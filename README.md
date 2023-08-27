@@ -11,10 +11,8 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 
 #### Trackers
 
-  * `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/announce`
-    + `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/stats`
-  * `http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/announce`
-    + `http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/stats`
+  * `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/announce` [stats](http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/stats)
+  * `http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/announce` [stats](http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/stats)
 
 #### Requirements
 
