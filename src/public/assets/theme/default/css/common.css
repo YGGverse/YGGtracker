@@ -1,0 +1,71 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #282b3c;
+  color: #ccc;
+  font-family: Sans-serif;
+  font-size: 13px;
+}
+
+h1, h2, h3, h4, h5 {
+  display: inline-block;
+  font-weight: normal;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+a,
+a:visited,
+a:active {
+  color: #96d9a1;
+  text-decoration: none;
+  opacity: .9;
+}
+
+a:hover {
+  opacity: 1;
+  transition: opacity .5s ease-in-out;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+  color: #fff;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #9698a5;
+  opacity: 1;
+}
+
+input,
+textarea {
+  background: #5d627d;
+  color: #ccc;
+  border: 0;
+  border-radius: 3px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+input[type="submit"] {
+  cursor: pointer;
+}
+
+
+header a.logo {
+  color: #ccc;
+  font-size: 22px;
+}
+
+header a.logo > span {
+  color: #96d9a1;
+}

@@ -1,0 +1,4 @@
+@reboot searchd
+@reboot indexer --all --rotate
+
+* * * * * indexer magnet --rotate

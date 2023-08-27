@@ -1,0 +1,102 @@
+<?php
+
+/*
+ * MIT License
+ *
+ * Copyright (c) 2023 YGGverse
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ * Default configuration file example
+ * Production name: app.php
+ *
+ * Project home page
+ * https://github.com/YGGverse/YGGtracker
+ *
+ * Get support
+ * https://github.com/YGGverse/YGGtracker/issues
+*/
+
+// PHP
+declare(strict_types=1);
+
+// Debug
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
+// Database
+define('DB_PORT', 3306);
+define('DB_HOST', 'localhost');
+define('DB_NAME', '');
+define('DB_USERNAME', '');
+define('DB_PASSWORD', '');
+
+// Sphinx
+define('SPHINX_HOST', '127.0.0.1');
+define('SPHINX_PORT', 9306);
+
+// Webapp
+define('WEBSITE_URL', '');
+define('WEBSITE_NAME', 'YGGtracker');
+define('WEBSITE_CSS_VERSION', 1);
+
+define('WEBSITE_PAGINATION_LIMIT', 20);
+
+define('WEBSITE_MAGNET_SHORT_META_DESCRIPTION_LENGTH', 480);
+
+// Moderation
+define('MODERATOR_IP_LIST', (array)
+  [
+    '127.0.0.1', // at least one IP/moderator required
+    // ...
+  ]
+);
+
+// User
+define('USER_DEFAULT_APPROVED', false);
+
+// Magnet
+define('MAGNET_DEFAULT_APPROVED', USER_DEFAULT_APPROVED);
+define('MAGNET_DEFAULT_PUBLIC', false);
+define('MAGNET_DEFAULT_COMMENTS', true);
+define('MAGNET_DEFAULT_SENSITIVE', false);
+
+define('MAGNET_META_TITLE_MIN_LENGTH', 10);
+define('MAGNET_META_DESCRIPTION_MIN_LENGTH', 0);
+
+// Trackers
+define('TRACKER_LINKS', (object)
+  [
+    'Tracker 1' => (object)
+    [
+      'announce' => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/announce',
+      'stats'    => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/stats',
+    ],
+    'Tracker 2' => (object)
+    [
+      'announce' => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/announce',
+      'stats'    => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/stats',
+    ],
+    // ...
+  ]
+);
+
+// Yggdrasil
+define('YGGDRASIL_URL_REGEX', '/^0{0,1}[2-3][a-f0-9]{0,2}:/'); // thanks to @ygguser (https://github.com/YGGverse/YGGo/issues/1#issuecomment-1498182228 )

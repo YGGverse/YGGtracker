@@ -1,0 +1,21 @@
+{
+    "name": "yggverse/yggtracker",
+    "description": "Public BitTorrent tracker for Yggdrasil network",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "yggverse/parser": ">=0.2.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Yggverse\\Yggtracker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "YGGverse"
+        }
+    ],
+    "minimum-stability": "alpha"
+}

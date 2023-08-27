@@ -1,0 +1,7 @@
+/.vscode/
+/vendor/
+
+/database/yggtracker.mwb.bak
+/src/config/app.php
+
+/composer.lock
