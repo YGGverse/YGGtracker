@@ -151,18 +151,9 @@ class Database {
 
     $this->_debug->query->insert->total++;
 
-    if ($value) {
+    $query = $this->_db->prepare('INSERT INTO `port` SET `value` = ?');
 
-      $query = $this->_db->prepare('INSERT INTO `port` SET `value` = ?');
-
-      $query->execute([$value]);
-
-    } else {
-
-      $query = $this->_db->prepare('INSERT INTO `port` SET `value` = NULL');
-
-      $query->execute();
-    }
+    $query->execute([$value]);
 
     return $this->_db->lastInsertId();
   }
@@ -190,9 +181,7 @@ class Database {
 
     } else {
 
-      $query = $this->_db->prepare('SELECT * FROM `port` WHERE `value` IS NULL');
-
-      $query->execute();
+      $query = $this->_db->query('SELECT * FROM `port` WHERE `value` IS NULL');
     }
 
     return $query->fetch();
@@ -209,7 +198,7 @@ class Database {
   }
 
   // URI
-  public function addUri(string $value) : int {
+  public function addUri(mixed $value) : int {
 
     $this->_debug->query->insert->total++;
 
@@ -231,18 +220,25 @@ class Database {
     return $query->fetch();
   }
 
-  public function findUri(string $value) {
+  public function findUri(mixed $value) {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT * FROM `uri` WHERE `value` = ?');
+    if ($value) {
 
-    $query->execute([$value]);
+      $query = $this->_db->prepare('SELECT * FROM `uri` WHERE `value` = ?');
+
+      $query->execute([$value]);
+
+    } else {
+
+      $query = $this->_db->query('SELECT * FROM `uri` WHERE `value` IS NULL');
+    }
 
     return $query->fetch();
   }
 
-  public function initUriId(string $value) : int {
+  public function initUriId(mixed $value) : int {
 
     if ($result = $this->findUri($value)) {
 
@@ -253,22 +249,13 @@ class Database {
   }
 
   // Address Tracker
-  public function addAddressTracker(int $schemeId, int $hostId, int $portId, int $uriId) : int {
+  public function addAddressTracker(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
     $this->_debug->query->insert->total++;
 
-    if ($portId) {
+    $query = $this->_db->prepare('INSERT INTO `addressTracker` SET `schemeId` = ?, `hostId` = ?, `portId` = ?, `uriId` = ?');
 
-      $query = $this->_db->prepare('INSERT INTO `addressTracker` SET `schemeId` = ?, `hostId` = ?, `portId` = ?, `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $portId, $uriId]);
-
-    } else {
-
-      $query = $this->_db->prepare('INSERT INTO `addressTracker` SET `schemeId` = ?, `hostId` = ?, `portId` = NULL, `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $uriId]);
-    }
+    $query->execute([$schemeId, $hostId, $portId, $uriId]);
 
     return $this->_db->lastInsertId();
   }
@@ -284,27 +271,19 @@ class Database {
     return $query->fetch();
   }
 
-  public function findAddressTracker(int $schemeId, int $hostId, mixed $portId, int $uriId) {
+  public function findAddressTracker(int $schemeId, int $hostId, mixed $portId, mixed $uriId) {
 
     $this->_debug->query->select->total++;
 
-    if ($portId) {
-
-      $query = $this->_db->prepare('SELECT * FROM `addressTracker` WHERE `schemeId` = ? AND `hostId` = ? AND `portId` = ? AND `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $portId, $uriId]);
-
-    } else {
-
-      $query = $this->_db->prepare('SELECT * FROM `addressTracker` WHERE `schemeId` = ? AND `hostId` = ? AND `portId` IS NULL AND `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $uriId]);
-    }
+    $query = $this->_db->query('SELECT * FROM `addressTracker` WHERE `schemeId` = ' . (int) $schemeId . '
+                                                               AND   `hostId`   = ' . (int) $hostId . '
+                                                               AND   `portId`     ' . ($portId ? ' = ' .  (int) $portId : ' IS NULL ') . '
+                                                               AND   `uriId`      ' . ($uriId  ? ' = ' .  (int) $uriId  : ' IS NULL '));
 
     return $query->fetch();
   }
 
-  public function initAddressTrackerId(int $schemeId, int $hostId, mixed $portId, int $uriId) : int {
+  public function initAddressTrackerId(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
     if ($result = $this->findAddressTracker($schemeId, $hostId, $portId, $uriId)) {
 
@@ -315,22 +294,13 @@ class Database {
   }
 
   // Acceptable Source
-  public function addAcceptableSource(int $schemeId, int $hostId, int $portId, int $uriId) : int {
+  public function addAcceptableSource(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
     $this->_debug->query->insert->total++;
 
-    if ($portId) {
+    $query = $this->_db->prepare('INSERT INTO `acceptableSource` SET `schemeId` = ?, `hostId` = ?, `portId` = ?, `uriId` = ?');
 
-      $query = $this->_db->prepare('INSERT INTO `acceptableSource` SET `schemeId` = ?, `hostId` = ?, `portId` = ?, `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $portId, $uriId]);
-
-    } else {
-
-      $query = $this->_db->prepare('INSERT INTO `acceptableSource` SET `schemeId` = ?, `hostId` = ?, `portId` = NULL, `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $uriId]);
-    }
+    $query->execute([$schemeId, $hostId, $portId, $uriId]);
 
     return $this->_db->lastInsertId();
   }
@@ -346,27 +316,19 @@ class Database {
     return $query->fetch();
   }
 
-  public function findAcceptableSource(int $schemeId, int $hostId, mixed $portId, int $uriId) {
+  public function findAcceptableSource(int $schemeId, int $hostId, mixed $portId, mixed $uriId) {
 
     $this->_debug->query->select->total++;
 
-    if ($portId) {
-
-      $query = $this->_db->prepare('SELECT * FROM `acceptableSource` WHERE `schemeId` = ? AND `hostId` = ? AND `portId` = ? AND `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $portId, $uriId]);
-
-    } else {
-
-      $query = $this->_db->prepare('SELECT * FROM `acceptableSource` WHERE `schemeId` = ? AND `hostId` = ? AND `portId` IS NULL AND `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $uriId]);
-    }
+    $query = $this->_db->query('SELECT * FROM `acceptableSource` WHERE `schemeId` = ' . (int) $schemeId . '
+                                                                 AND   `hostId`   = ' . (int) $hostId . '
+                                                                 AND   `portId`     ' . ($portId ? ' = ' .  (int) $portId : ' IS NULL ') . '
+                                                                 AND   `uriId`      ' . ($uriId  ? ' = ' .  (int) $uriId  : ' IS NULL '));
 
     return $query->fetch();
   }
 
-  public function initAcceptableSourceId(int $schemeId, int $hostId, mixed $portId, int $uriId) : int {
+  public function initAcceptableSourceId(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
     if ($result = $this->findAcceptableSource($schemeId, $hostId, $portId, $uriId)) {
 
@@ -377,22 +339,13 @@ class Database {
   }
 
   // eXact Source
-  public function addExactSource(int $schemeId, int $hostId, int $portId, int $uriId) : int {
+  public function addExactSource(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
     $this->_debug->query->insert->total++;
 
-    if ($portId) {
+    $query = $this->_db->prepare('INSERT INTO `eXactSource` SET `schemeId` = ?, `hostId` = ?, `portId` = ?, `uriId` = ?');
 
-      $query = $this->_db->prepare('INSERT INTO `eXactSource` SET `schemeId` = ?, `hostId` = ?, `portId` = ?, `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $portId, $uriId]);
-
-    } else {
-
-      $query = $this->_db->prepare('INSERT INTO `eXactSource` SET `schemeId` = ?, `hostId` = ?, `portId` = NULL, `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $uriId]);
-    }
+    $query->execute([$schemeId, $hostId, $portId, $uriId]);
 
     return $this->_db->lastInsertId();
   }
@@ -408,27 +361,19 @@ class Database {
     return $query->fetch();
   }
 
-  public function findExactSource(int $schemeId, int $hostId, mixed $portId, int $uriId) {
+  public function findExactSource(int $schemeId, int $hostId, mixed $portId, mixed $uriId) {
 
     $this->_debug->query->select->total++;
 
-    if ($portId) {
-
-      $query = $this->_db->prepare('SELECT * FROM `eXactSource` WHERE `schemeId` = ? AND `hostId` = ? AND `portId` = ? AND `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $portId, $uriId]);
-
-    } else {
-
-      $query = $this->_db->prepare('SELECT * FROM `eXactSource` WHERE `schemeId` = ? AND `hostId` = ? AND `portId` IS NULL AND `uriId` = ?');
-
-      $query->execute([$schemeId, $hostId, $uriId]);
-    }
+    $query = $this->_db->query('SELECT * FROM `eXactSource` WHERE `schemeId` = ' . (int) $schemeId . '
+                                                            AND   `hostId`   = ' . (int) $hostId . '
+                                                            AND   `portId`     ' . ($portId ? ' = ' .  (int) $portId : ' IS NULL ') . '
+                                                            AND   `uriId`      ' . ($uriId  ? ' = ' .  (int) $uriId  : ' IS NULL '));
 
     return $query->fetch();
   }
 
-  public function initExactSourceId(int $schemeId, int $hostId, mixed $portId, int $uriId) : int {
+  public function initExactSourceId(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
     if ($result = $this->findExactSource($schemeId, $hostId, $portId, $uriId)) {
 
