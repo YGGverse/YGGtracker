@@ -425,14 +425,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       <div class="container">
         <div class="row">
           <div class="column width-100 text-center margin-y-8">
-            <a href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
-            |
             <?php foreach (TRACKER_LINKS as $name => $value) { ?>
               <a href="<?php echo $value->announce ?>"><?php echo $name ?></a>
               /
               <a href="<?php echo $value->stats ?>"><?php echo _('Stats') ?></a>
               |
             <?php } ?>
+            <a href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
+            |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>
           </div>
         </div>
