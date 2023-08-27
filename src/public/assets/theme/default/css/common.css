@@ -56,6 +56,11 @@ textarea {
   font-size: 13px;
 }
 
+input:hover,
+textarea:hover {
+  background: #636884;
+}
+
 input[type="submit"] {
   cursor: pointer;
 }
