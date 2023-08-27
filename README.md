@@ -57,6 +57,7 @@ git checkout -b my-pr-branch-name
     + [x] Downloads
     + [ ] Comments
     + [ ] Views
+    + [ ] Peers
     + [ ] Info page
 
 * [ ] User
