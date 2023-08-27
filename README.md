@@ -60,16 +60,13 @@ git checkout -b my-pr-branch-name
     + [ ] Info page
 
 * [ ] User
+  + [ ] Profile
   + [ ] Magnets
   + [ ] Downloads
   + [ ] Stars
   + [ ] Following
   + [ ] Followers
-    + [ ] Profile menu
-    + [ ] Magnets
-    + [ ] Downloads
-    + [ ] Stars
-    + [ ] Comments
+  + [ ] Comments
 
 * [x] Other
   + [x] RSS
