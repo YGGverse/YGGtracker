@@ -241,7 +241,7 @@ else {
               )
             );
 
-            if (preg_match(YGGDRASIL_URL_REGEX, $url->host->name))
+            if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
               $response->form->tr->valid->success = true;
               $response->form->tr->valid->message = false;
@@ -277,7 +277,7 @@ else {
               )
             );
 
-            if (preg_match(YGGDRASIL_URL_REGEX, $url->host->name))
+            if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
               $response->form->as->valid->success = true;
               $response->form->as->valid->message = false;
@@ -313,7 +313,7 @@ else {
               )
             );
 
-            if (preg_match(YGGDRASIL_URL_REGEX, $url->host->name))
+            if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
               $response->form->xs->valid->success = true;
               $response->form->xs->valid->message = false;
