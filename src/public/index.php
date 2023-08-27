@@ -108,8 +108,8 @@ else
         'public'          => (bool) $magnet->public,
         'sensitive'       => (bool) $magnet->sensitive,
         'comments'        => (bool) $magnet->comments,
-        'timeAdded'       => Time::ago($magnet->timeAdded),
-        'timeUpdated'     => Time::ago($magnet->timeUpdated),
+        'timeAdded'       => $magnet->timeAdded   ? Time::ago((int) $magnet->timeAdded)   : false,
+        'timeUpdated'     => $magnet->timeUpdated ? Time::ago((int) $magnet->timeUpdated) : false,
         'keywords'        => $keywords,
         'comment'         => (object)
         [

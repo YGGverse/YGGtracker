@@ -542,8 +542,8 @@ class Database {
 
     $query = $this->_db->prepare('INSERT INTO `magnet` SET  `userId`      = ?,
                                                             `xt`          = ?,
-                                                            `xl` = ?,
-                                                            `dn` = ?,
+                                                            `xl`          = ?,
+                                                            `dn`          = ?,
                                                             `linkSource`  = ?,
                                                             `public`      = ?,
                                                             `comments`    = ?,
