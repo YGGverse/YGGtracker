@@ -34,18 +34,6 @@ a:hover {
   transition: opacity .5s ease-in-out;
 }
 
-textarea:focus,
-input:focus {
-  outline: none;
-  color: #fff;
-}
-
-textarea::placeholder,
-input::placeholder {
-  color: #9698a5;
-  opacity: 1;
-}
-
 input,
 textarea {
   background: #5d627d;
@@ -54,6 +42,22 @@ textarea {
   border-radius: 3px;
   padding: 6px 8px;
   font-size: 13px;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+  color: #fff;
+}
+
+textarea:focus {
+  min-height: 120px;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #9698a5;
+  opacity: 1;
 }
 
 input:hover,
