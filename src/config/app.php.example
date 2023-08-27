@@ -64,7 +64,7 @@ define('WEBSITE_MAGNET_SHORT_META_DESCRIPTION_LENGTH', 480);
 // Moderation
 define('MODERATOR_IP_LIST', (array)
   [
-    '127.0.0.1', // at least one IP/moderator required
+    '127.0.0.1',
     // ...
   ]
 );
