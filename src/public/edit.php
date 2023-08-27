@@ -131,6 +131,13 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
   $response->message = _('Could not init user session');
 }
 
+// Get user
+else if (!$user = $db->getUser($userId))
+{
+  $response->success = false;
+  $response->message = _('Could not init user info');
+}
+
 // Init magnet
 else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) ? (int) $_GET['magnetId'] : 0)) {
 
@@ -139,7 +146,7 @@ else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) ? (int) $_GET['magne
 }
 
 // Validate access
-else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST))) {
+else if (!($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST))) {
 
   $response->success = false;
   $response->message = _('You have no permissions to edit this magnet!');
@@ -152,7 +159,7 @@ else {
   if (!empty($_POST)) {
 
     // Approve by moderation request
-    if (isset($_POST['approved']) && in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST))
+    if ($user->approved || (isset($_POST['approved']) && in_array($user->address, MODERATOR_IP_LIST)))
     {
       $db->updateMagnetApproved($magnet->magnetId, true, time());
     }
@@ -514,7 +521,7 @@ else {
                       <?php } ?>
                       <label class="margin-y-8" for="sensitive"><?php echo _('Sensitive') ?></label>
                     </div>
-                    <?php if (in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST)) { ?>
+                    <?php if (in_array($user->address, MODERATOR_IP_LIST)) { ?>
                       <div class="margin-b-8">
                         <?php if (MAGNET_DEFAULT_APPROVED) { ?>
                           <input type="checkbox" id="approved" name="approved" value="1" checked="checked" />

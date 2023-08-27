@@ -234,6 +234,13 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       $response->message = _('Could not init user session');
     }
 
+    // Get user
+    else if (!$user = $db->getUser($userId))
+    {
+      $response->success = false;
+      $response->message = _('Could not init user info');
+    }
+
     // Validate link
     if (empty($_GET['magnet']))
     {
@@ -266,7 +273,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         // Init magnet
         if (Yggverse\Parser\Urn::parse($magnet->xt))
         {
-          if ($magnetId = $db->initMagnetId($userId,
+          if ($magnetId = $db->initMagnetId($user->userId,
                                             strip_tags($magnet->xt),
                                             strip_tags($magnet->xl),
                                             strip_tags($magnet->dn),
@@ -274,7 +281,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                             MAGNET_DEFAULT_PUBLIC,
                                             MAGNET_DEFAULT_COMMENTS,
                                             MAGNET_DEFAULT_SENSITIVE,
-                                            MAGNET_DEFAULT_APPROVED,
+                                            $user->approved ? true : MAGNET_DEFAULT_APPROVED,
                                             time()))
           {
             foreach ($magnet as $key => $value)
