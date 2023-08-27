@@ -48,10 +48,22 @@ git checkout -b my-pr-branch-name
 #### Roadmap
 
 * [ ] Magnet
+  + [ ] Protocol
+    + [x] Exact Topic / xt
+    + [x] Display Name / dn
+    + [x] eXact Length / xl
+    + [x] Address Tracker / rt
+    + [x] Web Seed / ws
+    + [x] Acceptable Source / as
+    + [x] eXact Source / xs
+    + [x] Keyword Topic / kt
+    + [ ] Manifest Topic / mt
+    + [ ] Select Only / so
+    + [ ] PEer / x.pe
   + [x] Options
     + [x] Public
     + [x] Sensitive
-    + [x] Comments
+    + [ ] Comments
   + [ ] Features
     + [x] Stars
     + [x] Downloads
