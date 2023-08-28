@@ -172,10 +172,22 @@ else {
   // Update form
   if (!empty($_POST)) {
 
-    // Approve by moderation request
-    if ($user->approved || (isset($_POST['approved']) && in_array($user->address, MODERATOR_IP_LIST)))
+    // Approve by approved user
+    if ($user->approved)
     {
       $db->updateMagnetApproved($magnet->magnetId, true, time());
+    }
+
+    // Approve by moderation request
+    if (in_array($user->address, MODERATOR_IP_LIST))
+    {
+      $db->updateMagnetApproved($magnet->magnetId, isset($_POST['approved']), time());
+
+      // Auto-approve user on magnet approve
+      if (USER_AUTO_APPROVE_ON_MAGNET_APPROVE)
+      {
+        $db->updateUserApproved($magnet->userId, isset($_POST['approved']), time());
+      }
     }
 
     // Set default approve status
