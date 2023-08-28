@@ -155,6 +155,20 @@ else if (!($user->address == $db->getUser($magnet->userId)->address || in_array(
 // Process form
 else {
 
+  // Validate magnet lock
+  if ($lastMagnetLock = $db->findLastMagnetLock($magnet->magnetId))
+  {
+    if ($lastMagnetLock->userId != $user->userId &&
+        $lastMagnetLock->timeAdded > time() - MAGNET_EDITOR_LOCK_TIMEOUT)
+    {
+      $response->success = false;
+      $response->message = _('This form have opened by owner or moderator, to prevent overwriting, try attempt later!');
+    }
+  }
+
+  // Lock form for moderators
+  $db->addMagnetLock($magnet->magnetId, $user->userId, time());
+
   // Update form
   if (!empty($_POST)) {
 

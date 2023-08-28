@@ -839,7 +839,6 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
-
   public function deleteMagnetToExactSourceByMagnetId(int $magnetId) : int {
 
     $this->_debug->query->delete->total++;
@@ -936,6 +935,29 @@ class Database {
     }
 
     return $this->addMagnetToKeywordTopic($magnetId, $keywordTopicId);
+  }
+
+  // Magnet lock
+  public function addMagnetLock(int $magnetId, int $userId, int $timeAdded) : int {
+
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `magnetLock` SET `magnetId` = ?, `userId` = ?, `timeAdded` = ?');
+
+    $query->execute([$magnetId, $userId, $timeAdded]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function findLastMagnetLock(int $magnetId) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetLock` WHERE `magnetId` = ? ORDER BY `magnetLockId` DESC LIMIT 1');
+
+    $query->execute([$magnetId]);
+
+    return $query->fetch();
   }
 
   // Magnet comment
