@@ -130,12 +130,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
     // Request valid
     else
     {
-      // Download exists, trigger delete
-      if (!$db->findMagnetDownloadsTotalByUserId($magnet->magnetId, $userId))
-      {
-        // Download not exists, add new record
-        $db->addMagnetDownload($magnet->magnetId, $userId, time());
-      }
+      // Update download stats
+      $db->addMagnetDownload($magnet->magnetId, $userId, time());
 
       // Build magnet link
       $link = [];
@@ -210,7 +206,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                         $uri->value)));
       }
 
-      // Redirect to edit page
+      // Return download link
       header(
         sprintf('Location: %s', implode('&', $link))
       );
