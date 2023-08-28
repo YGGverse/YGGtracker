@@ -211,11 +211,11 @@
   transition: opacity .2s ease-in-out;
 }
 
-.bloor-2 {
+.blur-2 {
   filter: blur(2px);
 }
 
-.bloor-hover-0:hover {
+.blur-hover-0:hover {
   filter: blur(0);
 }
 
