@@ -98,8 +98,8 @@ git checkout -b my-pr-branch-name
 
 #### Components
 
-[Icons](https://icons.getbootstrap.com)
-[PHP Scrapper](https://github.com/medariox/scrapeer)
+* [Icons](https://icons.getbootstrap.com)
+* [PHP Scrapper](https://github.com/medariox/scrapeer)
 
 #### Feedback
 
