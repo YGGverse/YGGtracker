@@ -5,3 +5,5 @@
 /src/config/app.php
 
 /composer.lock
+
+*test*
