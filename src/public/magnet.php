@@ -363,7 +363,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                   <div class="padding-y-8 padding-x-16">
                     <a name="comment"></a>
                     <h3><?php echo _('Comments') ?></h3>
-                    <sup><a href="<?php echo WEBSITE_URL ?>/magnet.php?rss&magnetId=<?php echo $response->magnet->magnetId ?>"><?php echo _('RSS') ?></a></sup>
+                    <sup><small><a href="<?php echo WEBSITE_URL ?>/magnet.php?rss&magnetId=<?php echo $response->magnet->magnetId ?>"><?php echo _('RSS') ?></a></small></sup>
                   </div>
                   <div class="padding-x-16">
                     <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
