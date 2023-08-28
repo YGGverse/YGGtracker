@@ -78,3 +78,16 @@ header a.logo {
 header a.logo > span {
   color: #96d9a1;
 }
+
+a.button,
+a.button:visited,
+a.button:active,
+a.button:hover,
+.button {
+  background: #5d627d;
+  color: #ccc;
+  border: 0;
+  border-radius: 3px;
+  padding: 6px 8px;
+  font-size: 13px;
+}

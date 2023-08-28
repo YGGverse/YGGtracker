@@ -76,12 +76,12 @@ else
   }
 
   // Get index
-  $total   = $sphinx->searchMagnetsTotal($request->query);
+  $response->total = $sphinx->searchMagnetsTotal($request->query);
   $results = $sphinx->searchMagnets(
     $request->query,
     $request->page * WEBSITE_PAGINATION_LIMIT - WEBSITE_PAGINATION_LIMIT,
     WEBSITE_PAGINATION_LIMIT,
-    $total
+    $response->total
   );
 
   foreach ($results as $result)
@@ -413,6 +413,29 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
             <?php } ?>
           </div>
         </div>
+        <?php if ($response->total > WEBSITE_PAGINATION_LIMIT) { ?>
+          <div class="row">
+            <div class="column width-100 text-right">
+              <?php echo sprintf(_('page %s / %s'), $request->page, ceil($response->total / WEBSITE_PAGINATION_LIMIT)) ?>
+              <?php if ($request->page > 1) { ?>
+                <a class="button margin-l-8"
+                  href="<?php echo sprintf('%s/index.php?page=%s', WEBSITE_URL,
+                                                                   $request->page - 1,
+                                                                   $request->query ? sprintf('&query=%s', urlencode($request->query)) : false) ?>">
+                  <?php echo _('back') ?>
+                </a>
+              <?php } ?>
+              <?php if ($request->page < ceil($response->total / WEBSITE_PAGINATION_LIMIT)) { ?>
+                <a class="button margin-l-4"
+                  href="<?php echo sprintf('%s/index.php?page=%s', WEBSITE_URL,
+                                                                   $request->page + 1,
+                                                                   $request->query ? sprintf('&query=%s', urlencode($request->query)) : false) ?>">
+                  <?php echo _('next') ?>
+                </a>
+              <?php } ?>
+            </div>
+          </div>
+        <?php } ?>
       </div>
     </main>
     <footer>
