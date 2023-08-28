@@ -686,7 +686,7 @@ class Database {
     return $query->rowCount();
   }
 
-  public function updateMagnetToAddressTrackerTimeOffline(int $magnetToAddressTrackerId, int $timeOffline) : int {
+  public function updateMagnetToAddressTrackerTimeOffline(int $magnetToAddressTrackerId, mixed $timeOffline) : int {
 
     $this->_debug->query->update->total++;
 
