@@ -653,6 +653,50 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
+  public function updateMagnetToAddressTrackerSeeders(int $magnetToAddressTrackerId, int $seeders, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetToAddressTracker` SET `seeders` = ?, `timeUpdated` = ? WHERE `magnetToAddressTrackerId` = ?');
+
+    $query->execute([$seeders, $timeUpdated, $magnetToAddressTrackerId]);
+
+    return $query->rowCount();
+  }
+
+  public function updateMagnetToAddressTrackerCompleted(int $magnetToAddressTrackerId, int $completed, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetToAddressTracker` SET `completed` = ?, `timeUpdated` = ? WHERE `magnetToAddressTrackerId` = ?');
+
+    $query->execute([$completed, $timeUpdated, $magnetToAddressTrackerId]);
+
+    return $query->rowCount();
+  }
+
+  public function updateMagnetToAddressTrackerLeechers(int $magnetToAddressTrackerId, int $leechers, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetToAddressTracker` SET `leechers` = ?, `timeUpdated` = ? WHERE `magnetToAddressTrackerId` = ?');
+
+    $query->execute([$leechers, $timeUpdated, $magnetToAddressTrackerId]);
+
+    return $query->rowCount();
+  }
+
+  public function updateMagnetToAddressTrackerTimeOffline(int $magnetToAddressTrackerId, int $timeOffline) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetToAddressTracker` SET `timeOffline` = ? WHERE `magnetToAddressTrackerId` = ?');
+
+    $query->execute([$timeOffline, $magnetToAddressTrackerId]);
+
+    return $query->rowCount();
+  }
+
   public function deleteMagnetToAddressTrackerByMagnetId(int $magnetId) : int {
 
     $this->_debug->query->delete->total++;
@@ -684,6 +728,38 @@ class Database {
     $query->execute([$magnetId]);
 
     return $query->fetchAll();
+  }
+
+  public function getMagnetToAddressTrackerScrapeQueue(int $limit) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetToAddressTracker`
+
+                                           WHERE `timeOffline` IS NULL
+
+                                           ORDER BY `timeUpdated` ASC, RAND()
+
+                                           LIMIT ' . (int) $limit);
+
+    $query->execute();
+
+    return $query->fetchAll();
+  }
+
+  public function resetMagnetToAddressTrackerTimeOfflineByTimeout(int $timeOffline) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetToAddressTracker` SET `timeOffline` = NULL WHERE `timeOffline` < ?');
+
+    $query->execute(
+      [
+        time() - $timeOffline
+      ]
+    );
+
+    return $query->rowCount();
   }
 
   public function initMagnetToAddressTrackerId(int $magnetId, int $addressTrackerId) : int {
@@ -942,26 +1018,15 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
-  public function getMagnetDownloadsTotal(int $magnetId) : int {
+  public function getMagnetDownloadsTotalByUserId(int $magnetId) : int {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetDownload` WHERE `magnetId` = ?');
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `userId`) AS `result` FROM `magnetDownload` WHERE `magnetId` = ?');
 
     $query->execute([$magnetId]);
 
     return $query->fetch()->result;
-  }
-
-  public function deleteMagnetDownloadByUserId(int $magnetId, int $userId) : int {
-
-    $this->_debug->query->delete->total++;
-
-    $query = $this->_db->prepare('DELETE FROM `magnetDownload` WHERE `magnetId` = ? AND `userId` = ?');
-
-    $query->execute([$magnetId, $userId]);
-
-    return $query->rowCount();
   }
 
   public function findMagnetDownloadsTotalByUserId(int $magnetId, int $userId) : int {
@@ -969,6 +1034,40 @@ class Database {
     $this->_debug->query->select->total++;
 
     $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetDownload` WHERE `magnetId` = ? AND `userId` = ?');
+
+    $query->execute([$magnetId, $userId]);
+
+    return $query->fetch()->result;
+  }
+
+  // Magnet view
+  public function addMagnetView(int $magnetId, int $userId, int $timeAdded) : int {
+
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `magnetView` SET `magnetId` = ?, `userId` = ?, `timeAdded` = ?');
+
+    $query->execute([$magnetId, $userId, $timeAdded]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function getMagnetViewsTotal(int $magnetId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetView` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return $query->fetch()->result;
+  }
+
+  public function findMagnetViewsTotalByUserId(int $magnetId, int $userId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetView` WHERE `magnetId` = ? AND `userId` = ?');
 
     $query->execute([$magnetId, $userId]);
 

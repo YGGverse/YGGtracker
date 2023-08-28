@@ -2,3 +2,5 @@
 @reboot indexer --all --rotate
 
 * * * * * indexer magnet --rotate
+
+* * * * * /usr/bin/php /YGGtracker/src/crontab/scrape.php

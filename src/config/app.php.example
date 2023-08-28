@@ -100,3 +100,7 @@ define('TRACKER_LINKS', (object)
 
 // Yggdrasil
 define('YGGDRASIL_URL_REGEX', '/^0{0,1}[2-3][a-f0-9]{0,2}:/'); // thanks to @ygguser (https://github.com/YGGverse/YGGo/issues/1#issuecomment-1498182228 )
+
+// Crawler
+define('CRAWLER_SCRAPE_QUEUE_LIMIT', 1);
+define('CRAWLER_SCRAPE_TIME_OFFLINE_TIMEOUT', 60*60*24);

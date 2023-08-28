@@ -88,11 +88,73 @@ else
   {
     if ($magnet = $db->getMagnet($result->magnetid))
     {
+      // Get access info
+      $accessRead = ($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved));
+      $accessEdit = ($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST));
+
+      // Update magnet viwed
+      if ($accessRead)
+      {
+        $db->addMagnetView($magnet->magnetId, $userId, time());
+      }
+
+      // Keywords
       $keywords = [];
 
       foreach ($db->findKeywordTopicByMagnetId($magnet->magnetId) as $keyword)
       {
         $keywords[] = $db->getKeywordTopic($keyword->keywordTopicId)->value;
+      }
+
+      // Scrapes
+      $localScrape = (object)
+      [
+        'seeders'   => 0,
+        'completed' => 0,
+        'leechers'  => 0,
+      ];
+
+      $totalScrape = (object)
+      [
+        'seeders'   => 0,
+        'completed' => 0,
+        'leechers'  => 0,
+      ];
+
+      $trackers = [];
+
+      foreach (TRACKER_LINKS as $tracker)
+      {
+        $trackers[] = $tracker->announce;
+      }
+
+      foreach ($db->findAddressTrackerByMagnetId($magnet->magnetId) as $magnetToAddressTracker)
+      {
+        if ($addressTracker = $db->getAddressTracker($magnetToAddressTracker->addressTrackerId))
+        {
+          $scheme = $db->getScheme($addressTracker->schemeId);
+          $host   = $db->getHost($addressTracker->hostId);
+          $port   = $db->getPort($addressTracker->portId);
+          $uri    = $db->getUri($addressTracker->uriId);
+
+          $url = $port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                        $host->value,
+                                                        $port->value,
+                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                            $host->value,
+                                                                                            $uri->value);
+
+          if (in_array($url, $trackers))
+          {
+            $localScrape->seeders   += (int) $magnetToAddressTracker->seeders;
+            $localScrape->completed += (int) $magnetToAddressTracker->completed;
+            $localScrape->leechers  += (int) $magnetToAddressTracker->leechers;
+          }
+
+          $totalScrape->seeders   += (int) $magnetToAddressTracker->seeders;
+          $totalScrape->completed += (int) $magnetToAddressTracker->completed;
+          $totalScrape->leechers  += (int) $magnetToAddressTracker->leechers;
+        }
       }
 
       $response->magnets[] = (object)
@@ -128,9 +190,14 @@ else
         ],
         'access'          => (object)
         [
-          'read' => ($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved)),
-          'edit' => ($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST)),
+          'read' => $accessRead,
+          'edit' => $accessEdit,
         ],
+        'scrape' => (object)
+        [
+          'local' => $localScrape,
+          'total' => $totalScrape
+        ]
       ];
     }
   }
@@ -198,8 +265,23 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                                 <?php echo !$magnet->public || !$magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
                       <div class="<?php echo $magnet->sensitive ? 'bloor-2 bloor-hover-0' : false ?>">
                         <a name="magnet-<?php echo $magnet->magnetId ?>"></a>
-                        <h2><?php echo $magnet->metaTitle ?></h2>
+                        <h2 class="margin-b-8"><?php echo $magnet->metaTitle ?></h2>
                         <div class="float-right opacity-0 parent-hover-opacity-09">
+                        <?php if (!$magnet->public) { ?>
+                          <span class="margin-l-8" title="<?php echo _('Private') ?>">
+                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                              <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+                              <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+                            </svg>
+                          </span>
+                        <?php } ?>
+                        <?php if (!$magnet->approved) { ?>
+                          <span class="margin-l-8" title="<?php echo _('Waiting for approve') ?>">
+                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
+                              <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
+                            </svg>
+                          </span>
+                        <?php } ?>
                           <?php if ($magnet->access->edit) { ?>
                             <a class="text-color-green margin-l-12" href="<?php echo WEBSITE_URL ?>/edit.php?magnetId=<?php echo $magnet->magnetId ?>" title="<?php echo _('Edit') ?>">
                               <svg class="text-color-green" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -229,24 +311,41 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                             <?php } ?>
                           </div>
                         <?php } ?>
-                      </div>
-                      <div class="margin-t-8">
-                        <?php if (!$magnet->public) { ?>
-                          <span class="margin-r-8" title="<?php echo _('Private') ?>">
-                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-                              <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
-                              <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
-                            </svg>
-                          </span>
-                        <?php } ?>
-                        <?php if (!$magnet->approved) { ?>
-                          <span class="margin-r-8" title="<?php echo _('Waiting for approve') ?>">
-                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
-                              <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z"/>
-                            </svg>
-                          </span>
-                        <?php } ?>
-                        <sup><?php echo $magnet->timeUpdated ? sprintf('Updated %s', $magnet->timeUpdated) : sprintf('Added %s', $magnet->timeAdded) ?></sup>
+                        <div class="width-100 padding-y-4"></div>
+                        <!-- DOUBTS
+                        <span class="margin-t-8 margin-r-8 cursor-default" title="<?php echo $magnet->timeUpdated ? _('Updated') : _('Added') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                          </svg>
+                          <sup><?php echo $magnet->timeUpdated ? $magnet->timeUpdated : $magnet->timeAdded ?></sup>
+                        </span>
+                        -->
+                        <span class="margin-t-8 margin-r-8 cursor-default">
+                          <sup>
+                            <?php echo $magnet->timeUpdated ? _('Updated') : _('Added') ?>
+                            <?php echo $magnet->timeUpdated ? $magnet->timeUpdated : $magnet->timeAdded ?>
+                          </sup>
+                        </span>
+                        <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Seeders - yggdrasil / total') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
+                          </svg>
+                          <sup><?php echo $magnet->scrape->local->seeders ?> / <?php echo $magnet->scrape->total->seeders ?></sup>
+                        </span>
+                        <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Completed - yggdrasil / total') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+                          </svg>
+                          <sup><?php echo $magnet->scrape->local->completed ?> / <?php echo $magnet->scrape->total->completed ?></sup>
+                        </span>
+                        <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Leechers - yggdrasil / total') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cup-hot" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6H.5ZM13 12.5a2.01 2.01 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5ZM2.64 13.825 1.123 7h11.754l-1.517 6.825A1.5 1.5 0 0 1 9.896 15H4.104a1.5 1.5 0 0 1-1.464-1.175Z"/>
+                            <path d="m4.4.8-.003.004-.014.019a4.167 4.167 0 0 0-.204.31 2.327 2.327 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.593.593 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3.31 3.31 0 0 1-.202.388 5.444 5.444 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4.149 4.149 0 0 0 .204-.31 2.06 2.06 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.593.593 0 0 0-.09-.252A4.334 4.334 0 0 0 3.6 2.8l-.01-.012a5.099 5.099 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a5.446 5.446 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8Zm3 0-.003.004-.014.019a4.167 4.167 0 0 0-.204.31 2.327 2.327 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.593.593 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3.31 3.31 0 0 1-.202.388 5.444 5.444 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4.149 4.149 0 0 0 .204-.31 2.06 2.06 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.593.593 0 0 0-.09-.252A4.334 4.334 0 0 0 6.6 2.8l-.01-.012a5.099 5.099 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a5.446 5.446 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8Zm3 0-.003.004-.014.019a4.077 4.077 0 0 0-.204.31 2.337 2.337 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.593.593 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3.198 3.198 0 0 1-.202.388 5.385 5.385 0 0 1-.252.382l-.019.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4.149 4.149 0 0 0 .204-.31 2.06 2.06 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.593.593 0 0 0-.09-.252A4.334 4.334 0 0 0 9.6 2.8l-.01-.012a5.099 5.099 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a5.446 5.446 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8Z"/>
+                          </svg>
+                          <sup><?php echo $magnet->scrape->local->leechers ?> / <?php echo $magnet->scrape->total->leechers ?></sup>
+                        </span>
                         <span class="float-right margin-l-12">
                           <a href="<?php echo WEBSITE_URL ?>/action.php?target=star&magnetId=<?php echo $magnet->magnetId ?>&callback=<?php echo base64_encode(sprintf('%s/index.php?query=%s#magnet-%s', WEBSITE_URL, urlencode($request->query), $magnet->magnetId)) ?>" title="<?php echo _('Star') ?>">
                             <?php if ($magnet->star->status) { ?>

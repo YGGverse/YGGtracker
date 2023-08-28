@@ -129,6 +129,10 @@
   padding: 4px;
 }
 
+.padding-y-4 {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
 .padding-x-4 {
   padding-left: 4px;
   padding-right: 4px;

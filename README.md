@@ -65,11 +65,14 @@ git checkout -b my-pr-branch-name
     + [x] Sensitive
     + [ ] Comments
   + [ ] Features
+    + [x] Scrape trackers
+      + [x] Peers
+      + [x] Completed
+      + [x] Leechers
     + [x] Stars
     + [x] Downloads
     + [ ] Comments
     + [ ] Views
-    + [ ] Peers
     + [ ] Info page
 
 * [ ] User
@@ -96,6 +99,7 @@ git checkout -b my-pr-branch-name
 #### Components
 
 [Icons](https://icons.getbootstrap.com)
+[PHP Scrapper](https://github.com/medariox/scrapeer)
 
 #### Feedback
 
