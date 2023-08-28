@@ -393,9 +393,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                       </div>
                     </div>
                   <?php } else { ?>
+                    <!-- DOUBTS
                     <div class="padding-16 margin-y-8 border-radius-3 background-color-night">
                       <div><?php echo _('Hidden content') ?></div>
                     </div>
+                    -->
                   <?php } ?>
                 <?php } ?>
               <?php } else { ?>
