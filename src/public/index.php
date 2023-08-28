@@ -118,7 +118,7 @@ else
         ],
         'download'        => (object)
         [
-          'total'  => $db->getMagnetDownloadsTotal($magnet->magnetId),
+          'total'  => $db->getMagnetDownloadsTotalByUserId($magnet->magnetId),
           'status' => $db->findMagnetDownloadsTotalByUserId($magnet->magnetId, $userId),
         ],
         'star'            => (object)
