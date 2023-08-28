@@ -114,6 +114,10 @@ $response = (object)
         'message' => false,
       ]
     ],
+    'approved' => (object)
+    [
+      'value' => false,
+    ],
   ]
 ];
 
@@ -370,6 +374,7 @@ else {
   $response->form->public->value    = (bool) $magnet->public;
   $response->form->comments->value  = (bool) $magnet->comments;
   $response->form->sensitive->value = (bool) $magnet->sensitive;
+  $response->form->approved->value  = (bool) $magnet->approved;
 
   // Display Name
   $response->form->dn->value = $magnet->dn;
@@ -549,7 +554,7 @@ else {
                     </div>
                     <?php if (in_array($user->address, MODERATOR_IP_LIST)) { ?>
                       <div class="margin-b-8">
-                        <?php if (MAGNET_DEFAULT_APPROVED) { ?>
+                        <?php if ($response->form->approved->value) { ?>
                           <input type="checkbox" id="approved" name="approved" value="1" checked="checked" />
                         <?php } else { ?>
                           <input type="checkbox" id="approved" name="approved" value="1" />

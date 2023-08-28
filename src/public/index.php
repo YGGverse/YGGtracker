@@ -64,6 +64,13 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
   $response->message = _('Could not init user session');
 }
 
+// Get user
+else if (!$user = $db->getUser($userId))
+{
+  $response->success = false;
+  $response->message = _('Could not init user info');
+}
+
 // Request valid
 else
 {
@@ -89,10 +96,10 @@ else
     if ($magnet = $db->getMagnet($result->magnetid))
     {
       // Get access info
-      $accessRead = ($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved));
-      $accessEdit = ($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST));
+      $accessRead = ($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved));
+      $accessEdit = ($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST));
 
-      // Update magnet viwed
+      // Update magnet viewed
       if ($accessRead)
       {
         $db->addMagnetView($magnet->magnetId, $userId, time());
@@ -360,7 +367,6 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                           </a>
                           <sup><?php echo $magnet->star->total ?></sup>
                         </span>
-                        <!--
                         <span class="float-right margin-l-12">
                           <a href="<?php echo WEBSITE_URL ?>/magnet.php?magnetId=<?php echo $magnet->magnetId ?>#comment" title="<?php echo _('Comment') ?>">
                             <?php if ($magnet->comment->status) { ?>
@@ -375,7 +381,6 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                           </a>
                           <sup><?php echo $magnet->comment->total ?></sup>
                         </span>
-                        -->
                         <span class="float-right margin-l-12">
                           <a href="<?php echo WEBSITE_URL ?>/action.php?target=download&magnetId=<?php echo $magnet->magnetId ?>" title="<?php echo _('Download') ?>">
                             <?php if ($magnet->download->status) { ?>

@@ -50,9 +50,11 @@ input:focus {
   color: #fff;
 }
 
+/* @TODO improve focus out
 textarea:focus {
   min-height: 120px;
 }
+*/
 
 textarea::placeholder,
 input::placeholder {

@@ -63,7 +63,7 @@ git checkout -b my-pr-branch-name
   + [x] Options
     + [x] Public
     + [x] Sensitive
-    + [ ] Comments
+    + [x] Comments
   + [ ] Features
     + [x] Scrape trackers
       + [x] Peers
@@ -71,7 +71,7 @@ git checkout -b my-pr-branch-name
       + [x] Leechers
     + [x] Stars
     + [x] Downloads
-    + [ ] Comments
+    + [x] Threading comments
     + [ ] Views
     + [ ] Info page
 

@@ -471,6 +471,17 @@ class Database {
     return $this->addUser($address, $approved, $timeAdded);
   }
 
+  public function updateUserApproved(int $userId, mixed $approved, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `user` SET `approved` = ?, `timeUpdated` = ? WHERE `userId` = ?');
+
+    $query->execute([(int) $approved, $timeUpdated, $userId]);
+
+    return $query->rowCount();
+  }
+
   // Magnet
   public function addMagnet(int $userId,
                             string $xt,
@@ -961,6 +972,61 @@ class Database {
   }
 
   // Magnet comment
+  public function addMagnetComment( int $magnetId,
+                                    int $userId,
+                                    mixed $magnetCommentIdParent,
+                                    string $value,
+                                    bool $approved,
+                                    bool $public,
+                                    int $timeAdded) : int {
+
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `magnetComment` SET `magnetId` = ?,
+                                                                  `userId` = ?,
+                                                                  `magnetCommentIdParent` = ?,
+                                                                  `value` = ?,
+                                                                  `approved` = ?,
+                                                                  `public` = ?,
+                                                                  `timeAdded` = ?');
+
+    $query->execute(
+      [
+        $magnetId,
+        $userId,
+        $magnetCommentIdParent,
+        $value,
+        $approved,
+        $public,
+        $timeAdded
+      ]
+    );
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function updateMagnetCommentPublic(int $magnetCommentId, mixed $public) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetComment` SET `public` = ? WHERE `magnetCommentId` = ?');
+
+    $query->execute([(int) $public, $magnetCommentId]);
+
+    return $query->rowCount();
+  }
+
+  public function updateMagnetCommentApproved(int $magnetCommentId, mixed $approved) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnetComment` SET `approved` = ? WHERE `magnetCommentId` = ?');
+
+    $query->execute([(int) $approved, $magnetCommentId]);
+
+    return $query->rowCount();
+  }
+
   public function getMagnetCommentsTotal(int $magnetId) : int {
 
     $this->_debug->query->select->total++;
@@ -972,6 +1038,26 @@ class Database {
     return $query->fetch()->result;
   }
 
+  public function getMagnetComments(int $magnetId, mixed $magnetCommentIdParent = null) {
+
+    $this->_debug->query->select->total++;
+
+    if ($magnetCommentIdParent)
+    {
+      $query = $this->_db->prepare('SELECT * FROM `magnetComment` WHERE `magnetId` = ? AND `magnetCommentIdParent` = ?');
+
+      $query->execute([$magnetId, $magnetCommentIdParent]);
+    }
+    else
+    {
+      $query = $this->_db->prepare('SELECT * FROM `magnetComment` WHERE `magnetId` = ? AND `magnetCommentIdParent` IS NULL');
+
+      $query->execute([$magnetId]);
+    }
+
+    return $query->fetchAll();
+  }
+
   public function findMagnetCommentsTotalByUserId(int $magnetId, int $userId) : int {
 
     $this->_debug->query->select->total++;
@@ -981,6 +1067,17 @@ class Database {
     $query->execute([$magnetId, $userId]);
 
     return $query->fetch()->result;
+  }
+
+  public function getMagnetComment(int $magnetCommentId) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetComment` WHERE `magnetCommentId` = ?');
+
+    $query->execute([$magnetCommentId]);
+
+    return $query->fetch();
   }
 
   // Magnet star
