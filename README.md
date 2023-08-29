@@ -96,6 +96,7 @@ git checkout -b my-pr-branch-name
 * [x] Other
   + [x] RSS
   + [x] Moderation
+  + [ ] Federative API
 
 #### Donate to contributors
 
