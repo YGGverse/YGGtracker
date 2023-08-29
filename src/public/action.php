@@ -271,360 +271,363 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
   break;
 
-  case 'star':
+  case 'magnet':
 
-    // Yggdrasil connections only
-    if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+    switch (isset($_GET['toggle']) ? $_GET['toggle'] : false)
     {
-      $response->success = false;
-      $response->message = _('Yggdrasil connection required for this action');
-    }
+      case 'star':
 
-    // Init session
-    else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
-    {
-      $response->success = false;
-      $response->message = _('Could not init user session');
-    }
-
-    // Magnet exists
-    else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
-    {
-      $response->success = false;
-      $response->message = _('Requested magnet not found');
-    }
-
-    // Access allowed
-    else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved))) {
-
-      $response->success = false;
-      $response->message = _('Magnet not available for this action');
-    }
-
-    // Validate callback
-    else if (empty($_GET['callback']))
-    {
-      $response->success = false;
-      $response->message = _('Callback required');
-    }
-
-    // Validate base64
-    else if (!$callback = (string) @base64_decode($_GET['callback']))
-    {
-      $response->success = false;
-      $response->message = _('Invalid callback encoding');
-    }
-
-    // Request valid
-    else
-    {
-      // Star exists, trigger delete
-      if ($db->findMagnetStarsTotalByUserId($magnet->magnetId, $userId))
-      {
-        $db->deleteMagnetStarByUserId($magnet->magnetId, $userId);
-      }
-      else
-      {
-        // Star not exists, trigger add
-        $db->addMagnetStar($magnet->magnetId, $userId, time());
-      }
-
-      // Redirect to edit page
-      header(
-        sprintf('Location: %s', $callback)
-      );
-    }
-
-  break;
-
-  case 'download':
-
-    // Yggdrasil connections only
-    if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
-    {
-      $response->success = false;
-      $response->message = _('Yggdrasil connection required for this action');
-    }
-
-    // Init session
-    else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
-    {
-      $response->success = false;
-      $response->message = _('Could not init user session');
-    }
-
-    // Magnet exists
-    else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
-    {
-      $response->success = false;
-      $response->message = _('Requested magnet not found');
-    }
-
-    // Access allowed
-    else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved))) {
-
-      $response->success = false;
-      $response->message = _('Magnet not available for this action');
-    }
-
-    // Request valid
-    else
-    {
-      // Update download stats
-      $db->addMagnetDownload($magnet->magnetId, $userId, time());
-
-      // Build magnet link
-      $link = [];
-
-      /// Exact Topic
-      $link[] = sprintf('magnet:?xt=%s', $magnet->xt);
-
-      /// Display Name
-      $link[] = sprintf('dn=%s', urlencode($magnet->dn));
-
-      // Keyword Topic
-      $kt = [];
-
-      foreach ($db->findKeywordTopicByMagnetId($magnet->magnetId) as $result)
-      {
-        $kt[] = urlencode($db->getKeywordTopic($result->keywordTopicId)->value);
-      }
-
-      $link[] = sprintf('kt=%s', implode('+', $kt));
-
-      /// Address Tracker
-      foreach ($db->findAddressTrackerByMagnetId($magnet->magnetId) as $result)
-      {
-        $addressTracker = $db->getAddressTracker($result->addressTrackerId);
-
-        $scheme = $db->getScheme($addressTracker->schemeId);
-        $host   = $db->getHost($addressTracker->hostId);
-        $port   = $db->getPort($addressTracker->portId);
-        $uri    = $db->getUri($addressTracker->uriId);
-
-        $link[] = sprintf('tr=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                                                    $host->value,
-                                                                                    $port->value,
-                                                                                    $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                                        $host->value,
-                                                                                                                        $uri->value)));
-      }
-
-      /// Acceptable Source
-      foreach ($db->findAcceptableSourceByMagnetId($magnet->magnetId) as $result)
-      {
-        $acceptableSource = $db->getAcceptableSource($result->acceptableSourceId);
-
-        $scheme = $db->getScheme($acceptableSource->schemeId);
-        $host   = $db->getHost($acceptableSource->hostId);
-        $port   = $db->getPort($acceptableSource->portId);
-        $uri    = $db->getUri($acceptableSource->uriId);
-
-        $link[] = sprintf('as=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                                                    $host->value,
-                                                                                    $port->value,
-                                                                                    $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                                        $host->value,
-                                                                                                                        $uri->value)));
-      }
-
-      /// Exact Source
-      foreach ($db->findExactSourceByMagnetId($magnet->magnetId) as $result)
-      {
-        $eXactSource = $db->getExactSource($result->eXactSourceId);
-
-        $scheme = $db->getScheme($eXactSource->schemeId);
-        $host   = $db->getHost($eXactSource->hostId);
-        $port   = $db->getPort($eXactSource->portId);
-        $uri    = $db->getUri($eXactSource->uriId);
-
-        $link[] = sprintf('xs=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                                                    $host->value,
-                                                                                    $port->value,
-                                                                                    $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                                        $host->value,
-                                                                                                                        $uri->value)));
-      }
-
-      // Return download link
-      header(
-        sprintf('Location: %s', implode('&', $link))
-      );
-    }
-
-  break;
-
-  case 'new':
-
-    // Yggdrasil connections only
-    if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
-    {
-      $response->success = false;
-      $response->message = _('Yggdrasil connection required for this action');
-    }
-
-    // Init session
-    else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
-    {
-      $response->success = false;
-      $response->message = _('Could not init user session');
-    }
-
-    // Get user
-    else if (!$user = $db->getUser($userId))
-    {
-      $response->success = false;
-      $response->message = _('Could not init user info');
-    }
-
-    // Validate link
-    if (empty($_GET['magnet']))
-    {
-      $response->success = false;
-      $response->message = _('Link required');
-    }
-
-    // Validate base64
-    else if (!$link = (string) @base64_decode($_GET['magnet']))
-    {
-      $response->success = false;
-      $response->message = _('Invalid link encoding');
-    }
-
-    // Validate magnet
-    else if (!$magnet = Yggverse\Parser\Magnet::parse($link))
-    {
-      $response->success = false;
-      $response->message = _('Invalid magnet link');
-    }
-
-    // Request valid
-    else
-    {
-      // Begin magnet registration
-      try
-      {
-        $db->beginTransaction();
-
-        // Init magnet
-        if (Yggverse\Parser\Urn::parse($magnet->xt))
+        // Yggdrasil connections only
+        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
         {
-          if ($magnetId = $db->initMagnetId($user->userId,
-                                            strip_tags($magnet->xt),
-                                            strip_tags($magnet->xl),
-                                            strip_tags($magnet->dn),
-                                            $link,
-                                            MAGNET_DEFAULT_PUBLIC,
-                                            MAGNET_DEFAULT_COMMENTS,
-                                            MAGNET_DEFAULT_SENSITIVE,
-                                            $user->approved ? true : MAGNET_DEFAULT_APPROVED,
-                                            time()))
+          $response->success = false;
+          $response->message = _('Yggdrasil connection required for this action');
+        }
+
+        // Init session
+        else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user session');
+        }
+
+        // Magnet exists
+        else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
+        {
+          $response->success = false;
+          $response->message = _('Requested magnet not found');
+        }
+
+        // Access allowed
+        else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved))) {
+
+          $response->success = false;
+          $response->message = _('Magnet not available for this action');
+        }
+
+        // Validate callback
+        else if (empty($_GET['callback']))
+        {
+          $response->success = false;
+          $response->message = _('Callback required');
+        }
+
+        // Validate base64
+        else if (!$callback = (string) @base64_decode($_GET['callback']))
+        {
+          $response->success = false;
+          $response->message = _('Invalid callback encoding');
+        }
+
+        // Request valid
+        else
+        {
+          // Star exists, trigger delete
+          if ($db->findMagnetStarsTotalByUserId($magnet->magnetId, $userId))
           {
-            foreach ($magnet as $key => $value)
+            $db->deleteMagnetStarByUserId($magnet->magnetId, $userId);
+          }
+          else
+          {
+            // Star not exists, trigger add
+            $db->addMagnetStar($magnet->magnetId, $userId, time());
+          }
+
+          // Redirect to edit page
+          header(
+            sprintf('Location: %s', $callback)
+          );
+        }
+
+      break;
+
+      case 'download':
+
+        // Yggdrasil connections only
+        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        {
+          $response->success = false;
+          $response->message = _('Yggdrasil connection required for this action');
+        }
+
+        // Init session
+        else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user session');
+        }
+
+        // Magnet exists
+        else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
+        {
+          $response->success = false;
+          $response->message = _('Requested magnet not found');
+        }
+
+        // Access allowed
+        else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved))) {
+
+          $response->success = false;
+          $response->message = _('Magnet not available for this action');
+        }
+
+        // Request valid
+        else
+        {
+          // Update download stats
+          $db->addMagnetDownload($magnet->magnetId, $userId, time());
+
+          // Build magnet link
+          $link = [];
+
+          /// Exact Topic
+          $link[] = sprintf('magnet:?xt=%s', $magnet->xt);
+
+          /// Display Name
+          $link[] = sprintf('dn=%s', urlencode($magnet->dn));
+
+          // Keyword Topic
+          $kt = [];
+
+          foreach ($db->findKeywordTopicByMagnetId($magnet->magnetId) as $result)
+          {
+            $kt[] = urlencode($db->getKeywordTopic($result->keywordTopicId)->value);
+          }
+
+          $link[] = sprintf('kt=%s', implode('+', $kt));
+
+          /// Address Tracker
+          foreach ($db->findAddressTrackerByMagnetId($magnet->magnetId) as $result)
+          {
+            $addressTracker = $db->getAddressTracker($result->addressTrackerId);
+
+            $scheme = $db->getScheme($addressTracker->schemeId);
+            $host   = $db->getHost($addressTracker->hostId);
+            $port   = $db->getPort($addressTracker->portId);
+            $uri    = $db->getUri($addressTracker->uriId);
+
+            $link[] = sprintf('tr=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                                                        $host->value,
+                                                                                        $port->value,
+                                                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                                            $host->value,
+                                                                                                                            $uri->value)));
+          }
+
+          /// Acceptable Source
+          foreach ($db->findAcceptableSourceByMagnetId($magnet->magnetId) as $result)
+          {
+            $acceptableSource = $db->getAcceptableSource($result->acceptableSourceId);
+
+            $scheme = $db->getScheme($acceptableSource->schemeId);
+            $host   = $db->getHost($acceptableSource->hostId);
+            $port   = $db->getPort($acceptableSource->portId);
+            $uri    = $db->getUri($acceptableSource->uriId);
+
+            $link[] = sprintf('as=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                                                        $host->value,
+                                                                                        $port->value,
+                                                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                                            $host->value,
+                                                                                                                            $uri->value)));
+          }
+
+          /// Exact Source
+          foreach ($db->findExactSourceByMagnetId($magnet->magnetId) as $result)
+          {
+            $eXactSource = $db->getExactSource($result->eXactSourceId);
+
+            $scheme = $db->getScheme($eXactSource->schemeId);
+            $host   = $db->getHost($eXactSource->hostId);
+            $port   = $db->getPort($eXactSource->portId);
+            $uri    = $db->getUri($eXactSource->uriId);
+
+            $link[] = sprintf('xs=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                                                        $host->value,
+                                                                                        $port->value,
+                                                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                                            $host->value,
+                                                                                                                            $uri->value)));
+          }
+
+          // Return download link
+          header(
+            sprintf('Location: %s', implode('&', $link))
+          );
+        }
+
+      break;
+
+      case 'new':
+
+        // Yggdrasil connections only
+        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        {
+          $response->success = false;
+          $response->message = _('Yggdrasil connection required for this action');
+        }
+
+        // Init session
+        else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user session');
+        }
+
+        // Get user
+        else if (!$user = $db->getUser($userId))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user info');
+        }
+
+        // Validate link
+        if (empty($_GET['magnet']))
+        {
+          $response->success = false;
+          $response->message = _('Link required');
+        }
+
+        // Validate base64
+        else if (!$link = (string) @base64_decode($_GET['magnet']))
+        {
+          $response->success = false;
+          $response->message = _('Invalid link encoding');
+        }
+
+        // Validate magnet
+        else if (!$magnet = Yggverse\Parser\Magnet::parse($link))
+        {
+          $response->success = false;
+          $response->message = _('Invalid magnet link');
+        }
+
+        // Request valid
+        else
+        {
+          // Begin magnet registration
+          try
+          {
+            $db->beginTransaction();
+
+            // Init magnet
+            if (Yggverse\Parser\Urn::parse($magnet->xt))
             {
-              switch ($key)
+              if ($magnetId = $db->initMagnetId($user->userId,
+                                                strip_tags($magnet->xt),
+                                                strip_tags($magnet->xl),
+                                                strip_tags($magnet->dn),
+                                                $link,
+                                                MAGNET_DEFAULT_PUBLIC,
+                                                MAGNET_DEFAULT_COMMENTS,
+                                                MAGNET_DEFAULT_SENSITIVE,
+                                                $user->approved ? true : MAGNET_DEFAULT_APPROVED,
+                                                time()))
               {
-                case 'tr':
-                  foreach ($value as $tr)
+                foreach ($magnet as $key => $value)
+                {
+                  switch ($key)
                   {
-                    if ($url = Yggverse\Parser\Url::parse($tr))
-                    {
-                      $db->initMagnetToAddressTrackerId(
-                        $magnetId,
-                        $db->initAddressTrackerId(
-                          $db->initSchemeId($url->host->scheme),
-                          $db->initHostId($url->host->name),
-                          $db->initPortId($url->host->port),
-                          $db->initUriId($url->page->uri)
-                        )
-                      );
-                    }
+                    case 'tr':
+                      foreach ($value as $tr)
+                      {
+                        if ($url = Yggverse\Parser\Url::parse($tr))
+                        {
+                          $db->initMagnetToAddressTrackerId(
+                            $magnetId,
+                            $db->initAddressTrackerId(
+                              $db->initSchemeId($url->host->scheme),
+                              $db->initHostId($url->host->name),
+                              $db->initPortId($url->host->port),
+                              $db->initUriId($url->page->uri)
+                            )
+                          );
+                        }
+                      }
+                    break;
+                    case 'ws':
+                      foreach ($value as $ws)
+                      {
+                        // @TODO
+                      }
+                    break;
+                    case 'as':
+                      foreach ($value as $as)
+                      {
+                        if ($url = Yggverse\Parser\Url::parse($as))
+                        {
+                          $db->initMagnetToAcceptableSourceId(
+                            $magnetId,
+                            $db->initAcceptableSourceId(
+                              $db->initSchemeId($url->host->scheme),
+                              $db->initHostId($url->host->name),
+                              $db->initPortId($url->host->port),
+                              $db->initUriId($url->page->uri)
+                            )
+                          );
+                        }
+                      }
+                    break;
+                    case 'xs':
+                      foreach ($value as $xs)
+                      {
+                        if ($url = Yggverse\Parser\Url::parse($xs))
+                        {
+                          $db->initMagnetToExactSourceId(
+                            $magnetId,
+                            $db->initExactSourceId(
+                              $db->initSchemeId($url->host->scheme),
+                              $db->initHostId($url->host->name),
+                              $db->initPortId($url->host->port),
+                              $db->initUriId($url->page->uri)
+                            )
+                          );
+                        }
+                      }
+                    break;
+                    case 'mt':
+                      foreach ($value as $mt)
+                      {
+                        // @TODO
+                      }
+                    break;
+                    case 'x.pe':
+                      foreach ($value as $xPe)
+                      {
+                        // @TODO
+                      }
+                    break;
+                    case 'kt':
+                      foreach ($value as $kt)
+                      {
+                        $db->initMagnetToKeywordTopicId(
+                          $magnetId,
+                          $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
+                        );
+                      }
+                    break;
                   }
-                break;
-                case 'ws':
-                  foreach ($value as $ws)
-                  {
-                    // @TODO
-                  }
-                break;
-                case 'as':
-                  foreach ($value as $as)
-                  {
-                    if ($url = Yggverse\Parser\Url::parse($as))
-                    {
-                      $db->initMagnetToAcceptableSourceId(
-                        $magnetId,
-                        $db->initAcceptableSourceId(
-                          $db->initSchemeId($url->host->scheme),
-                          $db->initHostId($url->host->name),
-                          $db->initPortId($url->host->port),
-                          $db->initUriId($url->page->uri)
-                        )
-                      );
-                    }
-                  }
-                break;
-                case 'xs':
-                  foreach ($value as $xs)
-                  {
-                    if ($url = Yggverse\Parser\Url::parse($xs))
-                    {
-                      $db->initMagnetToExactSourceId(
-                        $magnetId,
-                        $db->initExactSourceId(
-                          $db->initSchemeId($url->host->scheme),
-                          $db->initHostId($url->host->name),
-                          $db->initPortId($url->host->port),
-                          $db->initUriId($url->page->uri)
-                        )
-                      );
-                    }
-                  }
-                break;
-                case 'mt':
-                  foreach ($value as $mt)
-                  {
-                    // @TODO
-                  }
-                break;
-                case 'x.pe':
-                  foreach ($value as $xPe)
-                  {
-                    // @TODO
-                  }
-                break;
-                case 'kt':
-                  foreach ($value as $kt)
-                  {
-                    $db->initMagnetToKeywordTopicId(
-                      $magnetId,
-                      $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
-                    );
-                  }
-                break;
+                }
+
+                $db->commit();
+
+                // Redirect to edit page
+                header(sprintf('Location: %s/edit.php?magnetId=%s', trim(WEBSITE_URL, '/'), $magnetId));
               }
             }
 
-            $db->commit();
+          } catch (Exception $e) {
 
-            // Redirect to edit page
-            header(sprintf('Location: %s/edit.php?magnetId=%s', trim(WEBSITE_URL, '/'), $magnetId));
+            var_dump($e);
+
+            $db->rollBack();
           }
         }
 
-      } catch (Exception $e) {
-
-        var_dump($e);
-
-        $db->rollBack();
-      }
+      break;
     }
 
   break;
-  default:
-    header(
-      sprintf('Location: %s', WEBSITE_URL)
-    );
 }
 
 ?>
