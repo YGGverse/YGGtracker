@@ -72,6 +72,12 @@ define('MODERATOR_IP_LIST', (array)
 // User
 define('USER_DEFAULT_APPROVED', false);
 
+define('USER_AUTO_APPROVE_ON_MAGNET_APPROVE', false);
+define('USER_AUTO_APPROVE_ON_COMMENT_APPROVE', false);
+
+define('USER_DEFAULT_IDENTICON', 'jidenticon'); // jidenticon|false
+define('USER_IDENTICON_FIELD', 'address'); // address|userId|...
+
 // Magnet
 define('MAGNET_DEFAULT_APPROVED', USER_DEFAULT_APPROVED);
 define('MAGNET_DEFAULT_PUBLIC', false);

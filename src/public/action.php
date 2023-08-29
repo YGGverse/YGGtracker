@@ -31,7 +31,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
     switch (isset($_GET['toggle']) ? $_GET['toggle'] : false)
     {
-      case 'identicon':
+      case 'jidenticon':
 
         // Yggdrasil connections only
         if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
@@ -62,7 +62,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
           $icon = new Jdenticon\Identicon();
 
-          $icon->setValue($user->address);
+          $icon->setValue($user->{USER_IDENTICON_FIELD});
           $icon->setSize(empty($_GET['size']) ? 100 : (int) $_GET['size']);
           $icon->setStyle(
             [
