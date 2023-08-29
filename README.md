@@ -75,14 +75,23 @@ git checkout -b my-pr-branch-name
     + [ ] Views
     + [ ] Info page
 
-* [ ] User
-  + [ ] Profile
-  + [ ] Magnets
-  + [ ] Downloads
-  + [ ] Stars
-  + [ ] Following
-  + [ ] Followers
-  + [ ] Comments
++ [ ] Profile
+  + [ ] Listing
+    + [ ] Uploads
+    + [ ] Downloads
+    + [ ] Stars
+    + [ ] Following
+    + [ ] Followers
+    + [ ] Comments
+  + [ ] Settings
+    + [ ] Public name
+    + [ ] Avatar
+    + [ ] Downloads customization
+      + [ ] Address Tracker
+      + [ ] Web Seed
+      + [ ] Acceptable Source
+      + [ ] eXact Source
+    + [ ] Content filters
 
 * [x] Other
   + [x] RSS
