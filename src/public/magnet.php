@@ -418,7 +418,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                           <div class="margin-b-16">
                             <?php echo nl2br(htmlentities($magnetComment->value)) ?>
                           </div>
-                          <img class="float-left margin-r-8"
+                          <img class="float-left margin-r-4"
                                alt=""
                                src="<?php echo sprintf('%s/action.php?target=profile&toggle=identicon&userId=%s&size=16',
                                                        WEBSITE_URL,
