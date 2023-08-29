@@ -371,7 +371,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     </span>
                   </div>
                 </div>
-                <?php if ($similarMagnetsTotal = $sphinx->searchMagnetsTotal($magnet->metaTitle ? $magnet->metaTitle : $magnet->dn, 'similar')) { ?>
+                <?php if ($similarMagnetsTotal = $sphinx->searchMagnetsTotal($magnet->metaTitle ? $magnet->metaTitle : $magnet->dn, 'similar', MAGNET_STOP_WORDS_SIMILAR)) { ?>
                   <?php if ($similarMagnetsTotal > 1) { // skip current magnet ?>
                     <div class="padding-y-8 padding-x-16">
                       <a name="similar"></a>
@@ -384,7 +384,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                                         0,
                                         10,
                                         $similarMagnetsTotal,
-                                        'similar'
+                                        'similar',
+                                        MAGNET_STOP_WORDS_SIMILAR
                                       ) as $result) { ?>
                           <?php if ($magnet = $db->getMagnet($result->magnetid)) { ?>
                             <?php if ($result->magnetid != $response->magnet->magnetId && // skip current magnet

@@ -11,20 +11,20 @@ class Sphinx {
     $this->_sphinx->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
   }
 
-  public function searchMagnetsTotal(string $keyword, string $mode = 'default') : int
+  public function searchMagnetsTotal(string $keyword, string $mode = 'default', array $stopWords = []) : int
   {
     $query = $this->_sphinx->prepare('SELECT COUNT(*) AS `total` FROM `magnet` WHERE MATCH(?)');
 
     $query->execute(
       [
-        self::_match($keyword, $mode)
+        self::_match($keyword, $mode, $stopWords)
       ]
     );
 
     return $query->fetch()->total;
   }
 
-  public function searchMagnets(string $keyword, int $start, int $limit, int $maxMatches, string $mode = 'default')
+  public function searchMagnets(string $keyword, int $start, int $limit, int $maxMatches, string $mode = 'default', array $stopWords = [])
   {
     $query = $this->_sphinx->prepare("SELECT *
 
@@ -40,14 +40,14 @@ class Sphinx {
 
     $query->execute(
       [
-        self::_match($keyword, $mode)
+        self::_match($keyword, $mode, $stopWords)
       ]
     );
 
     return $query->fetchAll();
   }
 
-  private static function _match(string $keyword, string $mode = 'default') : string
+  private static function _match(string $keyword, string $mode = 'default', array $stopWords = []) : string
   {
     $keyword = trim($keyword);
 
@@ -67,15 +67,17 @@ class Sphinx {
 
         $result = [];
 
-        foreach ((array) explode(' ', $keyword) as $i => $value)
+        $keyword = preg_replace('/[\d]/ui', ' ', $keyword);
+        $keyword = preg_replace('/[\s]+/ui', ' ', $keyword);
+        $keyword = trim($keyword);
+
+        foreach ((array) explode(' ', $keyword) as $value)
         {
           if (mb_strlen($value) > 5)
           {
-            $result[] = sprintf('@metaTitle "%s" | @dn "%s"', $value, $value);
-
-            if ($i > 3)
+            if (!in_array(mb_strtolower($value), $stopWords))
             {
-              break;
+              $result[] = sprintf('@metaTitle "%s" | @dn "%s"', $value, $value);
             }
           }
         }
@@ -97,7 +99,10 @@ class Sphinx {
 
         foreach ((array) explode(' ', $keyword) as $value)
         {
-          $result[] = sprintf('@"*%s*"', $value);
+          if (!in_array(mb_strtolower($value), $stopWords))
+          {
+            $result[] = sprintf('@"*%s*"', $value);
+          }
         }
 
         return implode(' | ', $result);

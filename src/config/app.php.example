@@ -83,6 +83,15 @@ define('MAGNET_EDITOR_LOCK_TIMEOUT', 60*60);
 define('MAGNET_META_TITLE_MIN_LENGTH', 10);
 define('MAGNET_META_DESCRIPTION_MIN_LENGTH', 0);
 
+define('MAGNET_STOP_WORDS_SIMILAR',
+  [
+    'series',
+    'season',
+    'discography',
+    // ...
+  ]
+);
+
 // Comment
 define('COMMENT_DEFAULT_APPROVED', false);
 define('COMMENT_DEFAULT_PUBLIC', false);
