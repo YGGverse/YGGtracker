@@ -142,9 +142,17 @@
   padding: 8px;
 }
 
+.padding-b-8 {
+  padding-bottom: 8px;
+}
+
 .padding-y-8 {
   padding-top: 8px;
   padding-bottom: 8px;
+}
+
+.padding-t-16 {
+  padding-top: 16px;
 }
 
 .padding-x-16 {
