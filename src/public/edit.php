@@ -360,8 +360,27 @@ else {
       }
     }
 
-    // Refresh magnet data
-    $magnet = $db->getMagnet($magnet->magnetId);
+    // Is valid
+    if ($response->success &&
+        $response->form->metaTitle->valid->success &&
+        $response->form->metaDescription->valid->success &&
+        $response->form->tr->valid->success &&
+        $response->form->as->valid->success &&
+        $response->form->xs->valid->success)
+    {
+      // Unlock form
+      $db->flushMagnetLock($magnet->magnetId);
+
+      // Return redirect to the magnet page
+      header(
+        sprintf('Location: %s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId)
+      );
+    }
+    else
+    {
+      // Refresh magnet data
+      $magnet = $db->getMagnet($magnet->magnetId);
+    }
   }
 
   // Meta Title, auto-replace with Display Name on empty value

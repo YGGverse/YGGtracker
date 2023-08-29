@@ -960,6 +960,17 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
+  public function flushMagnetLock(int $magnetId) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('DELETE FROM `magnetLock` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return $query->rowCount();
+  }
+
   public function findLastMagnetLock(int $magnetId) {
 
     $this->_debug->query->select->total++;
