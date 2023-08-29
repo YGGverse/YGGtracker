@@ -2,9 +2,22 @@
 
 // Load dependencies
 require_once (__DIR__ . '/../config/app.php');
+require_once (__DIR__ . '/../library/sphinx.php');
 require_once (__DIR__ . '/../library/database.php');
 require_once (__DIR__ . '/../library/time.php');
 require_once (__DIR__ . '/../../vendor/autoload.php');
+
+// Connect Sphinx
+try {
+
+  $sphinx = new Sphinx(SPHINX_HOST, SPHINX_PORT);
+
+} catch(Exception $e) {
+
+  var_dump($e);
+
+  exit;
+}
 
 // Connect database
 try {
@@ -358,6 +371,37 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     </span>
                   </div>
                 </div>
+                <?php if ($similarMagnetsTotal = $sphinx->searchMagnetsTotal($magnet->metaTitle ? $magnet->metaTitle : $magnet->dn, 'similar')) { ?>
+                  <?php if ($similarMagnetsTotal > 1) { // skip current magnet ?>
+                    <div class="padding-y-8 padding-x-16">
+                      <a name="similar"></a>
+                      <h3><?php echo _('Similar') ?></h3>
+                    </div>
+                    <div class="padding-x-16 margin-b-8">
+                      <div class="padding-16 margin-t-8 border-radius-3 background-color-night">
+                        <?php foreach ( $sphinx->searchMagnets(
+                                        $magnet->metaTitle ? $magnet->metaTitle : $magnet->dn,
+                                        0,
+                                        10,
+                                        $similarMagnetsTotal,
+                                        'similar'
+                                      ) as $result) { ?>
+                          <?php if ($magnet = $db->getMagnet($result->magnetid)) { ?>
+                            <?php if ($result->magnetid != $response->magnet->magnetId && // skip current magnet
+                                      ($response->user->address == $db->getUser($magnet->userId)->address ||
+                                       in_array($response->user->address, MODERATOR_IP_LIST) || ($magnet->approved && $magnet->public))) { ?>
+                              <div class="margin-y-8">
+                                <a href="<?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?>" class="margin-b-16">
+                                  <?php echo nl2br(htmlentities($magnet->metaTitle ? $magnet->metaTitle : $magnet->dn)) ?>
+                                </a>
+                              </div>
+                            <?php } ?>
+                          <?php } ?>
+                        <?php } ?>
+                      </div>
+                    </div>
+                  <?php } ?>
+                <?php } ?>
                 <?php if ($response->magnet->comments) { ?>
                   <div class="padding-y-8 padding-x-16">
                     <a name="comment"></a>

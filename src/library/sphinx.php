@@ -11,20 +11,20 @@ class Sphinx {
     $this->_sphinx->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
   }
 
-  public function searchMagnetsTotal(string $keyword) : int
+  public function searchMagnetsTotal(string $keyword, string $mode = 'default') : int
   {
     $query = $this->_sphinx->prepare('SELECT COUNT(*) AS `total` FROM `magnet` WHERE MATCH(?)');
 
     $query->execute(
       [
-        self::_match($keyword)
+        self::_match($keyword, $mode)
       ]
     );
 
     return $query->fetch()->total;
   }
 
-  public function searchMagnets(string $keyword, int $start, int $limit, int $maxMatches)
+  public function searchMagnets(string $keyword, int $start, int $limit, int $maxMatches, string $mode = 'default')
   {
     $query = $this->_sphinx->prepare("SELECT *
 
@@ -40,14 +40,14 @@ class Sphinx {
 
     $query->execute(
       [
-        self::_match($keyword)
+        self::_match($keyword, $mode)
       ]
     );
 
     return $query->fetchAll();
   }
 
-  private static function _match(string $keyword) : string
+  private static function _match(string $keyword, string $mode = 'default') : string
   {
     $keyword = trim($keyword);
 
@@ -61,13 +61,46 @@ class Sphinx {
     $keyword = preg_replace('/[\s]+/ui', ' ', $keyword);
     $keyword = trim($keyword);
 
-    $result = [];
-
-    foreach ((array) explode(' ', $keyword) as $value)
+    switch ($mode)
     {
-      $result[] = sprintf('@"*%s*"', $value);
-    }
+      case 'similar':
 
-    return implode(' | ', $result);
+        $result = [];
+
+        foreach ((array) explode(' ', $keyword) as $i => $value)
+        {
+          if (mb_strlen($value) > 5)
+          {
+            $result[] = sprintf('@metaTitle "%s" | @dn "%s"', $value, $value);
+
+            if ($i > 3)
+            {
+              break;
+            }
+          }
+        }
+
+        if (empty($result))
+        {
+          return '*';
+        }
+        else
+        {
+          return implode(' | ', $result);
+        }
+
+      break;
+
+      default:
+
+        $result = [];
+
+        foreach ((array) explode(' ', $keyword) as $value)
+        {
+          $result[] = sprintf('@"*%s*"', $value);
+        }
+
+        return implode(' | ', $result);
+    }
   }
 }
