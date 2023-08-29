@@ -414,6 +414,11 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $uri->value)));
           }
 
+          foreach (TRACKER_LINKS as $tracker => $value)
+          {
+            $link[] = sprintf('tr=%s', urlencode($value->announce));
+          }
+
           /// Acceptable Source
           foreach ($db->findAcceptableSourceByMagnetId($magnet->magnetId) as $result)
           {
@@ -452,7 +457,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
           // Return download link
           header(
-            sprintf('Location: %s', implode('&', $link))
+            sprintf('Location: %s', implode('&', array_unique($link)))
           );
         }
 
