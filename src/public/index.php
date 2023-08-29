@@ -307,7 +307,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                           <?php } ?>
                         </div>
                         <?php if ($magnet->metaDescription) { ?>
-                          <div class="margin-y-8"><?php echo $magnet->metaDescription ?></div>
+                          <div class="margin-y-8 max-height-220 max-height-parent-hover-640"><?php echo $magnet->metaDescription ?></div>
                         <?php } ?>
                         <?php if ($magnet->keywords) { ?>
                           <div class="margin-y-8">

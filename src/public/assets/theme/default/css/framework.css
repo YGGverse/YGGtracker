@@ -203,12 +203,23 @@
 
 .opacity-hover-1:hover {
   opacity: 1;
-  transition: opacity .2s ease-in-out;
+  transition: opacity .2s;
 }
 
 *:hover > .parent-hover-opacity-09 {
   opacity: .9;
-  transition: opacity .2s ease-in-out;
+  transition: opacity .2s;
+}
+
+.max-height-220 {
+  max-height: 220px;
+  overflow: hidden;
+  transition: max-height .2s;
+}
+
+*:hover > .max-height-parent-hover-640 {
+  max-height: 640px;
+  transition: max-height .2s;
 }
 
 .blur-2 {
