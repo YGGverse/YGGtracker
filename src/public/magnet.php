@@ -227,12 +227,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
           <div class="column width-100">
             <?php if ($response->success) { ?>
               <?php if ($response->magnet->access->read) { ?>
-                <div class="padding-16
-                            margin-y-8
+                <div class="margin-y-8
                             border-radius-3
                             background-color-night
                             <?php echo !$response->magnet->public || !$response->magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
-                  <div class="<?php echo $response->magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
+                  <div class="padding-16 <?php echo $response->magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
                     <a name="magnet-<?php echo $response->magnet->magnetId ?>"></a>
                     <h2 class="margin-b-8"><?php echo $response->magnet->metaTitle ?></h2>
                     <div class="float-right opacity-0 parent-hover-opacity-09">

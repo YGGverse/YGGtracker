@@ -266,12 +266,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                 <?php foreach ($response->magnets as $magnet) { ?>
                   <?php if ($magnet->access->read) { ?>
                     <a name="magnet-<?php echo $magnet->magnetId ?>"></a>
-                    <div class="padding-16
-                                margin-y-8
+                    <div class="margin-y-8
                                 border-radius-3
                                 background-color-night
                                 <?php echo !$magnet->public || !$magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
-                      <div class="<?php echo $magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
+                      <div class="padding-16 <?php echo $magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
                         <h2 class="margin-b-8"><?php echo $magnet->metaTitle ?></h2>
                         <div class="float-right opacity-0 parent-hover-opacity-09">
                         <?php if (!$magnet->public) { ?>
