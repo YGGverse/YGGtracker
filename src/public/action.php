@@ -27,6 +27,56 @@ $response = (object)
 // Begin action request
 switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 {
+  case 'profile':
+
+    switch (isset($_GET['toggle']) ? $_GET['toggle'] : false)
+    {
+      case 'identicon':
+
+        // Yggdrasil connections only
+        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        {
+          $response->success = false;
+          $response->message = _('Yggdrasil connection required for this action');
+        }
+
+        // Init session
+        else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user session');
+        }
+
+        // Get user
+        else if (!$user = $db->getUser($userId))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user info');
+        }
+
+        // Render icon
+        else
+        {
+          header('Cache-Control: max-age=604800');
+
+
+          $icon = new Jdenticon\Identicon();
+
+          $icon->setValue($user->address);
+          $icon->setSize(empty($_GET['size']) ? 100 : (int) $_GET['size']);
+          $icon->setStyle(
+            [
+              'backgroundColor' => 'rgba(255, 255, 255, 0)',
+            ]
+          );
+          $icon->displayImage('webp');
+        }
+
+      break;
+    }
+
+  break;
+
   case 'comment':
 
     switch (isset($_GET['toggle']) ? $_GET['toggle'] : false)

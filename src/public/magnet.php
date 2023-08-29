@@ -413,10 +413,16 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
                       <div class="padding-x-16 padding-t-16 padding-b-8 margin-t-8 border-radius-3 background-color-night <?php echo !$magnetComment->approved || !$magnetComment->public ? 'opacity-06 opacity-hover-1' : false ?>">
                         <a name="comment-<?php echo $magnetComment->magnetCommentId ?>"></a>
-                        <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address || in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
+                        <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address ||
+                                  in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
                           <div class="margin-b-16">
                             <?php echo nl2br(htmlentities($magnetComment->value)) ?>
                           </div>
+                          <img class="float-left margin-r-8"
+                               alt=""
+                               src="<?php echo sprintf('%s/action.php?target=profile&toggle=identicon&userId=%s&size=16',
+                                                       WEBSITE_URL,
+                                                       $magnetComment->userId) ?>" />
                           <sup>
                             <?php echo Time::ago((int) $magnetComment->timeAdded) ?>
                           </sup>

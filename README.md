@@ -85,7 +85,6 @@ git checkout -b my-pr-branch-name
     + [ ] Comments
   + [ ] Settings
     + [ ] Public name
-    + [ ] Avatar
     + [ ] Downloads customization
       + [ ] Address Tracker
       + [ ] Web Seed
@@ -108,8 +107,9 @@ git checkout -b my-pr-branch-name
 
 #### Components
 
-* [Icons](https://icons.getbootstrap.com)
+* [SVG icons](https://icons.getbootstrap.com)
 * [PHP Scrapper](https://github.com/medariox/scrapeer)
+* [Identicon](https://github.com/dmester/jdenticon-php)
 
 #### Feedback
 

@@ -4,7 +4,8 @@
     "type": "library",
     "require": {
         "php": "^8.1",
-        "yggverse/parser": ">=0.2.0"
+        "yggverse/parser": ">=0.2.0",
+        "jdenticon/jdenticon": "^1.0"
     },
     "license": "MIT",
     "autoload": {
