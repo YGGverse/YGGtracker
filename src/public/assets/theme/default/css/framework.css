@@ -248,8 +248,8 @@
   transition: max-height .2s;
 }
 
-*:hover > .max-height-parent-hover-640 {
-  max-height: 640px;
+*:hover > .max-height-parent-hover-840 {
+  max-height: 840px;
   transition: max-height .2s;
 }
 
