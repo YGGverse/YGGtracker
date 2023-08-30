@@ -400,6 +400,12 @@ else {
     {
       // Refresh magnet data
       $magnet = $db->getMagnet($magnet->magnetId);
+
+      // Replace fields by last POST data
+      foreach ($_POST as $key => $value)
+      {
+        $magnet->{$key} = $value;
+      }
     }
   }
 
