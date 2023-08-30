@@ -71,8 +71,9 @@ git checkout -b my-pr-branch-name
     + [x] Stars
     + [x] Downloads
     + [x] Threading comments
+    + [x] Info page
     + [ ] Views
-    + [ ] Info page
+    + [ ] Forks
 
 + [ ] Profile
   + [ ] Listing
