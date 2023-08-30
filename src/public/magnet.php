@@ -251,7 +251,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                             <?php echo !$response->magnet->public || !$response->magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
                   <div class="padding-16 <?php echo $response->magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
                     <a name="magnet-<?php echo $response->magnet->magnetId ?>"></a>
-                    <h2 class="margin-b-8"><?php echo $response->magnet->metaTitle ?></h2>
+                    <h1 class="margin-b-8"><?php echo $response->magnet->metaTitle ?></h1>
                     <div class="float-right opacity-0 parent-hover-opacity-09">
                     <?php if (!$response->magnet->public) { ?>
                       <span class="margin-l-8" title="<?php echo _('Private') ?>">
@@ -289,7 +289,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                       <div class="margin-y-8"><?php echo $response->magnet->metaDescription ?></div>
                     <?php } ?>
                     <?php if ($response->magnet->description) { ?>
-                      <div class="margin-y-8"><?php echo $response->magnet->description ?></div>
+                      <div class="margin-t-16 margin-b-8 padding-t-16  border-top-default"><?php echo $response->magnet->description ?></div>
                     <?php } ?>
                     <?php if ($response->magnet->keywords) { ?>
                       <div class="margin-y-8">

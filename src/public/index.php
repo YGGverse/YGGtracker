@@ -271,7 +271,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                                 background-color-night
                                 <?php echo !$magnet->public || !$magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
                       <div class="padding-16 <?php echo $magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
-                        <h2 class="margin-b-8"><?php echo $magnet->metaTitle ?></h2>
+                        <a href="<?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?>">
+                          <h2 class="margin-b-8"><?php echo $magnet->metaTitle ?></h2>
+                        </a>
                         <div class="float-right opacity-0 parent-hover-opacity-09">
                         <?php if (!$magnet->public) { ?>
                           <span class="margin-l-8" title="<?php echo _('Private') ?>">

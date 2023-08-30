@@ -12,19 +12,6 @@ body {
   font-size: 13px;
 }
 
-h1, h2, h3, h4, h5 {
-  display: inline-block;
-  font-weight: normal;
-}
-
-h1 {
-  font-size: 18px;
-}
-
-h2 {
-  font-size: 16px;
-}
-
 a,
 a:visited,
 a:active {
@@ -37,6 +24,28 @@ a:hover {
   opacity: 1;
   transition: opacity .5s ease-in-out;
 }
+
+h1, h2, h3, h4, h5 {
+  display: inline-block;
+  font-weight: normal;
+}
+
+h1 {
+  font-size: 18px;
+}
+
+h2 {
+  color: #ccc;
+  font-size: 16px;
+}
+
+/* @TODO doubts
+a h2,
+a:visited h2,
+a:active h2 {
+  color: #a4d4ff;
+}
+*/
 
 input,
 textarea {

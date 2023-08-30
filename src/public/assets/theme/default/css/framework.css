@@ -82,6 +82,10 @@
   border-bottom: 1px #5d627d solid;
 }
 
+.border-top-default {
+  border-top: 1px #5d627d solid;
+}
+
 .background-color-night {
   background-color: #34384f;
 }
@@ -214,6 +218,10 @@
 
 .margin-b-8 {
   margin-bottom: 8px;
+}
+
+.margin-t-16 {
+  margin-top: 16px;
 }
 
 .margin-b-16 {
