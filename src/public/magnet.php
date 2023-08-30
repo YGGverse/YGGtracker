@@ -517,7 +517,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
               <a href="<?php echo $value->stats ?>"><?php echo _('Stats') ?></a>
               |
             <?php } ?>
-            <a href="<?php echo WEBSITE_URL ?>/info.php"><?php echo _('Info') ?></a>
+            <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
             <a href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
             |
