@@ -126,19 +126,19 @@ else
       <div class="container">
         <div class="row">
           <div class="column width-100">
-            <div class="padding-y-16 padding-x-8 margin-y-8 border-radius-3 background-color-night">
+            <div class="padding-16 margin-y-8 border-radius-3 background-color-night">
               <?php if ($response->success) { ?>
-                <h1 class="padding-x-8 margin-b-16"><?php echo _('Node info') ?></h1>
-                <table>
+                <h1 class="margin-b-16"><?php echo _('Node info') ?></h1>
+                <table class="width-100">
                   <tbody>
                     <tr>
-                      <td class="padding-b-8" colspan="2">
-                        <h3><?php echo _('Rules') ?></h3>
+                      <td class="padding-b-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Rules') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Subject') ?></td>
-                      <td><?php echo _(RULE_SUBJECT) ?></td>
+                      <td class="padding-t-16"><?php echo _('Subject') ?></td>
+                      <td class="padding-t-16"><?php echo _(RULE_SUBJECT) ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Languages') ?></td>
@@ -149,13 +149,13 @@ else
                       <td><?php echo MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
-                      <td class="padding-t-16 colspan="2">
-                        <h3><?php echo _('Totals') ?></h3>
+                      <td class="padding-y-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Totals') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Users') ?></td>
-                      <td><?php echo $db->getUsersTotal() ?></td>
+                      <td class="padding-t-16"><?php echo _('Users') ?></td>
+                      <td class="padding-t-16"><?php echo $db->getUsersTotal() ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Magnets') ?></td>
@@ -182,13 +182,13 @@ else
                       <td><?php echo sprintf('%s / %s', $localScrape->leechers, $totalScrape->leechers) ?></td>
                     </tr>
                     <tr>
-                      <td class="padding-t-16 padding-b-8" colspan="2">
-                        <h3><?php echo _('Users') ?></h3>
+                      <td class="padding-y-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Users') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Identicon') ?></td>
-                      <td><?php echo USER_DEFAULT_IDENTICON ? USER_DEFAULT_IDENTICON : _('no') ?></td>
+                      <td class="padding-t-16"><?php echo _('Identicon') ?></td>
+                      <td class="padding-t-16"><?php echo USER_DEFAULT_IDENTICON ? USER_DEFAULT_IDENTICON : _('no') ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Identicon key') ?></td>
@@ -207,13 +207,13 @@ else
                       <td><?php echo USER_AUTO_APPROVE_ON_COMMENT_APPROVE ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
-                      <td class="padding-t-16 padding-b-8" colspan="2">
-                        <h3><?php echo _('Magnets') ?></h3>
+                      <td class="padding-y-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Magnets') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Approved by default') ?></td>
-                      <td><?php echo MAGNET_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
+                      <td class="padding-t-16"><?php echo _('Approved by default') ?></td>
+                      <td class="padding-t-16"><?php echo MAGNET_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Title length') ?></td>
@@ -224,25 +224,25 @@ else
                       <td><?php echo MAGNET_META_DESCRIPTION_MIN_LENGTH ?>-<?php echo MAGNET_META_DESCRIPTION_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
-                      <td class="padding-t-16 padding-b-8" colspan="2">
-                        <h3><?php echo _('Comments') ?></h3>
+                      <td class="padding-y-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Comments') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Approved by default') ?></td>
-                      <td><?php echo COMMENT_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
+                      <td class="padding-t-16"><?php echo _('Approved by default') ?></td>
+                      <td class="padding-t-16"><?php echo COMMENT_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Length') ?></td>
                       <td><?php echo COMMENT_MIN_LENGTH ?>-<?php echo COMMENT_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
-                      <td class="padding-t-16 padding-b-8" colspan="2">
-                        <h3><?php echo _('Trackers') ?></h3>
+                      <td class="padding-y-8 padding-b-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Trackers') ?>
                       </td>
                       <?php foreach (TRACKER_LINKS as $name => $settings) { ?>
                         <tr>
-                          <td><?php echo $name ?></td>
+                          <td class="padding-t-16"><?php echo $name ?></td>
                         </tr>
                         <?php foreach ($settings as $key => $value) { ?>
                           <tr>
