@@ -1,0 +1,6 @@
+server {
+  listen [::]:80 ipv6only=on default_server;
+
+  allow 0200::/7;
+  deny  all;
+}
