@@ -93,6 +93,7 @@ git checkout -b my-pr-branch-name
     + [ ] Content filters
 
 * [x] Other
+  + [x] Sitemap
   + [x] RSS
   + [x] Moderation
   + [ ] Federative API
