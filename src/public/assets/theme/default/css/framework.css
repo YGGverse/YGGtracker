@@ -133,9 +133,15 @@
   padding-top: 4px;
   padding-bottom: 4px;
 }
+
 .padding-x-4 {
   padding-left: 4px;
   padding-right: 4px;
+}
+
+.padding-x-8 {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .padding-8 {
@@ -155,6 +161,11 @@
   padding-top: 16px;
 }
 
+.padding-y-16 {
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
 .padding-x-16 {
   padding-left: 16px;
   padding-right: 16px;
@@ -170,6 +181,10 @@
 
 .margin-l-8 {
   margin-left: 8px;
+}
+
+.margin-l-16 {
+  margin-left: 16px;
 }
 
 .margin-r-4 {

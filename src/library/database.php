@@ -450,6 +450,17 @@ class Database {
     return $query->fetch();
   }
 
+  public function getUsersTotal() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `user`');
+
+    $query->execute();
+
+    return $query->fetch()->result;
+  }
+
   public function findUserByAddress(string $address) {
 
     $this->_debug->query->select->total++;
@@ -534,6 +545,28 @@ class Database {
     $query->execute([$magnetId]);
 
     return $query->fetch();
+  }
+
+  public function getMagnets() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnet`');
+
+    $query->execute();
+
+    return $query->fetchAll();
+  }
+
+  public function getMagnetsTotal() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnet`');
+
+    $query->execute();
+
+    return $query->fetch()->result;
   }
 
   public function findMagnet(int $userId, string $xt) {
@@ -782,6 +815,41 @@ class Database {
 
     return $this->addMagnetToAddressTracker($magnetId, $addressTrackerId);
   }
+
+  /*
+  public function getMagnetToAddressTrackerSeedersSum() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT SUM(`seeders`) AS `result` FROM `magnetToAddressTracker`');
+
+    $query->execute();
+
+    return $query->fetch()->result;
+  }
+
+  public function getMagnetToAddressTrackerCompletedSum() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT SUM(`completed`) AS `result` FROM `magnetToAddressTracker`');
+
+    $query->execute();
+
+    return $query->fetch()->result;
+  }
+
+  public function getMagnetToAddressTrackerLeechersSum() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT SUM(`leechers`) AS `result` FROM `magnetToAddressTracker`');
+
+    $query->execute();
+
+    return $query->fetch()->result;
+  }
+  */
 
   // Magnet to AcceptableSource
   public function addMagnetToAcceptableSource(int $magnetId, int $acceptableSourceId) : int {
@@ -1038,13 +1106,22 @@ class Database {
     return $query->rowCount();
   }
 
-  public function getMagnetCommentsTotal(int $magnetId) : int {
+  public function getMagnetCommentsTotal(mixed $magnetId = null) : int {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment` WHERE `magnetId` = ?');
+    if ($magnetId)
+    {
+      $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment` WHERE `magnetId` = ?');
 
-    $query->execute([$magnetId]);
+      $query->execute([$magnetId]);
+    }
+    else
+    {
+      $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment`');
+
+      $query->execute();
+    }
 
     return $query->fetch()->result;
   }

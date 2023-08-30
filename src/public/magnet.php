@@ -147,7 +147,7 @@ else
     'metaTitle'       => $magnet->metaTitle ? htmlentities($magnet->metaTitle) : ($magnet->dn ? htmlentities($magnet->dn): false),
     'metaDescription' => $magnet->metaDescription ? nl2br(
                                                       htmlentities(
-                                                        substr($magnet->metaDescription, 0, WEBSITE_MAGNET_SHORT_META_DESCRIPTION_LENGTH)
+                                                        substr($magnet->metaDescription, 0, MAGNET_META_DESCRIPTION_LENGTH_SHORT)
                                                       )
                                                     ) : false,
     'approved'        => (bool) $magnet->approved,
@@ -517,6 +517,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
               <a href="<?php echo $value->stats ?>"><?php echo _('Stats') ?></a>
               |
             <?php } ?>
+            <a href="<?php echo WEBSITE_URL ?>/info.php"><?php echo _('Info') ?></a>
+            |
             <a href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
             |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>

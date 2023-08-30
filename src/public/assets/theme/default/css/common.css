@@ -17,6 +17,10 @@ h1, h2, h3, h4, h5 {
   font-weight: normal;
 }
 
+h1 {
+  font-size: 18px;
+}
+
 h2 {
   font-size: 16px;
 }
@@ -71,6 +75,9 @@ input[type="submit"] {
   cursor: pointer;
 }
 
+td {
+  padding: 2px 6px;
+}
 
 header a.logo {
   color: #ccc;

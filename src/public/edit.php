@@ -201,7 +201,7 @@ else {
     }
 
     // Meta
-    if (MAGNET_META_TITLE_MIN_LENGTH <= mb_strlen($_POST['metaTitle']))
+    if (MAGNET_META_TITLE_MIN_LENGTH <= mb_strlen($_POST['metaTitle']) && MAGNET_META_TITLE_MAX_LENGTH >= mb_strlen($_POST['metaTitle']))
     {
       $db->updateMagnetMetaTitle($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['metaTitle']))), time());
 
@@ -211,17 +211,17 @@ else {
     else
     {
       $response->form->metaTitle->valid->success = false;
-      $response->form->metaTitle->valid->message = sprintf(_('* required, minimum %s chars'), MAGNET_META_TITLE_MIN_LENGTH);
+      $response->form->metaTitle->valid->message = sprintf(_('* required, minimum %s-%s chars'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH);
     }
 
-    if (MAGNET_META_DESCRIPTION_MIN_LENGTH <= mb_strlen($_POST['metaDescription']))
+    if (MAGNET_META_DESCRIPTION_MIN_LENGTH <= mb_strlen($_POST['metaDescription']) && MAGNET_META_DESCRIPTION_MAX_LENGTH >= mb_strlen($_POST['metaDescription']))
     {
       $db->updateMagnetMetaDescription($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['metaDescription']))), time());
     }
     else
     {
       $response->form->metaDescription->valid->success = false;
-      $response->form->metaDescription->valid->message = sprintf(_('* required, minimum %s chars'), MAGNET_META_DESCRIPTION_MIN_LENGTH);
+      $response->form->metaDescription->valid->message = sprintf(_('* required, minimum %s-%s chars'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH);
     }
 
     // Social
@@ -606,6 +606,8 @@ else {
               <a href="<?php echo $value->stats ?>"><?php echo _('Stats') ?></a>
               |
             <?php } ?>
+            <a href="<?php echo WEBSITE_URL ?>/info.php"><?php echo _('Info') ?></a>
+            |
             <a href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
             |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>
