@@ -7,7 +7,6 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 #### Online instances
 
   * [http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker](http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/)
-  * [http://94.140.114.241/yggtracker](http://94.140.114.241/yggtracker/)
 
 #### Trackers
 
