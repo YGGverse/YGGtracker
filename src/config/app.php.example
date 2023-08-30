@@ -98,6 +98,8 @@ define('MAGNET_STOP_WORDS_SIMILAR',
   ]
 );
 
+define('MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY', true);
+
 // Comment
 define('COMMENT_DEFAULT_APPROVED', false);
 define('COMMENT_DEFAULT_PUBLIC', false);

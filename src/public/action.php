@@ -456,12 +456,20 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $port   = $db->getPort($addressTracker->portId);
             $uri    = $db->getUri($addressTracker->uriId);
 
-            $link[] = sprintf('tr=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+            $url    = sprintf('tr=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
                                                                                         $host->value,
                                                                                         $port->value,
                                                                                         $uri->value) : sprintf('%s://%s%s', $scheme->value,
                                                                                                                             $host->value,
                                                                                                                             $uri->value)));
+
+            // Yggdrasil url only settings enabled
+            if (MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY && !preg_match(YGGDRASIL_URL_REGEX, $url))
+            {
+              continue;
+            }
+
+            $link[] = $url;
           }
 
           foreach (TRACKER_LINKS as $tracker => $value)
@@ -479,12 +487,20 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $port   = $db->getPort($acceptableSource->portId);
             $uri    = $db->getUri($acceptableSource->uriId);
 
-            $link[] = sprintf('as=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+            $url    = sprintf('as=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
                                                                                         $host->value,
                                                                                         $port->value,
                                                                                         $uri->value) : sprintf('%s://%s%s', $scheme->value,
                                                                                                                             $host->value,
                                                                                                                             $uri->value)));
+
+            // Yggdrasil url only settings enabled
+            if (MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY && !preg_match(YGGDRASIL_URL_REGEX, $url))
+            {
+              continue;
+            }
+
+            $link[] = $url;
           }
 
           /// Exact Source
@@ -497,12 +513,20 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $port   = $db->getPort($eXactSource->portId);
             $uri    = $db->getUri($eXactSource->uriId);
 
-            $link[] = sprintf('xs=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+            $url    = sprintf('xs=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
                                                                                         $host->value,
                                                                                         $port->value,
                                                                                         $uri->value) : sprintf('%s://%s%s', $scheme->value,
                                                                                                                             $host->value,
                                                                                                                             $uri->value)));
+
+            // Yggdrasil url only settings enabled
+            if (MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY && !preg_match(YGGDRASIL_URL_REGEX, $url))
+            {
+              continue;
+            }
+
+            $link[] = $url;
           }
 
           // Return download link
