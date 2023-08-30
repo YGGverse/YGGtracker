@@ -54,6 +54,10 @@ input:focus {
   color: #fff;
 }
 
+textarea {
+  min-height: 86px;
+}
+
 /* @TODO improve focus out
 textarea:focus {
   min-height: 120px;
