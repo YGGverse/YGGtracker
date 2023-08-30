@@ -216,12 +216,16 @@ else
                       <td class="padding-t-16"><?php echo MAGNET_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Title length') ?></td>
+                      <td><?php echo _('Title, chars') ?></td>
                       <td><?php echo MAGNET_META_TITLE_MIN_LENGTH ?>-<?php echo MAGNET_META_TITLE_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Description length') ?></td>
+                      <td><?php echo _('Description short, chars') ?></td>
                       <td><?php echo MAGNET_META_DESCRIPTION_MIN_LENGTH ?>-<?php echo MAGNET_META_DESCRIPTION_MAX_LENGTH ?></td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('Description long, chars') ?></td>
+                      <td><?php echo MAGNET_DESCRIPTION_MIN_LENGTH ?>-<?php echo MAGNET_DESCRIPTION_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
                       <td class="padding-y-8 border-bottom-default text-right" colspan="2">
@@ -233,7 +237,7 @@ else
                       <td class="padding-t-16"><?php echo COMMENT_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Length') ?></td>
+                      <td><?php echo _('Length, chars') ?></td>
                       <td><?php echo COMMENT_MIN_LENGTH ?>-<?php echo COMMENT_MAX_LENGTH ?></td>
                     </tr>
                     <tr>

@@ -170,7 +170,7 @@ else
         'metaTitle'       => $magnet->metaTitle ? htmlentities($magnet->metaTitle) : ($magnet->dn ? htmlentities($magnet->dn): false),
         'metaDescription' => $magnet->metaDescription ? nl2br(
                                                           htmlentities(
-                                                            substr($magnet->metaDescription, 0, MAGNET_META_DESCRIPTION_LENGTH_SHORT)
+                                                            $magnet->metaDescription
                                                           )
                                                         ) : false,
         'approved'        => (bool) $magnet->approved,
@@ -306,7 +306,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                           <?php } ?>
                         </div>
                         <?php if ($magnet->metaDescription) { ?>
-                          <div class="margin-y-8 max-height-220 max-height-parent-hover-840"><?php echo $magnet->metaDescription ?></div>
+                          <div class="margin-y-8"><?php echo $magnet->metaDescription ?></div>
                         <?php } ?>
                         <?php if ($magnet->keywords) { ?>
                           <div class="margin-y-8">

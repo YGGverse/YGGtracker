@@ -641,6 +641,17 @@ class Database {
     return $query->rowCount();
   }
 
+  public function updateMagnetDescription(int $magnetId, string $description, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnet` SET `description` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
+
+    $query->execute([$description, $timeUpdated, $magnetId]);
+
+    return $query->rowCount();
+  }
+
   public function updateMagnetPublic(int $magnetId, bool $public, int $timeUpdated) : int {
 
     $this->_debug->query->update->total++;

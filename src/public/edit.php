@@ -42,6 +42,15 @@ $response = (object)
         'message' => false,
       ]
     ],
+    'description' => (object)
+    [
+      'value' => false,
+      'valid' => (object)
+      [
+        'success' => true,
+        'message' => false,
+      ]
+    ],
     'dn' => (object)
     [
       'value' => false,
@@ -211,17 +220,27 @@ else {
     else
     {
       $response->form->metaTitle->valid->success = false;
-      $response->form->metaTitle->valid->message = sprintf(_('* required, minimum %s-%s chars'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH);
+      $response->form->metaTitle->valid->message = sprintf(_('* required, %s-%s chars'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH);
     }
 
-    if (MAGNET_META_DESCRIPTION_MIN_LENGTH <= mb_strlen($_POST['metaDescription']) && MAGNET_META_DESCRIPTION_MAX_LENGTH >= mb_strlen($_POST['metaDescription']))
+    if (mb_strlen($_POST['metaDescription']) < MAGNET_META_DESCRIPTION_MIN_LENGTH || mb_strlen($_POST['metaDescription']) > MAGNET_META_DESCRIPTION_MAX_LENGTH)
     {
-      $db->updateMagnetMetaDescription($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['metaDescription']))), time());
+      $response->form->metaDescription->valid->success = false;
+      $response->form->metaDescription->valid->message = sprintf(_('* required, %s-%s chars, %s provided'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH, mb_strlen($_POST['metaDescription']));
     }
     else
     {
-      $response->form->metaDescription->valid->success = false;
-      $response->form->metaDescription->valid->message = sprintf(_('* required, minimum %s-%s chars'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH);
+      $db->updateMagnetMetaDescription($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['metaDescription']))), time());
+    }
+
+    if (mb_strlen($_POST['description']) < MAGNET_DESCRIPTION_MIN_LENGTH || mb_strlen($_POST['description']) > MAGNET_DESCRIPTION_MAX_LENGTH)
+    {
+      $response->form->description->valid->success = false;
+      $response->form->description->valid->message = sprintf(_('* required, %s-%s chars, %s provided'), MAGNET_DESCRIPTION_MIN_LENGTH, MAGNET_DESCRIPTION_MAX_LENGTH, mb_strlen($_POST['description']));
+    }
+    else
+    {
+      $db->updateMagnetDescription($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['description']))), time());
     }
 
     // Social
@@ -364,6 +383,7 @@ else {
     if ($response->success &&
         $response->form->metaTitle->valid->success &&
         $response->form->metaDescription->valid->success &&
+        $response->form->description->valid->success &&
         $response->form->tr->valid->success &&
         $response->form->as->valid->success &&
         $response->form->xs->valid->success)
@@ -388,6 +408,9 @@ else {
 
   // Meta Description
   $response->form->metaDescription->value = $magnet->metaDescription;
+
+  // Description
+  $response->form->description->value = $magnet->description;
 
   // Magnet settings
   $response->form->public->value    = (bool) $magnet->public;
@@ -517,11 +540,16 @@ else {
                       <div class="margin-b-8"><?php echo $response->form->metaTitle->valid->message ?></div>
                     <?php } ?>
                     <input class="width-100 <?php echo ($response->form->metaTitle->valid->success ? false : 'background-color-red') ?>" type="text" name="metaTitle" value="<?php echo $response->form->metaTitle->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
-                    <label class="display-block margin-y-8"><?php echo _('Description') ?></label>
+                    <label class="display-block margin-y-8"><?php echo _('Short description') ?></label>
                     <?php if ($response->form->metaDescription->valid->message) { ?>
                       <div class="margin-b-8"><?php echo $response->form->metaDescription->valid->message ?></div>
                     <?php } ?>
-                    <textarea class="width-100 <?php echo ($response->form->metaDescription->valid->success ? false : 'background-color-red') ?>" name="metaDescription" placeholder="<?php echo _('Describe your magnet for others') ?>"><?php echo $response->form->metaDescription->value ?></textarea>
+                    <textarea class="width-100 <?php echo ($response->form->metaDescription->valid->success ? false : 'background-color-red') ?>" name="metaDescription" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->metaDescription->value ?></textarea>
+                    <label class="display-block margin-y-8"><?php echo _('Long description') ?></label>
+                    <?php if ($response->form->description->valid->message) { ?>
+                      <div class="margin-b-8"><?php echo $response->form->description->valid->message ?></div>
+                    <?php } ?>
+                    <textarea class="width-100 <?php echo ($response->form->description->valid->success ? false : 'background-color-red') ?>" name="description" placeholder="<?php echo _('Shows on magnet page') ?>"><?php echo $response->form->description->value ?></textarea>
                   </fieldset>
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('BitTorrent') ?></legend>

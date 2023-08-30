@@ -242,17 +242,6 @@
   transition: opacity .2s;
 }
 
-.max-height-220 {
-  max-height: 220px;
-  overflow: hidden;
-  transition: max-height .2s;
-}
-
-*:hover > .max-height-parent-hover-840 {
-  max-height: 840px;
-  transition: max-height .2s;
-}
-
 .blur-2 {
   filter: blur(2px);
 }

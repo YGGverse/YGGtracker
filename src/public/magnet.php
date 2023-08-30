@@ -147,9 +147,14 @@ else
     'metaTitle'       => $magnet->metaTitle ? htmlentities($magnet->metaTitle) : ($magnet->dn ? htmlentities($magnet->dn): false),
     'metaDescription' => $magnet->metaDescription ? nl2br(
                                                       htmlentities(
-                                                        substr($magnet->metaDescription, 0, MAGNET_META_DESCRIPTION_LENGTH_SHORT)
+                                                        $magnet->metaDescription
                                                       )
                                                     ) : false,
+    'description'     => $magnet->description ? nl2br(
+                                                  htmlentities(
+                                                    $magnet->description
+                                                  )
+                                                ) : false,
     'approved'        => (bool) $magnet->approved,
     'public'          => (bool) $magnet->public,
     'sensitive'       => (bool) $magnet->sensitive,
@@ -282,6 +287,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     </div>
                     <?php if ($response->magnet->metaDescription) { ?>
                       <div class="margin-y-8"><?php echo $response->magnet->metaDescription ?></div>
+                    <?php } ?>
+                    <?php if ($response->magnet->description) { ?>
+                      <div class="margin-y-8"><?php echo $response->magnet->description ?></div>
                     <?php } ?>
                     <?php if ($response->magnet->keywords) { ?>
                       <div class="margin-y-8">
