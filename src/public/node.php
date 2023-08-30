@@ -220,7 +220,7 @@ else
                       <td><?php echo MAGNET_META_TITLE_MIN_LENGTH ?>-<?php echo MAGNET_META_TITLE_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Title length') ?></td>
+                      <td><?php echo _('Description length') ?></td>
                       <td><?php echo MAGNET_META_DESCRIPTION_MIN_LENGTH ?>-<?php echo MAGNET_META_DESCRIPTION_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
