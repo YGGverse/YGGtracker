@@ -75,7 +75,7 @@ class Sphinx {
         {
           if (mb_strlen($value) > 5)
           {
-            if (!in_array(mb_strtolower($value), $stopWords))
+            if (!in_array(mb_strtolower($value), array_map('strtolower', $stopWords)))
             {
               $result[] = sprintf('@metaTitle "%s" | @dn "%s"', $value, $value);
             }
