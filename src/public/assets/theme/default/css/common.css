@@ -31,7 +31,7 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 h2 {
@@ -39,13 +39,14 @@ h2 {
   font-size: 16px;
 }
 
-/* @TODO doubts
+
 a h2,
 a:visited h2,
 a:active h2 {
+  /* @TODO doubts
   color: #a4d4ff;
+  */
 }
-*/
 
 input,
 textarea {
