@@ -10,11 +10,11 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 
 #### Trackers
 
-Initial trackers defined in [trackers.json](#).
+Open trackers defined in [trackers.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/trackers.json)
 
 * Application appends trackers to all download links and magnet forms
 * Trackers not in list will be cropped by the application filter
-* Feel free to PR new yggdrasil tracker instance!
+* Feel free to PR new yggdrasil tracker!
 
 #### Requirements
 
