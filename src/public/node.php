@@ -108,7 +108,7 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
                       <td><?php echo count(MODERATOR_IP_LIST) ?></td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Seeders') ?></td>
+                      <td><?php echo _('Seeds') ?></td>
                       <td><?php echo $db->getMagnetToAddressTrackerSeedersSum() ?></td>
                     </tr>
                     <tr>

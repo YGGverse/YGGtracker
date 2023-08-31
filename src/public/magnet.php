@@ -263,13 +263,13 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                         <?php echo $response->magnet->timeUpdated ? $response->magnet->timeUpdated : $response->magnet->timeAdded ?>
                       </sup>
                     </span>
-                    <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Seeders') ?>">
+                    <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Seeds') ?>">
                       <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
                       </svg>
                       <sup><?php echo $response->magnet->seeders ?></sup>
                     </span>
-                    <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Completed') ?>">
+                    <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Peers') ?>">
                       <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
                       </svg>
