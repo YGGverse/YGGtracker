@@ -472,9 +472,10 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $link[] = $url;
           }
 
-          foreach (TRACKER_LINKS as $tracker => $value)
+          // Append trackers.json
+          foreach (json_decode(file_get_contents(__DIR__ . '/../config/trackers.json')) as $tracker)
           {
-            $link[] = sprintf('tr=%s', urlencode($value->announce));
+            $link[] = sprintf('tr=%s', urlencode($tracker->announce));
           }
 
           /// Acceptable Source
@@ -759,11 +760,13 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       <div class="container">
         <div class="row">
           <div class="column width-100 text-center margin-y-8">
-            <?php foreach (TRACKER_LINKS as $name => $value) { ?>
-              <a href="<?php echo $value->announce ?>"><?php echo $name ?></a>
-              /
-              <a href="<?php echo $value->stats ?>"><?php echo _('Stats') ?></a>
-              |
+          <?php foreach (json_decode(file_get_contents(__DIR__ . '/../config/trackers.json')) as $i => $tracker) { ?>
+              <?php if (!empty($tracker->announce) && !empty($tracker->stats)) { ?>
+                <a href="<?php echo $tracker->announce ?>"><?php echo sprintf('Tracker %s', $i + 1) ?></a>
+                /
+                <a href="<?php echo $tracker->stats ?>"><?php echo _('Stats') ?></a>
+                |
+              <?php } ?>
             <?php } ?>
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |

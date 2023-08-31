@@ -182,17 +182,19 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
                       <td class="padding-y-8 padding-b-8 border-bottom-default text-right" colspan="2">
                         <?php echo _('Trackers') ?>
                       </td>
-                      <?php foreach (TRACKER_LINKS as $name => $settings) { ?>
+                      <?php foreach (json_decode(file_get_contents(__DIR__ . '/../config/trackers.json')) as $i => $tracker) { ?>
                         <tr>
-                          <td class="padding-t-16"><?php echo $name ?></td>
+                          <td class="padding-t-16"><?php echo sprintf('#%s', $i + 1) ?></td>
                         </tr>
-                        <?php foreach ($settings as $key => $value) { ?>
-                          <tr>
-                            <td>
-                              <span class="margin-l-16"><?php echo $key ?></span>
-                            </td>
-                            <td><?php echo $value ?></td>
-                          </tr>
+                        <?php foreach ($tracker as $key => $value) { ?>
+                          <?php if ($value) { ?>
+                            <tr>
+                              <td>
+                                <span class="margin-l-16"><?php echo $key ?></span>
+                              </td>
+                              <td><?php echo $value ?></td>
+                            </tr>
+                          <?php } ?>
                         <?php } ?>
                       <?php } ?>
                     </tr>
@@ -210,11 +212,13 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
       <div class="container">
         <div class="row">
           <div class="column width-100 text-center margin-y-8">
-            <?php foreach (TRACKER_LINKS as $name => $value) { ?>
-              <a href="<?php echo $value->announce ?>"><?php echo $name ?></a>
-              /
-              <a href="<?php echo $value->stats ?>"><?php echo _('Stats') ?></a>
-              |
+            <?php foreach (json_decode(file_get_contents(__DIR__ . '/../config/trackers.json')) as $i => $tracker) { ?>
+              <?php if (!empty($tracker->announce) && !empty($tracker->stats)) { ?>
+                <a href="<?php echo $tracker->announce ?>"><?php echo sprintf('Tracker %s', $i + 1) ?></a>
+                /
+                <a href="<?php echo $tracker->stats ?>"><?php echo _('Stats') ?></a>
+                |
+              <?php } ?>
             <?php } ?>
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |

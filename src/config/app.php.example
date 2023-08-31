@@ -109,27 +109,6 @@ define('COMMENT_DEFAULT_PUBLIC', false);
 define('COMMENT_MIN_LENGTH', 1);
 define('COMMENT_MAX_LENGTH', 1000);
 
-// Trackers
-define('TRACKER_LINKS', (object)
-  [
-    'Tracker 1' => (object)
-    [
-      'url'      => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker',
-      'announce' => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/announce',
-      'stats'    => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/stats',
-      'scrape'   => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/scrape',
-    ],
-    'Tracker 2' => (object)
-    [
-      'url'      => false,
-      'announce' => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/announce',
-      'stats'    => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/stats',
-      'scrape'   => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/scrape',
-    ],
-    // ...
-  ]
-);
-
 // Yggdrasil
 define('YGGDRASIL_URL_REGEX', '/^0{0,1}[2-3][a-f0-9]{0,2}:/'); // thanks to @ygguser (https://github.com/YGGverse/YGGo/issues/1#issuecomment-1498182228 )
 

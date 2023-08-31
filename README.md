@@ -10,8 +10,11 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 
 #### Trackers
 
-  * `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/announce` [stats](http://[201:23b4:991a:634d:8359:4521:5576:15b7]/stats)
-  * `http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/announce` [stats](http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/stats)
+Initial trackers defined in [trackers.json](#).
+
+* Application appends trackers to all download links and magnet forms
+* Trackers not in list will be cropped by the application filter
+* Feel free to PR new yggdrasil tracker instance!
 
 #### Requirements
 
@@ -115,7 +118,7 @@ git checkout -b my-pr-branch-name
 
 #### Feedback
 
-Feel free to [share](https://github.com/YGGverse/YGGtracker/issues) your ideas and bug reports!
+[https://github.com/YGGverse/YGGtracker/issues](https://github.com/YGGverse/YGGtracker/issues)
 
 #### Community
 
