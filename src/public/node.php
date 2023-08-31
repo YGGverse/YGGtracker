@@ -39,64 +39,6 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
   $response->message = _('Could not init user session');
 }
 
-else
-{
-
-  // Scrapes
-  $localScrape = (object)
-  [
-    'seeders'   => 0,
-    'completed' => 0,
-    'leechers'  => 0,
-  ];
-
-  $totalScrape = (object)
-  [
-    'seeders'   => 0,
-    'completed' => 0,
-    'leechers'  => 0,
-  ];
-
-  $trackers = [];
-
-  foreach (TRACKER_LINKS as $tracker)
-  {
-    $trackers[] = $tracker->announce;
-  }
-
-  foreach ($db->getMagnets() as $magnet)
-  {
-    foreach ($db->findAddressTrackerByMagnetId($magnet->magnetId) as $magnetToAddressTracker)
-    {
-      if ($addressTracker = $db->getAddressTracker($magnetToAddressTracker->addressTrackerId))
-      {
-        $scheme = $db->getScheme($addressTracker->schemeId);
-        $host   = $db->getHost($addressTracker->hostId);
-        $port   = $db->getPort($addressTracker->portId);
-        $uri    = $db->getUri($addressTracker->uriId);
-
-        $url = $port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                      $host->value,
-                                                      $port->value,
-                                                      $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                          $host->value,
-                                                                                          $uri->value);
-
-        if (in_array($url, $trackers))
-        {
-          $localScrape->seeders   += (int) $magnetToAddressTracker->seeders;
-          $localScrape->completed += (int) $magnetToAddressTracker->completed;
-          $localScrape->leechers  += (int) $magnetToAddressTracker->leechers;
-        }
-
-        $totalScrape->seeders   += (int) $magnetToAddressTracker->seeders;
-        $totalScrape->completed += (int) $magnetToAddressTracker->completed;
-        $totalScrape->leechers  += (int) $magnetToAddressTracker->leechers;
-      }
-    }
-  }
-}
-
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -145,10 +87,6 @@ else
                       <td><?php echo _(RULE_LANGUAGES) ?></td>
                     </tr>
                     <tr>
-                      <td><?php echo _('Yggdrasil only') ?></td>
-                      <td><?php echo MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY ? _('yes') : _('no') ?></td>
-                    </tr>
-                    <tr>
                       <td class="padding-y-8 border-bottom-default text-right" colspan="2">
                         <?php echo _('Totals') ?>
                       </td>
@@ -171,15 +109,15 @@ else
                     </tr>
                     <tr>
                       <td><?php echo _('Seeders') ?></td>
-                      <td><?php echo sprintf('%s / %s', $localScrape->seeders, $totalScrape->seeders) ?></td>
+                      <td><?php echo $db->getMagnetToAddressTrackerSeedersSum() ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Peers') ?></td>
-                      <td><?php echo sprintf('%s / %s', $localScrape->completed, $totalScrape->completed) ?></td>
+                      <td><?php echo $db->getMagnetToAddressTrackerCompletedSum() ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Leechers') ?></td>
-                      <td><?php echo sprintf('%s / %s', $localScrape->leechers, $totalScrape->leechers) ?></td>
+                      <td><?php echo $db->getMagnetToAddressTrackerLeechersSum() ?></td>
                     </tr>
                     <tr>
                       <td class="padding-y-8 border-bottom-default text-right" colspan="2">

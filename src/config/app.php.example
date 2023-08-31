@@ -103,8 +103,6 @@ define('MAGNET_STOP_WORDS_SIMILAR',
   ]
 );
 
-define('MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY', true);
-
 // Comment
 define('COMMENT_DEFAULT_APPROVED', false);
 define('COMMENT_DEFAULT_PUBLIC', false);
@@ -116,17 +114,17 @@ define('TRACKER_LINKS', (object)
   [
     'Tracker 1' => (object)
     [
+      'url'      => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker',
       'announce' => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/announce',
       'stats'    => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/stats',
       'scrape'   => 'http://[201:23b4:991a:634d:8359:4521:5576:15b7]/scrape',
-      'rules'    => 'yggdrasil only',
     ],
     'Tracker 2' => (object)
     [
+      'url'      => false,
       'announce' => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/announce',
       'stats'    => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/stats',
       'scrape'   => 'http://[200:1e2f:e608:eb3a:2bf:1e62:87ba:e2f7]/scrape',
-      'rules'    => 'yggdrasil only',
     ],
     // ...
   ]

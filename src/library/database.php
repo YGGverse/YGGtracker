@@ -827,8 +827,40 @@ class Database {
     return $this->addMagnetToAddressTracker($magnetId, $addressTrackerId);
   }
 
-  /*
-  public function getMagnetToAddressTrackerSeedersSum() {
+  public function getMagnetToAddressTrackerSeedersSumByMagnetId(int $magnetId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT SUM(`seeders`) AS `result` FROM `magnetToAddressTracker` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return (int) $query->fetch()->result;
+  }
+
+  public function getMagnetToAddressTrackerCompletedSumByMagnetId(int $magnetId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT SUM(`completed`) AS `result` FROM `magnetToAddressTracker` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return (int) $query->fetch()->result;
+  }
+
+  public function getMagnetToAddressTrackerLeechersSumByMagnetId(int $magnetId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT SUM(`leechers`) AS `result` FROM `magnetToAddressTracker` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return (int) $query->fetch()->result;
+  }
+
+  public function getMagnetToAddressTrackerSeedersSum() : int {
 
     $this->_debug->query->select->total++;
 
@@ -836,10 +868,10 @@ class Database {
 
     $query->execute();
 
-    return $query->fetch()->result;
+    return (int) $query->fetch()->result;
   }
 
-  public function getMagnetToAddressTrackerCompletedSum() {
+  public function getMagnetToAddressTrackerCompletedSum() : int {
 
     $this->_debug->query->select->total++;
 
@@ -847,10 +879,10 @@ class Database {
 
     $query->execute();
 
-    return $query->fetch()->result;
+    return (int) $query->fetch()->result;
   }
 
-  public function getMagnetToAddressTrackerLeechersSum() {
+  public function getMagnetToAddressTrackerLeechersSum() : int {
 
     $this->_debug->query->select->total++;
 
@@ -858,9 +890,8 @@ class Database {
 
     $query->execute();
 
-    return $query->fetch()->result;
+    return (int) $query->fetch()->result;
   }
-  */
 
   // Magnet to AcceptableSource
   public function addMagnetToAcceptableSource(int $magnetId, int $acceptableSourceId) : int {

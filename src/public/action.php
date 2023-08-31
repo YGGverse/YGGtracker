@@ -463,8 +463,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $host->value,
                                                                                                                             $uri->value)));
 
-            // Yggdrasil url only settings enabled
-            if (MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY && !preg_match(YGGDRASIL_URL_REGEX, $url))
+            // Yggdrasil url only
+            if (!preg_match(YGGDRASIL_URL_REGEX, $url))
             {
               continue;
             }
@@ -494,8 +494,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $host->value,
                                                                                                                             $uri->value)));
 
-            // Yggdrasil url only settings enabled
-            if (MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY && !preg_match(YGGDRASIL_URL_REGEX, $url))
+            // Yggdrasil url only
+            if (!preg_match(YGGDRASIL_URL_REGEX, $url))
             {
               continue;
             }
@@ -520,8 +520,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $host->value,
                                                                                                                             $uri->value)));
 
-            // Yggdrasil url only settings enabled
-            if (MAGNET_DOWNLOAD_YGGDRASIL_URL_ONLY && !preg_match(YGGDRASIL_URL_REGEX, $url))
+            // Yggdrasil url only
+            if (!preg_match(YGGDRASIL_URL_REGEX, $url))
             {
               continue;
             }
@@ -612,15 +612,18 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                       {
                         if ($url = Yggverse\Parser\Url::parse($tr))
                         {
-                          $db->initMagnetToAddressTrackerId(
-                            $magnetId,
-                            $db->initAddressTrackerId(
-                              $db->initSchemeId($url->host->scheme),
-                              $db->initHostId($url->host->name),
-                              $db->initPortId($url->host->port),
-                              $db->initUriId($url->page->uri)
-                            )
-                          );
+                          if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                          {
+                            $db->initMagnetToAddressTrackerId(
+                              $magnetId,
+                              $db->initAddressTrackerId(
+                                $db->initSchemeId($url->host->scheme),
+                                $db->initHostId($url->host->name),
+                                $db->initPortId($url->host->port),
+                                $db->initUriId($url->page->uri)
+                              )
+                            );
+                          }
                         }
                       }
                     break;
@@ -635,15 +638,18 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                       {
                         if ($url = Yggverse\Parser\Url::parse($as))
                         {
-                          $db->initMagnetToAcceptableSourceId(
-                            $magnetId,
-                            $db->initAcceptableSourceId(
-                              $db->initSchemeId($url->host->scheme),
-                              $db->initHostId($url->host->name),
-                              $db->initPortId($url->host->port),
-                              $db->initUriId($url->page->uri)
-                            )
-                          );
+                          if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                          {
+                            $db->initMagnetToAcceptableSourceId(
+                              $magnetId,
+                              $db->initAcceptableSourceId(
+                                $db->initSchemeId($url->host->scheme),
+                                $db->initHostId($url->host->name),
+                                $db->initPortId($url->host->port),
+                                $db->initUriId($url->page->uri)
+                              )
+                            );
+                          }
                         }
                       }
                     break;
@@ -652,15 +658,18 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                       {
                         if ($url = Yggverse\Parser\Url::parse($xs))
                         {
-                          $db->initMagnetToExactSourceId(
-                            $magnetId,
-                            $db->initExactSourceId(
-                              $db->initSchemeId($url->host->scheme),
-                              $db->initHostId($url->host->name),
-                              $db->initPortId($url->host->port),
-                              $db->initUriId($url->page->uri)
-                            )
-                          );
+                          if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                          {
+                            $db->initMagnetToExactSourceId(
+                              $magnetId,
+                              $db->initExactSourceId(
+                                $db->initSchemeId($url->host->scheme),
+                                $db->initHostId($url->host->name),
+                                $db->initPortId($url->host->port),
+                                $db->initUriId($url->page->uri)
+                              )
+                            );
+                          }
                         }
                       }
                     break;

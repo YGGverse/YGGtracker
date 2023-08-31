@@ -287,18 +287,18 @@ else {
         {
           if ($url = Yggverse\Parser\Url::parse($tr))
           {
-            $db->initMagnetToAddressTrackerId(
-              $magnet->magnetId,
-              $db->initAddressTrackerId(
-                $db->initSchemeId($url->host->scheme),
-                $db->initHostId($url->host->name),
-                $db->initPortId($url->host->port),
-                $db->initUriId($url->page->uri)
-              )
-            );
-
             if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
+              $db->initMagnetToAddressTrackerId(
+                $magnet->magnetId,
+                $db->initAddressTrackerId(
+                  $db->initSchemeId($url->host->scheme),
+                  $db->initHostId($url->host->name),
+                  $db->initPortId($url->host->port),
+                  $db->initUriId($url->page->uri)
+                )
+              );
+
               $response->form->tr->valid->success = true;
               $response->form->tr->valid->message = false;
             }
@@ -323,18 +323,18 @@ else {
         {
           if ($url = Yggverse\Parser\Url::parse($as))
           {
-            $db->initMagnetToAcceptableSourceId(
-              $magnet->magnetId,
-              $db->initAcceptableSourceId(
-                $db->initSchemeId($url->host->scheme),
-                $db->initHostId($url->host->name),
-                $db->initPortId($url->host->port),
-                $db->initUriId($url->page->uri)
-              )
-            );
-
             if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
+              $db->initMagnetToAcceptableSourceId(
+                $magnet->magnetId,
+                $db->initAcceptableSourceId(
+                  $db->initSchemeId($url->host->scheme),
+                  $db->initHostId($url->host->name),
+                  $db->initPortId($url->host->port),
+                  $db->initUriId($url->page->uri)
+                )
+              );
+
               $response->form->as->valid->success = true;
               $response->form->as->valid->message = false;
             }
@@ -359,18 +359,18 @@ else {
         {
           if ($url = Yggverse\Parser\Url::parse($xs))
           {
-            $db->initMagnetToExactSourceId(
-              $magnet->magnetId,
-              $db->initExactSourceId(
-                $db->initSchemeId($url->host->scheme),
-                $db->initHostId($url->host->name),
-                $db->initPortId($url->host->port),
-                $db->initUriId($url->page->uri)
-              )
-            );
-
             if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
+              $db->initMagnetToExactSourceId(
+                $magnet->magnetId,
+                $db->initExactSourceId(
+                  $db->initSchemeId($url->host->scheme),
+                  $db->initHostId($url->host->name),
+                  $db->initPortId($url->host->port),
+                  $db->initUriId($url->page->uri)
+                )
+              );
+
               $response->form->xs->valid->success = true;
               $response->form->xs->valid->message = false;
             }
