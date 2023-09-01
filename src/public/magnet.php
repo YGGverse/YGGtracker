@@ -137,15 +137,15 @@ else
   ];
 }
 
-if (isset($_GET['rss']) && $response->success) { ?><?php
+if (isset($_GET['rss']) && isset($_GET['target']) && $_GET['target'] == 'comment' && $response->success) { ?><?php
 header('Content-type: text/xml;charset=UTF-8');
 echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
-      <atom:link href="<?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $response->magnet->magnetId) ?>" rel="self" type="application/rss+xml"></atom:link>
+      <atom:link href="<?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?>" rel="self" type="application/rss+xml"></atom:link>
+      <link><?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?></link>
       <title><?php echo sprintf(_('%s - Comments - %s'), htmlentities($response->magnet->metaTitle), WEBSITE_NAME) ?></title>
       <description><?php echo _('BitTorrent Catalog for Yggdrasil') ?></description>
-      <link><?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $response->magnet->magnetId) ?></link>
       <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
         <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address || in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
           <item>
@@ -362,7 +362,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                   <div class="padding-y-8 padding-x-16">
                     <a name="comment"></a>
                     <h3><?php echo _('Comments') ?></h3>
-                    <sup><small><a href="<?php echo WEBSITE_URL ?>/magnet.php?rss&magnetId=<?php echo $response->magnet->magnetId ?>"><?php echo _('RSS') ?></a></small></sup>
+                    <sup><small><a href="<?php echo sprintf('%s/magnet.php?rss&magnetId=%s&target=comment', WEBSITE_URL, $response->magnet->magnetId) ?>"><?php echo _('RSS') ?></a></small></sup>
                   </div>
                   <div class="padding-x-16">
                     <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
