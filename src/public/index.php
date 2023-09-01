@@ -165,14 +165,14 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
       <atom:link href="<?php echo WEBSITE_URL ?>/index.php<?php echo $request->query ? sprintf('?query=%s', urlencode($request->query)) : false ?>" rel="self" type="application/rss+xml"></atom:link>
       <title><?php echo WEBSITE_NAME ?></title>
       <description><?php echo _('BitTorrent Catalog for Yggdrasil') ?></description>
-      <link><?php echo WEBSITE_URL ?>/index.php<?php echo $request->query ? sprintf('?query=%s', urlencode($request->query)) : false ?></link>
+      <link><?php echo sprintf('%s/index.php%s', WEBSITE_URL, $request->query ? sprintf('?query=%s', urlencode($request->query)) : false) ?></link>
       <?php foreach ($response->magnets as $magnet) { ?>
         <?php if ($magnet->access->read) { ?>
           <item>
             <title><?php echo htmlspecialchars($magnet->metaTitle, ENT_QUOTES, 'UTF-8') ?></title>
-            <guid><?php echo WEBSITE_URL ?>#magnet-<?php echo $magnet->magnetId ?></guid>
             <description><?php echo htmlspecialchars(strip_tags($magnet->metaDescription), ENT_QUOTES, 'UTF-8') ?></description>
-            <link><?php echo WEBSITE_URL ?>#magnet-<?php echo $magnet->magnetId ?></link>
+            <guid><?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?></guid>
+            <link><?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?></link>
           </item>
         <?php } ?>
     <?php } ?>
