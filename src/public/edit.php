@@ -51,6 +51,15 @@ $response = (object)
         'message' => false,
       ]
     ],
+    'xt' => (object)
+    [
+      'value' => false,
+      'valid' => (object)
+      [
+        'success' => true,
+        'message' => false,
+      ]
+    ],
     'dn' => (object)
     [
       'value' => false,
@@ -428,6 +437,9 @@ else {
   $response->form->sensitive->value = (bool) $magnet->sensitive;
   $response->form->approved->value  = (bool) $magnet->approved;
 
+  // Exact Topic
+  $response->form->xt->value = $magnet->xt;
+
   // Display Name
   $response->form->dn->value = $magnet->dn;
 
@@ -584,6 +596,15 @@ else {
                   </fieldset>
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('BitTorrent') ?></legend>
+                    <label class="display-block margin-y-8" for="xt">
+                      <?php echo _('Exact Topic (xt)') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('URN containing file hash, could not be changed') ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <input class="width-100 margin-t-8" type="text" name="xt" id="xt" value="<?php echo $response->form->xt->value ?>" readonly="readonly" disabled="disabled" />
+                    </label>
                     <label class="display-block margin-y-8" for="dn">
                       <?php echo _('Display Name (dn)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Filename display to the user in BitTorrent client') ?>">
