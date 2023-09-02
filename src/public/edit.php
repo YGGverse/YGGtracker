@@ -541,78 +541,162 @@ else {
                 <form name="search" method="post" action="<?php echo WEBSITE_URL ?>/edit.php?magnetId=<?php echo $magnet->magnetId ?>">
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('Meta') ?></legend>
-                    <label class="display-block margin-y-8"><?php echo _('Title') ?></label>
-                    <?php if ($response->form->metaTitle->valid->message) { ?>
-                      <div class="margin-b-8"><?php echo $response->form->metaTitle->valid->message ?></div>
-                    <?php } ?>
-                    <input class="width-100 <?php echo ($response->form->metaTitle->valid->success ? false : 'background-color-red') ?>" type="text" name="metaTitle" value="<?php echo $response->form->metaTitle->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
-                    <label class="display-block margin-y-8"><?php echo _('Short description') ?></label>
-                    <?php if ($response->form->metaDescription->valid->message) { ?>
-                      <div class="margin-b-8"><?php echo $response->form->metaDescription->valid->message ?></div>
-                    <?php } ?>
-                    <textarea class="width-100 <?php echo ($response->form->metaDescription->valid->success ? false : 'background-color-red') ?>" name="metaDescription" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->metaDescription->value ?></textarea>
-                    <label class="display-block margin-y-8"><?php echo _('Long description') ?></label>
-                    <?php if ($response->form->description->valid->message) { ?>
-                      <div class="margin-b-8"><?php echo $response->form->description->valid->message ?></div>
-                    <?php } ?>
-                    <textarea class="width-100 <?php echo ($response->form->description->valid->success ? false : 'background-color-red') ?>" name="description" placeholder="<?php echo _('Shows on magnet page') ?>"><?php echo $response->form->description->value ?></textarea>
+                    <label class="display-block margin-y-8">
+                      <?php echo _('Title') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Subject and meta title (%s-%s chars)'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH) ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <?php if ($response->form->metaTitle->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->metaTitle->valid->message ?></div>
+                      <?php } ?>
+                      <input class="width-100 margin-t-8 <?php echo ($response->form->metaTitle->valid->success ? false : 'background-color-red') ?>" type="text" name="metaTitle" value="<?php echo $response->form->metaTitle->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
+                    </label>
+                    <label class="display-block margin-y-8">
+                      <?php echo _('Short description') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible in listings, magnet web page description and meta description (%s-%s chars)'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH) ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <?php if ($response->form->metaDescription->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->metaDescription->valid->message ?></div>
+                      <?php } ?>
+                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->metaDescription->valid->success ? false : 'background-color-red') ?>" name="metaDescription" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->metaDescription->value ?></textarea>
+                    </label>
+                    <label class="display-block margin-y-8">
+                      <?php echo _('Long description') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible on magnet web page (%s-%s chars)'), MAGNET_DESCRIPTION_MIN_LENGTH, MAGNET_DESCRIPTION_MAX_LENGTH) ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <?php if ($response->form->description->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->description->valid->message ?></div>
+                      <?php } ?>
+                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->description->valid->success ? false : 'background-color-red') ?>" name="description" placeholder="<?php echo _('Shows on magnet page') ?>"><?php echo $response->form->description->value ?></textarea>
+                    </label>
                   </fieldset>
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('BitTorrent') ?></legend>
-                    <label class="display-block margin-y-8"><?php echo _('Display Name (dn)') ?></label>
-                    <input class="width-100" type="text" name="dn" value="<?php echo $response->form->dn->value ?>" placeholder="<?php echo _('A filename to display to the user, for convenience') ?>" maxlength="255" />
-                    <label class="display-block margin-y-8"><?php echo _('Keyword Topic (kt)') ?></label>
-                    <textarea class="width-100" name="kt" placeholder="<?php echo _('Hash tag, comma separated, or one per line') ?>"><?php echo $response->form->kt->value ?></textarea>
-                    <label class="display-block margin-y-8"><?php echo _('Address Tracker (tr)') ?></label>
-                    <?php if ($response->form->tr->valid->message) { ?>
-                      <div class="margin-b-8"><?php echo $response->form->tr->valid->message ?></div>
-                    <?php } ?>
-                    <textarea class="width-100 <?php echo ($response->form->tr->valid->success ? false : 'background-color-red') ?>" name="tr" placeholder="<?php echo _('BitTorrent trackers list - comma separated, or one per line') ?>"><?php echo $response->form->tr->value ?></textarea>
-                    <label class="display-block margin-y-8"><?php echo _('Acceptable Source (as)') ?></label>
-                    <?php if ($response->form->as->valid->message) { ?>
-                      <div class="margin-b-8"><?php echo $response->form->as->valid->message ?></div>
-                    <?php } ?>
-                    <textarea class="width-100 <?php echo ($response->form->as->valid->success ? false : 'background-color-red') ?>" name="as" placeholder="<?php echo _('Web servers to a direct download - comma separated, or one per line') ?>"><?php echo $response->form->as->value ?></textarea>
-                    <label class="display-block margin-y-8"><?php echo _('eXact Source (xs)') ?></label>
-                    <?php if ($response->form->xs->valid->message) { ?>
-                      <div class="margin-b-8"><?php echo $response->form->xs->valid->message ?></div>
-                    <?php } ?>
-                    <textarea class="width-100 <?php echo ($response->form->xs->valid->success ? false : 'background-color-red') ?>" name="xs" placeholder="<?php echo _('URL of a P2P source for the file or the address of a hub - comma separated, or one per line') ?>"><?php echo $response->form->xs->value ?></textarea>
-                  </fieldset>
+                    <label class="display-block margin-y-8" for="dn">
+                      <?php echo _('Display Name (dn)') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Filename display to the user in BitTorrent client') ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <input class="width-100 margin-t-8" type="text" name="dn" id="dn" value="<?php echo $response->form->dn->value ?>" placeholder="<?php echo _('A filename to display to the user, for convenience') ?>" maxlength="255" />
+                    </label>
+                    <label class="display-block margin-y-8" for="kt">
+                      <?php echo _('Keyword Topic (kt)') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Search keywords for YGGtracker and P2P networks over DHT') ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <textarea class="width-100 margin-t-8" name="kt" id="kt" placeholder="<?php echo _('Hash tag, comma separated, or one per line') ?>"><?php echo $response->form->kt->value ?></textarea>
+                    </label>
+                    <label class="display-block margin-y-8" for="tr">
+                      <?php echo _('Address Tracker (tr)') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Yggdrasil only trackers URL to obtain peers without DHT') ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <?php if ($response->form->tr->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->tr->valid->message ?></div>
+                      <?php } ?>
+                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->tr->valid->success ? false : 'background-color-red') ?>" name="tr" id="tr" placeholder="<?php echo _('BitTorrent trackers list - comma separated, or one per line') ?>"><?php echo $response->form->tr->value ?></textarea>
+                    </label>
+                    <label class="display-block margin-y-8" for="as">
+                      <?php echo _('Acceptable Source (as)') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Yggdrasil only URL to a direct download from a web server') ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <?php if ($response->form->as->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->as->valid->message ?></div>
+                      <?php } ?>
+                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->as->valid->success ? false : 'background-color-red') ?>" name="as" id="as" placeholder="<?php echo _('Web servers to a direct download - comma separated, or one per line') ?>"><?php echo $response->form->as->value ?></textarea>
+                    </label>
+                    <label class="display-block margin-y-8" for="xs">
+                      <?php echo _('eXact Source (xs)') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Yggdrasil only URL to download source for the file pointed to by the Magnet link') ?>">
+                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                        </svg>
+                      </sub>
+                      <?php if ($response->form->xs->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->xs->valid->message ?></div>
+                      <?php } ?>
+                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->xs->valid->success ? false : 'background-color-red') ?>" name="xs" id="xs" placeholder="<?php echo _('URL of a P2P source for the file or the address of a hub - comma separated, or one per line') ?>"><?php echo $response->form->xs->value ?></textarea>
+                    </label>
+                 </fieldset>
                   <fieldset class="display-block">
                     <legend class="text-right width-100 padding-y-8 margin-b-16 border-bottom-default"><?php echo _('Social') ?></legend>
                     <div class="margin-b-8">
-                      <?php if ($response->form->public->value) { ?>
-                        <input type="checkbox" id="public" name="public" value="1" checked="checked" />
-                      <?php } else { ?>
-                        <input type="checkbox" id="public" name="public" value="1" />
-                      <?php } ?>
-                      <label class="margin-y-8" for="public"><?php echo _('Public') ?></label>
+                      <label class="margin-y-8" for="public">
+                        <?php if ($response->form->public->value) { ?>
+                          <input type="checkbox" id="public" name="public" value="1" checked="checked" />
+                        <?php } else { ?>
+                          <input type="checkbox" id="public" name="public" value="1" />
+                        <?php } ?>
+                        <?php echo _('Public') ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Make permanently visible on this website, RSS feeds and YGGtracker fediverse') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </label>
                     </div>
                     <div class="margin-b-8">
-                      <?php if ($response->form->comments->value) { ?>
-                        <input type="checkbox" id="comments" name="comments" value="1" checked="checked" />
-                      <?php } else { ?>
-                        <input type="checkbox" id="comments" name="comments" value="1" />
-                      <?php } ?>
-                      <label class="margin-y-8" for="comments"><?php echo _('Comments') ?></label>
+                      <label class="margin-y-8" for="comments">
+                        <?php if ($response->form->comments->value) { ?>
+                          <input type="checkbox" id="comments" name="comments" value="1" checked="checked" />
+                        <?php } else { ?>
+                          <input type="checkbox" id="comments" name="comments" value="1" />
+                        <?php } ?>
+                        <?php echo _('Comments') ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Allow comments for this publication') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </label>
                     </div>
                     <div class="margin-b-8">
-                      <?php if ($response->form->sensitive->value) { ?>
-                        <input type="checkbox" id="sensitive" name="sensitive" value="1" checked="checked" />
-                      <?php } else { ?>
-                        <input type="checkbox" id="sensitive" name="sensitive" value="1" />
-                      <?php } ?>
-                      <label class="margin-y-8" for="sensitive"><?php echo _('Sensitive') ?></label>
+                      <label class="margin-y-8" for="sensitive">
+                        <?php if ($response->form->sensitive->value) { ?>
+                          <input type="checkbox" id="sensitive" name="sensitive" value="1" checked="checked" />
+                        <?php } else { ?>
+                          <input type="checkbox" id="sensitive" name="sensitive" value="1" />
+                        <?php } ?>
+                        <?php echo _('Sensitive') ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Apply NSFW filters for this publication') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </label>
                     </div>
                     <?php if (in_array($user->address, MODERATOR_IP_LIST)) { ?>
                       <div class="margin-b-8">
-                        <?php if ($response->form->approved->value) { ?>
-                          <input type="checkbox" id="approved" name="approved" value="1" checked="checked" />
-                        <?php } else { ?>
-                          <input type="checkbox" id="approved" name="approved" value="1" />
-                        <?php } ?>
-                        <label class="margin-y-8" for="approved"><?php echo _('Approved') ?></label>
+                        <label class="margin-y-8" for="approved">
+                          <?php if ($response->form->approved->value) { ?>
+                            <input type="checkbox" id="approved" name="approved" value="1" checked="checked" />
+                          <?php } else { ?>
+                            <input type="checkbox" id="approved" name="approved" value="1" />
+                          <?php } ?>
+                          <?php echo _('Approved') ?>
+                          <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo USER_AUTO_APPROVE_ON_MAGNET_APPROVE ? _('Approve this post and user') : _('Approve this post as moderator') ?>">
+                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                            </svg>
+                          </sub>
+                        </label>
                       </div>
                     <?php } ?>
                   </fieldset>
