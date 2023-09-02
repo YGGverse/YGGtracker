@@ -244,9 +244,13 @@ else {
     }
 
     // Social
-    $db->updateMagnetPublic($magnet->magnetId, isset($_POST['public']) ? true : false, time());
     $db->updateMagnetComments($magnet->magnetId, isset($_POST['comments']) ? true : false, time());
     $db->updateMagnetSensitive($magnet->magnetId, isset($_POST['sensitive']) ? true : false, time());
+
+    if (isset($_POST['public'])) // could be enabled once only because of distributed database model #1
+    {
+      $db->updateMagnetPublic($magnet->magnetId, true, time());
+    }
 
     // Display Name
     if (isset($_POST['dn']))
@@ -640,12 +644,12 @@ else {
                     <div class="margin-b-8">
                       <label class="margin-y-8" for="public">
                         <?php if ($response->form->public->value) { ?>
-                          <input type="checkbox" id="public" name="public" value="1" checked="checked" />
+                          <input type="checkbox" id="public" name="public" value="1" checked="checked" disabled="disabled" />
                         <?php } else { ?>
                           <input type="checkbox" id="public" name="public" value="1" />
                         <?php } ?>
                         <?php echo _('Public') ?>
-                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Make permanently visible on this website, RSS feeds and YGGtracker fediverse') ?>">
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo $response->form->public->value ? _('Magnet transmitted to this website, RSS feeds and YGGtracker fediverse') : _('Make permanently visible on this website, RSS feeds and YGGtracker fediverse') ?>">
                           <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                           </svg>
