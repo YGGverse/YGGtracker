@@ -557,7 +557,7 @@ else {
                 <form name="search" method="post" action="<?php echo WEBSITE_URL ?>/edit.php?magnetId=<?php echo $magnet->magnetId ?>">
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('Meta') ?></legend>
-                    <label class="display-block margin-y-8">
+                    <label class="display-block margin-y-8 padding-y-4">
                       <?php echo _('Title') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Subject and meta title (%s-%s chars)'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH) ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -569,7 +569,7 @@ else {
                       <?php } ?>
                       <input class="width-100 margin-t-8 <?php echo ($response->form->metaTitle->valid->success ? false : 'background-color-red') ?>" type="text" name="metaTitle" value="<?php echo $response->form->metaTitle->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
                     </label>
-                    <label class="display-block margin-y-8">
+                    <label class="display-block margin-y-8 padding-y-4">
                       <?php echo _('Short description') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible in listings, magnet web page description and meta description (%s-%s chars)'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH) ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -581,7 +581,7 @@ else {
                       <?php } ?>
                       <textarea class="width-100 margin-t-8 <?php echo ($response->form->metaDescription->valid->success ? false : 'background-color-red') ?>" name="metaDescription" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->metaDescription->value ?></textarea>
                     </label>
-                    <label class="display-block margin-y-8">
+                    <label class="display-block margin-y-8 padding-y-4">
                       <?php echo _('Long description') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible on magnet web page (%s-%s chars)'), MAGNET_DESCRIPTION_MIN_LENGTH, MAGNET_DESCRIPTION_MAX_LENGTH) ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -596,7 +596,7 @@ else {
                   </fieldset>
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('BitTorrent') ?></legend>
-                    <label class="display-block margin-y-8" for="xt">
+                    <label class="display-block margin-y-8 padding-y-4" for="xt">
                       <?php echo _('Exact Topic (xt)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('URN containing file hash, could not be changed') ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -605,7 +605,7 @@ else {
                       </sub>
                       <input class="width-100 margin-t-8" type="text" name="xt" id="xt" value="<?php echo $response->form->xt->value ?>" readonly="readonly" disabled="disabled" />
                     </label>
-                    <label class="display-block margin-y-8" for="dn">
+                    <label class="display-block margin-y-8 padding-y-4" for="dn">
                       <?php echo _('Display Name (dn)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Filename display to the user in BitTorrent client') ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -614,7 +614,7 @@ else {
                       </sub>
                       <input class="width-100 margin-t-8" type="text" name="dn" id="dn" value="<?php echo $response->form->dn->value ?>" placeholder="<?php echo _('A filename to display to the user, for convenience') ?>" maxlength="255" />
                     </label>
-                    <label class="display-block margin-y-8" for="kt">
+                    <label class="display-block margin-y-8 padding-y-4" for="kt">
                       <?php echo _('Keyword Topic (kt)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Search keywords for YGGtracker and P2P networks over DHT') ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -623,7 +623,7 @@ else {
                       </sub>
                       <textarea class="width-100 margin-t-8" name="kt" id="kt" placeholder="<?php echo _('Hash tag, comma separated, or one per line') ?>"><?php echo $response->form->kt->value ?></textarea>
                     </label>
-                    <label class="display-block margin-y-8" for="tr">
+                    <label class="display-block margin-y-8 padding-y-4" for="tr">
                       <?php echo _('Address Tracker (tr)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Yggdrasil only trackers URL to obtain peers without DHT') ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -635,7 +635,7 @@ else {
                       <?php } ?>
                       <textarea class="width-100 margin-t-8 <?php echo ($response->form->tr->valid->success ? false : 'background-color-red') ?>" name="tr" id="tr" placeholder="<?php echo _('BitTorrent trackers list - comma separated, or one per line') ?>"><?php echo $response->form->tr->value ?></textarea>
                     </label>
-                    <label class="display-block margin-y-8" for="as">
+                    <label class="display-block margin-y-8 padding-y-4" for="as">
                       <?php echo _('Acceptable Source (as)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Yggdrasil only URL to a direct download from a web server') ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -647,7 +647,7 @@ else {
                       <?php } ?>
                       <textarea class="width-100 margin-t-8 <?php echo ($response->form->as->valid->success ? false : 'background-color-red') ?>" name="as" id="as" placeholder="<?php echo _('Web servers to a direct download - comma separated, or one per line') ?>"><?php echo $response->form->as->value ?></textarea>
                     </label>
-                    <label class="display-block margin-y-8" for="xs">
+                    <label class="display-block margin-y-8 padding-y-4" for="xs">
                       <?php echo _('eXact Source (xs)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Yggdrasil only URL to download source for the file pointed to by the Magnet link') ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
