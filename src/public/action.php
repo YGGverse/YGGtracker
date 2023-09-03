@@ -431,7 +431,30 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
           $link = [];
 
           /// Exact Topic
-          $link[] = sprintf('magnet:?xt=%s', $magnet->xt);
+          $xt = [];
+
+          foreach ($db->findMagnetToInfoHashByMagnetId($magnet->magnetId) as $result)
+          {
+            if ($infoHash = $db->getInfoHash($result->infoHashId))
+            {
+              switch ($infoHash->version)
+              {
+                case 1:
+
+                  $xt[] = sprintf('xt=urn:btih:%s', $infoHash->value);
+
+                break;
+
+                case 2:
+
+                  $xt[] = sprintf('xt=urn:btmh:%s', $infoHash->value);
+
+                break;
+              }
+            }
+          }
+
+          $link[] = sprintf('magnet:?%s', implode('&', $xt));
 
           /// Display Name
           $link[] = sprintf('dn=%s', urlencode($magnet->dn));
@@ -591,118 +614,137 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $db->beginTransaction();
 
             // Init magnet
-            if (Yggverse\Parser\Urn::parse($magnet->xt))
+            if ($magnetId = $db->addMagnet( $user->userId,
+                                            $magnet->xl,
+                                            $magnet->dn,
+                                            $link,
+                                            MAGNET_DEFAULT_PUBLIC,
+                                            MAGNET_DEFAULT_COMMENTS,
+                                            MAGNET_DEFAULT_SENSITIVE,
+                                            $user->approved ? true : MAGNET_DEFAULT_APPROVED,
+                                            time()))
             {
-              if ($magnetId = $db->initMagnetId($user->userId,
-                                                strip_tags($magnet->xt),
-                                                strip_tags($magnet->xl),
-                                                strip_tags($magnet->dn),
-                                                $link,
-                                                MAGNET_DEFAULT_PUBLIC,
-                                                MAGNET_DEFAULT_COMMENTS,
-                                                MAGNET_DEFAULT_SENSITIVE,
-                                                $user->approved ? true : MAGNET_DEFAULT_APPROVED,
-                                                time()))
+              foreach ($magnet as $key => $value)
               {
-                foreach ($magnet as $key => $value)
+                switch ($key)
                 {
-                  switch ($key)
-                  {
-                    case 'tr':
-                      foreach ($value as $tr)
+                  case 'xt':
+                    foreach ($value as $xt)
+                    {
+                      if (Yggverse\Parser\Magnet::isXTv1($xt))
                       {
-                        if ($url = Yggverse\Parser\Url::parse($tr))
-                        {
-                          if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
-                          {
-                            $db->initMagnetToAddressTrackerId(
-                              $magnetId,
-                              $db->initAddressTrackerId(
-                                $db->initSchemeId($url->host->scheme),
-                                $db->initHostId($url->host->name),
-                                $db->initPortId($url->host->port),
-                                $db->initUriId($url->page->uri)
-                              )
-                            );
-                          }
-                        }
-                      }
-                    break;
-                    case 'ws':
-                      foreach ($value as $ws)
-                      {
-                        // @TODO
-                      }
-                    break;
-                    case 'as':
-                      foreach ($value as $as)
-                      {
-                        if ($url = Yggverse\Parser\Url::parse($as))
-                        {
-                          if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
-                          {
-                            $db->initMagnetToAcceptableSourceId(
-                              $magnetId,
-                              $db->initAcceptableSourceId(
-                                $db->initSchemeId($url->host->scheme),
-                                $db->initHostId($url->host->name),
-                                $db->initPortId($url->host->port),
-                                $db->initUriId($url->page->uri)
-                              )
-                            );
-                          }
-                        }
-                      }
-                    break;
-                    case 'xs':
-                      foreach ($value as $xs)
-                      {
-                        if ($url = Yggverse\Parser\Url::parse($xs))
-                        {
-                          if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
-                          {
-                            $db->initMagnetToExactSourceId(
-                              $magnetId,
-                              $db->initExactSourceId(
-                                $db->initSchemeId($url->host->scheme),
-                                $db->initHostId($url->host->name),
-                                $db->initPortId($url->host->port),
-                                $db->initUriId($url->page->uri)
-                              )
-                            );
-                          }
-                        }
-                      }
-                    break;
-                    case 'mt':
-                      foreach ($value as $mt)
-                      {
-                        // @TODO
-                      }
-                    break;
-                    case 'x.pe':
-                      foreach ($value as $xPe)
-                      {
-                        // @TODO
-                      }
-                    break;
-                    case 'kt':
-                      foreach ($value as $kt)
-                      {
-                        $db->initMagnetToKeywordTopicId(
+                        $db->addMagnetToInfoHash(
                           $magnetId,
-                          $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
+                          $db->initInfoHashId(
+                            Yggverse\Parser\Magnet::filterInfoHash($xt), 1
+                          )
                         );
                       }
-                    break;
-                  }
+                      if (Yggverse\Parser\Magnet::isXTv2($xt))
+                      {
+                        $db->addMagnetToInfoHash(
+                          $magnetId,
+                          $db->initInfoHashId(
+                            Yggverse\Parser\Magnet::filterInfoHash($xt), 2
+                          )
+                        );
+                      }
+                    }
+                  break;
+                  case 'tr':
+                    foreach ($value as $tr)
+                    {
+                      if ($url = Yggverse\Parser\Url::parse($tr))
+                      {
+                        if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                        {
+                          $db->initMagnetToAddressTrackerId(
+                            $magnetId,
+                            $db->initAddressTrackerId(
+                              $db->initSchemeId($url->host->scheme),
+                              $db->initHostId($url->host->name),
+                              $db->initPortId($url->host->port),
+                              $db->initUriId($url->page->uri)
+                            )
+                          );
+                        }
+                      }
+                    }
+                  break;
+                  case 'ws':
+                    foreach ($value as $ws)
+                    {
+                      // @TODO
+                    }
+                  break;
+                  case 'as':
+                    foreach ($value as $as)
+                    {
+                      if ($url = Yggverse\Parser\Url::parse($as))
+                      {
+                        if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                        {
+                          $db->initMagnetToAcceptableSourceId(
+                            $magnetId,
+                            $db->initAcceptableSourceId(
+                              $db->initSchemeId($url->host->scheme),
+                              $db->initHostId($url->host->name),
+                              $db->initPortId($url->host->port),
+                              $db->initUriId($url->page->uri)
+                            )
+                          );
+                        }
+                      }
+                    }
+                  break;
+                  case 'xs':
+                    foreach ($value as $xs)
+                    {
+                      if ($url = Yggverse\Parser\Url::parse($xs))
+                      {
+                        if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                        {
+                          $db->initMagnetToExactSourceId(
+                            $magnetId,
+                            $db->initExactSourceId(
+                              $db->initSchemeId($url->host->scheme),
+                              $db->initHostId($url->host->name),
+                              $db->initPortId($url->host->port),
+                              $db->initUriId($url->page->uri)
+                            )
+                          );
+                        }
+                      }
+                    }
+                  break;
+                  case 'mt':
+                    foreach ($value as $mt)
+                    {
+                      // @TODO
+                    }
+                  break;
+                  case 'x.pe':
+                    foreach ($value as $xPe)
+                    {
+                      // @TODO
+                    }
+                  break;
+                  case 'kt':
+                    foreach ($value as $kt)
+                    {
+                      $db->initMagnetToKeywordTopicId(
+                        $magnetId,
+                        $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
+                      );
+                    }
+                  break;
                 }
-
-                $db->commit();
-
-                // Redirect to edit page
-                header(sprintf('Location: %s/edit.php?magnetId=%s', trim(WEBSITE_URL, '/'), $magnetId));
               }
+
+              $db->commit();
+
+              // Redirect to edit page
+              header(sprintf('Location: %s/edit.php?magnetId=%s', trim(WEBSITE_URL, '/'), $magnetId));
             }
 
           } catch (Exception $e) {

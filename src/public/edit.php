@@ -51,15 +51,6 @@ $response = (object)
         'message' => false,
       ]
     ],
-    'xt' => (object)
-    [
-      'value' => false,
-      'valid' => (object)
-      [
-        'success' => true,
-        'message' => false,
-      ]
-    ],
     'dn' => (object)
     [
       'value' => false,
@@ -69,9 +60,18 @@ $response = (object)
         'message' => false,
       ]
     ],
+    'xt' => (object)
+    [
+      'value' => [],
+      'valid' => (object)
+      [
+        'success' => true,
+        'message' => false,
+      ]
+    ],
     'kt' => (object)
     [
-      'value' => false,
+      'value' => [],
       'valid' => (object)
       [
         'success' => true,
@@ -80,7 +80,7 @@ $response = (object)
     ],
     'tr' => (object)
     [
-      'value' => false,
+      'value' => [],
       'valid' => (object)
       [
         'success' => true,
@@ -89,7 +89,7 @@ $response = (object)
     ],
     'as' => (object)
     [
-      'value' => false,
+      'value' => [],
       'valid' => (object)
       [
         'success' => true,
@@ -98,7 +98,7 @@ $response = (object)
     ],
     'xs' => (object)
     [
-      'value' => false,
+      'value' => [],
       'valid' => (object)
       [
         'success' => true,
@@ -265,6 +265,76 @@ else {
     if (isset($_POST['dn']))
     {
       $db->updateMagnetDn($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['dn']))), time());
+    }
+
+    // Exact Topic
+    if (isset($_POST['xt']))
+    {
+      foreach ((array) $_POST['xt'] as $version => $value)
+      {
+        switch ($version)
+        {
+          case 1:
+
+            if (!empty($value))
+            {
+              $exist = false;
+
+              foreach ($db->findMagnetToInfoHashByMagnetId($magnet->magnetId) as $result)
+              {
+                if ($infoHash = $db->getInfoHash($result->infoHashId))
+                {
+                  if ($infoHash->version == 1)
+                  {
+                    $exist = true;
+                  }
+                }
+              }
+
+              if (!$exist)
+              {
+                $db->addMagnetToInfoHash(
+                  $magnet->magnetId,
+                  $db->initInfoHashId(
+                    Yggverse\Parser\Magnet::filterInfoHash($value), 1
+                  )
+                );
+              }
+            }
+
+          break;
+
+          case 2:
+
+            if (!empty($value))
+            {
+              $exist = false;
+
+              foreach ($db->findMagnetToInfoHashByMagnetId($magnet->magnetId) as $result)
+              {
+                if ($infoHash = $db->getInfoHash($result->infoHashId))
+                {
+                  if ($infoHash->version == 2)
+                  {
+                    $exist = true;
+                  }
+                }
+              }
+
+              if (!$exist)
+              {
+                $db->addMagnetToInfoHash(
+                  $magnet->magnetId,
+                  $db->initInfoHashId(
+                    Yggverse\Parser\Magnet::filterInfoHash($value), 2
+                  )
+                );
+              }
+            }
+
+          break;
+        }
+      }
     }
 
     // Keyword Topic
@@ -437,11 +507,17 @@ else {
   $response->form->sensitive->value = (bool) $magnet->sensitive;
   $response->form->approved->value  = (bool) $magnet->approved;
 
-  // Exact Topic
-  $response->form->xt->value = $magnet->xt;
-
   // Display Name
   $response->form->dn->value = $magnet->dn;
+
+  // Exact Topic
+  foreach ($db->findMagnetToInfoHashByMagnetId($magnet->magnetId) as $result)
+  {
+    if ($infoHash = $db->getInfoHash($result->infoHashId))
+    {
+      $response->form->xt->value[$infoHash->version] = $infoHash->value;
+    }
+  }
 
   // Keyword Topic
   $kt = [];
@@ -596,15 +672,45 @@ else {
                   </fieldset>
                   <fieldset class="display-block margin-b-16">
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('BitTorrent') ?></legend>
-                    <label class="display-block margin-y-8 padding-t-4" for="xt">
-                      <?php echo _('Exact Topic (xt)') ?>
-                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('URN containing file hash, could not be changed') ?>">
-                        <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                        </svg>
-                      </sub>
-                      <input class="width-100 margin-t-8" type="text" name="xt" id="xt" value="<?php echo $response->form->xt->value ?>" readonly="readonly" disabled="disabled" />
+                    <label class="display-block margin-y-8 padding-t-4" for="xt-1">
+                      <?php echo _('Info Hash v1 (xt)') ?>
+                      <?php if (empty($response->form->xt->value[1])) { ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Info info hash (btih) not provided and could be changed once') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                        <input class="width-100 margin-t-8 <?php echo (empty($response->form->xt->value[2]) ? 'background-color-red' : false) ?>" type="text" name="xt[1]" id="xt-1" value="" />
+                      <?php } else { ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Unique info hash (btih)') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                        <input class="width-100 margin-t-8" type="text" name="xt[1]" id="xt-1" value="<?php echo $response->form->xt->value[1] ?>" readonly="readonly" disabled="disabled" />
+                      <?php } ?>
                     </label>
+                    <label class="display-block margin-y-8 padding-t-4" for="xt-2">
+                      <?php echo _('Info Hash v2 (xt)') ?>
+                      <?php if (empty($response->form->xt->value[2])) { ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Info info hash (btmh) not provided and could be changed once') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                        <input class="width-100 margin-t-8 <?php echo (empty($response->form->xt->value[1]) ? 'background-color-red' : false) ?>" type="text" name="xt[2]" id="xt-2" value="" />
+                      <?php } else { ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Unique info hash (btmh)') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                        <input class="width-100 margin-t-8" type="text" name="xt[2]" id="xt-2" value="<?php echo $response->form->xt->value[2] ?>" readonly="readonly" disabled="disabled" />
+                      <?php } ?>
+                    </label>
+                    <?php if (empty($response->form->xt->value[1]) && empty($response->form->xt->value[2])) { ?>
+                      <div class="margin-b-8"><?php echo _('At least v1 or v2 info hash required for download') ?></div>
+                    <?php } ?>
                     <label class="display-block margin-y-8 padding-t-4" for="dn">
                       <?php echo _('Display Name (dn)') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('Filename display to the user in BitTorrent client') ?>">

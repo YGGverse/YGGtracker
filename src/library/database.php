@@ -248,6 +248,50 @@ class Database {
     return $this->addUri($value);
   }
 
+  // Info Hash
+  public function addInfoHash(mixed $value, int $version) : int {
+
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `infoHash` SET `value` = ?, `version` = ?');
+
+    $query->execute([$value, $version]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function getInfoHash(int $infoHashId) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `infoHash` WHERE `infoHashId` = ?');
+
+    $query->execute([$infoHashId]);
+
+    return $query->fetch();
+  }
+
+  public function findInfoHash(string $value, int $version) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `infoHash` WHERE `value` = ? AND `version` = ?');
+
+    $query->execute([$value, $version]);
+
+    return $query->fetch();
+  }
+
+  public function initInfoHashId(mixed $value, int $version) : int {
+
+    if ($result = $this->findInfoHash($value, $version)) {
+
+      return $result->infoHashId;
+    }
+
+    return $this->addInfoHash($value, $version);
+  }
+
   // Address Tracker
   public function addAddressTracker(int $schemeId, int $hostId, mixed $portId, mixed $uriId) : int {
 
@@ -495,7 +539,6 @@ class Database {
 
   // Magnet
   public function addMagnet(int $userId,
-                            string $xt,
                             int $xl,
                             string $dn,
                             string $linkSource,
@@ -508,7 +551,6 @@ class Database {
     $this->_debug->query->insert->total++;
 
     $query = $this->_db->prepare('INSERT INTO `magnet` SET  `userId`      = ?,
-                                                            `xt`          = ?,
                                                             `xl`          = ?,
                                                             `dn`          = ?,
                                                             `linkSource`  = ?,
@@ -521,7 +563,6 @@ class Database {
     $query->execute(
       [
         $userId,
-        $xt,
         $xl,
         $dn,
         $linkSource,
@@ -567,45 +608,6 @@ class Database {
     $query->execute();
 
     return $query->fetch()->result;
-  }
-
-  public function findMagnet(int $userId, string $xt) {
-
-    $this->_debug->query->select->total++;
-
-    $query = $this->_db->prepare('SELECT * FROM `magnet` WHERE `userId` = ? AND `xt` = ?');
-
-    $query->execute([$userId, $xt]);
-
-    return $query->fetch();
-  }
-
-  public function initMagnetId( int $userId,
-                                string $xt,
-                                int $xl,
-                                string $dn,
-                                string $linkSource,
-                                bool $public,
-                                bool $comments,
-                                bool $sensitive,
-                                bool $approved,
-                                int $timeAdded) : int {
-
-    if ($result = $this->findMagnet($userId, $xt)) {
-
-      return $result->magnetId;
-    }
-
-    return $this->addMagnet($userId,
-                            $xt,
-                            $xl,
-                            $dn,
-                            $linkSource,
-                            $public,
-                            $comments,
-                            $sensitive,
-                            $approved,
-                            $timeAdded);
   }
 
   public function updateMagnetDn(int $magnetId, string $dn, int $timeUpdated) : int {
@@ -694,6 +696,29 @@ class Database {
     $query->execute([(int) $approved, $timeUpdated, $magnetId]);
 
     return $query->rowCount();
+  }
+
+  // Magnet to Info Hash
+  public function addMagnetToInfoHash(int $magnetId, int $infoHashId) : int {
+
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `magnetToInfoHash` SET `magnetId` = ?, `infoHashId` = ?');
+
+    $query->execute([$magnetId, $infoHashId]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function findMagnetToInfoHashByMagnetId(int $magnetId)
+  {
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetToInfoHash` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return $query->fetchAll();
   }
 
   // Magnet to AddressTracker

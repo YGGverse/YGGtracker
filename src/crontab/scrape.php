@@ -57,6 +57,12 @@ try {
 
   foreach ($db->getMagnetToAddressTrackerScrapeQueue(CRAWLER_SCRAPE_QUEUE_LIMIT) as $queue)
   {
+    $hash = [];
+    foreach ($db->findMagnetToInfoHashByMagnetId($queue->magnetId) as $result)
+    {
+      $hash[] = $db->getInfoHash($result->infoHashId)->value;
+    }
+
     if ($addressTracker = $db->getAddressTracker($queue->addressTrackerId))
     {
       // Build url
@@ -72,9 +78,7 @@ try {
                                                                                         $host->value,
                                                                                         $uri->value);
 
-      $hash = str_replace('urn:btih:', false, $db->getMagnet($queue->magnetId)->xt);
-
-      if ($scrape = $scraper->scrape([$hash], [$url], null, 1))
+      if ($scrape = $scraper->scrape($hash, [$url], null, 1))
       {
         $db->updateMagnetToAddressTrackerTimeOffline(
           $queue->magnetToAddressTrackerId,
