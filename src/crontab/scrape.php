@@ -57,10 +57,10 @@ try {
 
   foreach ($db->getMagnetToAddressTrackerScrapeQueue(CRAWLER_SCRAPE_QUEUE_LIMIT) as $queue)
   {
-    $hash = [];
+    $hashes = [];
     foreach ($db->findMagnetToInfoHashByMagnetId($queue->magnetId) as $result)
     {
-      $hash[] = $db->getInfoHash($result->infoHashId)->value;
+      $hashes[] = $db->getInfoHash($result->infoHashId)->value;
     }
 
     if ($addressTracker = $db->getAddressTracker($queue->addressTrackerId))
@@ -78,46 +78,49 @@ try {
                                                                                         $host->value,
                                                                                         $uri->value);
 
-      if ($scrape = $scraper->scrape($hash, [$url], null, 1))
+      foreach ($hashes as $hash)
       {
-        $db->updateMagnetToAddressTrackerTimeOffline(
-          $queue->magnetToAddressTrackerId,
-          null
-        );
-
-        if (isset($scrape[$hash]['seeders']))
+        if ($scrape = $scraper->scrape([$hash], [$url], null, 1))
         {
-          $db->updateMagnetToAddressTrackerSeeders(
+          $db->updateMagnetToAddressTrackerTimeOffline(
             $queue->magnetToAddressTrackerId,
-            (int) $scrape[$hash]['seeders'],
+            null
+          );
+
+          if (isset($scrape[$hash]['seeders']))
+          {
+            $db->updateMagnetToAddressTrackerSeeders(
+              $queue->magnetToAddressTrackerId,
+              (int) $scrape[$hash]['seeders'],
+              time()
+            );
+          }
+
+          if (isset($scrape[$hash]['completed']))
+          {
+            $db->updateMagnetToAddressTrackerCompleted(
+              $queue->magnetToAddressTrackerId,
+              (int) $scrape[$hash]['completed'],
+              time()
+            );
+          }
+
+          if (isset($scrape[$hash]['leechers']))
+          {
+            $db->updateMagnetToAddressTrackerLeechers(
+              $queue->magnetToAddressTrackerId,
+              (int) $scrape[$hash]['leechers'],
+              time()
+            );
+          }
+        }
+        else
+        {
+          $db->updateMagnetToAddressTrackerTimeOffline(
+            $queue->magnetToAddressTrackerId,
             time()
           );
         }
-
-        if (isset($scrape[$hash]['completed']))
-        {
-          $db->updateMagnetToAddressTrackerCompleted(
-            $queue->magnetToAddressTrackerId,
-            (int) $scrape[$hash]['completed'],
-            time()
-          );
-        }
-
-        if (isset($scrape[$hash]['leechers']))
-        {
-          $db->updateMagnetToAddressTrackerLeechers(
-            $queue->magnetToAddressTrackerId,
-            (int) $scrape[$hash]['leechers'],
-            time()
-          );
-        }
-      }
-      else
-      {
-        $db->updateMagnetToAddressTrackerTimeOffline(
-          $queue->magnetToAddressTrackerId,
-          time()
-        );
       }
     }
   }
