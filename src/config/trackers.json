@@ -1,7 +1,7 @@
 [
   {
     "description":"YGGtracker instance, yggdrasil-only connections",
-    "url":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]:2023/yggtracker",
+    "url":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker",
     "announce":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]:2023/announce",
     "stats":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]:2023/stats",
     "scrape":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]:2023/scrape"
