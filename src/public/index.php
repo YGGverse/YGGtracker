@@ -407,7 +407,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
             <?php } ?>
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
-            <a href="<?php echo WEBSITE_URL ?>/index.php?rss<?php echo $request->query ? sprintf('&query=%s', urlencode($request->query)) : false ?>"><?php echo _('RSS') ?></a>
+            <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/index.php?rss<?php echo $request->query ? sprintf('&query=%s', urlencode($request->query)) : false ?>"><?php echo _('RSS') ?></a>
             |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>
           </div>
