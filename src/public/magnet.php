@@ -199,6 +199,12 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                   <div class="padding-16 <?php echo $response->magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
                     <a name="magnet-<?php echo $response->magnet->magnetId ?>"></a>
                     <h1 class="margin-b-8"><?php echo $response->magnet->metaTitle ?></h1>
+                    <?php if ($response->magnet->leechers && !$response->magnet->seeders) { ?>
+                      <span class="label label-green margin-x-4 font-size-10 position-relative top--2 cursor-default"
+                            title="<?php echo _('Active leechers waiting for seeds') ?>">
+                        <?php echo _('wanted') ?>
+                      </span>
+                    <?php } ?>
                     <div class="float-right opacity-0 parent-hover-opacity-09">
                     <?php if (!$response->magnet->public) { ?>
                       <span class="margin-l-8" title="<?php echo _('Private') ?>">

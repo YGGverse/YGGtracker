@@ -54,8 +54,16 @@
 }
 
 .label-green {
-  color: #277b1b;
-  border: 1px #92bc8c solid;
+  color: #fff;
+  background-color: #65916d;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.top--2 {
+  top: -2px;
 }
 
 .line-height-26 {
@@ -110,6 +118,10 @@
 
 .font-width-normal {
   font-weight: normal;
+}
+
+.font-size-10 {
+  font-size: 10px;
 }
 
 .font-size-12 {
@@ -197,6 +209,11 @@
 
 .margin-l-16 {
   margin-left: 16px;
+}
+
+.margin-x-4 {
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .margin-r-4 {
