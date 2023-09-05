@@ -447,8 +447,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
                 case 2:
 
-                  // @TODO temporarily disabled because of address too long error in some clients
-                  // $xt[] = sprintf('xt=urn:btmh:%s', $infoHash->value);
+                  $xt[] = sprintf('xt=urn:btmh:1220%s', $infoHash->value);
 
                 break;
               }
