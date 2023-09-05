@@ -86,6 +86,10 @@
   border-bottom: 1px #a44399 solid;
 }
 
+.border-default {
+  border: 1px #5d627d solid;
+}
+
 .border-bottom-default {
   border-bottom: 1px #5d627d solid;
 }

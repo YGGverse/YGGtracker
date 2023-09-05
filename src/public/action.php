@@ -21,7 +21,8 @@ try {
 $response = (object)
 [
   'success' => true,
-  'message' => _('Internal server error')
+  'message' => _('Internal server error'),
+  'title'   => sprintf(_('Oops - %s'), WEBSITE_NAME)
 ];
 
 // Begin action request
@@ -553,10 +554,30 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $link[] = $url;
           }
 
-          // Return download link
-          header(
-            sprintf('Location: %s', implode('&', array_unique($link)))
+          // Return link @TODO implement .bittorrent and separated v1/v2 magnet links
+          $response->title = sprintf(
+            _('%s - Download - %s'),
+            htmlentities($magnet->metaTitle),
+            WEBSITE_NAME
           );
+
+          $response->message = sprintf( // @TODO MVC page for downloads needed
+           '<h1 class="display-block margin-b-16 font-size-16">%s</h1>
+            <a href="%s">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-magnet" viewBox="0 0 16 16">
+                <path d="M8 1a7 7 0 0 0-7 7v3h4V8a3 3 0 0 1 6 0v3h4V8a7 7 0 0 0-7-7Zm7 11h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
+              </svg>
+            </a>',
+            htmlentities($magnet->metaTitle),
+            implode('&', array_unique($link))
+          );
+
+          // Direct link output could not be useful because not cover all downloads options available on page.
+          // Also opens default app, when Yggdrasil users may run separated client for that needs.
+          // Feedback https://github.com/YGGverse/YGGtracker/issues
+          # header(
+          #   sprintf('Location: %s', implode('&', array_unique($link)))
+          # );
         }
 
       break;
@@ -769,7 +790,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
     <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE_URL ?>/assets/theme/default/css/common.css?<?php echo WEBSITE_CSS_VERSION ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE_URL ?>/assets/theme/default/css/framework.css?<?php echo WEBSITE_CSS_VERSION ?>" />
     <title>
-      <?php echo sprintf(_('Oops - %s'), WEBSITE_NAME) ?>
+      <?php echo $response->title ?>
     </title>
     <meta name="robots" content="noindex,nofollow"/>
     <meta name="author" content="YGGtracker" />
@@ -796,6 +817,17 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             </div>
           </div>
         </div>
+        <?php if (!empty($_SERVER['HTTP_REFERER']) && false !== strpos($_SERVER['HTTP_REFERER'], WEBSITE_URL)) { ?>
+          <div class="row">
+            <div class="column width-100 text-right">
+              <a class="button margin-l-8"
+                  rel="nofollow"
+                  href="<?php echo $_SERVER['HTTP_REFERER'] ?>">
+                <?php echo _('return') ?>
+              </a>
+            </div>
+          </div>
+        <?php } ?>
       </div>
     </main>
     <footer>
