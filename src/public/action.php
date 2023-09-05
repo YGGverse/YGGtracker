@@ -447,7 +447,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
                 case 2:
 
-                  $xt[] = sprintf('xt=urn:btmh:%s', $infoHash->value);
+                  // @TODO temporarily disabled because of address too long error in some clients
+                  // $xt[] = sprintf('xt=urn:btmh:%s', $infoHash->value);
 
                 break;
               }
