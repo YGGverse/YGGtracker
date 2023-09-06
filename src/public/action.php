@@ -392,6 +392,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
       break;
 
+      /* Moved to download.php
       case 'download':
 
         // Yggdrasil connections only
@@ -554,36 +555,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             $link[] = $url;
           }
 
-          // Return link @TODO implement .bittorrent and separated v1/v2 magnet links
-          $response->title = sprintf(
-            _('%s - Download - %s'),
-            htmlentities($magnet->metaTitle),
-            WEBSITE_NAME
+          // Return link
+          header(
+            sprintf('Location: %s', implode('&', array_unique($link)))
           );
-
-          $response->message = sprintf( // @TODO MVC page for downloads needed
-           '<h1 class="display-block margin-b-16 font-size-16">%s</h1>
-            <div class="margin-b-16 text-color-night">
-              * make sure BitTorrent client listening Yggdrasil interface!
-            </div>
-            <a href="%s">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-magnet" viewBox="0 0 16 16">
-                <path d="M8 1a7 7 0 0 0-7 7v3h4V8a3 3 0 0 1 6 0v3h4V8a7 7 0 0 0-7-7Zm7 11h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
-              </svg>
-            </a>',
-            htmlentities($magnet->metaTitle),
-            implode('&', array_unique($link))
-          );
-
-          // Direct link output could not be useful because not cover all downloads options available on page.
-          // Also opens default app, when Yggdrasil users may run separated client for that needs.
-          // Feedback https://github.com/YGGverse/YGGtracker/issues
-          # header(
-          #   sprintf('Location: %s', implode('&', array_unique($link)))
-          # );
         }
 
       break;
+      */
 
       case 'new':
 

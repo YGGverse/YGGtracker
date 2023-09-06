@@ -336,7 +336,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                           <sup><?php echo $magnet->comment->total ?></sup>
                         </span>
                         <span class="float-right margin-l-12">
-                          <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/action.php?target=magnet&toggle=download&magnetId=<?php echo $magnet->magnetId ?>" title="<?php echo _('Download') ?>">
+                          <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/download.php?magnetId=<?php echo $magnet->magnetId ?>" title="<?php echo _('Download') ?>">
                             <?php if ($magnet->download->status) { ?>
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle-fill" viewBox="0 0 16 16">
                                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
