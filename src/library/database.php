@@ -885,6 +885,17 @@ class Database {
     return (int) $query->fetch()->result;
   }
 
+  public function getMagnetToAcceptableSourceTotalByMagnetId(int $magnetId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetToAcceptableSource` WHERE `magnetId` = ?');
+
+    $query->execute([$magnetId]);
+
+    return (int) $query->fetch()->result;
+  }
+
   public function getMagnetToAddressTrackerSeedersSum() : int {
 
     $this->_debug->query->select->total++;
