@@ -1,6 +1,6 @@
 # YGGtracker
 
-BitTorrent Catalog for Yggdrasil ecosystem
+BitTorrent Registry for Yggdrasil
 
 YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
 

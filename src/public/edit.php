@@ -602,7 +602,7 @@ else {
     <title>
       <?php echo sprintf(_('Edit - %s'), WEBSITE_NAME) ?>
     </title>
-    <meta name="description" content="<?php echo _('BitTorrent Catalog for Yggdrasil') ?>" />
+    <meta name="description" content="<?php echo _('BitTorrent Registry for Yggdrasil') ?>" />
     <meta name="keywords" content="yggdrasil, yggverse, yggtracker, bittorrent, magnet, catalog" />
     <meta name="author" content="YGGtracker" />
     <meta charset="UTF-8" />

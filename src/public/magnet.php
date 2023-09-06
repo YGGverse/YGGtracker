@@ -145,7 +145,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
       <atom:link href="<?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?>" rel="self" type="application/rss+xml"></atom:link>
       <link><?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?></link>
       <title><?php echo sprintf(_('%s - Comments - %s'), htmlentities($response->magnet->metaTitle), WEBSITE_NAME) ?></title>
-      <description><?php echo _('BitTorrent Catalog for Yggdrasil') ?></description>
+      <description><?php echo _('BitTorrent Registry for Yggdrasil') ?></description>
       <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
         <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address || in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
           <item>
