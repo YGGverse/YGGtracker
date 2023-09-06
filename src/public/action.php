@@ -35,7 +35,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'jidenticon':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -85,7 +85,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'approved':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -166,7 +166,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'public':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -236,7 +236,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'new':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -329,7 +329,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'star':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -396,7 +396,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'download':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -489,7 +489,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $uri->value)));
 
             // Yggdrasil url only
-            if (!preg_match(YGGDRASIL_URL_REGEX, $url))
+            if (!preg_match(YGGDRASIL_HOST_REGEX, $url))
             {
               continue;
             }
@@ -521,7 +521,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $uri->value)));
 
             // Yggdrasil url only
-            if (!preg_match(YGGDRASIL_URL_REGEX, $url))
+            if (!preg_match(YGGDRASIL_HOST_REGEX, $url))
             {
               continue;
             }
@@ -547,7 +547,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                                                                                             $uri->value)));
 
             // Yggdrasil url only
-            if (!preg_match(YGGDRASIL_URL_REGEX, $url))
+            if (!preg_match(YGGDRASIL_HOST_REGEX, $url))
             {
               continue;
             }
@@ -567,7 +567,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
       case 'new':
 
         // Yggdrasil connections only
-        if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+        if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
         {
           $response->success = false;
           $response->message = _('Yggdrasil connection required for this action');
@@ -659,7 +659,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                     {
                       if ($url = Yggverse\Parser\Url::parse($tr))
                       {
-                        if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                        if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
                         {
                           $db->initMagnetToAddressTrackerId(
                             $magnetId,
@@ -685,7 +685,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                     {
                       if ($url = Yggverse\Parser\Url::parse($as))
                       {
-                        if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                        if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
                         {
                           $db->initMagnetToAcceptableSourceId(
                             $magnetId,
@@ -705,7 +705,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                     {
                       if ($url = Yggverse\Parser\Url::parse($xs))
                       {
-                        if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+                        if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
                         {
                           $db->initMagnetToExactSourceId(
                             $magnetId,

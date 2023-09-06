@@ -31,7 +31,7 @@ $response = (object)
 ];
 
   // Yggdrasil connections only
-  if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+  if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
   {
     $response->success = false;
     $response->message = _('Yggdrasil connection required for this action');
@@ -123,8 +123,8 @@ $response = (object)
                                                                                                                       $host->value,
                                                                                                                       $uri->value)));
 
-      // Yggdrasil url only
-      if (!preg_match(YGGDRASIL_URL_REGEX, $url))
+      // Yggdrasil host only
+      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
       {
         continue;
       }
@@ -154,9 +154,8 @@ $response = (object)
                                                                                   $uri->value) : sprintf('%s://%s%s', $scheme->value,
                                                                                                                       $host->value,
                                                                                                                       $uri->value)));
-
-      // Yggdrasil url only
-      if (!preg_match(YGGDRASIL_URL_REGEX, $url))
+      // Yggdrasil host only
+      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
       {
         continue;
       }
@@ -181,8 +180,8 @@ $response = (object)
                                                                                                                       $host->value,
                                                                                                                       $uri->value)));
 
-      // Yggdrasil url only
-      if (!preg_match(YGGDRASIL_URL_REGEX, $url))
+      // Yggdrasil host only
+      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
       {
         continue;
       }

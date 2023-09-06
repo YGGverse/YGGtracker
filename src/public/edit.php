@@ -140,7 +140,7 @@ $response = (object)
 ];
 
 // Yggdrasil connections only
-if (!preg_match(YGGDRASIL_URL_REGEX, $_SERVER['REMOTE_ADDR']))
+if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
 {
   $response->success = false;
   $response->message = _('Yggdrasil connection required to enable resource features');
@@ -370,7 +370,7 @@ else {
         {
           if ($url = Yggverse\Parser\Url::parse($tr))
           {
-            if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+            if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
               $db->initMagnetToAddressTrackerId(
                 $magnet->magnetId,
@@ -406,7 +406,7 @@ else {
         {
           if ($url = Yggverse\Parser\Url::parse($as))
           {
-            if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+            if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
               $db->initMagnetToAcceptableSourceId(
                 $magnet->magnetId,
@@ -442,7 +442,7 @@ else {
         {
           if ($url = Yggverse\Parser\Url::parse($xs))
           {
-            if (preg_match(YGGDRASIL_URL_REGEX, str_replace(['[',']'], false, $url->host->name)))
+            if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
             {
               $db->initMagnetToExactSourceId(
                 $magnet->magnetId,
