@@ -152,8 +152,8 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
                   </a>
                   <div class="margin-t-16">
                     <p><?php echo _('To start seeding, make sure you have BitTorrent client configured to listen Yggdrasil interface.') ?></p>
-                    <p><?php echo _('Another requirement - port given by client enabled in firewall rules.') ?></p>
-                    <p><?php echo _('On changes, re-announce your connection to tracker, alternatively restart BitTorrent client.') ?></p>
+                    <p><?php echo _('UPnP option not applying to router in Yggdrasil tunnels. But port open required in firewall rules.') ?></p>
+                    <p><?php echo _('On changes completed, re-announce your connection to tracker, alternatively restart BitTorrent client.') ?></p>
                   </div>
                 </div>
                 <div class="margin-b-16 text-right padding-y-8 margin-b-8 border-bottom-default">
