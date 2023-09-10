@@ -41,8 +41,14 @@
 }
 
 .text-color-pink {
+  color: #b55cab;
+}
+
+/*
+.text-color-pink {
   color: #a44399;
 }
+*/
 
 .text-color-blue {
   color: #5785b7;
@@ -193,6 +199,10 @@
   padding-bottom: 8px;
 }
 
+.padding-b-16 {
+  padding-bottom: 16px;
+}
+
 .padding-t-16 {
   padding-top: 16px;
 }
@@ -259,6 +269,10 @@
 
 .margin-b-16 {
   margin-bottom: 16px;
+}
+
+.margin-b-24 {
+  margin-bottom: 24px;
 }
 
 .display-block {

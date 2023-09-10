@@ -537,6 +537,17 @@ class Database {
     return $query->rowCount();
   }
 
+  public function updateUserPublic(int $userId, bool $public, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `user` SET `public` = ?, `timeUpdated` = ? WHERE `userId` = ?');
+
+    $query->execute([(int) $public, $timeUpdated, $userId]);
+
+    return $query->rowCount();
+  }
+
   // Magnet
   public function addMagnet(int $userId,
                             int $xl,
