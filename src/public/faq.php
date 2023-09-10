@@ -138,7 +138,7 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
                   </a>
                   <div class="margin-t-16">
                     <p class="margin-b-16"><?php echo _('To use torrents in Yggdrasil network, your client should support IPv6 protocol and listen Yggdrasil interface, instead or with regular internet connection.') ?></p>
-                    <p class="margin-b-16"><?php echo _('<a href="https://www.qbittorrent.org/">qBittorrent</a> supports all required features, just check <strong>Preferences - Advanced - Network interface / Optional IP address to bind to</strong> settings and select Yggdrasil instance from list, then reboot client.') ?></p>
+                    <p class="margin-b-16"><?php echo _('<a href="https://www.qbittorrent.org/">qBittorrent</a> supports all required features, just check <strong>Preferences</strong> - <strong>Advanced</strong> - <strong>Optional IP address to bind</strong> and set to <strong>All addresses</strong> or Yggdrasil address only.') ?></p>
                     <p><?php echo sprintf(_('To start download, click %s icon and select available options: magnet or direct download.'), '<svg class="width-13px position-relative top-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/></svg>') ?></p>
                   </div>
                 </div>
