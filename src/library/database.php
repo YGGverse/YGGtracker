@@ -494,13 +494,31 @@ class Database {
     return $query->fetch();
   }
 
-  public function getUsersTotal() {
+  public function getUsersTotal() : int {
 
     $this->_debug->query->select->total++;
 
     $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `user`');
 
     $query->execute();
+
+    return $query->fetch()->result;
+  }
+
+  public function getUsersTotalByPublic(mixed $public) : int {
+
+    $this->_debug->query->select->total++;
+
+    if (is_null($public))
+    {
+      $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `user` WHERE `public` IS NULL');
+      $query->execute();
+    }
+    else
+    {
+      $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `user` WHERE `public` = ?');
+      $query->execute([(int) $public]);
+    }
 
     return $query->fetch()->result;
   }
@@ -628,6 +646,19 @@ class Database {
     $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnet` WHERE `userId` = ?');
 
     $query->execute([$userId]);
+
+    return $query->fetch()->result;
+  }
+
+  public function getMagnetsTotalByUsersPublic(bool $public) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM  `magnet`
+                                                              JOIN  `user` ON (`user`.`userId` = `magnet`.`userId`)
+                                                              WHERE `user`.`public` = ?');
+
+    $query->execute([(int) $public]);
 
     return $query->fetch()->result;
   }
@@ -1242,6 +1273,19 @@ class Database {
 
       $query->execute([$userId]);
     }
+
+    return $query->fetch()->result;
+  }
+
+  public function getMagnetCommentsTotalByUsersPublic(bool $public) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM  `magnetComment`
+                                                              JOIN  `user` ON (`user`.`userId` = `magnetComment`.`userId`)
+                                                              WHERE `user`.`public` = ?');
+
+    $query->execute([(int) $public]);
 
     return $query->fetch()->result;
   }

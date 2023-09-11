@@ -117,6 +117,20 @@ else if (is_null($user->public))
                         <?php echo Time::ago((int) $user->timeUpdated) ?>
                       </td>
                     </tr>
+                    <!--
+                    <tr>
+                      <td><?php echo _('Magnets') ?></td>
+                      <td>
+                        <?php echo $db->getMagnetsTotalByUserId($user->userId) ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('Comments') ?></td>
+                      <td>
+                        <?php echo $db->getMagnetCommentsTotalByUserId($user->userId) ?>
+                      </td>
+                    </tr>
+                    -->
                     <tr>
                       <td class="padding-b-8 border-bottom-default text-right" colspan="2">
                         <?php echo _('Rules') ?>
@@ -137,38 +151,77 @@ else if (is_null($user->public))
                     </tr>
                     <tr>
                       <td class="padding-t-16"><?php echo _('Users') ?></td>
-                      <td class="padding-t-16"><?php echo $db->getUsersTotal() ?></td>
+                      <td class="padding-t-16">
+                        <?php echo $db->getUsersTotal() ?>
+                        <?php if ($usersTotalByPublicTrue = $db->getUsersTotalByPublic(true)) { ?>
+                        /
+                        <span class="cursor-default text-color-green">
+                          <?php echo $usersTotalByPublicTrue ?>
+                        </span>
+                        <?php } ?>
+                        <?php if ($usersTotalByPublicFalse = $db->getUsersTotalByPublic(false)) { ?>
+                        /
+                        <span class="cursor-default text-color-pink">
+                          <?php echo $usersTotalByPublicFalse ?>
+                        </span>
+                        <?php } ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
+                                                                                        ($usersTotalByPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
+                                                                                        ($usersTotalByPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </td>
                     </tr>
                     <tr>
                       <td><?php echo _('Magnets') ?></td>
-                      <td>
+                      <td class="cursor-default">
                         <?php echo $db->getMagnetsTotal() ?>
-                        /
-                        <span class="cursor-default <?php echo $user->public ? 'text-color-green' : 'text-color-pink' ?>">
-                          <?php echo $db->getMagnetsTotalByUserId($user->userId) ?>
-                          <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your magnets on this instance (Distributed access)') : _('Your magnets on this instance (local access level)') ?>">
-                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                            </svg>
-                          </sub>
-                        </span>
+                        <?php if ($magnetsTotalByUsersPublicTrue = $db->getMagnetsTotalByUsersPublic(true)) { ?>
+                          /
+                          <span class="text-color-green">
+                            <?php echo $magnetsTotalByUsersPublicTrue ?>
+                          </span>
+                        <?php } ?>
+                        <?php if ($magnetsTotalByUsersPublicFalse = $db->getMagnetsTotalByUsersPublic(false)) { ?>
+                          /
+                          <span class="text-color-pink">
+                            <?php echo $magnetsTotalByUsersPublicFalse ?>
+                          </span>
+                        <?php } ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
+                                                                                        ($magnetsTotalByUsersPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
+                                                                                        ($magnetsTotalByUsersPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
                       </td>
                     </tr>
                     <tr>
                       <td><?php echo _('Comments') ?></td>
-                      <td>
+                      <td class="cursor-default">
                         <?php echo $db->getMagnetCommentsTotal() ?>
-                        <?php if ($userMagnetCommentsTotal = $db->getMagnetCommentsTotalByUserId($user->userId)) { ?>
-                        /
-                        <span class="cursor-default <?php echo $user->public ? 'text-color-green' : 'text-color-pink' ?>">
-                          <?php echo $userMagnetCommentsTotal ?>
-                          <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your comments on this instance (Distributed access)') : _('Your comments on this instance (local access level)') ?>">
-                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                              <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                            </svg>
-                          </sub>
-                        </span>
+                        <?php if ($magnetCommentsTotalByUsersPublicTrue = $db->getMagnetCommentsTotalByUsersPublic(true)) { ?>
+                          /
+                          <span class="text-color-green">
+                            <?php echo $magnetCommentsTotalByUsersPublicTrue ?>
+                          </span>
                         <?php } ?>
+                        <?php if ($magnetCommentsTotalByUsersPublicFalse = $db->getMagnetCommentsTotalByUsersPublic(false)) { ?>
+                          /
+                          <span class="text-color-pink">
+                            <?php echo $magnetCommentsTotalByUsersPublicFalse ?>
+                          </span>
+                        <?php } ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
+                                                                                        ($magnetCommentsTotalByUsersPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
+                                                                                        ($magnetCommentsTotalByUsersPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
                       </td>
                     </tr>
                     <tr>
