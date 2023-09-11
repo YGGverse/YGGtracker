@@ -1344,26 +1344,15 @@ class Database {
   }
 
   // Magnet star
-  public function addMagnetStar(int $magnetId, int $userId, int $timeAdded) : int {
+  public function addMagnetStar(int $magnetId, int $userId, bool $value, int $timeAdded) : int {
 
     $this->_debug->query->insert->total++;
 
-    $query = $this->_db->prepare('INSERT INTO `magnetStar` SET `magnetId` = ?, `userId` = ?, `timeAdded` = ?');
+    $query = $this->_db->prepare('INSERT INTO `magnetStar` SET `magnetId` = ?, `userId` = ?, `value` = ?, `timeAdded` = ?');
 
-    $query->execute([$magnetId, $userId, $timeAdded]);
+    $query->execute([$magnetId, $userId, (int) $value, $timeAdded]);
 
     return $this->_db->lastInsertId();
-  }
-
-  public function deleteMagnetStarByUserId(int $magnetId, int $userId) : int {
-
-    $this->_debug->query->delete->total++;
-
-    $query = $this->_db->prepare('DELETE FROM `magnetStar` WHERE `magnetId` = ? AND `userId` = ?');
-
-    $query->execute([$magnetId, $userId]);
-
-    return $query->rowCount();
   }
 
   public function findMagnetStarsTotalByMagnetId(int $magnetId) : int {
@@ -1388,26 +1377,15 @@ class Database {
     return $query->fetch()->result;
   }
 
-  public function findMagnetStarsTotal(int $magnetId, int $userId) : int {
+  public function findLastMagnetStarValue(int $magnetId, int $userId) : bool {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetStar` WHERE `magnetId` = ? AND `userId` = ?');
+    $query = $this->_db->prepare('SELECT * FROM `magnetStar` WHERE `magnetId` = ? AND `userId` = ? ORDER BY `magnetStarId` DESC');
 
     $query->execute([$magnetId, $userId]);
 
-    return $query->fetch()->result;
-  }
-
-  public function findMagnetStarByUserId(int $magnetId, int $userId) : int {
-
-    $this->_debug->query->select->total++;
-
-    $query = $this->_db->prepare('SELECT * FROM `magnetStar` WHERE `magnetId` = ? AND `userId` = ?');
-
-    $query->execute([$magnetId, $userId]);
-
-    return $query->fetch();
+    return $query->rowCount() ? (bool) $query->fetch()->value : false;
   }
 
   // Magnet download

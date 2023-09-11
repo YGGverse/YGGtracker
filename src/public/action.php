@@ -420,16 +420,13 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         // Request valid
         else
         {
-          // Star exists, trigger delete
-          if ($db->findMagnetStarsTotal($magnet->magnetId, $userId))
-          {
-            $db->deleteMagnetStarByUserId($magnet->magnetId, $userId);
-          }
-          else
-          {
-            // Star not exists, trigger add
-            $db->addMagnetStar($magnet->magnetId, $userId, time());
-          }
+          // Save value
+          $db->addMagnetStar(
+            $magnet->magnetId,
+            $userId,
+            !$db->findLastMagnetStarValue($magnet->magnetId, $userId),
+            time()
+          );
 
           // Redirect to edit page
           header(
