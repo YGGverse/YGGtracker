@@ -3,6 +3,7 @@
 
 // Load dependencies
 require_once (__DIR__ . '/../config/app.php');
+require_once (__DIR__ . '/../library/time.php');
 require_once (__DIR__ . '/../library/database.php');
 require_once (__DIR__ . '/../../vendor/autoload.php');
 
@@ -90,6 +91,34 @@ else if (is_null($user->public))
                   <tbody>
                     <tr>
                       <td class="padding-b-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Profile') ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="padding-t-16"><?php echo _('Access level') ?></td>
+                      <td class="padding-t-16 cursor-default <?php echo $user->public ? _('text-color-green') : _('text-color-pink') ?>">
+                        <?php echo $user->public ? _('distributed') : _('local') ?>
+                        <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your profile accessible everywhere YGGtracker running') : _('Your profile details stored on this instance only') ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('Address') ?></td>
+                      <td>
+                        <?php echo $user->address ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('Updated') ?></td>
+                      <td>
+                        <?php echo Time::ago((int) $user->timeUpdated) ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="padding-b-8 border-bottom-default text-right" colspan="2">
                         <?php echo _('Rules') ?>
                       </td>
                     </tr>
@@ -117,7 +146,7 @@ else if (is_null($user->public))
                         /
                         <span class="cursor-default <?php echo $user->public ? 'text-color-green' : 'text-color-pink' ?>">
                           <?php echo $db->getMagnetsTotalByUserId($user->userId) ?>
-                          <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your magnets on this node (shared)') : _('Your magnets on this node (local)') ?>">
+                          <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your magnets on this instance (shared)') : _('Your magnets on this instance (local)') ?>">
                             <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                             </svg>
@@ -133,7 +162,7 @@ else if (is_null($user->public))
                         /
                         <span class="cursor-default <?php echo $user->public ? 'text-color-green' : 'text-color-pink' ?>">
                           <?php echo $userMagnetCommentsTotal ?>
-                          <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your comments on this node (shared)') : _('Your comments on this node (local)') ?>">
+                          <sub class="text-color-default opacity-0 parent-hover-opacity-09" title="<?php echo $user->public ? _('Your comments on this instance (shared)') : _('Your comments on this instance (local)') ?>">
                             <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                               <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                             </svg>
