@@ -113,7 +113,7 @@ else if (is_null($user->public))
                   </a>
                   <div class="margin-t-16">
                     <p class="margin-b-16"><?php echo _('YGGtracker uses IPv6 in 0200::/7 range to auto-identify users and relate theirs activity like downloads, favlists, comments, etc, without manual registration. This model allows to build decentralized BitTorrent registry where users able to manage their own content everywhere YGGtracker instance running.') ?></p>
-                    <p class="margin-b-16"><?php echo _('On first visit, each user select Local or Distributed access level to say application how to properly process personal data. The Local access means that profile data like Yggdrasil IPv6 stored locally and not displaying or transmitting trough API to other YGGdrasil nodes. Otherwise, content published will be related with user and other nodes able to collect it remotely to sync their registry.') ?></p>
+                    <p class="margin-b-16"><?php echo _('On first visit, each user select Local or Distributed access level to say application how to properly process personal data. The Local access means that profile data like Yggdrasil IPv6 stored locally and not displaying or transmitting trough API to other YGGtracker nodes. Otherwise, any user activity will be publicly related with address that proves ownership and other nodes able to collect it and sync their remote registry by timestamp.') ?></p>
                     <p><?php echo _('Pay attention, Yggdrasil protocol does not make activity private. So if your connection sensitive for ISP or local laws, please use Proxy bridge, Tor or I2P software before use YGGtracker.') ?></p>
                   </div>
                 </div>
