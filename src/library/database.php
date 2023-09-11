@@ -610,13 +610,24 @@ class Database {
     return $query->fetchAll();
   }
 
-  public function getMagnetsTotal() {
+  public function getMagnetsTotal() : int {
 
     $this->_debug->query->select->total++;
 
     $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnet`');
 
     $query->execute();
+
+    return $query->fetch()->result;
+  }
+
+  public function getMagnetsTotalByUserId(int $userId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnet` WHERE `userId` = ?');
+
+    $query->execute([$userId]);
 
     return $query->fetch()->result;
   }
@@ -1210,6 +1221,26 @@ class Database {
       $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment`');
 
       $query->execute();
+    }
+
+    return $query->fetch()->result;
+  }
+
+  public function getMagnetCommentsTotalByUserId(int $userId, mixed $magnetId = null) : int {
+
+    $this->_debug->query->select->total++;
+
+    if ($magnetId)
+    {
+      $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment` WHERE `userId` = ? AND `magnetId` = ?');
+
+      $query->execute([$userId, $magnetId]);
+    }
+    else
+    {
+      $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment` WHERE `userId` = ?');
+
+      $query->execute([$userId]);
     }
 
     return $query->fetch()->result;
