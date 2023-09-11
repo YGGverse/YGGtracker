@@ -71,6 +71,14 @@ else if (!$user = $db->getUser($userId))
   $response->message = _('Could not init user info');
 }
 
+// On first visit, redirect user to the welcome page with access level question
+else if (is_null($user->public))
+{
+  header(
+    sprintf('Location: %s/welcome.php', WEBSITE_URL)
+  );
+}
+
 // Request valid
 else
 {

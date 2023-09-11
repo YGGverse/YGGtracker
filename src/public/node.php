@@ -39,6 +39,21 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
   $response->message = _('Could not init user session');
 }
 
+// Get user
+else if (!$user = $db->getUser($userId))
+{
+  $response->success = false;
+  $response->message = _('Could not init user info');
+}
+
+// On first visit, redirect user to the welcome page with access level question
+else if (is_null($user->public))
+{
+  header(
+    sprintf('Location: %s/welcome.php', WEBSITE_URL)
+  );
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en-US">

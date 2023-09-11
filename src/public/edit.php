@@ -174,6 +174,14 @@ else if (!($user->address == $db->getUser($magnet->userId)->address || in_array(
   $response->message = _('You have no permissions to edit this magnet!');
 }
 
+// On first visit, redirect user to the welcome page with access level question
+else if (is_null($user->public))
+{
+  header(
+    sprintf('Location: %s/welcome.php', WEBSITE_URL)
+  );
+}
+
 // Process form
 else {
 

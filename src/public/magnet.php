@@ -68,6 +68,14 @@ else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) ? (int) $_GET['magne
   $response->message = _('Magnet not found! Submit new magnet link by sending address to the search field.');
 }
 
+// On first visit, redirect user to the welcome page with access level question
+else if (is_null($user->public))
+{
+  header(
+    sprintf('Location: %s/welcome.php', WEBSITE_URL)
+  );
+}
+
 // Request valid
 else
 {

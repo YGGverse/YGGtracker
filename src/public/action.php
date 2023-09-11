@@ -55,6 +55,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
           $response->message = _('Could not init user info');
         }
 
+        // On first visit, redirect user to the welcome page with access level question
+        else if (is_null($user->public))
+        {
+          header(
+            sprintf('Location: %s/welcome.php', WEBSITE_URL)
+          );
+        }
+
         // Render icon
         else
         {
@@ -103,6 +111,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         {
           $response->success = false;
           $response->message = _('Could not init user info');
+        }
+
+        // On first visit, redirect user to the welcome page with access level question
+        else if (is_null($user->public))
+        {
+          header(
+            sprintf('Location: %s/welcome.php', WEBSITE_URL)
+          );
         }
 
         // Magnet comment exists
@@ -186,6 +202,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
           $response->message = _('Could not init user info');
         }
 
+        // On first visit, redirect user to the welcome page with access level question
+        else if (is_null($user->public))
+        {
+          header(
+            sprintf('Location: %s/welcome.php', WEBSITE_URL)
+          );
+        }
+
         // Magnet comment exists
         else if (!$magnetComment = $db->getMagnetComment(isset($_GET['magnetCommentId']) && $_GET['magnetCommentId'] > 0 ? (int) $_GET['magnetCommentId'] : 0))
         {
@@ -254,6 +278,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         {
           $response->success = false;
           $response->message = _('Could not init user info');
+        }
+
+        // On first visit, redirect user to the welcome page with access level question
+        else if (is_null($user->public))
+        {
+          header(
+            sprintf('Location: %s/welcome.php', WEBSITE_URL)
+          );
         }
 
         // Magnet exists
@@ -342,6 +374,21 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
           $response->message = _('Could not init user session');
         }
 
+        // Get user
+        else if (!$user = $db->getUser($userId))
+        {
+          $response->success = false;
+          $response->message = _('Could not init user info');
+        }
+
+        // On first visit, redirect user to the welcome page with access level question
+        else if (is_null($user->public))
+        {
+          header(
+            sprintf('Location: %s/welcome.php', WEBSITE_URL)
+          );
+        }
+
         // Magnet exists
         else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
         {
@@ -413,6 +460,14 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         {
           $response->success = false;
           $response->message = _('Could not init user info');
+        }
+
+        // On first visit, redirect user to the welcome page with access level question
+        else if (is_null($user->public))
+        {
+          header(
+            sprintf('Location: %s/welcome.php', WEBSITE_URL)
+          );
         }
 
         // Validate link

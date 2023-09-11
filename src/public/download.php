@@ -30,183 +30,198 @@ $response = (object)
   ]
 ];
 
-  // Yggdrasil connections only
-  if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
+// Yggdrasil connections only
+if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
+{
+  $response->success = false;
+  $response->message = _('Yggdrasil connection required for this action');
+}
+
+// Init session
+else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
+{
+  $response->success = false;
+  $response->message = _('Could not init user session');
+}
+
+// Magnet exists
+else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
+{
+  $response->success = false;
+  $response->message = _('Requested magnet not found');
+}
+
+// Access allowed
+else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved))) {
+
+  $response->success = false;
+  $response->message = _('Magnet not available for this action');
+}
+
+// Get user
+else if (!$user = $db->getUser($userId))
+{
+  $response->success = false;
+  $response->message = _('Could not init user info');
+}
+
+// On first visit, redirect user to the welcome page with access level question
+else if (is_null($user->public))
+{
+  header(
+    sprintf('Location: %s/welcome.php', WEBSITE_URL)
+  );
+}
+
+// Request valid
+else
+{
+  // Update download stats
+  $db->addMagnetDownload($magnet->magnetId, $userId, time());
+
+  // Build magnet link
+  $link = (object)
+  [
+    'magnet' => [],
+    'direct' => [],
+  ];
+
+  /// Exact Topic
+  $xt = [];
+
+  foreach ($db->findMagnetToInfoHashByMagnetId($magnet->magnetId) as $result)
   {
-    $response->success = false;
-    $response->message = _('Yggdrasil connection required for this action');
-  }
-
-  // Init session
-  else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROVED, time()))
-  {
-    $response->success = false;
-    $response->message = _('Could not init user session');
-  }
-
-  // Magnet exists
-  else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) && $_GET['magnetId'] > 0 ? (int) $_GET['magnetId'] : 0))
-  {
-    $response->success = false;
-    $response->message = _('Requested magnet not found');
-  }
-
-  // Access allowed
-  else if (!($_SERVER['REMOTE_ADDR'] == $db->getUser($magnet->userId)->address || in_array($_SERVER['REMOTE_ADDR'], MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved))) {
-
-    $response->success = false;
-    $response->message = _('Magnet not available for this action');
-  }
-
-  // Request valid
-  else
-  {
-    // Update download stats
-    $db->addMagnetDownload($magnet->magnetId, $userId, time());
-
-    // Build magnet link
-    $link = (object)
-    [
-      'magnet' => [],
-      'direct' => [],
-    ];
-
-    /// Exact Topic
-    $xt = [];
-
-    foreach ($db->findMagnetToInfoHashByMagnetId($magnet->magnetId) as $result)
+    if ($infoHash = $db->getInfoHash($result->infoHashId))
     {
-      if ($infoHash = $db->getInfoHash($result->infoHashId))
+      switch ($infoHash->version)
       {
-        switch ($infoHash->version)
-        {
-          case 1:
+        case 1:
 
-            $xt[] = sprintf('xt=urn:btih:%s', $infoHash->value);
+          $xt[] = sprintf('xt=urn:btih:%s', $infoHash->value);
 
-          break;
+        break;
 
-          case 2:
+        case 2:
 
-            $xt[] = sprintf('xt=urn:btmh:1220%s', $infoHash->value);
+          $xt[] = sprintf('xt=urn:btmh:1220%s', $infoHash->value);
 
-          break;
-        }
+        break;
       }
     }
-
-    $link->magnet[] = sprintf('magnet:?%s', implode('&', $xt));
-
-    /// Display Name
-    $link->magnet[] = sprintf('dn=%s', urlencode($magnet->dn));
-
-    // Keyword Topic
-    $kt = [];
-
-    foreach ($db->findKeywordTopicByMagnetId($magnet->magnetId) as $result)
-    {
-      $kt[] = urlencode($db->getKeywordTopic($result->keywordTopicId)->value);
-    }
-
-    $link->magnet[] = sprintf('kt=%s', implode('+', $kt));
-
-    /// Address Tracker
-    foreach ($db->findAddressTrackerByMagnetId($magnet->magnetId) as $result)
-    {
-      $addressTracker = $db->getAddressTracker($result->addressTrackerId);
-
-      $scheme = $db->getScheme($addressTracker->schemeId);
-      $host   = $db->getHost($addressTracker->hostId);
-      $port   = $db->getPort($addressTracker->portId);
-      $uri    = $db->getUri($addressTracker->uriId);
-
-      // Yggdrasil host only
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
-      {
-        continue;
-      }
-
-      $link->magnet[] = sprintf('tr=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                                                          $host->value,
-                                                                                          $port->value,
-                                                                                          $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                                              $host->value,
-                                                                                                                              $uri->value)));
-    }
-
-    // Append trackers.json
-    foreach (json_decode(file_get_contents(__DIR__ . '/../config/trackers.json')) as $tracker)
-    {
-      $link->magnet[] = sprintf('tr=%s', urlencode($tracker->announce));
-    }
-
-    /// Acceptable Source
-    foreach ($db->findAcceptableSourceByMagnetId($magnet->magnetId) as $result)
-    {
-      $acceptableSource = $db->getAcceptableSource($result->acceptableSourceId);
-
-      $scheme = $db->getScheme($acceptableSource->schemeId);
-      $host   = $db->getHost($acceptableSource->hostId);
-      $port   = $db->getPort($acceptableSource->portId);
-      $uri    = $db->getUri($acceptableSource->uriId);
-
-      // Yggdrasil host only
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
-      {
-        continue;
-      }
-
-      $link->magnet[] = sprintf('as=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                                                          $host->value,
-                                                                                          $port->value,
-                                                                                          $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                                              $host->value,
-                                                                                                                              $uri->value)));
-      $link->direct[] = $port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                               $host->value,
-                                                               $port->value,
-                                                               $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                   $host->value,
-                                                                                                   $uri->value);
-    }
-
-    /// Exact Source
-    foreach ($db->findExactSourceByMagnetId($magnet->magnetId) as $result)
-    {
-      $eXactSource = $db->getExactSource($result->eXactSourceId);
-
-      $scheme = $db->getScheme($eXactSource->schemeId);
-      $host   = $db->getHost($eXactSource->hostId);
-      $port   = $db->getPort($eXactSource->portId);
-      $uri    = $db->getUri($eXactSource->uriId);
-
-      // Yggdrasil host only
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
-      {
-        continue;
-      }
-
-      $link->magnet[] = sprintf('xs=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
-                                                                                          $host->value,
-                                                                                          $port->value,
-                                                                                          $uri->value) : sprintf('%s://%s%s', $scheme->value,
-                                                                                                                              $host->value,
-                                                                                                                              $uri->value)));
-    }
-
-    // Return html
-    $response->html->title = sprintf(
-      _('%s - Download - %s'),
-      htmlentities($magnet->metaTitle),
-      WEBSITE_NAME
-    );
-
-    $response->html->h1 = htmlentities($magnet->metaTitle);
-
-    // @TODO implement .bittorrent, separated v1/v2 magnet links
-    $response->html->link->magnet = implode('&', array_unique($link->magnet));
-    $response->html->link->direct = $link->direct;
   }
+
+  $link->magnet[] = sprintf('magnet:?%s', implode('&', $xt));
+
+  /// Display Name
+  $link->magnet[] = sprintf('dn=%s', urlencode($magnet->dn));
+
+  // Keyword Topic
+  $kt = [];
+
+  foreach ($db->findKeywordTopicByMagnetId($magnet->magnetId) as $result)
+  {
+    $kt[] = urlencode($db->getKeywordTopic($result->keywordTopicId)->value);
+  }
+
+  $link->magnet[] = sprintf('kt=%s', implode('+', $kt));
+
+  /// Address Tracker
+  foreach ($db->findAddressTrackerByMagnetId($magnet->magnetId) as $result)
+  {
+    $addressTracker = $db->getAddressTracker($result->addressTrackerId);
+
+    $scheme = $db->getScheme($addressTracker->schemeId);
+    $host   = $db->getHost($addressTracker->hostId);
+    $port   = $db->getPort($addressTracker->portId);
+    $uri    = $db->getUri($addressTracker->uriId);
+
+    // Yggdrasil host only
+    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+    {
+      continue;
+    }
+
+    $link->magnet[] = sprintf('tr=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                                                        $host->value,
+                                                                                        $port->value,
+                                                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                                            $host->value,
+                                                                                                                            $uri->value)));
+  }
+
+  // Append trackers.json
+  foreach (json_decode(file_get_contents(__DIR__ . '/../config/trackers.json')) as $tracker)
+  {
+    $link->magnet[] = sprintf('tr=%s', urlencode($tracker->announce));
+  }
+
+  /// Acceptable Source
+  foreach ($db->findAcceptableSourceByMagnetId($magnet->magnetId) as $result)
+  {
+    $acceptableSource = $db->getAcceptableSource($result->acceptableSourceId);
+
+    $scheme = $db->getScheme($acceptableSource->schemeId);
+    $host   = $db->getHost($acceptableSource->hostId);
+    $port   = $db->getPort($acceptableSource->portId);
+    $uri    = $db->getUri($acceptableSource->uriId);
+
+    // Yggdrasil host only
+    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+    {
+      continue;
+    }
+
+    $link->magnet[] = sprintf('as=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                                                        $host->value,
+                                                                                        $port->value,
+                                                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                                            $host->value,
+                                                                                                                            $uri->value)));
+    $link->direct[] = $port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                              $host->value,
+                                                              $port->value,
+                                                              $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                  $host->value,
+                                                                                                  $uri->value);
+  }
+
+  /// Exact Source
+  foreach ($db->findExactSourceByMagnetId($magnet->magnetId) as $result)
+  {
+    $eXactSource = $db->getExactSource($result->eXactSourceId);
+
+    $scheme = $db->getScheme($eXactSource->schemeId);
+    $host   = $db->getHost($eXactSource->hostId);
+    $port   = $db->getPort($eXactSource->portId);
+    $uri    = $db->getUri($eXactSource->uriId);
+
+    // Yggdrasil host only
+    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+    {
+      continue;
+    }
+
+    $link->magnet[] = sprintf('xs=%s', urlencode($port->value ? sprintf('%s://%s:%s%s', $scheme->value,
+                                                                                        $host->value,
+                                                                                        $port->value,
+                                                                                        $uri->value) : sprintf('%s://%s%s', $scheme->value,
+                                                                                                                            $host->value,
+                                                                                                                            $uri->value)));
+  }
+
+  // Return html
+  $response->html->title = sprintf(
+    _('%s - Download - %s'),
+    htmlentities($magnet->metaTitle),
+    WEBSITE_NAME
+  );
+
+  $response->html->h1 = htmlentities($magnet->metaTitle);
+
+  // @TODO implement .bittorrent, separated v1/v2 magnet links
+  $response->html->link->magnet = implode('&', array_unique($link->magnet));
+  $response->html->link->direct = $link->direct;
+}
 
 ?>
 

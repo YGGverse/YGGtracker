@@ -102,14 +102,14 @@ else if (isset($_POST['public']))
                   <div class="margin-b-24 padding-b-16 border-bottom-default">
                     <h1 class=""><?php echo _('Welcome, stranger!') ?></h1>
                   </div>
-                  <p class="margin-b-8"><?php echo _('YGGtracker use Yggdrasil address to identify users without registration') ?></p>
+                  <p class="margin-b-8"><?php echo _('YGGtracker uses Yggdrasil address to identify users without registration') ?></p>
                   <p class="margin-b-16"><?php echo _('following address could be shared with independent nodes to allow you manage own content everywhere') ?></p>
                   <h2 class="margin-b-16"><?php echo $user->address ?></h2>
                   <form name="public" action="<?php echo sprintf('%s/welcome.php', WEBSITE_URL) ?>" method="post">
                     <div class="margin-b-16">
                       <label class="text-color-green margin-y-8 margin-x-4" for="public-1">
                         <input type="radio" id="public-1" name="public" value="1" checked="checked" />
-                        <?php echo _('Allow data distribution') ?>
+                        <?php echo _('Allow address distribution') ?>
                       </label>
                       <label class="text-color-pink margin-y-8 margin-x-4" for="public-0">
                         <input type="radio" id="public-0" name="public" value="0" />
