@@ -47,12 +47,14 @@ else if (!$user = $db->getUser($userId))
 }
 
 // On first visit, redirect user to the welcome page with access level question
+/* Allow to users read this page before accepting data access type in welcome form
 else if (is_null($user->public))
 {
   header(
     sprintf('Location: %s/welcome.php', WEBSITE_URL)
   );
 }
+*/
 
 ?>
 <!DOCTYPE html>
