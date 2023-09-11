@@ -69,7 +69,7 @@ else if (!$magnet = $db->getMagnet(isset($_GET['magnetId']) ? (int) $_GET['magne
 }
 
 // On first visit, redirect user to the welcome page with access level question
-else if (is_null($user->public))
+else if (is_null($user->public) && !isset($_GET['rss']))
 {
   header(
     sprintf('Location: %s/welcome.php', WEBSITE_URL)
