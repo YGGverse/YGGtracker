@@ -103,7 +103,7 @@ else if (isset($_POST['public']))
                     <h1 class=""><?php echo _('Welcome, stranger!') ?></h1>
                   </div>
                   <p class="margin-b-8"><?php echo _('YGGtracker uses Yggdrasil address to identify users without registration') ?></p>
-                  <p class="margin-b-16"><?php echo _('following address could be shared with independent nodes to allow you manage own content everywhere') ?></p>
+                  <p class="margin-b-16"><?php echo _('address below could be shared with independent nodes to allow you manage own content everywhere') ?></p>
                   <h2 class="margin-b-16"><?php echo $user->address ?></h2>
                   <form name="public" action="<?php echo sprintf('%s/welcome.php', WEBSITE_URL) ?>" method="post">
                     <div class="margin-b-16">
