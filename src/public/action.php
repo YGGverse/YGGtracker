@@ -421,7 +421,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         else
         {
           // Star exists, trigger delete
-          if ($db->findMagnetStarsTotalByUserId($magnet->magnetId, $userId))
+          if ($db->findMagnetStarsTotal($magnet->magnetId, $userId))
           {
             $db->deleteMagnetStarByUserId($magnet->magnetId, $userId);
           }

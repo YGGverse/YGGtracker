@@ -107,12 +107,6 @@ else
       $accessRead = ($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved));
       $accessEdit = ($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST));
 
-      // Update magnet viewed
-      if ($accessRead)
-      {
-        $db->addMagnetView($magnet->magnetId, $userId, time());
-      }
-
       // Keywords
       $keywords = [];
 
@@ -139,18 +133,18 @@ else
         'keywords'        => $keywords,
         'comment'         => (object)
         [
-          'total'  => $db->getMagnetCommentsTotal($magnet->magnetId),
-          'status' => $db->findMagnetCommentsTotalByUserId($magnet->magnetId, $userId),
+          'total'  => $db->findMagnetCommentsTotalByMagnetId($magnet->magnetId),
+          'status' => $db->findMagnetCommentsTotal($magnet->magnetId, $userId),
         ],
         'download'        => (object)
         [
-          'total'  => $db->getMagnetDownloadsTotalByUserId($magnet->magnetId),
-          'status' => $db->findMagnetDownloadsTotalByUserId($magnet->magnetId, $userId),
+          'total'  => $db->findMagnetDownloadsTotalByMagnetId($magnet->magnetId),
+          'status' => $db->findMagnetDownloadsTotal($magnet->magnetId, $userId),
         ],
         'star'            => (object)
         [
-          'total'  => $db->getMagnetStarsTotal($magnet->magnetId),
-          'status' => $db->findMagnetStarsTotalByUserId($magnet->magnetId, $userId),
+          'total'  => $db->findMagnetStarsTotalByMagnetId($magnet->magnetId),
+          'status' => $db->findMagnetStarsTotal($magnet->magnetId, $userId),
         ],
         'access'          => (object)
         [

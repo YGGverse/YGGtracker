@@ -121,13 +121,13 @@ else if (is_null($user->public))
                     <tr>
                       <td><?php echo _('Magnets') ?></td>
                       <td>
-                        <?php echo $db->getMagnetsTotalByUserId($user->userId) ?>
+                        <?php echo $db->findMagnetsTotalByUserId($user->userId) ?>
                       </td>
                     </tr>
                     <tr>
                       <td><?php echo _('Comments') ?></td>
                       <td>
-                        <?php echo $db->getMagnetCommentsTotalByUserId($user->userId) ?>
+                        <?php echo $db->findMagnetCommentsTotalByUserId($user->userId) ?>
                       </td>
                     </tr>
                     -->
