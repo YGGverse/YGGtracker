@@ -138,11 +138,11 @@ else if (is_null($user->public))
                     </tr>
                     <tr>
                       <td class="padding-t-16"><?php echo _('Subject') ?></td>
-                      <td class="padding-t-16"><?php echo _(RULE_SUBJECT) ?></td>
+                      <td class="padding-t-16"><?php echo _(NODE_RULE_SUBJECT) ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Languages') ?></td>
-                      <td><?php echo _(RULE_LANGUAGES) ?></td>
+                      <td><?php echo _(NODE_RULE_LANGUAGES) ?></td>
                     </tr>
                     <tr>
                       <td class="padding-y-8 border-bottom-default text-right" colspan="2">
@@ -200,16 +200,41 @@ else if (is_null($user->public))
                       </td>
                     </tr>
                     <tr>
+                      <td><?php echo _('Downloads') ?></td>
+                      <td class="cursor-default">
+                        <?php echo $db->getMagnetDownloadsTotal() ?>
+                        <?php if ($magnetDownloadsTotalByUsersPublicTrue = $db->findMagnetDownloadsTotalByUsersPublic(true)) { ?>
+                          /
+                          <span class="text-color-green">
+                            <?php echo $magnetDownloadsTotalByUsersPublicTrue ?>
+                          </span>
+                        <?php } ?>
+                        <?php if ($magnetDownloadsTotalByUsersPublicFalse = $db->findMagnetDownloadsTotalByUsersPublic(false)) { ?>
+                          /
+                          <span class="text-color-pink">
+                            <?php echo $magnetDownloadsTotalByUsersPublicFalse ?>
+                          </span>
+                        <?php } ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
+                                                                                        ($magnetDownloadsTotalByUsersPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
+                                                                                        ($magnetDownloadsTotalByUsersPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </td>
+                    </tr>
+                    <tr>
                       <td><?php echo _('Comments') ?></td>
                       <td class="cursor-default">
                         <?php echo $db->getMagnetCommentsTotal() ?>
-                        <?php if ($magnetCommentsTotalByUsersPublicTrue = $db->getMagnetCommentsTotalByUsersPublic(true)) { ?>
+                        <?php if ($magnetCommentsTotalByUsersPublicTrue = $db->findMagnetCommentsTotalByUsersPublic(true)) { ?>
                           /
                           <span class="text-color-green">
                             <?php echo $magnetCommentsTotalByUsersPublicTrue ?>
                           </span>
                         <?php } ?>
-                        <?php if ($magnetCommentsTotalByUsersPublicFalse = $db->getMagnetCommentsTotalByUsersPublic(false)) { ?>
+                        <?php if ($magnetCommentsTotalByUsersPublicFalse = $db->findMagnetCommentsTotalByUsersPublic(false)) { ?>
                           /
                           <span class="text-color-pink">
                             <?php echo $magnetCommentsTotalByUsersPublicFalse ?>
@@ -218,6 +243,56 @@ else if (is_null($user->public))
                         <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
                                                                                         ($magnetCommentsTotalByUsersPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
                                                                                         ($magnetCommentsTotalByUsersPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('Stars') ?></td>
+                      <td class="cursor-default">
+                        <?php echo $db->getMagnetStarsTotal() ?>
+                        <?php if ($magnetStarsTotalByUsersPublicTrue = $db->findMagnetStarsTotalByUsersPublic(true)) { ?>
+                          /
+                          <span class="text-color-green">
+                            <?php echo $magnetStarsTotalByUsersPublicTrue ?>
+                          </span>
+                        <?php } ?>
+                        <?php if ($magnetStarsTotalByUsersPublicFalse = $db->findMagnetStarsTotalByUsersPublic(false)) { ?>
+                          /
+                          <span class="text-color-pink">
+                            <?php echo $magnetStarsTotalByUsersPublicFalse ?>
+                          </span>
+                        <?php } ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
+                                                                                        ($magnetStarsTotalByUsersPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
+                                                                                        ($magnetStarsTotalByUsersPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
+                          <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                          </svg>
+                        </sub>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('Views') ?></td>
+                      <td class="cursor-default">
+                        <?php echo $db->getMagnetViewsTotal() ?>
+                        <?php if ($magnetViewsTotalByUsersPublicTrue = $db->findMagnetViewsTotalByUsersPublic(true)) { ?>
+                          /
+                          <span class="text-color-green">
+                            <?php echo $magnetViewsTotalByUsersPublicTrue ?>
+                          </span>
+                        <?php } ?>
+                        <?php if ($magnetViewsTotalByUsersPublicFalse = $db->findMagnetViewsTotalByUsersPublic(false)) { ?>
+                          /
+                          <span class="text-color-pink">
+                            <?php echo $magnetViewsTotalByUsersPublicFalse ?>
+                          </span>
+                        <?php } ?>
+                        <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo _('total') .
+                                                                                        ($magnetViewsTotalByUsersPublicTrue  ? sprintf(' / %s', _('distributed')) : false) .
+                                                                                        ($magnetViewsTotalByUsersPublicFalse ? sprintf(' / %s', _('local')) : false) ?>">
                           <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                           </svg>
@@ -293,11 +368,11 @@ else if (is_null($user->public))
                     </tr>
                     <tr>
                       <td class="padding-t-16"><?php echo _('Approved by default') ?></td>
-                      <td class="padding-t-16"><?php echo COMMENT_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
+                      <td class="padding-t-16"><?php echo MAGNET_COMMENT_DEFAULT_APPROVED ? _('yes') : _('no') ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Length, chars') ?></td>
-                      <td><?php echo COMMENT_MIN_LENGTH ?>-<?php echo COMMENT_MAX_LENGTH ?></td>
+                      <td><?php echo MAGNET_COMMENT_MIN_LENGTH ?>-<?php echo MAGNET_COMMENT_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
                       <td class="padding-y-8 padding-b-8 border-bottom-default text-right" colspan="2">
@@ -321,7 +396,51 @@ else if (is_null($user->public))
                               <td>
                                 <span class="margin-l-16"><?php echo $key ?></span>
                               </td>
-                              <td><?php echo $value ?></td>
+                              <?php if ($key == 'description') { ?>
+                                <td><?php echo $value ?></td>
+                              <?php } else { ?>
+                                <td class="font-size-10">
+                                  <a href="<?php echo $value ?>">
+                                    <?php echo $value ?>
+                                  </a>
+                                </td>
+                              <?php } ?>
+                            </tr>
+                          <?php } ?>
+                        <?php } ?>
+                      <?php } ?>
+                    </tr>
+                    <tr>
+                      <td class="padding-y-8 padding-b-8 border-bottom-default text-right" colspan="2">
+                        <?php echo _('Nodes') ?>
+                        <a href="https://github.com/YGGverse/YGGtracker/blob/main/src/config/nodes.json" title="<?php echo _('Add') ?>">
+                          <sub class="margin-l-4">
+                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                            </svg>
+                          </sub>
+                        </a>
+                      </td>
+                      <?php foreach (json_decode(file_get_contents(__DIR__ . '/../config/nodes.json')) as $i => $node) { ?>
+                        <tr>
+                          <td class="padding-t-16"><?php echo sprintf('#%s', $i + 1) ?></td>
+                        </tr>
+                        <?php foreach ($node as $key => $value) { ?>
+                          <?php if ($value) { ?>
+                            <tr>
+                              <td>
+                                <span class="margin-l-16"><?php echo $key ?></span>
+                              </td>
+                              <?php if ($key == 'description') { ?>
+                                <td><?php echo $value ?></td>
+                              <?php } else { ?>
+                                <td class="font-size-10">
+                                  <a href="<?php echo $value ?>">
+                                    <?php echo $value ?>
+                                  </a>
+                                </td>
+                              <?php } ?>
                             </tr>
                           <?php } ?>
                         <?php } ?>
@@ -354,6 +473,10 @@ else if (is_null($user->public))
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
             <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
+            <?php if (API_ENABLED) { ?>
+              |
+              <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/api/manifest.json"><?php echo _('API') ?></a>
+            <?php } ?>
             |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>
           </div>
