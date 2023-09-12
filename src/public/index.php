@@ -143,7 +143,7 @@ else
         ],
         'star'            => (object)
         [
-          'total'  => $db->findMagnetStarsTotalByMagnetId($magnet->magnetId),
+          'total'  => $db->findMagnetStarsTotalByMagnetId($magnet->magnetId, true),
           'status' => $db->findLastMagnetStarValue($magnet->magnetId, $userId),
         ],
         'access'          => (object)

@@ -1382,13 +1382,15 @@ class Database {
     return $query->fetch()->result;
   }
 
-  public function findMagnetStarsTotalByMagnetId(int $magnetId) : int {
+  public function findMagnetStarsTotalByMagnetId(int $magnetId, bool $value) : int {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `userId`) AS `result` FROM `magnetStar` WHERE `magnetId` = ?');
+    $total = 0;
 
-    $query->execute([$magnetId]);
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `userId`) AS `result` FROM `magnetStar` WHERE `magnetId` = ? AND `value` = ?');
+
+    $query->execute([$magnetId, (int) $value]);
 
     return $query->fetch()->result;
   }
