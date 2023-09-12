@@ -75,12 +75,11 @@ git checkout -b my-pr-branch-name
       + [x] Completed
       + [x] Leechers
     + [x] Stars
+    + [x] Views
     + [x] Downloads
+    + [x] Wanted
     + [x] Threading comments
-    + [x] Info page
-    + [ ] Views
     + [ ] Forks
-    + [ ] Wanted
 
 + [ ] Profile
   + [ ] Listing
@@ -102,6 +101,8 @@ git checkout -b my-pr-branch-name
 * [x] Other
   + [x] Sitemap
   + [x] RSS
+    + [x] Magnets
+    + [x] Comments
   + [x] Moderation
   + [x] API
     + [x] Manifest
