@@ -1,12 +1,14 @@
 # YGGtracker
 
-BitTorrent Registry for Yggdrasil
+Distributed BitTorrent Registry for Yggdrasil
 
 YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
 
-#### Online instances
+#### Nodes online
 
-  * [http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker](http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/)
+YGGtracker is distributed index engine, default nodes defined in [nodes.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/nodes.json)
+
+If you have launched new one, feel free to send there PR.
 
 #### Trackers
 
