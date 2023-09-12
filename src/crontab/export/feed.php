@@ -292,9 +292,9 @@ try
             'title'           => $magnet->title,
             'preview'         => $magnet->preview,
             'description'     => $magnet->description,
-            'comments'        => $magnet->comments,
-            'sensitive'       => $magnet->sensitive,
-            'approved'        => $magnet->approved,
+            'comments'        => (bool) $magnet->comments,
+            'sensitive'       => (bool) $magnet->sensitive,
+            'approved'        => (bool) $magnet->approved,
             'timeAdded'       => $magnet->timeAdded,
             'timeUpdated'     => $magnet->timeUpdated,
             'dn'              => $magnet->dn,
@@ -393,7 +393,7 @@ try
             'magnetStarId' => $star->magnetStarId,
             'userId'       => $star->userId,
             'magnetId'     => $star->magnetId,
-            'value'        => $star->value,
+            'value'        => (bool) $star->value,
             'timeAdded'    => $star->timeAdded,
           ];
         }
