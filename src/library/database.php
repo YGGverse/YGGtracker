@@ -1266,6 +1266,15 @@ class Database {
     return $query->fetch()->result;
   }
 
+  public function getMagnetComments() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->query('SELECT * FROM `magnetComment`');
+
+    return $query->fetchAll();
+  }
+
   public function findMagnetCommentsTotalByMagnetId(int $magnetId) : int {
 
     $this->_debug->query->select->total++;
@@ -1288,18 +1297,18 @@ class Database {
     return $query->fetch()->result;
   }
 
-  public function findMagnetCommentsTotal(int $userId, int $magnetId) : int {
+  public function findMagnetCommentsTotal(int $magnetId, int $userId) : int {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment` WHERE `userId` = ? AND `magnetId` = ?');
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetComment` WHERE `magnetId` = ? AND `userId` = ?');
 
-    $query->execute([$userId, $magnetId]);
+    $query->execute([$magnetId, $userId]);
 
     return $query->fetch()->result;
   }
 
-  public function getMagnetCommentsTotalByUsersPublic(bool $public) : int {
+  public function findMagnetCommentsTotalByUsersPublic(bool $public) : int {
 
     $this->_debug->query->select->total++;
 
@@ -1312,7 +1321,7 @@ class Database {
     return $query->fetch()->result;
   }
 
-  public function getMagnetComments(int $magnetId, mixed $magnetCommentIdParent = null) {
+  public function findMagnetComments(int $magnetId, mixed $magnetCommentIdParent = null) {
 
     $this->_debug->query->select->total++;
 
@@ -1355,6 +1364,24 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
+  public function getMagnetStars() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->query('SELECT * FROM `magnetStar`');
+
+    return $query->fetchAll();
+  }
+
+  public function getMagnetStarsTotal() : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->query('SELECT COUNT(*) AS `result` FROM `magnetStar`');
+
+    return $query->fetch()->result;
+  }
+
   public function findMagnetStarsTotalByMagnetId(int $magnetId) : int {
 
     $this->_debug->query->select->total++;
@@ -1388,6 +1415,19 @@ class Database {
     return $query->rowCount() ? (bool) $query->fetch()->value : false;
   }
 
+  public function findMagnetStarsTotalByUsersPublic(bool $public) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM  `magnetStar`
+                                                              JOIN  `user` ON (`user`.`userId` = `magnetStar`.`userId`)
+                                                              WHERE `user`.`public` = ?');
+
+    $query->execute([(int) $public]);
+
+    return $query->fetch()->result;
+  }
+
   // Magnet download
   public function addMagnetDownload(int $magnetId, int $userId, int $timeAdded) : int {
 
@@ -1398,6 +1438,24 @@ class Database {
     $query->execute([$magnetId, $userId, $timeAdded]);
 
     return $this->_db->lastInsertId();
+  }
+
+  public function getMagnetDownloads() {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->query('SELECT * FROM `magnetDownload`');
+
+    return $query->fetchAll();
+  }
+
+  public function getMagnetDownloadsTotal() : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->query('SELECT COUNT(*) AS `result` FROM `magnetDownload`');
+
+    return $query->fetch()->result;
   }
 
   public function findMagnetDownloadsTotal(int $magnetId, int $userId) : int {
@@ -1433,6 +1491,19 @@ class Database {
     return $query->fetch()->result;
   }
 
+  public function findMagnetDownloadsTotalByUsersPublic(bool $public) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM  `magnetDownload`
+                                                              JOIN  `user` ON (`user`.`userId` = `magnetDownload`.`userId`)
+                                                              WHERE `user`.`public` = ?');
+
+    $query->execute([(int) $public]);
+
+    return $query->fetch()->result;
+  }
+
   // Magnet view
   public function addMagnetView(int $magnetId, int $userId, int $timeAdded) : int {
 
@@ -1445,13 +1516,20 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
-  public function getMagnetViewsTotal(int $magnetId) : int {
+  public function getMagnetViews() {
 
     $this->_debug->query->select->total++;
 
-    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetView` WHERE `magnetId` = ?');
+    $query = $this->_db->query('SELECT * FROM `magnetView`');
 
-    $query->execute([$magnetId]);
+    return $query->fetchAll();
+  }
+
+  public function getMagnetViewsTotal() : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->query('SELECT COUNT(*) AS `result` FROM `magnetView`');
 
     return $query->fetch()->result;
   }
@@ -1463,6 +1541,19 @@ class Database {
     $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM `magnetView` WHERE `userId` = ?');
 
     $query->execute([$userId]);
+
+    return $query->fetch()->result;
+  }
+
+  public function findMagnetViewsTotalByUsersPublic(bool $public) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(*) AS `result` FROM  `magnetView`
+                                                              JOIN  `user` ON (`user`.`userId` = `magnetView`.`userId`)
+                                                              WHERE `user`.`public` = ?');
+
+    $query->execute([(int) $public]);
 
     return $query->fetch()->result;
   }

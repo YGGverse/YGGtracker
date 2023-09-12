@@ -318,11 +318,11 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
 
         // Validate comment value
         else if (empty($_POST['comment']) ||
-                mb_strlen($_POST['comment']) < COMMENT_MIN_LENGTH ||
-                mb_strlen($_POST['comment']) > COMMENT_MAX_LENGTH)
+                mb_strlen($_POST['comment']) < MAGNET_COMMENT_MIN_LENGTH ||
+                mb_strlen($_POST['comment']) > MAGNET_COMMENT_MAX_LENGTH)
         {
           $response->success = false;
-          $response->message = sprintf(_('Valid comment value required, %s-%s chars allowed'), COMMENT_MIN_LENGTH, COMMENT_MAX_LENGTH);
+          $response->message = sprintf(_('Valid comment value required, %s-%s chars allowed'), MAGNET_COMMENT_MIN_LENGTH, MAGNET_COMMENT_MAX_LENGTH);
         }
 
         // Request valid
@@ -332,8 +332,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
                                                       $user->userId,
                                                       null, // @TODO implement threads
                                                       trim($_POST['comment']),
-                                                      $user->approved || in_array($user->address, MODERATOR_IP_LIST) ? true : COMMENT_DEFAULT_APPROVED,
-                                                      COMMENT_DEFAULT_PUBLIC,
+                                                      $user->approved || in_array($user->address, MODERATOR_IP_LIST) ? true : MAGNET_COMMENT_DEFAULT_APPROVED,
+                                                      MAGNET_COMMENT_DEFAULT_PUBLIC,
                                                       time()))
           {
             // Redirect to referrer page
@@ -709,6 +709,10 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
             <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
+            <?php if (API_ENABLED) { ?>
+              |
+              <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/api/manifest.json"><?php echo _('API') ?></a>
+            <?php } ?>
             |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>
           </div>

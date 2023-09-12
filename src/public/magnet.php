@@ -155,7 +155,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
       <link><?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?></link>
       <title><?php echo sprintf(_('%s - Comments - %s'), htmlentities($response->magnet->title), WEBSITE_NAME) ?></title>
       <description><?php echo _('BitTorrent Registry for Yggdrasil') ?></description>
-      <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
+      <?php foreach ($db->findMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
         <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address || in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
           <item>
             <title><?php echo sprintf('%s - comment #%s', htmlspecialchars($magnet->title, ENT_QUOTES, 'UTF-8'), $magnetComment->magnetCommentId) ?></title>
@@ -388,7 +388,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     <sup><small><a href="<?php echo sprintf('%s/magnet.php?rss&magnetId=%s&target=comment', WEBSITE_URL, $response->magnet->magnetId) ?>"><?php echo _('RSS') ?></a></small></sup>
                   </div>
                   <div class="padding-x-16">
-                    <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
+                    <?php foreach ($db->findMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
                       <div class="padding-x-16 padding-t-16 padding-b-8 margin-t-8 border-radius-3 background-color-night <?php echo !$magnetComment->approved || !$magnetComment->public ? 'opacity-06 opacity-hover-1' : false ?>">
                         <a name="comment-<?php echo $magnetComment->magnetCommentId ?>"></a>
                         <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address ||
@@ -463,8 +463,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                                   name="comment"
                                   value=""
                                   placeholder="<?php echo _('Enter your comment') ?>"
-                                  minlength="<?php echo COMMENT_MIN_LENGTH ?>"
-                                  maxlength="<?php echo COMMENT_MAX_LENGTH ?>"></textarea>
+                                  minlength="<?php echo MAGNET_COMMENT_MIN_LENGTH ?>"
+                                  maxlength="<?php echo MAGNET_COMMENT_MAX_LENGTH ?>"></textarea>
                       </div>
                       <div class="padding-b-8 text-right">
                         <input type="submit" value="<?php echo _('send') ?>" />
@@ -503,6 +503,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
             <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
+            <?php if (API_ENABLED) { ?>
+              |
+              <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/api/manifest.json"><?php echo _('API') ?></a>
+            <?php } ?>
             |
             <a href="https://github.com/YGGverse/YGGtracker"><?php echo _('GitHub') ?></a>
           </div>

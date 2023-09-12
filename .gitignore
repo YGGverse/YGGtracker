@@ -1,8 +1,18 @@
-/.vscode/
-/vendor/
+/.vscode
+
+/vendor
 
 /database/yggtracker.mwb.bak
+
 /src/config/app.php
+
+/src/public/api/manifest.json
+/src/public/api/users.json
+/src/public/api/magnets.json
+/src/public/api/downloads.json
+/src/public/api/comments.json
+/src/public/api/stars.json
+/src/public/api/views.json
 
 /composer.lock
 

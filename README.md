@@ -36,6 +36,7 @@ sphinxsearch
 * Deploy the database using [MySQL Workbench](https://www.mysql.com/products/workbench) project presented in the `/database` folder
 * Install [Sphinx Search Server](https://sphinxsearch.com)
 * Configuration examples presented at `/config` folder
+* Make sure `/src/api` folder writable
 * Set up the `/src/crontab` by following [example](https://github.com/YGGverse/YGGtracker/blob/main/example/environment/crontab)
 
 #### Contribute
@@ -100,7 +101,14 @@ git checkout -b my-pr-branch-name
   + [x] Sitemap
   + [x] RSS
   + [x] Moderation
-  + [ ] Federative API
+  + [x] API
+    + [x] Manifest
+    + [x] Users
+    + [x] Magnets
+    + [x] Downloads
+    + [x] Comments
+    + [x] Stars
+    + [x] Views
 
 #### Donate to contributors
 

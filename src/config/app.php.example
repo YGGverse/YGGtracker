@@ -104,10 +104,10 @@ define('MAGNET_STOP_WORDS_SIMILAR',
 );
 
 // Comment
-define('COMMENT_DEFAULT_APPROVED', false);
-define('COMMENT_DEFAULT_PUBLIC', false);
-define('COMMENT_MIN_LENGTH', 1);
-define('COMMENT_MAX_LENGTH', 1000);
+define('MAGNET_COMMENT_DEFAULT_APPROVED', false);
+define('MAGNET_COMMENT_DEFAULT_PUBLIC', false);
+define('MAGNET_COMMENT_MIN_LENGTH', 1);
+define('MAGNET_COMMENT_MAX_LENGTH', 1000);
 
 // Yggdrasil
 define('YGGDRASIL_HOST_REGEX', '/^0{0,1}[2-3][a-f0-9]{0,2}:/'); // thanks to @ygguser (https://github.com/YGGverse/YGGo/issues/1#issuecomment-1498182228 )
@@ -116,6 +116,18 @@ define('YGGDRASIL_HOST_REGEX', '/^0{0,1}[2-3][a-f0-9]{0,2}:/'); // thanks to @yg
 define('CRAWLER_SCRAPE_QUEUE_LIMIT', 1);
 define('CRAWLER_SCRAPE_TIME_OFFLINE_TIMEOUT', 60*60*24);
 
-// Rules
-define('RULE_SUBJECT', 'Common');
-define('RULE_LANGUAGES', 'All');
+// Node
+define('NODE_RULE_SUBJECT', 'Common');
+define('NODE_RULE_LANGUAGES', 'All');
+
+// API
+define('API_VERSION', 1);
+
+define('API_ENABLED', true);
+
+define('API_FEED_USERS_ENABLED', true);
+define('API_FEED_MAGNETS_ENABLED', true);
+define('API_FEED_DOWNLOADS_ENABLED', true);
+define('API_FEED_COMMENTS_ENABLED', true);
+define('API_FEED_STARS_ENABLED', true);
+define('API_FEED_VIEWS_ENABLED', true);

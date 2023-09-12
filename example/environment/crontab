@@ -4,4 +4,7 @@
 * * * * * indexer magnet --rotate
 
 * * * * * /usr/bin/php /YGGtracker/src/crontab/scrape.php
+* 5 * * * /usr/bin/php /YGGtracker/src/crontab/import/feed.php
+* 0 * * * /usr/bin/php /YGGtracker/src/crontab/export/feed.php
+* * * * * /usr/bin/php /YGGtracker/src/crontab/export/push.php
 0 0 * * * /usr/bin/php /YGGtracker/src/crontab/sitemap.php
