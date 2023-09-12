@@ -118,12 +118,12 @@ else
       $response->magnets[] = (object)
       [
         'magnetId'        => $magnet->magnetId,
-        'metaTitle'       => $magnet->metaTitle ? htmlentities($magnet->metaTitle) : ($magnet->dn ? htmlentities($magnet->dn): false),
-        'metaDescription' => $magnet->metaDescription ? nl2br(
-                                                          htmlentities(
-                                                            $magnet->metaDescription
-                                                          )
-                                                        ) : false,
+        'title'           => $magnet->title ? htmlentities($magnet->title) : ($magnet->dn ? htmlentities($magnet->dn): false),
+        'preview'         => $magnet->preview ? nl2br(
+                                                        htmlentities(
+                                                          $magnet->preview
+                                                        )
+                                                      ) : false,
         'approved'        => (bool) $magnet->approved,
         'public'          => (bool) $magnet->public,
         'sensitive'       => (bool) $magnet->sensitive,
@@ -172,8 +172,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
       <?php foreach ($response->magnets as $magnet) { ?>
         <?php if ($magnet->access->read) { ?>
           <item>
-            <title><?php echo htmlspecialchars($magnet->metaTitle, ENT_QUOTES, 'UTF-8') ?></title>
-            <description><?php echo htmlspecialchars(strip_tags($magnet->metaDescription), ENT_QUOTES, 'UTF-8') ?></description>
+            <title><?php echo htmlspecialchars($magnet->title, ENT_QUOTES, 'UTF-8') ?></title>
+            <description><?php echo htmlspecialchars(strip_tags($magnet->preview), ENT_QUOTES, 'UTF-8') ?></description>
             <guid><?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?></guid>
             <link><?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?></link>
           </item>
@@ -222,7 +222,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                                 <?php echo !$magnet->public || !$magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
                       <div class="padding-16 <?php echo $magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
                         <a href="<?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?>">
-                          <h2 class="margin-b-8"><?php echo $magnet->metaTitle ?></h2>
+                          <h2 class="margin-b-8"><?php echo $magnet->title ?></h2>
                           <?php if ($magnet->leechers && !$magnet->seeders) { ?>
                             <span class="label label-green margin-x-4 font-size-10 position-relative top--2 cursor-default"
                                   title="<?php echo _('Active leechers waiting for seeds') ?>">
@@ -255,8 +255,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                             </a>
                           <?php } ?>
                         </div>
-                        <?php if ($magnet->metaDescription) { ?>
-                          <div class="margin-y-8"><?php echo $magnet->metaDescription ?></div>
+                        <?php if ($magnet->preview) { ?>
+                          <div class="margin-y-8"><?php echo $magnet->preview ?></div>
                         <?php } ?>
                         <?php if ($magnet->keywords) { ?>
                           <div class="margin-y-8">

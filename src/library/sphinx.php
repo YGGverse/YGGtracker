@@ -77,7 +77,7 @@ class Sphinx {
           {
             if (!in_array(mb_strtolower($value), array_map('strtolower', $stopWords)))
             {
-              $result[] = sprintf('@metaTitle "%s" | @dn "%s"', $value, $value);
+              $result[] = sprintf('@title "%s" | @dn "%s"', $value, $value);
             }
           }
         }

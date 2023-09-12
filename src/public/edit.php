@@ -24,7 +24,7 @@ $response = (object)
   'message' => false,
   'form' => (object)
   [
-    'metaTitle' => (object)
+    'title' => (object)
     [
       'value' => false,
       'valid' => (object)
@@ -33,7 +33,7 @@ $response = (object)
         'message' => false,
       ]
     ],
-    'metaDescription' => (object)
+    'preview' => (object)
     [
       'value' => false,
       'valid' => (object)
@@ -221,27 +221,27 @@ else {
     }
 
     // Meta
-    if (MAGNET_META_TITLE_MIN_LENGTH <= mb_strlen($_POST['metaTitle']) && MAGNET_META_TITLE_MAX_LENGTH >= mb_strlen($_POST['metaTitle']))
+    if (MAGNET_TITLE_MIN_LENGTH <= mb_strlen($_POST['title']) && MAGNET_TITLE_MAX_LENGTH >= mb_strlen($_POST['title']))
     {
-      $db->updateMagnetMetaTitle($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['metaTitle']))), time());
+      $db->updateMagnetTitle($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['title']))), time());
 
-      $response->form->metaTitle->valid->success = true;
-      $response->form->metaTitle->valid->message = false;
+      $response->form->title->valid->success = true;
+      $response->form->title->valid->message = false;
     }
     else
     {
-      $response->form->metaTitle->valid->success = false;
-      $response->form->metaTitle->valid->message = sprintf(_('* required, %s-%s chars'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH);
+      $response->form->title->valid->success = false;
+      $response->form->title->valid->message = sprintf(_('* required, %s-%s chars'), MAGNET_TITLE_MIN_LENGTH, MAGNET_TITLE_MAX_LENGTH);
     }
 
-    if (mb_strlen($_POST['metaDescription']) < MAGNET_META_DESCRIPTION_MIN_LENGTH || mb_strlen($_POST['metaDescription']) > MAGNET_META_DESCRIPTION_MAX_LENGTH)
+    if (mb_strlen($_POST['preview']) < MAGNET_PREVIEW_MIN_LENGTH || mb_strlen($_POST['preview']) > MAGNET_PREVIEW_MAX_LENGTH)
     {
-      $response->form->metaDescription->valid->success = false;
-      $response->form->metaDescription->valid->message = sprintf(_('* required, %s-%s chars, %s provided'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH, mb_strlen($_POST['metaDescription']));
+      $response->form->preview->valid->success = false;
+      $response->form->preview->valid->message = sprintf(_('* required, %s-%s chars, %s provided'), MAGNET_PREVIEW_MIN_LENGTH, MAGNET_PREVIEW_MAX_LENGTH, mb_strlen($_POST['preview']));
     }
     else
     {
-      $db->updateMagnetMetaDescription($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['metaDescription']))), time());
+      $db->updateMagnetPreview($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['preview']))), time());
     }
 
     if (mb_strlen($_POST['description']) < MAGNET_DESCRIPTION_MIN_LENGTH || mb_strlen($_POST['description']) > MAGNET_DESCRIPTION_MAX_LENGTH)
@@ -466,8 +466,8 @@ else {
 
     // Is valid
     if ($response->success &&
-        $response->form->metaTitle->valid->success &&
-        $response->form->metaDescription->valid->success &&
+        $response->form->title->valid->success &&
+        $response->form->preview->valid->success &&
         $response->form->description->valid->success &&
         $response->form->tr->valid->success &&
         $response->form->as->valid->success &&
@@ -495,10 +495,10 @@ else {
   }
 
   // Meta Title, auto-replace with Display Name on empty value
-  $response->form->metaTitle->value = $magnet->metaTitle ? $magnet->metaTitle : $magnet->dn;
+  $response->form->title->value = $magnet->title ? $magnet->title : $magnet->dn;
 
   // Meta Description
-  $response->form->metaDescription->value = $magnet->metaDescription;
+  $response->form->preview->value = $magnet->preview;
 
   // Description
   $response->form->description->value = $magnet->description;
@@ -637,30 +637,30 @@ else {
                     <legend class="text-right width-100 padding-y-8 margin-b-8 border-bottom-default"><?php echo _('Meta') ?></legend>
                     <label class="display-block margin-y-8 padding-t-4">
                       <?php echo _('Title') ?>
-                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Subject and meta title (%s-%s chars)'), MAGNET_META_TITLE_MIN_LENGTH, MAGNET_META_TITLE_MAX_LENGTH) ?>">
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Subject and meta title (%s-%s chars)'), MAGNET_TITLE_MIN_LENGTH, MAGNET_TITLE_MAX_LENGTH) ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                           <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                         </svg>
                       </sub>
-                      <?php if ($response->form->metaTitle->valid->message) { ?>
-                        <div class="margin-b-8"><?php echo $response->form->metaTitle->valid->message ?></div>
+                      <?php if ($response->form->title->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->title->valid->message ?></div>
                       <?php } ?>
-                      <input class="width-100 margin-t-8 <?php echo ($response->form->metaTitle->valid->success ? false : 'background-color-red') ?>" type="text" name="metaTitle" value="<?php echo $response->form->metaTitle->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
+                      <input class="width-100 margin-t-8 <?php echo ($response->form->title->valid->success ? false : 'background-color-red') ?>" type="text" name="title" value="<?php echo $response->form->title->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
                     </label>
                     <label class="display-block margin-y-8 padding-t-4">
-                      <?php echo _('Short description') ?>
-                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible in listings, magnet web page description and meta description (%s-%s chars)'), MAGNET_META_DESCRIPTION_MIN_LENGTH, MAGNET_META_DESCRIPTION_MAX_LENGTH) ?>">
+                      <?php echo _('Preview') ?>
+                      <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible in listings, magnet web page description and meta description (%s-%s chars)'), MAGNET_PREVIEW_MIN_LENGTH, MAGNET_PREVIEW_MAX_LENGTH) ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                           <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                         </svg>
                       </sub>
-                      <?php if ($response->form->metaDescription->valid->message) { ?>
-                        <div class="margin-b-8"><?php echo $response->form->metaDescription->valid->message ?></div>
+                      <?php if ($response->form->preview->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo $response->form->preview->valid->message ?></div>
                       <?php } ?>
-                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->metaDescription->valid->success ? false : 'background-color-red') ?>" name="metaDescription" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->metaDescription->value ?></textarea>
+                      <textarea class="width-100 margin-t-8 <?php echo ($response->form->preview->valid->success ? false : 'background-color-red') ?>" name="preview" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->preview->value ?></textarea>
                     </label>
                     <label class="display-block margin-y-8 padding-t-4">
-                      <?php echo _('Long description') ?>
+                      <?php echo _('Description') ?>
                       <sub class="opacity-0 parent-hover-opacity-09" title="<?php echo sprintf(_('Visible on magnet web page (%s-%s chars)'), MAGNET_DESCRIPTION_MIN_LENGTH, MAGNET_DESCRIPTION_MAX_LENGTH) ?>">
                         <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                           <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>

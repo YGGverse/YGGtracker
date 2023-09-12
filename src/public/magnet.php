@@ -101,12 +101,12 @@ else
   $response->magnet = (object)
   [
     'magnetId'        => $magnet->magnetId,
-    'metaTitle'       => $magnet->metaTitle ? htmlentities($magnet->metaTitle) : ($magnet->dn ? htmlentities($magnet->dn): false),
-    'metaDescription' => $magnet->metaDescription ? nl2br(
-                                                      htmlentities(
-                                                        $magnet->metaDescription
-                                                      )
-                                                    ) : false,
+    'title'           => $magnet->title ? htmlentities($magnet->title) : ($magnet->dn ? htmlentities($magnet->dn): false),
+    'preview'         => $magnet->preview ? nl2br(
+                                                    htmlentities(
+                                                      $magnet->preview
+                                                    )
+                                                  ) : false,
     'description'     => $magnet->description ? nl2br(
                                                   htmlentities(
                                                     $magnet->description
@@ -153,12 +153,12 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
     <channel>
       <atom:link href="<?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?>" rel="self" type="application/rss+xml"></atom:link>
       <link><?php echo sprintf('%s/magnet.php?magnetId=%s#comment', WEBSITE_URL, $response->magnet->magnetId) ?></link>
-      <title><?php echo sprintf(_('%s - Comments - %s'), htmlentities($response->magnet->metaTitle), WEBSITE_NAME) ?></title>
+      <title><?php echo sprintf(_('%s - Comments - %s'), htmlentities($response->magnet->title), WEBSITE_NAME) ?></title>
       <description><?php echo _('BitTorrent Registry for Yggdrasil') ?></description>
       <?php foreach ($db->getMagnetComments($response->magnet->magnetId) as $magnetComment) { ?>
         <?php if ($response->user->address == $db->getUser($magnetComment->userId)->address || in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
           <item>
-            <title><?php echo sprintf('%s - comment #%s', htmlspecialchars($magnet->metaTitle, ENT_QUOTES, 'UTF-8'), $magnetComment->magnetCommentId) ?></title>
+            <title><?php echo sprintf('%s - comment #%s', htmlspecialchars($magnet->title, ENT_QUOTES, 'UTF-8'), $magnetComment->magnetCommentId) ?></title>
             <description><?php echo htmlspecialchars($magnetComment->value, ENT_QUOTES, 'UTF-8') ?></description>
             <guid><?php echo sprintf('%s/magnet.php?magnetId=%s#comment-%s', WEBSITE_URL, $response->magnet->magnetId, $magnetComment->magnetCommentId) ?></guid>
             <link><?php echo sprintf('%s/magnet.php?magnetId=%s#comment-%s', WEBSITE_URL, $response->magnet->magnetId, $magnetComment->magnetCommentId) ?></link>
@@ -174,8 +174,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
     <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE_URL ?>/assets/theme/default/css/common.css?<?php echo WEBSITE_CSS_VERSION ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE_URL ?>/assets/theme/default/css/framework.css?<?php echo WEBSITE_CSS_VERSION ?>" />
     <?php if ($response->success) { ?>
-      <title><?php echo sprintf(_('%s - %s'), htmlentities($response->magnet->metaTitle), WEBSITE_NAME) ?></title>
-      <meta name="description" content="<?php echo htmlentities($response->magnet->metaDescription) ?>" />
+      <title><?php echo sprintf(_('%s - %s'), htmlentities($response->magnet->title), WEBSITE_NAME) ?></title>
+      <meta name="description" content="<?php echo htmlentities($response->magnet->preview) ?>" />
       <meta name="keywords" content="<?php echo  htmlentities(implode(',',$response->magnet->keywords)) ?>" />
     <?php } else { ?>
       <title><?php echo $response->message ?></title>
@@ -207,7 +207,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                             <?php echo !$response->magnet->public || !$response->magnet->approved ? 'opacity-06 opacity-hover-1' : false ?>">
                   <div class="padding-16 <?php echo $response->magnet->sensitive ? 'blur-2 blur-hover-0' : false ?>">
                     <a name="magnet-<?php echo $response->magnet->magnetId ?>"></a>
-                    <h1 class="margin-b-8"><?php echo $response->magnet->metaTitle ?></h1>
+                    <h1 class="margin-b-8"><?php echo $response->magnet->title ?></h1>
                     <?php if ($response->magnet->leechers && !$response->magnet->seeders) { ?>
                       <span class="label label-green margin-x-4 font-size-10 position-relative top--2 cursor-default"
                             title="<?php echo _('Active leechers waiting for seeds') ?>">
@@ -247,8 +247,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                         -->
                       <?php } ?>
                     </div>
-                    <?php if ($response->magnet->metaDescription) { ?>
-                      <div class="margin-y-8"><?php echo $response->magnet->metaDescription ?></div>
+                    <?php if ($response->magnet->preview) { ?>
+                      <div class="margin-y-8"><?php echo $response->magnet->preview ?></div>
                     <?php } ?>
                     <?php if ($response->magnet->description) { ?>
                       <div class="margin-t-16 margin-b-8 padding-t-16  border-top-default"><?php echo $response->magnet->description ?></div>
@@ -349,7 +349,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     </span>
                   </div>
                 </div>
-                <?php if ($similarMagnetsTotal = $sphinx->searchMagnetsTotal($magnet->metaTitle ? $magnet->metaTitle : $magnet->dn, 'similar', MAGNET_STOP_WORDS_SIMILAR)) { ?>
+                <?php if ($similarMagnetsTotal = $sphinx->searchMagnetsTotal($magnet->title ? $magnet->title : $magnet->dn, 'similar', MAGNET_STOP_WORDS_SIMILAR)) { ?>
                   <?php if ($similarMagnetsTotal > 1) { // skip current magnet ?>
                     <div class="padding-y-8 padding-x-16">
                       <a name="similar"></a>
@@ -358,7 +358,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                     <div class="padding-x-16 margin-b-8">
                       <div class="padding-16 margin-t-8 border-radius-3 background-color-night">
                         <?php foreach ( $sphinx->searchMagnets(
-                                        $magnet->metaTitle ? $magnet->metaTitle : $magnet->dn,
+                                        $magnet->title ? $magnet->title : $magnet->dn,
                                         0,
                                         10,
                                         $similarMagnetsTotal,
@@ -371,7 +371,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                                        in_array($response->user->address, MODERATOR_IP_LIST) || ($magnet->approved && $magnet->public))) { ?>
                               <div class="margin-y-8">
                                 <a href="<?php echo sprintf('%s/magnet.php?magnetId=%s', WEBSITE_URL, $magnet->magnetId) ?>" class="margin-b-16">
-                                  <?php echo nl2br(htmlentities($magnet->metaTitle ? $magnet->metaTitle : $magnet->dn)) ?>
+                                  <?php echo nl2br(htmlentities($magnet->title ? $magnet->title : $magnet->dn)) ?>
                                 </a>
                               </div>
                             <?php } ?>

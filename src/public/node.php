@@ -276,11 +276,11 @@ else if (is_null($user->public))
                     </tr>
                     <tr>
                       <td><?php echo _('Title, chars') ?></td>
-                      <td><?php echo MAGNET_META_TITLE_MIN_LENGTH ?>-<?php echo MAGNET_META_TITLE_MAX_LENGTH ?></td>
+                      <td><?php echo MAGNET_TITLE_MIN_LENGTH ?>-<?php echo MAGNET_TITLE_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Description short, chars') ?></td>
-                      <td><?php echo MAGNET_META_DESCRIPTION_MIN_LENGTH ?>-<?php echo MAGNET_META_DESCRIPTION_MAX_LENGTH ?></td>
+                      <td><?php echo MAGNET_PREVIEW_MIN_LENGTH ?>-<?php echo MAGNET_PREVIEW_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
                       <td><?php echo _('Description long, chars') ?></td>

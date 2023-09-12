@@ -694,24 +694,24 @@ class Database {
     return $query->rowCount();
   }
 
-  public function updateMagnetMetaTitle(int $magnetId, string $metaTitle, int $timeUpdated) : int {
+  public function updateMagnetTitle(int $magnetId, string $title, int $timeUpdated) : int {
 
     $this->_debug->query->update->total++;
 
-    $query = $this->_db->prepare('UPDATE `magnet` SET `metaTitle` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
+    $query = $this->_db->prepare('UPDATE `magnet` SET `title` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
 
-    $query->execute([$metaTitle, $timeUpdated, $magnetId]);
+    $query->execute([$title, $timeUpdated, $magnetId]);
 
     return $query->rowCount();
   }
 
-  public function updateMagnetMetaDescription(int $magnetId, string $metaDescription, int $timeUpdated) : int {
+  public function updateMagnetPreview(int $magnetId, string $preview, int $timeUpdated) : int {
 
     $this->_debug->query->update->total++;
 
-    $query = $this->_db->prepare('UPDATE `magnet` SET `metaDescription` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
+    $query = $this->_db->prepare('UPDATE `magnet` SET `preview` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
 
-    $query->execute([$metaDescription, $timeUpdated, $magnetId]);
+    $query->execute([$preview, $timeUpdated, $magnetId]);
 
     return $query->rowCount();
   }

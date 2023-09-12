@@ -212,11 +212,11 @@ else
   // Return html
   $response->html->title = sprintf(
     _('%s - Download - %s'),
-    htmlentities($magnet->metaTitle),
+    htmlentities($magnet->title),
     WEBSITE_NAME
   );
 
-  $response->html->h1 = htmlentities($magnet->metaTitle);
+  $response->html->h1 = htmlentities($magnet->title);
 
   // @TODO implement .bittorrent, separated v1/v2 magnet links
   $response->html->link->magnet = implode('&', array_unique($link->magnet));
