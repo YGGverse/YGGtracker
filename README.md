@@ -8,7 +8,7 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 
 YGGtracker is distributed index engine, default nodes list defined in [nodes.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/nodes.json)
 
-If you have launched new one, feel free to send there PR.
+If you have launched new one, feel free to participate by PR.
 
 #### Trackers
 
