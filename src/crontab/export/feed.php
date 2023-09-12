@@ -52,6 +52,7 @@ try
     $manifest =
     [
       'version'  => API_VERSION,
+      'updated'  => time(),
 
       'settings' =>
       [
