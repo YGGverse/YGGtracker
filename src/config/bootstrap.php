@@ -18,10 +18,12 @@ if (!in_array($_SERVER['PHP_ENV'], ['default', 'mirror', 'dev', 'test', 'prod'])
 // Generate configuration file if not exists
 if (!file_exists(__DIR__ . '/../../env.' . $_SERVER['PHP_ENV'] . '.php'))
 {
-  copy(
-    __DIR__ . '/../../example/environment/env.example.php',
-    __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php'
-  );
+  if (copy(__DIR__ . '/../../example/environment/env.example.php', __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php'))
+  {
+    chmod(__DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php', 0770);
+  }
+
+  else exit (_('Could not init configuration file. Please check permissions.'));
 }
 
 // Load environment configuration
