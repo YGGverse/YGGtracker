@@ -42,7 +42,6 @@ memcached
 * Install [Sphinx Search Server](https://sphinxsearch.com)
 * Configuration examples presented at `/example/environment` folder. On first app launch, configuration file will be auto-generated in `/src/config`
 * Make sure `/src/api` folder writable
-* Set up the `/src/crontab` by following [example](https://github.com/YGGverse/YGGtracker/blob/main/example/environment/crontab)
 
 #### Contribute
 
