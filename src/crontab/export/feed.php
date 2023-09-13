@@ -45,7 +45,7 @@ try
   @unlink(__DIR__ . '/../public/api/stars.json');
   @unlink(__DIR__ . '/../public/api/views.json');
 
-  if (API_ENABLED)
+  if (API_EXPORT_ENABLED)
   {
     // Manifest
     $manifest =
@@ -91,12 +91,12 @@ try
         'MAGNET_STOP_WORDS_SIMILAR'            => MAGNET_STOP_WORDS_SIMILAR,
       ],
 
-      'users'     => API_FEED_USERS_ENABLED     ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
-      'magnets'   => API_FEED_MAGNETS_ENABLED   ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
-      'downloads' => API_FEED_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
-      'comments'  => API_FEED_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
-      'stars'     => API_FEED_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
-      'views'     => API_FEED_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
+      'users'     => API_EXPORT_USERS_ENABLED     ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
+      'magnets'   => API_EXPORT_MAGNETS_ENABLED   ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
+      'downloads' => API_EXPORT_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
+      'comments'  => API_EXPORT_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
+      'stars'     => API_EXPORT_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
+      'views'     => API_EXPORT_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
 
       'totals'    =>
       [
@@ -144,7 +144,7 @@ try
     }
 
     // Users
-    if (API_FEED_USERS_ENABLED)
+    if (API_EXPORT_USERS_ENABLED)
     {
       $users = [];
 
@@ -181,7 +181,7 @@ try
     }
 
     // Magnets
-    if (API_FEED_MAGNETS_ENABLED)
+    if (API_EXPORT_MAGNETS_ENABLED)
     {
       $magnets = [];
 
@@ -320,7 +320,7 @@ try
     }
 
     // Downloads
-    if (API_FEED_DOWNLOADS_ENABLED)
+    if (API_EXPORT_DOWNLOADS_ENABLED)
     {
       $downloads = [];
 
@@ -349,7 +349,7 @@ try
     }
 
     // Comments
-    if (API_FEED_COMMENTS_ENABLED)
+    if (API_EXPORT_COMMENTS_ENABLED)
     {
       $comments = [];
 
@@ -378,7 +378,7 @@ try
     }
 
     // Stars
-    if (API_FEED_STARS_ENABLED)
+    if (API_EXPORT_STARS_ENABLED)
     {
       $stars = [];
 
@@ -407,7 +407,7 @@ try
       }
     }
     // Views
-    if (API_FEED_VIEWS_ENABLED)
+    if (API_EXPORT_VIEWS_ENABLED)
     {
       $views = [];
 

@@ -424,7 +424,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
             <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/index.php?rss<?php echo $request->query ? sprintf('&query=%s', urlencode($request->query)) : false ?>"><?php echo _('RSS') ?></a>
-            <?php if (API_ENABLED) { ?>
+            <?php if (API_EXPORT_ENABLED) { ?>
               |
               <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/api/manifest.json"><?php echo _('API') ?></a>
             <?php } ?>

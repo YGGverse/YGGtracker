@@ -123,11 +123,20 @@ define('NODE_RULE_LANGUAGES', 'All');
 // API
 define('API_VERSION', 1);
 
-define('API_ENABLED', true);
+define('API_EXPORT_ENABLED', true);
 
-define('API_FEED_USERS_ENABLED', true);
-define('API_FEED_MAGNETS_ENABLED', true);
-define('API_FEED_DOWNLOADS_ENABLED', true);
-define('API_FEED_COMMENTS_ENABLED', true);
-define('API_FEED_STARS_ENABLED', true);
-define('API_FEED_VIEWS_ENABLED', true);
+define('API_EXPORT_USERS_ENABLED', true);
+define('API_EXPORT_MAGNETS_ENABLED', true);
+define('API_EXPORT_DOWNLOADS_ENABLED', true);
+define('API_EXPORT_COMMENTS_ENABLED', true);
+define('API_EXPORT_STARS_ENABLED', true);
+define('API_EXPORT_VIEWS_ENABLED', true);
+
+define('API_IMPORT_ENABLED', true);
+
+define('API_IMPORT_USERS_ENABLED', true);
+define('API_IMPORT_MAGNETS_ENABLED', true);
+define('API_IMPORT_DOWNLOADS_ENABLED', true);
+define('API_IMPORT_COMMENTS_ENABLED', true);
+define('API_IMPORT_STARS_ENABLED', true);
+define('API_IMPORT_VIEWS_ENABLED', true);

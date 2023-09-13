@@ -862,7 +862,7 @@ else {
             <a href="<?php echo WEBSITE_URL ?>/node.php"><?php echo _('Node') ?></a>
             |
             <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/index.php?rss"><?php echo _('RSS') ?></a>
-            <?php if (API_ENABLED) { ?>
+            <?php if (API_EXPORT_ENABLED) { ?>
               |
               <a rel="nofollow" href="<?php echo WEBSITE_URL ?>/api/manifest.json"><?php echo _('API') ?></a>
             <?php } ?>
