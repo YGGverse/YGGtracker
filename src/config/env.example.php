@@ -23,10 +23,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * Default configuration file
- *
- * For different environments, use separated env.NAME.php files
- *
  * Project home page
  * https://github.com/YGGverse/YGGtracker
  *
