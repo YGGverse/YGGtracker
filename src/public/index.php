@@ -367,8 +367,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                 <?php } ?>
               <?php } else { ?>
                 <div class="padding-16 margin-y-8 border-radius-3 background-color-night text-center">
-                  <h2 class="margin-b-8"><?php echo _('Not found') ?></h2>
-                  <div class="text-color-night"><?php echo _('* submit new magnet link in search field') ?></div>
+                  <h2 class="margin-b-8">
+                    <?php echo _('Nothing found') ?>
+                  </h2>
+                  <div class="text-color-night"><?php echo _('* share your magnet links above to change it') ?></div>
                 </div>
               <?php } ?>
             <?php } else { ?>
