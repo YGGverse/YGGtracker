@@ -9,17 +9,23 @@ if (empty($_SERVER['PHP_ENV']))
   $_SERVER['PHP_ENV'] = 'default';
 }
 
+// Validate environment whitelist
+if (!in_array($_SERVER['PHP_ENV'], ['default', 'mirror', 'dev', 'test', 'prod']))
+{
+  exit (_('Environment not supported! Check /src/config/bootstrap.php to add exception.'));
+}
+
 // Generate configuration file if not exists
-if (!file_exists(sprintf('%s/env.%s.php', __DIR__, $_SERVER['PHP_ENV'])))
+if (!file_exists(__DIR__ . '/../../env.' . $_SERVER['PHP_ENV'] . '.php'))
 {
   copy(
-    __DIR__ . '/env.example.php',
-    sprintf('%s/env.%s.php', __DIR__, $_SERVER['PHP_ENV'])
+    __DIR__ . '/../../example/environment/env.example.php',
+    __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php'
   );
 }
 
 // Load environment configuration
-require_once sprintf('%s/env.%s.php', __DIR__, $_SERVER['PHP_ENV']);
+require_once __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php';
 
 // Local internal dependencies
 require_once __DIR__ . '/../library/database.php';
