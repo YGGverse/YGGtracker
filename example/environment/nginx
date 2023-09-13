@@ -1,6 +1,28 @@
 server {
-  listen [::]:80 ipv6only=on default_server;
+	listen [::]:80 default;
 
-  allow 0200::/7;
-  deny  all;
+	allow 0200::/7;
+	deny  all;
+
+	root /var/www/html;
+
+	index index.html index.htm index.nginx-debian.html index.php;
+
+	server_name _;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+
+		# default, mirror, dev, test, prod
+		fastcgi_param PHP_ENV default;
+	}
+
+	location ~ /\. {
+		deny all;
+	}
 }
