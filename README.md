@@ -40,7 +40,7 @@ memcached
 * The web root dir is `/src/public`
 * Deploy the database using [MySQL Workbench](https://www.mysql.com/products/workbench) project presented in the `/database` folder
 * Install [Sphinx Search Server](https://sphinxsearch.com)
-* Configuration examples presented at `/config` folder. When server environment not provided, setup `env.default.php`
+* Configuration examples presented at `/example/environment` folder. On first app launch, configuration file will be auto-generated in `/src/config`
 * Make sure `/src/api` folder writable
 * Set up the `/src/crontab` by following [example](https://github.com/YGGverse/YGGtracker/blob/main/example/environment/crontab)
 
