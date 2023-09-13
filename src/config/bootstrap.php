@@ -16,7 +16,7 @@ if (!in_array($_SERVER['PHP_ENV'], ['default', 'mirror', 'dev', 'test', 'prod'])
 }
 
 // Generate configuration file if not exists
-if (!file_exists(__DIR__ . '/../../env.' . $_SERVER['PHP_ENV'] . '.php'))
+if (!file_exists(__DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php') && file_exists(__DIR__ . '/../../example/environment/env.example.php'))
 {
   if (copy(__DIR__ . '/../../example/environment/env.example.php', __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php'))
   {
