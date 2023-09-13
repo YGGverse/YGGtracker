@@ -4,7 +4,9 @@
 
 /database/yggtracker.mwb.bak
 
-/src/config/app.php
+/src/config/*.php
+!/src/config/bootstrap.php
+!/src/config/env.default.php
 
 /src/public/api/manifest.json
 /src/public/api/users.json

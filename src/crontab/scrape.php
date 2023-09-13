@@ -8,10 +8,8 @@ if (false === sem_acquire($semaphore, true)) {
   exit (PHP_EOL . 'yggtracker.crontab.scrape process locked by another thread.' . PHP_EOL);
 }
 
-// Load system dependencies
-require_once(__DIR__ . '/../config/app.php');
-require_once(__DIR__ . '/../library/database.php');
-require_once(__DIR__ . '/../library/scrapeer.php');
+// Bootstrap
+require_once __DIR__ . '/../config/bootstrap.php';
 
 // Init Debug
 $debug = [

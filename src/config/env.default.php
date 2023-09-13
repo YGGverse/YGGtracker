@@ -23,8 +23,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  *
- * Default configuration file example
- * Production name: app.php
+ * Default configuration file
+ *
+ * For different environments, use separated env.NAME.php files
  *
  * Project home page
  * https://github.com/YGGverse/YGGtracker
@@ -32,9 +33,6 @@
  * Get support
  * https://github.com/YGGverse/YGGtracker/issues
 */
-
-// PHP
-declare(strict_types=1);
 
 // Debug
 ini_set('display_errors', '1');
@@ -51,6 +49,12 @@ define('DB_PASSWORD', '');
 // Sphinx
 define('SPHINX_HOST', '127.0.0.1');
 define('SPHINX_PORT', 9306);
+
+// Memcached
+define('MEMCACHED_PORT', 11211);
+define('MEMCACHED_HOST', 'localhost');
+define('MEMCACHED_NAMESPACE', 'yggtracker');
+define('MEMCACHED_TIMEOUT', 60 * 5);
 
 // Webapp
 define('WEBSITE_URL', '');

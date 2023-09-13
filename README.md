@@ -24,7 +24,10 @@ Open trackers defined in [trackers.json](https://github.com/YGGverse/YGGtracker/
 php8^
 php-pdo
 php-mysql
+php-curl
+php-memcached
 sphinxsearch
+memcached
 ```
 #### Installation
 
@@ -37,7 +40,7 @@ sphinxsearch
 * The web root dir is `/src/public`
 * Deploy the database using [MySQL Workbench](https://www.mysql.com/products/workbench) project presented in the `/database` folder
 * Install [Sphinx Search Server](https://sphinxsearch.com)
-* Configuration examples presented at `/config` folder
+* Configuration examples presented at `/config` folder. When server environment not provided, setup `env.default.php`
 * Make sure `/src/api` folder writable
 * Set up the `/src/crontab` by following [example](https://github.com/YGGverse/YGGtracker/blob/main/example/environment/crontab)
 
