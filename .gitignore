@@ -1,19 +1,15 @@
-/.vscode
+/.vscode/
 
-/vendor
+/vendor/
 
 /database/yggtracker.mwb.bak
 
-/src/config/*.php
-!/src/config/bootstrap.php
+/src/public/api/
 
-/src/public/api/manifest.json
-/src/public/api/users.json
-/src/public/api/magnets.json
-/src/public/api/downloads.json
-/src/public/api/comments.json
-/src/public/api/stars.json
-/src/public/api/views.json
+/src/config/*
+!/src/config/bootstrap.php
+!/src/config/nodes.php
+!/src/config/trackers.php
 
 /composer.lock
 

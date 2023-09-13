@@ -4,30 +4,35 @@
 declare(strict_types=1);
 
 // Init environment
-if (empty($_SERVER['PHP_ENV']))
+if (!file_exists(__DIR__ . '/.env'))
 {
-  $_SERVER['PHP_ENV'] = 'default';
-}
-
-// Validate environment whitelist
-if (!in_array($_SERVER['PHP_ENV'], ['default', 'mirror', 'dev', 'test', 'prod']))
-{
-  exit (_('Environment not supported! Check /src/config/bootstrap.php to add exception.'));
-}
-
-// Generate configuration file if not exists
-if (!file_exists(__DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php') && file_exists(__DIR__ . '/../../example/environment/env.example.php'))
-{
-  if (copy(__DIR__ . '/../../example/environment/env.example.php', __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php'))
+  if ($handle = fopen(__DIR__ . '/.env', 'w+'))
   {
-    chmod(__DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php', 0770);
+    fwrite($handle, 'default');
+    fclose($handle);
+
+    chmod(__DIR__ . '/.env', 0770);
+  }
+
+  else exit (_('Could not init environment file. Please check permissions.'));
+}
+
+define('PHP_ENV', file_get_contents(__DIR__ . '/.env'));
+
+// Init config
+if (!file_exists(__DIR__ . '/env.' . PHP_ENV . '.php'))
+{
+  if (copy(__DIR__ . '/../../example/environment/env.example.php',
+           __DIR__ . '/env.' . PHP_ENV . '.php'))
+  {
+     chmod(__DIR__ . '/env.' . PHP_ENV . '.php', 0770);
   }
 
   else exit (_('Could not init configuration file. Please check permissions.'));
 }
 
-// Load environment configuration
-require_once __DIR__ . '/env.' . $_SERVER['PHP_ENV'] . '.php';
+// Load environment
+require_once __DIR__ . '/env.' . PHP_ENV . '.php';
 
 // Local internal dependencies
 require_once __DIR__ . '/../library/database.php';
