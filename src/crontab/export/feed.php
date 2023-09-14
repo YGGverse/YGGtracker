@@ -369,7 +369,7 @@ try
             'userId'                => $comment->userId,
             'magnetId'              => $comment->magnetId,
             'timeAdded'             => $comment->timeAdded,
-            'approved'              => $comment->approved,
+            'approved'              => (bool) $comment->approved,
             'value'                 => $comment->value
           ];
         }
