@@ -155,16 +155,16 @@ try
         {
           $users[] = (object)
           [
-            'userId'      => $user->userId,
-            'address'     => $user->address,
-            'timeAdded'   => $user->timeAdded,
-            'timeUpdated' => $user->timeUpdated,
+            'userId'      => (int) $user->userId,
+            'address'     => (string) $user->address,
+            'timeAdded'   => (int) $user->timeAdded,
+            'timeUpdated' => (int) $user->timeUpdated,
             'approved'    => (bool) $user->approved,
-            'magnets'     => $db->findMagnetsTotalByUserId($user->userId),
-            'downloads'   => $db->findMagnetDownloadsTotalByUserId($user->userId),
-            'comments'    => $db->findMagnetCommentsTotalByUserId($user->userId),
-            'stars'       => $db->findMagnetStarsTotalByUserId($user->userId),
-            'views'       => $db->findMagnetViewsTotalByUserId($user->userId),
+            'magnets'     => (int) $db->findMagnetsTotalByUserId($user->userId),
+            'downloads'   => (int) $db->findMagnetDownloadsTotalByUserId($user->userId),
+            'comments'    => (int) $db->findMagnetCommentsTotalByUserId($user->userId),
+            'stars'       => (int) $db->findMagnetStarsTotalByUserId($user->userId),
+            'views'       => (int) $db->findMagnetViewsTotalByUserId($user->userId),
           ];
         }
 
@@ -197,8 +197,8 @@ try
             if ($infoHash = $db->getInfoHash($result->infoHashId))
             {
               $xt[] = (object) [
-                'version' => $infoHash->version,
-                'value'   => $infoHash->value,
+                'version' => (float) $infoHash->version,
+                'value'   => (string) $infoHash->value,
               ];
             }
           }
@@ -290,18 +290,18 @@ try
 
           $magnets[] = (object)
           [
-            'magnetId'        => $magnet->magnetId,
-            'userId'          => $magnet->userId,
-            'title'           => $magnet->title,
-            'preview'         => $magnet->preview,
-            'description'     => $magnet->description,
+            'magnetId'        => (int) $magnet->magnetId,
+            'userId'          => (int) $magnet->userId,
+            'title'           => (string) $magnet->title,
+            'preview'         => (string) $magnet->preview,
+            'description'     => (string) $magnet->description,
             'comments'        => (bool) $magnet->comments,
             'sensitive'       => (bool) $magnet->sensitive,
             'approved'        => (bool) $magnet->approved,
-            'timeAdded'       => $magnet->timeAdded,
-            'timeUpdated'     => $magnet->timeUpdated,
-            'dn'              => $magnet->dn,
-            'xl'              => $magnet->xl,
+            'timeAdded'       => (int) $magnet->timeAdded,
+            'timeUpdated'     => (int) $magnet->timeUpdated,
+            'dn'              => (string) $magnet->dn,
+            'xl'              => (float) $magnet->xl,
             'xt'              => (object) $xt,
             'kt'              => (object) $kt,
             'tr'              => (object) $tr,
@@ -335,10 +335,10 @@ try
         {
           $magnetDownloads[] = (object)
           [
-            'magnetDownloadId' => $magnetDownload->magnetDownloadId,
-            'userId'           => $magnetDownload->userId,
-            'magnetId'         => $magnetDownload->magnetId,
-            'timeAdded'        => $magnetDownload->timeAdded,
+            'magnetDownloadId' => (int) $magnetDownload->magnetDownloadId,
+            'userId'           => (int) $magnetDownload->userId,
+            'magnetId'         => (int) $magnetDownload->magnetId,
+            'timeAdded'        => (int) $magnetDownload->timeAdded,
           ];
         }
       }
@@ -364,13 +364,13 @@ try
         {
           $magnetComments[] = (object)
           [
-            'magnetCommentId'       => $magnetComment->magnetCommentId,
-            'magnetCommentIdParent' => $magnetComment->magnetCommentIdParent,
-            'userId'                => $magnetComment->userId,
-            'magnetId'              => $magnetComment->magnetId,
-            'timeAdded'             => $magnetComment->timeAdded,
+            'magnetCommentId'       => (int) $magnetComment->magnetCommentId,
+            'magnetCommentIdParent' => (int) $magnetComment->magnetCommentIdParent,
+            'userId'                => (int) $magnetComment->userId,
+            'magnetId'              => (int) $magnetComment->magnetId,
+            'timeAdded'             => (int) $magnetComment->timeAdded,
             'approved'              => (bool) $magnetComment->approved,
-            'value'                 => $magnetComment->value
+            'value'                 => (string) $magnetComment->value
           ];
         }
       }
@@ -396,11 +396,11 @@ try
         {
           $magnetStars[] = (object)
           [
-            'magnetStarId' => $magnetStar->magnetStarId,
-            'userId'       => $magnetStar->userId,
-            'magnetId'     => $magnetStar->magnetId,
+            'magnetStarId' => (int) $magnetStar->magnetStarId,
+            'userId'       => (int) $magnetStar->userId,
+            'magnetId'     => (int) $magnetStar->magnetId,
             'value'        => (bool) $magnetStar->value,
-            'timeAdded'    => $magnetStar->timeAdded,
+            'timeAdded'    => (int) $magnetStar->timeAdded,
           ];
         }
       }
@@ -426,10 +426,10 @@ try
         {
           $magnetViews[] = (object)
           [
-            'magnetViewId' => $magnetView->magnetViewId,
-            'userId'       => $magnetView->userId,
-            'magnetId'     => $magnetView->magnetId,
-            'timeAdded'    => $magnetView->timeAdded,
+            'magnetViewId' => (int) $magnetView->magnetViewId,
+            'userId'       => (int) $magnetView->userId,
+            'magnetId'     => (int) $magnetView->magnetId,
+            'timeAdded'    => (int) $magnetView->timeAdded,
           ];
         }
       }
