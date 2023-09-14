@@ -40,10 +40,10 @@ try
 
   @unlink(__DIR__ . '/../public/api/users.json');
   @unlink(__DIR__ . '/../public/api/magnets.json');
-  @unlink(__DIR__ . '/../public/api/comments.json');
-  @unlink(__DIR__ . '/../public/api/downloads.json');
-  @unlink(__DIR__ . '/../public/api/stars.json');
-  @unlink(__DIR__ . '/../public/api/views.json');
+  @unlink(__DIR__ . '/../public/api/magnetComments.json');
+  @unlink(__DIR__ . '/../public/api/magnetDownloads.json');
+  @unlink(__DIR__ . '/../public/api/magnetStars.json');
+  @unlink(__DIR__ . '/../public/api/magnetViews.json');
 
   if (API_EXPORT_ENABLED)
   {
@@ -125,12 +125,12 @@ try
       ],
       'feeds' =>
       [
-        'users'     => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
-        'magnets'   => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
-        'downloads' => API_EXPORT_MAGNET_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
-        'comments'  => API_EXPORT_MAGNET_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
-        'stars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
-        'views'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
+        'users'           => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
+        'magnets'         => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
+        'magnetDownloads' => API_EXPORT_MAGNET_DOWNLOADS_ENABLED ? sprintf('%s/api/magnetDownloads.json', WEBSITE_URL) : false,
+        'magnetComments'  => API_EXPORT_MAGNET_COMMENTS_ENABLED  ? sprintf('%s/api/magnetComments.json', WEBSITE_URL)  : false,
+        'magnetStars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/magnetStars.json', WEBSITE_URL)     : false,
+        'magnetViews'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/magnetViews.json', WEBSITE_URL)     : false,
       ],
       'trackers'  => json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
       'nodes'     => json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
@@ -344,7 +344,7 @@ try
       }
 
       /// Dump downloads feed
-      if ($handle = fopen(__DIR__ . '/../../public/api/downloads.json', 'w+'))
+      if ($handle = fopen(__DIR__ . '/../../public/api/magnetDownloads.json', 'w+'))
       {
         fwrite($handle, json_encode($downloads));
         fclose($handle);
@@ -373,7 +373,7 @@ try
       }
 
       /// Dump comments feed
-      if ($handle = fopen(__DIR__ . '/../../public/api/comments.json', 'w+'))
+      if ($handle = fopen(__DIR__ . '/../../public/api/magnetComments.json', 'w+'))
       {
         fwrite($handle, json_encode($comments));
         fclose($handle);
@@ -403,7 +403,7 @@ try
       }
 
       /// Dump stars feed
-      if ($handle = fopen(__DIR__ . '/../../public/api/stars.json', 'w+'))
+      if ($handle = fopen(__DIR__ . '/../../public/api/magnetStars.json', 'w+'))
       {
         fwrite($handle, json_encode($stars));
         fclose($handle);
@@ -431,7 +431,7 @@ try
       }
 
       /// Dump views feed
-      if ($handle = fopen(__DIR__ . '/../../public/api/views.json', 'w+'))
+      if ($handle = fopen(__DIR__ . '/../../public/api/magnetViews.json', 'w+'))
       {
         fwrite($handle, json_encode($views));
         fclose($handle);
