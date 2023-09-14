@@ -196,7 +196,10 @@ try
           {
             if ($infoHash = $db->getInfoHash($result->infoHashId))
             {
-              $xt[$infoHash->version] = $infoHash->value;
+              $xt[] = (object) [
+                'version' => $infoHash->version,
+                'value'   => $infoHash->value,
+              ];
             }
           }
 
@@ -299,11 +302,11 @@ try
             'timeUpdated'     => $magnet->timeUpdated,
             'dn'              => $magnet->dn,
             'xl'              => $magnet->xl,
-            'xt'              => (array) $xt,
-            'kt'              => (array) $kt,
-            'tr'              => (array) $tr,
-            'as'              => (array) $as,
-            'xs'              => (array) $xs,
+            'xt'              => (object) $xt,
+            'kt'              => (object) $kt,
+            'tr'              => (object) $tr,
+            'as'              => (object) $as,
+            'xs'              => (object) $xs,
           ];
         }
 
