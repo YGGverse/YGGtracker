@@ -11,6 +11,8 @@
 !/src/config/nodes.php
 !/src/config/trackers.php
 
+/src/public/sitemap.xml
+
 /composer.lock
 
 *test*
