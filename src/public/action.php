@@ -237,13 +237,37 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         else
         {
           if ($magnetCommentId = $db->addMagnetComment($magnet->magnetId,
-                                                      $user->userId,
-                                                      null, // @TODO implement threads
-                                                      trim($_POST['comment']),
-                                                      $user->approved || in_array($user->address, MODERATOR_IP_LIST) ? true : MAGNET_COMMENT_DEFAULT_APPROVED,
-                                                      MAGNET_COMMENT_DEFAULT_PUBLIC,
-                                                      time()))
+                                                       $user->userId,
+                                                       null, // @TODO implement threads
+                                                       trim($_POST['comment']),
+                                                       $user->approved || in_array($user->address, MODERATOR_IP_LIST) ? true : MAGNET_COMMENT_DEFAULT_APPROVED,
+                                                       MAGNET_COMMENT_DEFAULT_PUBLIC,
+                                                       time()))
           {
+
+            // Push event to other nodes
+            if (API_EXPORT_ENABLED &&
+                API_EXPORT_PUSH_ENABLED &&
+                API_EXPORT_USERS_ENABLED &&
+                API_EXPORT_MAGNETS_ENABLED &&
+                API_EXPORT_MAGNET_COMMENTS_ENABLED)
+            {
+              if (!$memoryApiExportPush = $memory->get('api.export.push'))
+              {
+                $memoryApiExportPush = [];
+              }
+
+              $memoryApiExportPush[] = (object)
+              [
+                'time'            => time(),
+                'userId'          => $user->userId,
+                'magnetId'        => $magnet->magnetId,
+                'magnetCommentId' => $magnetCommentId
+              ];
+
+              $memory->set('api.export.push', $memoryApiExportPush, 3600);
+            }
+
             // Redirect to referrer page
             header(
               sprintf('Location: %s#comment-%s', $callback, $magnetCommentId)
@@ -328,18 +352,40 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
         // Request valid
         else
         {
-          // Save value
-          $db->addMagnetStar(
-            $magnet->magnetId,
-            $userId,
-            !$db->findLastMagnetStarValue($magnet->magnetId, $userId),
-            time()
-          );
+          // Save star
+          if ($magnetStarId = $db->addMagnetStar( $magnet->magnetId,
+                                                  $user->userId,
+                                                  !$db->findLastMagnetStarValue($magnet->magnetId, $user->userId),
+                                                  time()))
+          {
+            // Push event to other nodes
+            if (API_EXPORT_ENABLED &&
+                API_EXPORT_PUSH_ENABLED &&
+                API_EXPORT_USERS_ENABLED &&
+                API_EXPORT_MAGNETS_ENABLED &&
+                API_EXPORT_MAGNET_STARS_ENABLED)
+            {
+              if (!$memoryApiExportPush = $memory->get('api.export.push'))
+              {
+                $memoryApiExportPush = [];
+              }
 
-          // Redirect to edit page
-          header(
-            sprintf('Location: %s', $callback)
-          );
+              $memoryApiExportPush[] = (object)
+              [
+                'time'         => time(),
+                'userId'       => $user->userId,
+                'magnetId'     => $magnet->magnetId,
+                'magnetStarId' => $magnetStarId
+              ];
+
+              $memory->set('api.export.push', $memoryApiExportPush, 3600);
+            }
+
+            // Redirect to edit page
+            header(
+              sprintf('Location: %s', $callback)
+            );
+          }
         }
 
       break;

@@ -188,6 +188,27 @@ else {
   // Update form
   if (!empty($_POST)) {
 
+    // Push event to other nodes
+    if (API_EXPORT_ENABLED &&
+        API_EXPORT_PUSH_ENABLED &&
+        API_EXPORT_USERS_ENABLED &&
+        API_EXPORT_MAGNETS_ENABLED)
+    {
+      if (!$memoryApiExportPush = $memory->get('api.export.push'))
+      {
+        $memoryApiExportPush = [];
+      }
+
+      $memoryApiExportPush[] = (object)
+      [
+        'time'     => time(),
+        'userId'   => $user->userId,
+        'magnetId' => $magnet->magnetId,
+      ];
+
+      $memory->set('api.export.push', $memoryApiExportPush, 3600);
+    }
+
     // Approve by moderation request
     if (in_array($user->address, MODERATOR_IP_LIST))
     {

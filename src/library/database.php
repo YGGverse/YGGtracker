@@ -1444,6 +1444,17 @@ class Database {
     return $this->_db->lastInsertId();
   }
 
+  public function getMagnetStar(int $magnetStarId) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetStar` WHERE `magnetStarId` = ?');
+
+    $query->execute([$magnetStarId]);
+
+    return $query->fetch();
+  }
+
   public function getMagnetStars() {
 
     $this->_debug->query->select->total++;
@@ -1531,6 +1542,17 @@ class Database {
     $query->execute([$magnetId, $userId, $timeAdded]);
 
     return $this->_db->lastInsertId();
+  }
+
+  public function getMagnetDownload(int $magnetDownloadId) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetDownload` WHERE `magnetDownloadId` = ?');
+
+    $query->execute([$magnetDownloadId]);
+
+    return $query->fetch();
   }
 
   public function getMagnetDownloads() {
@@ -1627,6 +1649,17 @@ class Database {
     $query = $this->_db->query('SELECT * FROM `magnetView`');
 
     return $query->fetchAll();
+  }
+
+  public function getMagnetView(int $magnetViewId) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetView` WHERE `magnetViewId` = ?');
+
+    $query->execute([$magnetViewId]);
+
+    return $query->fetch();
   }
 
   public function getMagnetViewsTotal() : int {
