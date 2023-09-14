@@ -136,7 +136,7 @@ try
       'nodes'     => (object) json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
     ];
 
-    /// Dump manifest manifest
+    /// Dump feed
     if ($handle = fopen(__DIR__ . '/../../public/api/manifest.json', 'w+'))
     {
       fwrite($handle, json_encode($manifest));
@@ -322,121 +322,122 @@ try
       }
     }
 
-    // Downloads
+    // Magnet downloads
     if (API_EXPORT_MAGNET_DOWNLOADS_ENABLED)
     {
-      $downloads = [];
+      $magnetDownloads = [];
 
-      foreach ($db->getMagnetDownloads() as $download)
+      foreach ($db->getMagnetDownloads() as $magnetDownload)
       {
         // Dump public data only
-        if (isset($public['magnet'][$download->magnetId]) && $public['magnet'][$download->magnetId] === '1' &&
-            isset($public['user'][$download->userId]) && $public['user'][$download->userId] === '1')
+        if (isset($public['magnet'][$magnetDownload->magnetId]) && $public['magnet'][$magnetDownload->magnetId] === '1' &&
+            isset($public['user'][$magnetDownload->userId])     && $public['user'][$magnetDownload->userId] === '1')
         {
-          $downloads[] = (object)
+          $magnetDownloads[] = (object)
           [
-            'magnetDownloadId' => $download->magnetDownloadId,
-            'userId'           => $download->userId,
-            'magnetId'         => $download->magnetId,
-            'timeAdded'        => $download->timeAdded,
+            'magnetDownloadId' => $magnetDownload->magnetDownloadId,
+            'userId'           => $magnetDownload->userId,
+            'magnetId'         => $magnetDownload->magnetId,
+            'timeAdded'        => $magnetDownload->timeAdded,
           ];
         }
       }
 
-      /// Dump downloads feed
+      /// Dump feed
       if ($handle = fopen(__DIR__ . '/../../public/api/magnetDownloads.json', 'w+'))
       {
-        fwrite($handle, json_encode($downloads));
+        fwrite($handle, json_encode($magnetDownloads));
         fclose($handle);
       }
     }
 
-    // Comments
+    // Magnet comments
     if (API_EXPORT_MAGNET_COMMENTS_ENABLED)
     {
-      $comments = [];
+      $magnetComments = [];
 
-      foreach ($db->getMagnetComments() as $comment)
+      foreach ($db->getMagnetComments() as $magnetComment)
       {
         // Dump public data only
-        if (isset($public['magnet'][$comment->magnetId]) && $public['magnet'][$comment->magnetId] === '1' &&
-            isset($public['user'][$comment->userId]) && $public['user'][$comment->userId] === '1')
+        if (isset($public['magnet'][$magnetComment->magnetId]) && $public['magnet'][$magnetComment->magnetId] === '1' &&
+            isset($public['user'][$magnetComment->userId])     && $public['user'][$magnetComment->userId] === '1')
         {
-          $comments[] = (object)
+          $magnetComments[] = (object)
           [
-            'magnetCommentId'       => $comment->magnetCommentId,
-            'magnetCommentIdParent' => $comment->magnetCommentIdParent,
-            'userId'                => $comment->userId,
-            'magnetId'              => $comment->magnetId,
-            'timeAdded'             => $comment->timeAdded,
-            'approved'              => (bool) $comment->approved,
-            'value'                 => $comment->value
+            'magnetCommentId'       => $magnetComment->magnetCommentId,
+            'magnetCommentIdParent' => $magnetComment->magnetCommentIdParent,
+            'userId'                => $magnetComment->userId,
+            'magnetId'              => $magnetComment->magnetId,
+            'timeAdded'             => $magnetComment->timeAdded,
+            'approved'              => (bool) $magnetComment->approved,
+            'value'                 => $magnetComment->value
           ];
         }
       }
 
-      /// Dump comments feed
+      /// Dump feed
       if ($handle = fopen(__DIR__ . '/../../public/api/magnetComments.json', 'w+'))
       {
-        fwrite($handle, json_encode($comments));
+        fwrite($handle, json_encode($magnetComments));
         fclose($handle);
       }
     }
 
-    // Stars
+    // Magnet stars
     if (API_EXPORT_MAGNET_STARS_ENABLED)
     {
-      $stars = [];
+      $magnetStars = [];
 
-      foreach ($db->getMagnetStars() as $star)
+      foreach ($db->getMagnetStars() as $magnetStar)
       {
         // Dump public data only
-        if (isset($public['magnet'][$star->magnetId]) && $public['magnet'][$star->magnetId] === '1' &&
-            isset($public['user'][$star->userId]) && $public['user'][$star->userId] === '1')
+        if (isset($public['magnet'][$magnetStar->magnetId]) && $public['magnet'][$magnetStar->magnetId] === '1' &&
+            isset($public['user'][$magnetStar->userId])     && $public['user'][$magnetStar->userId] === '1')
         {
-          $stars[] = (object)
+          $magnetStars[] = (object)
           [
-            'magnetStarId' => $star->magnetStarId,
-            'userId'       => $star->userId,
-            'magnetId'     => $star->magnetId,
-            'value'        => (bool) $star->value,
-            'timeAdded'    => $star->timeAdded,
+            'magnetStarId' => $magnetStar->magnetStarId,
+            'userId'       => $magnetStar->userId,
+            'magnetId'     => $magnetStar->magnetId,
+            'value'        => (bool) $magnetStar->value,
+            'timeAdded'    => $magnetStar->timeAdded,
           ];
         }
       }
 
-      /// Dump stars feed
+      /// Dump feed
       if ($handle = fopen(__DIR__ . '/../../public/api/magnetStars.json', 'w+'))
       {
-        fwrite($handle, json_encode($stars));
+        fwrite($handle, json_encode($magnetStars));
         fclose($handle);
       }
     }
-    // Views
+
+    // Magnet views
     if (API_EXPORT_MAGNET_VIEWS_ENABLED)
     {
-      $views = [];
+      $magnetViews = [];
 
-      foreach ($db->getMagnetViews() as $view)
+      foreach ($db->getMagnetViews() as $magnetView)
       {
         // Dump public data only
-        if (isset($public['magnet'][$view->magnetId]) && $public['magnet'][$view->magnetId] === '1' &&
-            isset($public['user'][$view->userId]) && $public['user'][$view->userId] === '1')
+        if (isset($public['magnet'][$magnetView->magnetId]) && $public['magnet'][$magnetView->magnetId] === '1' &&
+            isset($public['user'][$magnetView->userId]    ) && $public['user'][$magnetView->userId] === '1')
         {
-          $views[] = (object)
+          $magnetViews[] = (object)
           [
-            'magnetViewId' => $view->magnetViewId,
-            'userId'       => $view->userId,
-            'magnetId'     => $view->magnetId,
-            'timeAdded'    => $view->timeAdded,
+            'magnetViewId' => $magnetView->magnetViewId,
+            'userId'       => $magnetView->userId,
+            'magnetId'     => $magnetView->magnetId,
+            'timeAdded'    => $magnetView->timeAdded,
           ];
         }
       }
 
-      /// Dump views feed
+      /// Dump feed
       if ($handle = fopen(__DIR__ . '/../../public/api/magnetViews.json', 'w+'))
       {
-        fwrite($handle, json_encode($views));
+        fwrite($handle, json_encode($magnetViews));
         fclose($handle);
       }
     }
