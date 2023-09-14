@@ -69,6 +69,12 @@ try
             continue;
           }
 
+          // Skip import on user approved required
+          if (API_IMPORT_USERS_APPROVED_ONLY && !$remoteUser->approved)
+          {
+            continue;
+          }
+
           // Yggdrasil connections only
           else if (!preg_match(YGGDRASIL_HOST_REGEX, $remoteUser->address))
           {
@@ -166,6 +172,12 @@ try
                 !isset($remoteMagnet->tr)          || !is_object($remoteMagnet->tr)                                         ||
                 !isset($remoteMagnet->as)          || !is_object($remoteMagnet->as)                                         ||
                 !isset($remoteMagnet->xs)          || !is_object($remoteMagnet->xs))
+            {
+              continue;
+            }
+
+            // Skip import on magnet approved required
+            if (API_IMPORT_MAGNETS_APPROVED_ONLY && !$remoteMagnet->approved)
             {
               continue;
             }
@@ -391,6 +403,12 @@ try
 
                 !isset($remoteMagnetComment->magnetCommentIdParent) || !(is_bool($remoteMagnetComment->magnetCommentIdParent) || is_int($remoteMagnetComment->magnetCommentIdParent))
               )
+              {
+                continue;
+              }
+
+              // Skip import on magnet comment approved required
+              if (API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY && !$remoteMagnetComment->approved)
               {
                 continue;
               }
