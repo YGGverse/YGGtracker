@@ -575,6 +575,17 @@ class Database {
     return $query->rowCount();
   }
 
+  public function updateUserTimeAdded(int $userId, int $timeAdded) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `user` SET `timeAdded` = ? WHERE `userId` = ?');
+
+    $query->execute([$timeAdded, $userId]);
+
+    return $query->rowCount();
+  }
+
   public function updateUserTimeUpdated(int $userId, int $timeUpdated) : int {
 
     $this->_debug->query->update->total++;
@@ -803,6 +814,28 @@ class Database {
     $query = $this->_db->prepare('UPDATE `magnet` SET `approved` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
 
     $query->execute([(int) $approved, $timeUpdated, $magnetId]);
+
+    return $query->rowCount();
+  }
+
+  public function updateMagnetTimeUpdated(int $magnetId, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnet` SET `timeUpdated` = ? WHERE `magnetId` = ?');
+
+    $query->execute([$timeUpdated, $magnetId]);
+
+    return $query->rowCount();
+  }
+
+  public function updateMagnetTimeAdded(int $magnetId, int $timeAdded) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnet` SET `timeAdded` = ? WHERE `magnetId` = ?');
+
+    $query->execute([$timeAdded, $magnetId]);
 
     return $query->rowCount();
   }

@@ -87,6 +87,15 @@ try
           // Remember user ID for this host
           $aliasUserId[$remoteUser->userId] = $localUser->userId;
 
+          // Update time added if newer
+          if ($localUser->timeAdded < $remoteUser->timeAdded)
+          {
+            $db->updateUserTimeAdded(
+              $localUser->userId,
+              $remoteUser->timeAdded
+            );
+          }
+
           // Update user info if newer
           if ($localUser->timeUpdated < $remoteUser->timeUpdated)
           {
@@ -155,7 +164,7 @@ try
                 !isset($remoteMagnet->dn)          || mb_strlen($remoteMagnet->dn) < MAGNET_TITLE_MIN_LENGTH                ||
                                                       mb_strlen($remoteMagnet->dn) > MAGNET_TITLE_MAX_LENGTH                ||
 
-                !isset($remoteMagnet->xl)          || !is_int($remoteMagnet->xl)                                            ||
+                !isset($remoteMagnet->xl)          || !(is_int($remoteMagnet->xl) || is_float($remoteMagnet->xl))           ||
 
                 !isset($remoteMagnet->xt)          || !is_object($remoteMagnet->xt)                                         ||
                 !isset($remoteMagnet->kt)          || !is_object($remoteMagnet->kt)                                         ||
@@ -186,6 +195,15 @@ try
 
             // Add magnet alias for this host
             $aliasMagnetId[$remoteMagnet->magnetId] = $localMagnet->magnetId;
+
+            // Update time added if newer
+            if ($localMagnet->timeAdded < $remoteMagnet->timeAdded)
+            {
+              $db->updateMagnetTimeAdded(
+                $localUser->userId,
+                $remoteMagnet->timeAdded
+              );
+            }
 
             // Update info if remote newer
             if ($localMagnet->timeUpdated < $remoteMagnet->timeUpdated)
