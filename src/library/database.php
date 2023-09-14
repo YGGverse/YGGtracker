@@ -595,7 +595,8 @@ class Database {
                             bool $comments,
                             bool $sensitive,
                             bool $approved,
-                            int $timeAdded) : int {
+                            int $timeAdded,
+                            mixed $timeUpdated = null) : int {
 
     $this->_debug->query->insert->total++;
 
@@ -607,7 +608,8 @@ class Database {
                                                             `comments`    = ?,
                                                             `sensitive`   = ?,
                                                             `approved`    = ?,
-                                                            `timeAdded`   = ?');
+                                                            `timeAdded`   = ?,
+                                                            `timeUpdated` = ?');
 
     $query->execute(
       [
@@ -619,7 +621,8 @@ class Database {
         $comments ? 1 : 0,
         $sensitive ? 1 : 0,
         $approved ? 1 : 0,
-        $timeAdded
+        $timeAdded,
+        $timeUpdated
       ]
     );
 
@@ -703,6 +706,17 @@ class Database {
     $query->execute([(int) $public]);
 
     return $query->fetch()->result;
+  }
+
+  public function updateMagnetXl(int $magnetId, int $xl, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `magnet` SET `xl` = ?, `timeUpdated` = ? WHERE `magnetId` = ?');
+
+    $query->execute([$xl, $timeUpdated, $magnetId]);
+
+    return $query->rowCount();
   }
 
   public function updateMagnetDn(int $magnetId, string $dn, int $timeUpdated) : int {
