@@ -364,10 +364,11 @@ try
         {
           $comments[] = (object)
           [
-            'magnetCommentId' => $comment->magnetCommentId,
+            'magnetCommentId'  => $comment->magnetCommentId,
             'userId'           => $comment->userId,
             'magnetId'         => $comment->magnetId,
             'timeAdded'        => $comment->timeAdded,
+            'value'            => $comment->value
           ];
         }
       }
