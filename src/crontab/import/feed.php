@@ -140,19 +140,14 @@ try
 
           foreach (@json_decode(@file_get_contents($manifest->feeds->magnets)) as $remoteMagnet)
           {
-            // Validate required fields
+            // Validate required fields by protocol
             if (!isset($remoteMagnet->userId)      || !is_int($remoteMagnet->userId)                                        ||
                                                       !isset($aliasUserId[$remoteMagnet->userId])                           ||
                                                       !$db->getUser($aliasUserId[$remoteMagnet->userId])                    ||
 
-                !isset($remoteMagnet->title)       || mb_strlen($remoteMagnet->title) < MAGNET_TITLE_MIN_LENGTH             ||
-                                                      mb_strlen($remoteMagnet->title) > MAGNET_TITLE_MAX_LENGTH             ||
-
-                !isset($remoteMagnet->preview)     || mb_strlen($remoteMagnet->preview) < MAGNET_PREVIEW_MIN_LENGTH         ||
-                                                      mb_strlen($remoteMagnet->preview) > MAGNET_PREVIEW_MAX_LENGTH         ||
-
-                !isset($remoteMagnet->description) || mb_strlen($remoteMagnet->description) < MAGNET_DESCRIPTION_MIN_LENGTH ||
-                                                      mb_strlen($remoteMagnet->description) > MAGNET_DESCRIPTION_MAX_LENGTH ||
+                !isset($remoteMagnet->title)       || !is_string($remoteMagnet->title)                                      ||
+                !isset($remoteMagnet->preview)     || !is_string($remoteMagnet->preview)                                    ||
+                !isset($remoteMagnet->description) || !is_string($remoteMagnet->description)                                ||
 
                 !isset($remoteMagnet->comments)    || !is_bool($remoteMagnet->comments)                                     ||
                 !isset($remoteMagnet->sensitive)   || !is_bool($remoteMagnet->sensitive)                                    ||
@@ -211,9 +206,25 @@ try
               // Magnet fields
               $db->updateMagnetXl($localMagnet->magnetId, $remoteMagnet->xl, $remoteMagnet->timeUpdated);
               $db->updateMagnetDn($localMagnet->magnetId, $remoteMagnet->dn, $remoteMagnet->timeUpdated);
-              $db->updateMagnetTitle($localMagnet->magnetId, $remoteMagnet->title, $remoteMagnet->timeUpdated);
-              $db->updateMagnetPreview($localMagnet->magnetId, $remoteMagnet->preview, $remoteMagnet->timeUpdated);
-              $db->updateMagnetDescription($localMagnet->magnetId, $remoteMagnet->description, $remoteMagnet->timeUpdated);
+
+              if (mb_strlen($remoteMagnet->title) >= MAGNET_TITLE_MIN_LENGTH &&
+                  mb_strlen($remoteMagnet->title) <= MAGNET_TITLE_MAX_LENGTH)
+              {
+                $db->updateMagnetTitle($localMagnet->magnetId, $remoteMagnet->title, $remoteMagnet->timeUpdated);
+              }
+
+              if (mb_strlen($remoteMagnet->preview) >= MAGNET_PREVIEW_MIN_LENGTH &&
+                  mb_strlen($remoteMagnet->preview) <= MAGNET_PREVIEW_MAX_LENGTH)
+              {
+                $db->updateMagnetPreview($localMagnet->magnetId, $remoteMagnet->preview, $remoteMagnet->timeUpdated);
+              }
+
+              if (mb_strlen($remoteMagnet->description) >= MAGNET_DESCRIPTION_MIN_LENGTH &&
+                  mb_strlen($remoteMagnet->description) <= MAGNET_DESCRIPTION_MAX_LENGTH)
+              {
+                $db->updateMagnetDescription($localMagnet->magnetId, $remoteMagnet->description, $remoteMagnet->timeUpdated);
+              }
+
               $db->updateMagnetComments($localMagnet->magnetId, $remoteMagnet->comments, $remoteMagnet->timeUpdated);
               $db->updateMagnetSensitive($localMagnet->magnetId, $remoteMagnet->sensitive, $remoteMagnet->timeUpdated);
 
