@@ -66,3 +66,15 @@ try {
 
   exit;
 }
+
+// Connect memcached
+try {
+
+  $memory = new Yggverse\Cache\Memory(MEMCACHED_HOST, MEMCACHED_PORT, MEMCACHED_NAMESPACE, MEMCACHED_TIMEOUT + time());
+
+} catch(Exception $e) {
+
+  var_dump($e);
+
+  exit;
+}
