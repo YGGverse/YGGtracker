@@ -91,12 +91,12 @@ try
         'MAGNET_STOP_WORDS_SIMILAR'            => MAGNET_STOP_WORDS_SIMILAR,
       ],
 
-      'users'     => API_EXPORT_USERS_ENABLED     ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
-      'magnets'   => API_EXPORT_MAGNETS_ENABLED   ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
-      'downloads' => API_EXPORT_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
-      'comments'  => API_EXPORT_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
-      'stars'     => API_EXPORT_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
-      'views'     => API_EXPORT_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
+      'users'     => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
+      'magnets'   => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
+      'downloads' => API_EXPORT_MAGNET_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
+      'comments'  => API_EXPORT_MAGNET_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
+      'stars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
+      'views'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
 
       'totals'    =>
       [
@@ -323,7 +323,7 @@ try
     }
 
     // Downloads
-    if (API_EXPORT_DOWNLOADS_ENABLED)
+    if (API_EXPORT_MAGNET_DOWNLOADS_ENABLED)
     {
       $downloads = [];
 
@@ -352,7 +352,7 @@ try
     }
 
     // Comments
-    if (API_EXPORT_COMMENTS_ENABLED)
+    if (API_EXPORT_MAGNET_COMMENTS_ENABLED)
     {
       $comments = [];
 
@@ -381,7 +381,7 @@ try
     }
 
     // Stars
-    if (API_EXPORT_STARS_ENABLED)
+    if (API_EXPORT_MAGNET_STARS_ENABLED)
     {
       $stars = [];
 
@@ -410,7 +410,7 @@ try
       }
     }
     // Views
-    if (API_EXPORT_VIEWS_ENABLED)
+    if (API_EXPORT_MAGNET_VIEWS_ENABLED)
     {
       $views = [];
 
