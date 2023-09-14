@@ -3,18 +3,6 @@
 // Bootstrap
 require_once __DIR__ . '/../config/bootstrap.php';
 
-// Connect database
-try {
-
-  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
-
-} catch (Exception $e) {
-
-  var_dump($e);
-
-  exit;
-}
-
 // Define response
 $response = (object)
 [

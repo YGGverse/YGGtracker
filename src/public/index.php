@@ -3,30 +3,6 @@
 // Bootstrap dependencies
 require_once __DIR__ . '/../config/bootstrap.php';
 
-// Connect Sphinx
-try {
-
-  $sphinx = new Sphinx(SPHINX_HOST, SPHINX_PORT);
-
-} catch(Exception $e) {
-
-  var_dump($e);
-
-  exit;
-}
-
-// Connect database
-try {
-
-  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
-
-} catch (Exception $e) {
-
-  var_dump($e);
-
-  exit;
-}
-
 // Define variables
 $request = (object)
 [

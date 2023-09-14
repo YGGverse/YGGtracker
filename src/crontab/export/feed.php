@@ -29,9 +29,6 @@ $public = [
 // Begin export
 try
 {
-  // Connect DB
-  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
-
   // Init API folder if not exists
   @mkdir(__DIR__ . '/../public/api');
 

@@ -19,18 +19,6 @@ $debug = [
   ],
 ];
 
-// Connect DB
-try {
-
-  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
-
-} catch(Exception $e) {
-
-  var_dump($e);
-
-  exit;
-}
-
 // Begin
 try {
 

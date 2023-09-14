@@ -42,3 +42,27 @@ require_once __DIR__ . '/../library/time.php';
 
 // Vendors autoload
 require_once __DIR__ . '/../../vendor/autoload.php';
+
+// Connect database
+try {
+
+  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
+
+} catch (Exception $e) {
+
+  var_dump($e);
+
+  exit;
+}
+
+// Connect Sphinx
+try {
+
+  $sphinx = new Sphinx(SPHINX_HOST, SPHINX_PORT);
+
+} catch(Exception $e) {
+
+  var_dump($e);
+
+  exit;
+}

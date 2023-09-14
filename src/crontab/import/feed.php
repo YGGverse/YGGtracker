@@ -28,9 +28,6 @@ $debug =
 // Begin export
 try
 {
-  // Connect DB
-  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
-
   // Transaction begin
   $db->beginTransaction();
 
