@@ -41,10 +41,16 @@ try
     // Manifest
     if ($manifest = @json_decode(@file_get_contents($node->manifest)))
     {
+      // Feed channel exists
+      if (empty($manifest->feeds))
+      {
+        continue;
+      }
+
       // Users
       if (API_IMPORT_USERS_ENABLED)
       {
-        if (empty($manifest->users))
+        if (empty($manifest->feeds->users))
         {
           continue;
         }
@@ -52,7 +58,7 @@ try
         // Init alias registry for this host
         $aliasUserId = [];
 
-        foreach (@json_decode(@file_get_contents($manifest->users)) as $remoteUser)
+        foreach (@json_decode(@file_get_contents($manifest->feeds->users)) as $remoteUser)
         {
           // Validate required fields
           if (!isset($remoteUser->address)     || !preg_match(YGGDRASIL_HOST_REGEX, $remoteUser->address) ||
@@ -115,7 +121,7 @@ try
         // Magnets
         if (API_IMPORT_MAGNETS_ENABLED)
         {
-          if (empty($manifest->magnets))
+          if (empty($manifest->feeds->magnets))
           {
             continue;
           }
@@ -123,7 +129,7 @@ try
           // Init alias registry for this host
           $aliasMagnetId = [];
 
-          foreach (@json_decode(@file_get_contents($manifest->magnets)) as $remoteMagnet)
+          foreach (@json_decode(@file_get_contents($manifest->feeds->magnets)) as $remoteMagnet)
           {
             // Validate required fields
             if (!isset($remoteMagnet->userId)      || !is_int($remoteMagnet->userId)                                        ||
@@ -332,6 +338,163 @@ try
                     );
                   }
                 }
+              }
+            }
+          }
+
+          // Magnet comments
+          if (API_IMPORT_MAGNET_COMMENTS_ENABLED)
+          {
+            if (empty($manifest->feeds->magnetComments))
+            {
+              continue;
+            }
+
+            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetComments)) as $remoteMagnetComment)
+            {
+              // Validate
+              if (
+                empty($remoteMagnetComment->magnetId)  || !is_int($remoteMagnetComment->magnetId)  || !isset($aliasMagnetId[$remoteMagnetComment->magnetId]) ||
+                empty($remoteMagnetComment->userId)    || !is_int($remoteMagnetComment->userId)    || !isset($aliasUserId[$remoteMagnetComment->userId])     ||
+                empty($remoteMagnetComment->timeAdded) || !is_int($remoteMagnetComment->timeAdded) ||
+                empty($remoteMagnetComment->approved)  || !is_bool($remoteMagnetComment->approved) ||
+                !isset($remoteMagnetComment->value)    || !is_string($remoteMagnetComment->value)  || mb_strlen($remoteMagnetComment->value) < MAGNET_COMMENT_MIN_LENGTH || mb_strlen($remoteMagnetComment->value) > MAGNET_COMMENT_MAX_LENGTH ||
+
+                !isset($remoteMagnetComment->magnetCommentIdParent) || !(is_bool($remoteMagnetComment->magnetCommentIdParent) || is_int($remoteMagnetComment->magnetCommentIdParent))
+              )
+              {
+                continue;
+              }
+
+              // Add new magnet comment if not exist by timestamp added for this user
+              if (!$db->findMagnetComment($aliasMagnetId[$remoteMagnetComment->magnetId],
+                                           $aliasUserId[$remoteMagnetComment->userId],
+                                           $remoteMagnetComment->timeAdded))
+              {
+                // Parent comment provided
+                if (is_int($remoteMagnetComment->magnetCommentIdParent))
+                {
+                  $localMagnetCommentIdParent = null; // @TODO feature not in use yet
+                }
+
+                else
+                {
+                  $localMagnetCommentIdParent = null;
+                }
+
+                $db->addMagnetComment(
+                  $aliasMagnetId[$remoteMagnetComment->magnetId],
+                  $aliasUserId[$remoteMagnetComment->userId],
+                  $localMagnetCommentIdParent,
+                  $remoteMagnetComment->value,
+                  $remoteMagnetComment->approved,
+                  true,
+                  $remoteMagnetComment->timeAdded
+                );
+              }
+            }
+          }
+
+          // Magnet downloads
+          if (API_IMPORT_MAGNET_DOWNLOADS_ENABLED)
+          {
+            if (empty($manifest->feeds->magnetDownloads))
+            {
+              continue;
+            }
+
+            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetDownloads)) as $remoteMagnetDownload)
+            {
+              // Validate
+              if (
+                empty($remoteMagnetDownload->magnetId)  || !is_int($remoteMagnetDownload->magnetId)  || !isset($aliasMagnetId[$remoteMagnetDownload->magnetId]) ||
+                empty($remoteMagnetDownload->userId)    || !is_int($remoteMagnetDownload->userId)    || !isset($aliasUserId[$remoteMagnetDownload->userId])     ||
+                empty($remoteMagnetDownload->timeAdded) || !is_int($remoteMagnetDownload->timeAdded)
+              )
+              {
+                continue;
+              }
+
+              // Add new magnet download if not exist by timestamp added for this user
+              if (!$db->findMagnetDownload($aliasMagnetId[$remoteMagnetDownload->magnetId],
+                                           $aliasUserId[$remoteMagnetDownload->userId],
+                                           $remoteMagnetDownload->timeAdded))
+              {
+                $db->addMagnetDownload(
+                  $aliasMagnetId[$remoteMagnetDownload->magnetId],
+                  $aliasUserId[$remoteMagnetDownload->userId],
+                  $remoteMagnetDownload->timeAdded
+                );
+              }
+            }
+          }
+
+          // Magnet views
+          if (API_IMPORT_MAGNET_VIEWS_ENABLED)
+          {
+            if (empty($manifest->feeds->magnetViews))
+            {
+              continue;
+            }
+
+            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetViews)) as $remoteMagnetView)
+            {
+              // Validate
+              if (
+                empty($remoteMagnetView->magnetId)  || !is_int($remoteMagnetView->magnetId)  || !isset($aliasMagnetId[$remoteMagnetView->magnetId]) ||
+                empty($remoteMagnetView->userId)    || !is_int($remoteMagnetView->userId)    || !isset($aliasUserId[$remoteMagnetView->userId])     ||
+                empty($remoteMagnetView->timeAdded) || !is_int($remoteMagnetView->timeAdded)
+              )
+              {
+                continue;
+              }
+
+              // Add new magnet view if not exist by timestamp added for this user
+              if (!$db->findMagnetView($aliasMagnetId[$remoteMagnetView->magnetId],
+                                       $aliasUserId[$remoteMagnetView->userId],
+                                       $remoteMagnetView->timeAdded))
+              {
+                $db->addMagnetView(
+                  $aliasMagnetId[$remoteMagnetView->magnetId],
+                  $aliasUserId[$remoteMagnetView->userId],
+                  $remoteMagnetView->timeAdded
+                );
+              }
+            }
+          }
+
+          // Magnet stars
+          if (API_IMPORT_MAGNET_STARS_ENABLED)
+          {
+            if (empty($manifest->feeds->magnetStars))
+            {
+              continue;
+            }
+
+            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetStars)) as $remoteMagnetStar)
+            {
+              // Validate
+              if (
+                empty($remoteMagnetStar->magnetId)  || !is_int($remoteMagnetStar->magnetId)  || !isset($aliasMagnetId[$remoteMagnetStar->magnetId]) ||
+                empty($remoteMagnetStar->userId)    || !is_int($remoteMagnetStar->userId)    || !isset($aliasUserId[$remoteMagnetStar->userId])     ||
+                empty($remoteMagnetStar->timeAdded) || !is_int($remoteMagnetStar->timeAdded) ||
+                !isset($remoteMagnetStar->value)    || !is_bool($remoteMagnetStar->value)
+              )
+              {
+                continue;
+              }
+
+              // Add new magnet star if not exist by timestamp added for this user
+              if (!$db->findMagnetStar($aliasMagnetId[$remoteMagnetStar->magnetId],
+                                       $aliasUserId[$remoteMagnetStar->userId],
+                                       $remoteMagnetStar->timeAdded))
+              {
+                $db->addMagnetStar(
+                  $aliasMagnetId[$remoteMagnetStar->magnetId],
+                  $aliasUserId[$remoteMagnetStar->userId],
+                  $remoteMagnetStar->value,
+                  $remoteMagnetStar->timeAdded
+                );
               }
             }
           }

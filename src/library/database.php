@@ -1377,6 +1377,17 @@ class Database {
     return $query->fetchAll();
   }
 
+  public function findMagnetComment(int $magnetId, int $userId, int $timeAdded) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetComment` WHERE `magnetId` = ? AND `userId` = ? AND `timeAdded` = ?');
+
+    $query->execute([$magnetId, $userId, $timeAdded]);
+
+    return $query->fetch();
+  }
+
   public function getMagnetComment(int $magnetCommentId) {
 
     $this->_debug->query->select->total++;
@@ -1466,6 +1477,17 @@ class Database {
     return $query->fetch()->result;
   }
 
+  public function findMagnetStar(int $magnetId, int $userId, int $timeAdded) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetStar` WHERE `magnetId` = ? AND `userId` = ? AND `timeAdded` = ?');
+
+    $query->execute([$magnetId, $userId, $timeAdded]);
+
+    return $query->fetch();
+  }
+
   // Magnet download
   public function addMagnetDownload(int $magnetId, int $userId, int $timeAdded) : int {
 
@@ -1505,6 +1527,17 @@ class Database {
     $query->execute([$magnetId, $userId]);
 
     return $query->fetch()->result;
+  }
+
+  public function findMagnetDownload(int $magnetId, int $userId, int $timeAdded) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetDownload` WHERE `magnetId` = ? AND `userId` = ? AND `timeAdded` = ?');
+
+    $query->execute([$magnetId, $userId, $timeAdded]);
+
+    return $query->fetch();
   }
 
   public function findMagnetDownloadsTotalByMagnetId(int $magnetId) : int {
@@ -1594,5 +1627,16 @@ class Database {
     $query->execute([(int) $public]);
 
     return $query->fetch()->result;
+  }
+
+  public function findMagnetView(int $magnetId, int $userId, int $timeAdded) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnetView` WHERE `magnetId` = ? AND `userId` = ? AND `timeAdded` = ?');
+
+    $query->execute([$magnetId, $userId, $timeAdded]);
+
+    return $query->fetch();
   }
 }
