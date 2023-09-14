@@ -90,15 +90,7 @@ try
 
         'MAGNET_STOP_WORDS_SIMILAR'            => MAGNET_STOP_WORDS_SIMILAR,
       ],
-
-      'users'     => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
-      'magnets'   => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
-      'downloads' => API_EXPORT_MAGNET_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
-      'comments'  => API_EXPORT_MAGNET_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
-      'stars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
-      'views'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
-
-      'totals'    =>
+      'totals' =>
       [
         'magnets'   =>
         [
@@ -131,7 +123,15 @@ try
           'local'       => $db->findMagnetViewsTotalByUsersPublic(false),
         ],
       ],
-
+      'feeds' =>
+      [
+        'users'     => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
+        'magnets'   => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
+        'downloads' => API_EXPORT_MAGNET_DOWNLOADS_ENABLED ? sprintf('%s/api/downloads.json', WEBSITE_URL) : false,
+        'comments'  => API_EXPORT_MAGNET_COMMENTS_ENABLED  ? sprintf('%s/api/comments.json', WEBSITE_URL)  : false,
+        'stars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/stars.json', WEBSITE_URL)     : false,
+        'views'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/views.json', WEBSITE_URL)     : false,
+      ],
       'trackers'  => json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
       'nodes'     => json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
     ];
