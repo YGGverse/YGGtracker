@@ -575,6 +575,17 @@ class Database {
     return $query->rowCount();
   }
 
+  public function updateUserTimeUpdated(int $userId, int $timeUpdated) : int {
+
+    $this->_debug->query->update->total++;
+
+    $query = $this->_db->prepare('UPDATE `user` SET `timeUpdated` = ? WHERE `userId` = ?');
+
+    $query->execute([$timeUpdated, $userId]);
+
+    return $query->rowCount();
+  }
+
   // Magnet
   public function addMagnet(int $userId,
                             int $xl,
@@ -646,6 +657,17 @@ class Database {
     $query->execute();
 
     return $query->fetch()->result;
+  }
+
+  public function findMagnet(int $userId, int $timeAdded) {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `magnet` WHERE `userId` = ? AND `timeAdded` = ?');
+
+    $query->execute([$userId, $timeAdded]);
+
+    return $query->fetch();
   }
 
   public function findMagnetsByUserId(int $userId) {
