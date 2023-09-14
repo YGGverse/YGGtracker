@@ -397,14 +397,6 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                               </span>
                             <?php } ?>
                             <small>
-                              <a class="float-right margin-l-12"
-                                 href="<?php echo WEBSITE_URL ?>/action.php?target=comment&toggle=public&magnetCommentId=<?php echo $magnetComment->magnetCommentId ?>&callback=<?php echo base64_encode(sprintf('%s/magnet.php?magnetId=%s#comment-%s', WEBSITE_URL, $magnetComment->magnetId, $magnetComment->magnetCommentId)) ?>">
-                                <?php if ($magnetComment->public) { ?>
-                                  <?php echo _('hide') ?>
-                                <?php } else { ?>
-                                  <?php echo _('show') ?>
-                                <?php } ?>
-                              </a>
                               <?php if (in_array($response->user->address, MODERATOR_IP_LIST)) { ?>
                                 <a class="float-right margin-l-12"
                                   href="<?php echo WEBSITE_URL ?>/action.php?target=comment&toggle=approved&magnetCommentId=<?php echo $magnetComment->magnetCommentId ?>&callback=<?php echo base64_encode(sprintf('%s/magnet.php?magnetId=%s#comment-%s', WEBSITE_URL, $magnetComment->magnetId, $magnetComment->magnetCommentId)) ?>">
