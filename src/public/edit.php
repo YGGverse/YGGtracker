@@ -276,7 +276,7 @@ else {
         {
           case 1:
 
-            if (!empty($value))
+            if (!empty($value) && Yggverse\Parser\Magnet::isXTv1($value))
             {
               $exist = false;
 
@@ -306,7 +306,7 @@ else {
 
           case 2:
 
-            if (!empty($value))
+            if (!empty($value) && Yggverse\Parser\Magnet::isXTv2($value))
             {
               $exist = false;
 
