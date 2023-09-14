@@ -53,7 +53,7 @@ try
       'version'  => API_VERSION,
       'updated'  => time(),
 
-      'settings' =>
+      'settings' => (object)
       [
         'YGGDRASIL_HOST_REGEX'                 => YGGDRASIL_HOST_REGEX,
 
@@ -88,42 +88,42 @@ try
         'MAGNET_COMMENT_MIN_LENGTH'            => MAGNET_COMMENT_MIN_LENGTH,
         'MAGNET_COMMENT_MAX_LENGTH'            => MAGNET_COMMENT_MAX_LENGTH,
 
-        'MAGNET_STOP_WORDS_SIMILAR'            => MAGNET_STOP_WORDS_SIMILAR,
+        'MAGNET_STOP_WORDS_SIMILAR'            => (object) MAGNET_STOP_WORDS_SIMILAR,
       ],
-      'totals' =>
+      'totals' => (object)
       [
-        'magnets'   =>
+        'magnets'   => (object)
         [
           'total'       => $db->getMagnetsTotal(),
           'distributed' => $db->getMagnetsTotalByUsersPublic(true),
           'local'       => $db->getMagnetsTotalByUsersPublic(false),
         ],
-        'downloads' =>
+        'downloads' => (object)
         [
           'total'       => $db->getMagnetDownloadsTotal(),
           'distributed' => $db->findMagnetDownloadsTotalByUsersPublic(true),
           'local'       => $db->findMagnetDownloadsTotalByUsersPublic(false),
         ],
-        'comments'  =>
+        'comments'  => (object)
         [
           'total'       => $db->getMagnetCommentsTotal(),
           'distributed' => $db->findMagnetCommentsTotalByUsersPublic(true),
           'local'       => $db->findMagnetCommentsTotalByUsersPublic(false),
         ],
-        'stars'     =>
+        'stars'     => (object)
         [
           'total'       => $db->getMagnetStarsTotal(),
           'distributed' => $db->findMagnetStarsTotalByUsersPublic(true),
           'local'       => $db->findMagnetStarsTotalByUsersPublic(false),
         ],
-        'views'     =>
+        'views'     => (object)
         [
           'total'       => $db->getMagnetViewsTotal(),
           'distributed' => $db->findMagnetViewsTotalByUsersPublic(true),
           'local'       => $db->findMagnetViewsTotalByUsersPublic(false),
         ],
       ],
-      'feeds' =>
+      'feeds' => (object)
       [
         'users'           => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
         'magnets'         => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
@@ -132,8 +132,8 @@ try
         'magnetStars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/magnetStars.json', WEBSITE_URL)     : false,
         'magnetViews'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/magnetViews.json', WEBSITE_URL)     : false,
       ],
-      'trackers'  => json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
-      'nodes'     => json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
+      'trackers'  => (object) json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
+      'nodes'     => (object) json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
     ];
 
     /// Dump manifest manifest
