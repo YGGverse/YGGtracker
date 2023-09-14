@@ -299,11 +299,11 @@ try
             'timeUpdated'     => $magnet->timeUpdated,
             'dn'              => $magnet->dn,
             'xl'              => $magnet->xl,
-            'xt'              => $xt,
-            'kt'              => $kt,
-            'tr'              => $tr,
-            'as'              => $as,
-            'xs'              => $xs,
+            'xt'              => (array) $xt,
+            'kt'              => (array) $kt,
+            'tr'              => (array) $tr,
+            'as'              => (array) $as,
+            'xs'              => (array) $xs,
           ];
         }
 
