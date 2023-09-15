@@ -87,23 +87,13 @@ try
         foreach (@json_decode(@file_get_contents($manifest->export->users)) as $remoteUser)
         {
           // Validate required fields
-          if (!isset($remoteUser->userId)      || !is_int($remoteUser->userId)      ||
-              !isset($remoteUser->address)     || !is_string($remoteUser->address)  ||
-              !isset($remoteUser->timeAdded)   || !is_int($remoteUser->timeAdded)   ||
-              !isset($remoteUser->timeUpdated) || !is_int($remoteUser->timeUpdated) ||
-              !isset($remoteUser->approved)    || !is_bool($remoteUser->approved))
+          if (!Valid::user($remoteUser))
           {
             continue;
           }
 
           // Skip import on user approved required
           if (API_IMPORT_USERS_APPROVED_ONLY && !$remoteUser->approved)
-          {
-            continue;
-          }
-
-          // Yggdrasil connections only
-          else if (!preg_match(YGGDRASIL_HOST_REGEX, $remoteUser->address))
           {
             continue;
           }
@@ -174,32 +164,13 @@ try
           foreach (@json_decode(@file_get_contents($manifest->export->magnets)) as $remoteMagnet)
           {
             // Validate required fields by protocol
-            if (!isset($remoteMagnet->magnetId)    || !is_int($remoteMagnet->magnetId)                                      ||
-                !isset($remoteMagnet->userId)      || !is_int($remoteMagnet->userId)                                        ||
-                                                      !isset($aliasUserId[$remoteMagnet->userId])                           ||
-                                                      !$db->getUser($aliasUserId[$remoteMagnet->userId])                    ||
+            if (!Valid::magnet($remoteMagnet))
+            {
+              continue;
+            }
 
-                !isset($remoteMagnet->title)       || !is_string($remoteMagnet->title)                                      ||
-                !isset($remoteMagnet->preview)     || !is_string($remoteMagnet->preview)                                    ||
-                !isset($remoteMagnet->description) || !is_string($remoteMagnet->description)                                ||
-
-                !isset($remoteMagnet->comments)    || !is_bool($remoteMagnet->comments)                                     ||
-                !isset($remoteMagnet->sensitive)   || !is_bool($remoteMagnet->sensitive)                                    ||
-                !isset($remoteMagnet->approved)    || !is_bool($remoteMagnet->approved)                                     ||
-
-                !isset($remoteMagnet->timeAdded)   || !is_int($remoteMagnet->timeAdded)                                     ||
-                !isset($remoteMagnet->timeUpdated) || !is_int($remoteMagnet->timeUpdated)                                   ||
-
-                !isset($remoteMagnet->dn)          || mb_strlen($remoteMagnet->dn) < MAGNET_TITLE_MIN_LENGTH                ||
-                                                      mb_strlen($remoteMagnet->dn) > MAGNET_TITLE_MAX_LENGTH                ||
-
-                !isset($remoteMagnet->xl)          || !(is_int($remoteMagnet->xl) || is_float($remoteMagnet->xl))           ||
-
-                !isset($remoteMagnet->xt)          || !is_object($remoteMagnet->xt)                                         ||
-                !isset($remoteMagnet->kt)          || !is_object($remoteMagnet->kt)                                         ||
-                !isset($remoteMagnet->tr)          || !is_object($remoteMagnet->tr)                                         ||
-                !isset($remoteMagnet->as)          || !is_object($remoteMagnet->as)                                         ||
-                !isset($remoteMagnet->xs)          || !is_object($remoteMagnet->xs))
+            // Aliases check
+            if (!isset($aliasUserId[$remoteMagnet->userId]))
             {
               continue;
             }
@@ -235,7 +206,7 @@ try
             if ($localMagnet->timeAdded < $remoteMagnet->timeAdded)
             {
               $db->updateMagnetTimeAdded(
-                $localUser->userId,
+                $localMagnet->magnetId,
                 $remoteMagnet->timeAdded
               );
             }
@@ -246,25 +217,9 @@ try
               // Magnet fields
               $db->updateMagnetXl($localMagnet->magnetId, $remoteMagnet->xl, $remoteMagnet->timeUpdated);
               $db->updateMagnetDn($localMagnet->magnetId, $remoteMagnet->dn, $remoteMagnet->timeUpdated);
-
-              if (mb_strlen($remoteMagnet->title) >= MAGNET_TITLE_MIN_LENGTH &&
-                  mb_strlen($remoteMagnet->title) <= MAGNET_TITLE_MAX_LENGTH)
-              {
-                $db->updateMagnetTitle($localMagnet->magnetId, $remoteMagnet->title, $remoteMagnet->timeUpdated);
-              }
-
-              if (mb_strlen($remoteMagnet->preview) >= MAGNET_PREVIEW_MIN_LENGTH &&
-                  mb_strlen($remoteMagnet->preview) <= MAGNET_PREVIEW_MAX_LENGTH)
-              {
-                $db->updateMagnetPreview($localMagnet->magnetId, $remoteMagnet->preview, $remoteMagnet->timeUpdated);
-              }
-
-              if (mb_strlen($remoteMagnet->description) >= MAGNET_DESCRIPTION_MIN_LENGTH &&
-                  mb_strlen($remoteMagnet->description) <= MAGNET_DESCRIPTION_MAX_LENGTH)
-              {
-                $db->updateMagnetDescription($localMagnet->magnetId, $remoteMagnet->description, $remoteMagnet->timeUpdated);
-              }
-
+              $db->updateMagnetTitle($localMagnet->magnetId, $remoteMagnet->title, $remoteMagnet->timeUpdated);
+              $db->updateMagnetPreview($localMagnet->magnetId, $remoteMagnet->preview, $remoteMagnet->timeUpdated);
+              $db->updateMagnetDescription($localMagnet->magnetId, $remoteMagnet->description, $remoteMagnet->timeUpdated);
               $db->updateMagnetComments($localMagnet->magnetId, $remoteMagnet->comments, $remoteMagnet->timeUpdated);
               $db->updateMagnetSensitive($localMagnet->magnetId, $remoteMagnet->sensitive, $remoteMagnet->timeUpdated);
 
@@ -352,61 +307,43 @@ try
               // tr
               foreach ($remoteMagnet->tr as $tr)
               {
-                if ($url = Yggverse\Parser\Url::parse($tr))
-                {
-                  if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
-                  {
-                    $db->initMagnetToAddressTrackerId(
-                      $localMagnet->magnetId,
-                      $db->initAddressTrackerId(
-                        $db->initSchemeId($url->host->scheme),
-                        $db->initHostId($url->host->name),
-                        $db->initPortId($url->host->port),
-                        $db->initUriId($url->page->uri)
-                      )
-                    );
-                  }
-                }
+                $db->initMagnetToAddressTrackerId(
+                  $localMagnet->magnetId,
+                  $db->initAddressTrackerId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
               }
 
               // as
               foreach ($remoteMagnet->as as $as)
               {
-                if ($url = Yggverse\Parser\Url::parse($as))
-                {
-                  if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
-                  {
-                    $db->initMagnetToAcceptableSourceId(
-                      $localMagnet->magnetId,
-                      $db->initAcceptableSourceId(
-                        $db->initSchemeId($url->host->scheme),
-                        $db->initHostId($url->host->name),
-                        $db->initPortId($url->host->port),
-                        $db->initUriId($url->page->uri)
-                      )
-                    );
-                  }
-                }
+                $db->initMagnetToAcceptableSourceId(
+                  $localMagnet->magnetId,
+                  $db->initAcceptableSourceId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
               }
 
               // xs
               foreach ($remoteMagnet->xs as $xs)
               {
-                if ($url = Yggverse\Parser\Url::parse($xs))
-                {
-                  if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
-                  {
-                    $db->initMagnetToExactSourceId(
-                      $localMagnet->magnetId,
-                      $db->initExactSourceId(
-                        $db->initSchemeId($url->host->scheme),
-                        $db->initHostId($url->host->name),
-                        $db->initPortId($url->host->port),
-                        $db->initUriId($url->page->uri)
-                      )
-                    );
-                  }
-                }
+                $db->initMagnetToExactSourceId(
+                  $localMagnet->magnetId,
+                  $db->initExactSourceId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
               }
             }
           }
@@ -422,15 +359,13 @@ try
             foreach (@json_decode(@file_get_contents($manifest->export->magnetComments)) as $remoteMagnetComment)
             {
               // Validate
-              if (
-                empty($remoteMagnetComment->magnetId)  || !is_int($remoteMagnetComment->magnetId)  || !isset($aliasMagnetId[$remoteMagnetComment->magnetId]) ||
-                empty($remoteMagnetComment->userId)    || !is_int($remoteMagnetComment->userId)    || !isset($aliasUserId[$remoteMagnetComment->userId])     ||
-                empty($remoteMagnetComment->timeAdded) || !is_int($remoteMagnetComment->timeAdded) ||
-                empty($remoteMagnetComment->approved)  || !is_bool($remoteMagnetComment->approved) ||
-                !isset($remoteMagnetComment->value)    || !is_string($remoteMagnetComment->value)  || mb_strlen($remoteMagnetComment->value) < MAGNET_COMMENT_MIN_LENGTH || mb_strlen($remoteMagnetComment->value) > MAGNET_COMMENT_MAX_LENGTH ||
+              if (!Valid::magnetComment($remoteMagnetComment))
+              {
+                continue;
+              }
 
-                !isset($remoteMagnetComment->magnetCommentIdParent) || !(is_bool($remoteMagnetComment->magnetCommentIdParent) || is_int($remoteMagnetComment->magnetCommentIdParent))
-              )
+              // Aliases check
+              if (!isset($aliasMagnetId[$remoteMagnetComment->magnetId]) || !isset($aliasUserId[$remoteMagnetComment->userId]))
               {
                 continue;
               }
@@ -443,8 +378,8 @@ try
 
               // Add new magnet comment if not exist by timestamp added for this user
               if (!$db->findMagnetComment($aliasMagnetId[$remoteMagnetComment->magnetId],
-                                           $aliasUserId[$remoteMagnetComment->userId],
-                                           $remoteMagnetComment->timeAdded))
+                                          $aliasUserId[$remoteMagnetComment->userId],
+                                          $remoteMagnetComment->timeAdded))
               {
                 // Parent comment provided
                 if (is_int($remoteMagnetComment->magnetCommentIdParent))
@@ -481,11 +416,7 @@ try
             foreach (@json_decode(@file_get_contents($manifest->export->magnetDownloads)) as $remoteMagnetDownload)
             {
               // Validate
-              if (
-                empty($remoteMagnetDownload->magnetId)  || !is_int($remoteMagnetDownload->magnetId)  || !isset($aliasMagnetId[$remoteMagnetDownload->magnetId]) ||
-                empty($remoteMagnetDownload->userId)    || !is_int($remoteMagnetDownload->userId)    || !isset($aliasUserId[$remoteMagnetDownload->userId])     ||
-                empty($remoteMagnetDownload->timeAdded) || !is_int($remoteMagnetDownload->timeAdded)
-              )
+              if (!Valid::magnetDownload($remoteMagnetDownload))
               {
                 continue;
               }
@@ -515,11 +446,7 @@ try
             foreach (@json_decode(@file_get_contents($manifest->export->magnetViews)) as $remoteMagnetView)
             {
               // Validate
-              if (
-                empty($remoteMagnetView->magnetId)  || !is_int($remoteMagnetView->magnetId)  || !isset($aliasMagnetId[$remoteMagnetView->magnetId]) ||
-                empty($remoteMagnetView->userId)    || !is_int($remoteMagnetView->userId)    || !isset($aliasUserId[$remoteMagnetView->userId])     ||
-                empty($remoteMagnetView->timeAdded) || !is_int($remoteMagnetView->timeAdded)
-              )
+              if (!Valid::magnetView($remoteMagnetView))
               {
                 continue;
               }
@@ -549,12 +476,7 @@ try
             foreach (@json_decode(@file_get_contents($manifest->export->magnetStars)) as $remoteMagnetStar)
             {
               // Validate
-              if (
-                empty($remoteMagnetStar->magnetId)  || !is_int($remoteMagnetStar->magnetId)  || !isset($aliasMagnetId[$remoteMagnetStar->magnetId]) ||
-                empty($remoteMagnetStar->userId)    || !is_int($remoteMagnetStar->userId)    || !isset($aliasUserId[$remoteMagnetStar->userId])     ||
-                empty($remoteMagnetStar->timeAdded) || !is_int($remoteMagnetStar->timeAdded) ||
-                !isset($remoteMagnetStar->value)    || !is_bool($remoteMagnetStar->value)
-              )
+              if (!Valid::magnetStar($remoteMagnetStar))
               {
                 continue;
               }
