@@ -52,453 +52,539 @@ try
       continue;
     }
 
-    // Manifest
-    if ($manifest = @json_decode(@file_get_contents($node->manifest)))
+    // Get node manifest
+    $curl = new Curl($node->manifest, API_USER_AGENT);
+
+    if (200 != $curl->getCode())
     {
-      // Feed channel exists
-      if (empty($manifest->export))
+      continue;
+    }
+
+    if (!$manifest = $curl->getResponse())
+    {
+      continue;
+    }
+
+    if (empty($manifest->export))
+    {
+      continue;
+    }
+
+    // Users
+    if (API_IMPORT_USERS_ENABLED)
+    {
+      if (Valid::url($manifest->export->users))
       {
         continue;
       }
 
-      // Users
-      if (API_IMPORT_USERS_ENABLED)
+      // Call feed
+      $curl = new Curl($manifest->export->users, API_USER_AGENT);
+
+      if (200 != $curl->getCode())
       {
-        if (empty($manifest->export->users))
+        continue;
+      }
+
+      if (!$remoteUsers = $curl->getResponse())
+      {
+        continue;
+      }
+
+      // Init alias registry for this host
+      $aliasUserId = [];
+
+      foreach ((object) $remoteUsers as $remoteUser)
+      {
+        // Validate required fields
+        if (!Valid::user($remoteUser))
+        {
+          continue;
+        }
+
+        // Skip import on user approved required
+        if (API_IMPORT_USERS_APPROVED_ONLY && !$remoteUser->approved)
+        {
+          continue;
+        }
+
+        // Init session
+        else if (!$localUser = $db->getUser(
+          $db->initUserId($remoteUser->address,
+                          USER_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remoteUser->approved : USER_DEFAULT_APPROVED,
+                          $remoteUser->timeAdded)))
+        {
+          continue;
+        }
+
+        // Update time added if newer
+        if ($localUser->timeAdded < $remoteUser->timeAdded)
+        {
+          $db->updateUserTimeAdded(
+            $localUser->userId,
+            $remoteUser->timeAdded
+          );
+        }
+
+        // Update user info if newer
+        if ($localUser->timeUpdated < $remoteUser->timeUpdated)
+        {
+          // Update time updated
+          $db->updateUserTimeUpdated(
+            $localUser->userId,
+            $remoteUser->timeUpdated
+          );
+
+          // Update approved for existing user
+          if (USER_AUTO_APPROVE_ON_IMPORT_APPROVED && $localUser->approved !== $remoteUser->approved && $remoteUser->approved)
+          {
+            $db->updateUserApproved(
+              $localUser->userId,
+              $remoteUser->approved,
+              $remoteUser->timeUpdated
+            );
+          }
+
+          // Set public as received remotely
+          if (!$localUser->public)
+          {
+            $db->updateUserPublic(
+              $localUser->userId,
+              true,
+              $remoteUser->timeUpdated
+            );
+          }
+        }
+
+        // Register userId alias
+        $aliasUserId[$remoteUser->userId] = $localUser->userId;
+      }
+
+      // Magnets
+      if (API_IMPORT_MAGNETS_ENABLED)
+      {
+        if (Valid::url($manifest->export->magnets))
+        {
+          continue;
+        }
+
+        // Call feed
+        $curl = new Curl($manifest->export->magnets, API_USER_AGENT);
+
+        if (200 != $curl->getCode())
+        {
+          continue;
+        }
+
+        if (!$remoteMagnets = $curl->getResponse())
         {
           continue;
         }
 
         // Init alias registry for this host
-        $aliasUserId = [];
+        $aliasMagnetId = [];
 
-        foreach (@json_decode(@file_get_contents($manifest->export->users)) as $remoteUser)
+        foreach ((object) $remoteMagnets as $remoteMagnet)
         {
-          // Validate required fields
-          if (!Valid::user($remoteUser))
+          // Validate required fields by protocol
+          if (!Valid::magnet($remoteMagnet))
           {
             continue;
           }
 
-          // Skip import on user approved required
-          if (API_IMPORT_USERS_APPROVED_ONLY && !$remoteUser->approved)
+          // Aliases check
+          if (!isset($aliasUserId[$remoteMagnet->userId]))
           {
             continue;
           }
 
-          // Init session
-          else if (!$localUser = $db->getUser(
-            $db->initUserId($remoteUser->address,
-                            USER_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remoteUser->approved : USER_DEFAULT_APPROVED,
-                            $remoteUser->timeAdded)))
+          // Skip import on magnet approved required
+          if (API_IMPORT_MAGNETS_APPROVED_ONLY && !$remoteMagnet->approved)
           {
             continue;
           }
 
-          // Remember user ID for this host
-          $aliasUserId[$remoteUser->userId] = $localUser->userId;
+          // Add new magnet if not exist by timestamp added for this user
+          if (!$localMagnet = $db->findMagnet($aliasUserId[$remoteMagnet->userId], $remoteMagnet->timeAdded))
+          {
+            $localMagnet = $db->getMagnet(
+              $db->addMagnet(
+                $aliasUserId[$remoteMagnet->userId],
+                $remoteMagnet->xl,
+                $remoteMagnet->dn,
+                '', // @TODO linkSource used for debug only, will be deleted later
+                true,
+                $remoteMagnet->comments,
+                $remoteMagnet->sensitive,
+                MAGNET_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remoteMagnet->approved : MAGNET_DEFAULT_APPROVED,
+                $remoteMagnet->timeAdded
+              )
+            );
+          }
 
           // Update time added if newer
-          if ($localUser->timeAdded < $remoteUser->timeAdded)
+          if ($localMagnet->timeAdded < $remoteMagnet->timeAdded)
           {
-            $db->updateUserTimeAdded(
-              $localUser->userId,
-              $remoteUser->timeAdded
+            $db->updateMagnetTimeAdded(
+              $localMagnet->magnetId,
+              $remoteMagnet->timeAdded
             );
           }
 
-          // Update user info if newer
-          if ($localUser->timeUpdated < $remoteUser->timeUpdated)
+          // Update info if remote newer
+          if ($localMagnet->timeUpdated < $remoteMagnet->timeUpdated)
           {
-            // Update time updated
-            $db->updateUserTimeUpdated(
-              $localUser->userId,
-              $remoteUser->timeUpdated
-            );
+            // Magnet fields
+            $db->updateMagnetXl($localMagnet->magnetId, $remoteMagnet->xl, $remoteMagnet->timeUpdated);
+            $db->updateMagnetDn($localMagnet->magnetId, $remoteMagnet->dn, $remoteMagnet->timeUpdated);
+            $db->updateMagnetTitle($localMagnet->magnetId, $remoteMagnet->title, $remoteMagnet->timeUpdated);
+            $db->updateMagnetPreview($localMagnet->magnetId, $remoteMagnet->preview, $remoteMagnet->timeUpdated);
+            $db->updateMagnetDescription($localMagnet->magnetId, $remoteMagnet->description, $remoteMagnet->timeUpdated);
+            $db->updateMagnetComments($localMagnet->magnetId, $remoteMagnet->comments, $remoteMagnet->timeUpdated);
+            $db->updateMagnetSensitive($localMagnet->magnetId, $remoteMagnet->sensitive, $remoteMagnet->timeUpdated);
 
-            // Update approved for existing user
-            if (USER_AUTO_APPROVE_ON_IMPORT_APPROVED && $localUser->approved !== $remoteUser->approved && $remoteUser->approved)
+            if (MAGNET_AUTO_APPROVE_ON_IMPORT_APPROVED && $localMagnet->approved !== $remoteMagnet->approved && $remoteMagnet->approved)
             {
-              $db->updateUserApproved(
-                $localUser->userId,
-                $remoteUser->approved,
-                $remoteUser->timeUpdated
+              $db->updateMagnetApproved($localMagnet->magnetId, $remoteMagnet->approved, $remoteMagnet->timeUpdated);
+            }
+
+            // xt
+            foreach ((array) $remoteMagnet->xt as $xt)
+            {
+              switch ($xt->version)
+              {
+                case 1:
+
+                  if (Yggverse\Parser\Magnet::isXTv1($xt->value))
+                  {
+                    $exist = false;
+
+                    foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
+                    {
+                      if ($infoHash = $db->getInfoHash($result->infoHashId))
+                      {
+                        if ($infoHash->version == 1)
+                        {
+                          $exist = true;
+                        }
+                      }
+                    }
+
+                    if (!$exist)
+                    {
+                      $db->addMagnetToInfoHash(
+                        $localMagnet->magnetId,
+                        $db->initInfoHashId(
+                          Yggverse\Parser\Magnet::filterInfoHash($xt->value), 1
+                        )
+                      );
+                    }
+                  }
+
+                break;
+
+                case 2:
+
+                  if (Yggverse\Parser\Magnet::isXTv2($xt->value))
+                  {
+                    $exist = false;
+
+                    foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
+                    {
+                      if ($infoHash = $db->getInfoHash($result->infoHashId))
+                      {
+                        if ($infoHash->version == 2)
+                        {
+                          $exist = true;
+                        }
+                      }
+                    }
+
+                    if (!$exist)
+                    {
+                      $db->addMagnetToInfoHash(
+                        $localMagnet->magnetId,
+                        $db->initInfoHashId(
+                          Yggverse\Parser\Magnet::filterInfoHash($xt->value), 2
+                        )
+                      );
+                    }
+                  }
+
+                break;
+              }
+            }
+
+            // kt
+            foreach ($remoteMagnet->kt as $kt)
+            {
+              $db->initMagnetToKeywordTopicId(
+                $localMagnet->magnetId,
+                $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
               );
             }
 
-            // Set public as received remotely
-            if (!$localUser->public)
+            // tr
+            foreach ($remoteMagnet->tr as $tr)
             {
-              $db->updateUserPublic(
-                $localUser->userId,
-                true,
-                $remoteUser->timeUpdated
+              $db->initMagnetToAddressTrackerId(
+                $localMagnet->magnetId,
+                $db->initAddressTrackerId(
+                  $db->initSchemeId($url->host->scheme),
+                  $db->initHostId($url->host->name),
+                  $db->initPortId($url->host->port),
+                  $db->initUriId($url->page->uri)
+                )
+              );
+            }
+
+            // as
+            foreach ($remoteMagnet->as as $as)
+            {
+              $db->initMagnetToAcceptableSourceId(
+                $localMagnet->magnetId,
+                $db->initAcceptableSourceId(
+                  $db->initSchemeId($url->host->scheme),
+                  $db->initHostId($url->host->name),
+                  $db->initPortId($url->host->port),
+                  $db->initUriId($url->page->uri)
+                )
+              );
+            }
+
+            // xs
+            foreach ($remoteMagnet->xs as $xs)
+            {
+              $db->initMagnetToExactSourceId(
+                $localMagnet->magnetId,
+                $db->initExactSourceId(
+                  $db->initSchemeId($url->host->scheme),
+                  $db->initHostId($url->host->name),
+                  $db->initPortId($url->host->port),
+                  $db->initUriId($url->page->uri)
+                )
               );
             }
           }
+
+          // Add magnet alias for this host
+          $aliasMagnetId[$remoteMagnet->magnetId] = $localMagnet->magnetId;
         }
 
-        // Magnets
-        if (API_IMPORT_MAGNETS_ENABLED)
+        // Magnet comments
+        if (API_IMPORT_MAGNET_COMMENTS_ENABLED)
         {
-          if (empty($manifest->export->magnets))
+          if (Valid::url($manifest->export->magnetComments))
           {
             continue;
           }
 
-          // Init alias registry for this host
-          $aliasMagnetId = [];
+          // Call feed
+          $curl = new Curl($manifest->export->magnetComments, API_USER_AGENT);
 
-          foreach (@json_decode(@file_get_contents($manifest->export->magnets)) as $remoteMagnet)
+          if (200 != $curl->getCode())
           {
-            // Validate required fields by protocol
-            if (!Valid::magnet($remoteMagnet))
+            continue;
+          }
+
+          if (!$remoteMagnetComments = $curl->getResponse())
+          {
+            continue;
+          }
+
+          foreach ((object) $remoteMagnetComments as $remoteMagnetComment)
+          {
+            // Validate
+            if (!Valid::magnetComment($remoteMagnetComment))
             {
               continue;
             }
 
             // Aliases check
-            if (!isset($aliasUserId[$remoteMagnet->userId]))
+            if (!isset($aliasMagnetId[$remoteMagnetComment->magnetId]) || !isset($aliasUserId[$remoteMagnetComment->userId]))
             {
               continue;
             }
 
-            // Skip import on magnet approved required
-            if (API_IMPORT_MAGNETS_APPROVED_ONLY && !$remoteMagnet->approved)
+            // Skip import on magnet comment approved required
+            if (API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY && !$remoteMagnetComment->approved)
             {
               continue;
             }
 
-            // Add new magnet if not exist by timestamp added for this user
-            if (!$localMagnet = $db->findMagnet($aliasUserId[$remoteMagnet->userId], $remoteMagnet->timeAdded))
+            // Add new magnet comment if not exist by timestamp added for this user
+            if (!$db->findMagnetComment($aliasMagnetId[$remoteMagnetComment->magnetId],
+                                        $aliasUserId[$remoteMagnetComment->userId],
+                                        $remoteMagnetComment->timeAdded))
             {
-              $localMagnet = $db->getMagnet(
-                $db->addMagnet(
-                  $aliasUserId[$remoteMagnet->userId],
-                  $remoteMagnet->xl,
-                  $remoteMagnet->dn,
-                  '', // @TODO linkSource used for debug only, will be deleted later
-                  true,
-                  $remoteMagnet->comments,
-                  $remoteMagnet->sensitive,
-                  MAGNET_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remoteMagnet->approved : MAGNET_DEFAULT_APPROVED,
-                  $remoteMagnet->timeAdded
-                )
+              // Parent comment provided
+              if (is_int($remoteMagnetComment->magnetCommentIdParent))
+              {
+                $localMagnetCommentIdParent = null; // @TODO feature not in use yet
+              }
+
+              else
+              {
+                $localMagnetCommentIdParent = null;
+              }
+
+              $db->addMagnetComment(
+                $aliasMagnetId[$remoteMagnetComment->magnetId],
+                $aliasUserId[$remoteMagnetComment->userId],
+                $localMagnetCommentIdParent,
+                $remoteMagnetComment->value,
+                $remoteMagnetComment->approved,
+                true,
+                $remoteMagnetComment->timeAdded
               );
             }
+          }
+        }
 
-            // Add magnet alias for this host
-            $aliasMagnetId[$remoteMagnet->magnetId] = $localMagnet->magnetId;
+        // Magnet downloads
+        if (API_IMPORT_MAGNET_DOWNLOADS_ENABLED)
+        {
+          if (Valid::url($manifest->export->magnetDownloads))
+          {
+            continue;
+          }
 
-            // Update time added if newer
-            if ($localMagnet->timeAdded < $remoteMagnet->timeAdded)
+          // Call feed
+          $curl = new Curl($manifest->export->magnetDownloads, API_USER_AGENT);
+
+          if (200 != $curl->getCode())
+          {
+            continue;
+          }
+
+          if (!$remoteMagnetDownloads = $curl->getResponse())
+          {
+            continue;
+          }
+
+          foreach ((object) $remoteMagnetDownloads as $remoteMagnetDownload)
+          {
+            // Validate
+            if (!Valid::magnetDownload($remoteMagnetDownload))
             {
-              $db->updateMagnetTimeAdded(
-                $localMagnet->magnetId,
-                $remoteMagnet->timeAdded
+              continue;
+            }
+
+            // Aliases check
+            if (!isset($aliasMagnetId[$remoteMagnetDownload->magnetId]) || !isset($aliasUserId[$remoteMagnetDownload->userId]))
+            {
+              continue;
+            }
+
+            // Add new magnet download if not exist by timestamp added for this user
+            if (!$db->findMagnetDownload($aliasMagnetId[$remoteMagnetDownload->magnetId],
+                                          $aliasUserId[$remoteMagnetDownload->userId],
+                                          $remoteMagnetDownload->timeAdded))
+            {
+              $db->addMagnetDownload(
+                $aliasMagnetId[$remoteMagnetDownload->magnetId],
+                $aliasUserId[$remoteMagnetDownload->userId],
+                $remoteMagnetDownload->timeAdded
               );
             }
+          }
+        }
 
-            // Update info if remote newer
-            if ($localMagnet->timeUpdated < $remoteMagnet->timeUpdated)
-            {
-              // Magnet fields
-              $db->updateMagnetXl($localMagnet->magnetId, $remoteMagnet->xl, $remoteMagnet->timeUpdated);
-              $db->updateMagnetDn($localMagnet->magnetId, $remoteMagnet->dn, $remoteMagnet->timeUpdated);
-              $db->updateMagnetTitle($localMagnet->magnetId, $remoteMagnet->title, $remoteMagnet->timeUpdated);
-              $db->updateMagnetPreview($localMagnet->magnetId, $remoteMagnet->preview, $remoteMagnet->timeUpdated);
-              $db->updateMagnetDescription($localMagnet->magnetId, $remoteMagnet->description, $remoteMagnet->timeUpdated);
-              $db->updateMagnetComments($localMagnet->magnetId, $remoteMagnet->comments, $remoteMagnet->timeUpdated);
-              $db->updateMagnetSensitive($localMagnet->magnetId, $remoteMagnet->sensitive, $remoteMagnet->timeUpdated);
-
-              if (MAGNET_AUTO_APPROVE_ON_IMPORT_APPROVED && $localMagnet->approved !== $remoteMagnet->approved && $remoteMagnet->approved)
-              {
-                $db->updateMagnetApproved($localMagnet->magnetId, $remoteMagnet->approved, $remoteMagnet->timeUpdated);
-              }
-
-              // xt
-              foreach ((array) $remoteMagnet->xt as $xt)
-              {
-                switch ($xt->version)
-                {
-                  case 1:
-
-                    if (Yggverse\Parser\Magnet::isXTv1($xt->value))
-                    {
-                      $exist = false;
-
-                      foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
-                      {
-                        if ($infoHash = $db->getInfoHash($result->infoHashId))
-                        {
-                          if ($infoHash->version == 1)
-                          {
-                            $exist = true;
-                          }
-                        }
-                      }
-
-                      if (!$exist)
-                      {
-                        $db->addMagnetToInfoHash(
-                          $localMagnet->magnetId,
-                          $db->initInfoHashId(
-                            Yggverse\Parser\Magnet::filterInfoHash($xt->value), 1
-                          )
-                        );
-                      }
-                    }
-
-                  break;
-
-                  case 2:
-
-                    if (Yggverse\Parser\Magnet::isXTv2($xt->value))
-                    {
-                      $exist = false;
-
-                      foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
-                      {
-                        if ($infoHash = $db->getInfoHash($result->infoHashId))
-                        {
-                          if ($infoHash->version == 2)
-                          {
-                            $exist = true;
-                          }
-                        }
-                      }
-
-                      if (!$exist)
-                      {
-                        $db->addMagnetToInfoHash(
-                          $localMagnet->magnetId,
-                          $db->initInfoHashId(
-                            Yggverse\Parser\Magnet::filterInfoHash($xt->value), 2
-                          )
-                        );
-                      }
-                    }
-
-                  break;
-                }
-              }
-
-              // kt
-              foreach ($remoteMagnet->kt as $kt)
-              {
-                $db->initMagnetToKeywordTopicId(
-                  $localMagnet->magnetId,
-                  $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
-                );
-              }
-
-              // tr
-              foreach ($remoteMagnet->tr as $tr)
-              {
-                $db->initMagnetToAddressTrackerId(
-                  $localMagnet->magnetId,
-                  $db->initAddressTrackerId(
-                    $db->initSchemeId($url->host->scheme),
-                    $db->initHostId($url->host->name),
-                    $db->initPortId($url->host->port),
-                    $db->initUriId($url->page->uri)
-                  )
-                );
-              }
-
-              // as
-              foreach ($remoteMagnet->as as $as)
-              {
-                $db->initMagnetToAcceptableSourceId(
-                  $localMagnet->magnetId,
-                  $db->initAcceptableSourceId(
-                    $db->initSchemeId($url->host->scheme),
-                    $db->initHostId($url->host->name),
-                    $db->initPortId($url->host->port),
-                    $db->initUriId($url->page->uri)
-                  )
-                );
-              }
-
-              // xs
-              foreach ($remoteMagnet->xs as $xs)
-              {
-                $db->initMagnetToExactSourceId(
-                  $localMagnet->magnetId,
-                  $db->initExactSourceId(
-                    $db->initSchemeId($url->host->scheme),
-                    $db->initHostId($url->host->name),
-                    $db->initPortId($url->host->port),
-                    $db->initUriId($url->page->uri)
-                  )
-                );
-              }
-            }
+        // Magnet views
+        if (API_IMPORT_MAGNET_VIEWS_ENABLED)
+        {
+          if (Valid::url($manifest->export->magnetViews))
+          {
+            continue;
           }
 
-          // Magnet comments
-          if (API_IMPORT_MAGNET_COMMENTS_ENABLED)
+          // Call feed
+          $curl = new Curl($manifest->export->magnetViews, API_USER_AGENT);
+
+          if (200 != $curl->getCode())
           {
-            if (empty($manifest->export->magnetComments))
+            continue;
+          }
+
+          if (!$remoteMagnetViews = $curl->getResponse())
+          {
+            continue;
+          }
+
+          foreach ((object) $remoteMagnetViews as $remoteMagnetView)
+          {
+            // Validate
+            if (!Valid::magnetView($remoteMagnetView))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->export->magnetComments)) as $remoteMagnetComment)
-            {
-              // Validate
-              if (!Valid::magnetComment($remoteMagnetComment))
-              {
-                continue;
-              }
-
-              // Aliases check
-              if (!isset($aliasMagnetId[$remoteMagnetComment->magnetId]) || !isset($aliasUserId[$remoteMagnetComment->userId]))
-              {
-                continue;
-              }
-
-              // Skip import on magnet comment approved required
-              if (API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY && !$remoteMagnetComment->approved)
-              {
-                continue;
-              }
-
-              // Add new magnet comment if not exist by timestamp added for this user
-              if (!$db->findMagnetComment($aliasMagnetId[$remoteMagnetComment->magnetId],
-                                          $aliasUserId[$remoteMagnetComment->userId],
-                                          $remoteMagnetComment->timeAdded))
-              {
-                // Parent comment provided
-                if (is_int($remoteMagnetComment->magnetCommentIdParent))
-                {
-                  $localMagnetCommentIdParent = null; // @TODO feature not in use yet
-                }
-
-                else
-                {
-                  $localMagnetCommentIdParent = null;
-                }
-
-                $db->addMagnetComment(
-                  $aliasMagnetId[$remoteMagnetComment->magnetId],
-                  $aliasUserId[$remoteMagnetComment->userId],
-                  $localMagnetCommentIdParent,
-                  $remoteMagnetComment->value,
-                  $remoteMagnetComment->approved,
-                  true,
-                  $remoteMagnetComment->timeAdded
-                );
-              }
-            }
-          }
-
-          // Magnet downloads
-          if (API_IMPORT_MAGNET_DOWNLOADS_ENABLED)
-          {
-            if (empty($manifest->export->magnetDownloads))
+            // Aliases check
+            if (!isset($aliasMagnetId[$remoteMagnetView->magnetId]) || !isset($aliasUserId[$remoteMagnetView->userId]))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->export->magnetDownloads)) as $remoteMagnetDownload)
+            // Add new magnet view if not exist by timestamp added for this user
+            if (!$db->findMagnetView($aliasMagnetId[$remoteMagnetView->magnetId],
+                                      $aliasUserId[$remoteMagnetView->userId],
+                                      $remoteMagnetView->timeAdded))
             {
-              // Validate
-              if (!Valid::magnetDownload($remoteMagnetDownload))
-              {
-                continue;
-              }
-
-              // Aliases check
-              if (!isset($aliasMagnetId[$remoteMagnetDownload->magnetId]) || !isset($aliasUserId[$remoteMagnetDownload->userId]))
-              {
-                continue;
-              }
-
-              // Add new magnet download if not exist by timestamp added for this user
-              if (!$db->findMagnetDownload($aliasMagnetId[$remoteMagnetDownload->magnetId],
-                                           $aliasUserId[$remoteMagnetDownload->userId],
-                                           $remoteMagnetDownload->timeAdded))
-              {
-                $db->addMagnetDownload(
-                  $aliasMagnetId[$remoteMagnetDownload->magnetId],
-                  $aliasUserId[$remoteMagnetDownload->userId],
-                  $remoteMagnetDownload->timeAdded
-                );
-              }
+              $db->addMagnetView(
+                $aliasMagnetId[$remoteMagnetView->magnetId],
+                $aliasUserId[$remoteMagnetView->userId],
+                $remoteMagnetView->timeAdded
+              );
             }
           }
+        }
 
-          // Magnet views
-          if (API_IMPORT_MAGNET_VIEWS_ENABLED)
+        // Magnet stars
+        if (API_IMPORT_MAGNET_STARS_ENABLED)
+        {
+          if (Valid::url($manifest->export->magnetStars))
           {
-            if (empty($manifest->export->magnetViews))
+            continue;
+          }
+
+          // Call feed
+          $curl = new Curl($manifest->export->magnetStars, API_USER_AGENT);
+
+          if (200 != $curl->getCode())
+          {
+            continue;
+          }
+
+          if (!$remoteMagnetStars = $curl->getResponse())
+          {
+            continue;
+          }
+
+          foreach ((object) $remoteMagnetStars as $remoteMagnetStar)
+          {
+            // Validate
+            if (!Valid::magnetStar($remoteMagnetStar))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->export->magnetViews)) as $remoteMagnetView)
-            {
-              // Validate
-              if (!Valid::magnetView($remoteMagnetView))
-              {
-                continue;
-              }
-
-              // Aliases check
-              if (!isset($aliasMagnetId[$remoteMagnetView->magnetId]) || !isset($aliasUserId[$remoteMagnetView->userId]))
-              {
-                continue;
-              }
-
-              // Add new magnet view if not exist by timestamp added for this user
-              if (!$db->findMagnetView($aliasMagnetId[$remoteMagnetView->magnetId],
-                                       $aliasUserId[$remoteMagnetView->userId],
-                                       $remoteMagnetView->timeAdded))
-              {
-                $db->addMagnetView(
-                  $aliasMagnetId[$remoteMagnetView->magnetId],
-                  $aliasUserId[$remoteMagnetView->userId],
-                  $remoteMagnetView->timeAdded
-                );
-              }
-            }
-          }
-
-          // Magnet stars
-          if (API_IMPORT_MAGNET_STARS_ENABLED)
-          {
-            if (empty($manifest->export->magnetStars))
+            // Aliases check
+            if (!isset($aliasMagnetId[$remoteMagnetStar->magnetId]) || !isset($aliasUserId[$remoteMagnetStar->userId]))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->export->magnetStars)) as $remoteMagnetStar)
+            // Add new magnet star if not exist by timestamp added for this user
+            if (!$db->findMagnetStar($aliasMagnetId[$remoteMagnetStar->magnetId],
+                                      $aliasUserId[$remoteMagnetStar->userId],
+                                      $remoteMagnetStar->timeAdded))
             {
-              // Validate
-              if (!Valid::magnetStar($remoteMagnetStar))
-              {
-                continue;
-              }
-
-              // Aliases check
-              if (!isset($aliasMagnetId[$remoteMagnetStar->magnetId]) || !isset($aliasUserId[$remoteMagnetStar->userId]))
-              {
-                continue;
-              }
-
-              // Add new magnet star if not exist by timestamp added for this user
-              if (!$db->findMagnetStar($aliasMagnetId[$remoteMagnetStar->magnetId],
-                                       $aliasUserId[$remoteMagnetStar->userId],
-                                       $remoteMagnetStar->timeAdded))
-              {
-                $db->addMagnetStar(
-                  $aliasMagnetId[$remoteMagnetStar->magnetId],
-                  $aliasUserId[$remoteMagnetStar->userId],
-                  $remoteMagnetStar->value,
-                  $remoteMagnetStar->timeAdded
-                );
-              }
+              $db->addMagnetStar(
+                $aliasMagnetId[$remoteMagnetStar->magnetId],
+                $aliasUserId[$remoteMagnetStar->userId],
+                $remoteMagnetStar->value,
+                $remoteMagnetStar->timeAdded
+              );
             }
           }
         }
