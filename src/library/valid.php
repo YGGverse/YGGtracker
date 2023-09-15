@@ -695,9 +695,19 @@ class Valid
       return false;
     }
 
-    foreach ($value as $version => $xt)
+    foreach ($value as $xt)
     {
-      if (!(is_int($version) || is_float($version)))
+      if (empty($xt->version))
+      {
+        array_push(
+          $error,
+          _('Magnet info hash version required')
+        );
+
+        return false;
+      }
+
+      if (!(is_int($xt->version) || is_float($xt->version)))
       {
         array_push(
           $error,
@@ -707,7 +717,17 @@ class Valid
         return false;
       }
 
-      if (!is_string($xt))
+      if (empty($xt->value))
+      {
+        array_push(
+          $error,
+          _('Magnet info hash value required')
+        );
+
+        return false;
+      }
+
+      if (!is_string($xt->value))
       {
         array_push(
           $error,
@@ -717,11 +737,11 @@ class Valid
         return false;
       }
 
-      switch ($version->version)
+      switch ($xt->version)
       {
         case 1:
 
-          if (!Yggverse\Parser\Magnet::isXTv1($xt))
+          if (!preg_match('/^([A-z0-9]{40})$/i', $xt->value))
           {
             array_push(
               $error,
@@ -735,7 +755,7 @@ class Valid
 
         case 2:
 
-          if (!Yggverse\Parser\Magnet::isXTv2($xt))
+          if (!preg_match('/^([A-z0-9]{64})$/i', $xt->value))
           {
             array_push(
               $error,
