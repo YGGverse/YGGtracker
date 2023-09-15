@@ -298,28 +298,28 @@ if (API_EXPORT_PUSH_ENABLED)
       if ($manifest = @json_decode(@file_get_contents($node->manifest)))
       {
         // API channel not exists
-        if (empty($manifest->api))
+        if (empty($manifest->import))
         {
           continue;
         }
 
         // Push API channel not exists
-        if (empty($manifest->api->push))
+        if (empty($manifest->import->push))
         {
           continue;
         }
 
         // Send push request
-        $debug['result'][$manifest->api->push]['request'] = $request;
+        $debug['result'][$manifest->import->push]['request'] = $request;
 
-        $curl = new Curl($manifest->api->push, $request);
+        $curl = new Curl($manifest->import->push, $request);
 
         if ($response = $curl->getResponse())
         {
-          $debug['result'][$manifest->api->push]['response'] = $response;
+          $debug['result'][$manifest->import->push]['response'] = $response;
         }
 
-        $debug['result'][$manifest->api->push]['code'] = $curl->getCode();
+        $debug['result'][$manifest->import->push]['code'] = $curl->getCode();
       }
     }
 
