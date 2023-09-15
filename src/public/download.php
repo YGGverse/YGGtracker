@@ -17,7 +17,7 @@ $response = (object)
 ];
 
 // Yggdrasil connections only
-if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
+if (!Valid::host($_SERVER['REMOTE_ADDR']))
 {
   $response->success = false;
   $response->message = _('Yggdrasil connection required for this action');
@@ -146,7 +146,7 @@ else
     $uri    = $db->getUri($addressTracker->uriId);
 
     // Yggdrasil host only
-    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+    if (!Valid::host($host->value))
     {
       continue;
     }
@@ -176,7 +176,7 @@ else
     $uri    = $db->getUri($acceptableSource->uriId);
 
     // Yggdrasil host only
-    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+    if (!Valid::host($host->value))
     {
       continue;
     }
@@ -206,7 +206,7 @@ else
     $uri    = $db->getUri($eXactSource->uriId);
 
     // Yggdrasil host only
-    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+    if (!Valid::host($host->value))
     {
       continue;
     }

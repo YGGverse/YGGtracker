@@ -5,18 +5,102 @@ class Valid
   private static $_error = [];
 
   // Common
-  public static function getError()
+  public static function getError() : array
   {
     return self::$_error;
   }
 
-  public static function setError(array $value)
+  public static function setError(array $value) : void
   {
     self::$_error = $value;
   }
 
+  public static function host(mixed $value) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid host data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Host "%s" not match condition "%s"'),
+          $value,
+          YGGDRASIL_HOST_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function url(mixed $value) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid URL data type')
+      );
+
+      return false;
+    }
+
+    if (!$url = Yggverse\Parser\Url::parse($value))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('URL "%s" invalid'),
+          $value
+        )
+      );
+
+      return false;
+    }
+
+    if (empty($url->host->name))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Could not init host name for URL "%s"'),
+          $value
+        )
+      );
+
+      return false;
+    }
+
+    if (!self::host($url->host->name))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('URL host "%s" not supported'),
+          $value,
+          $url->host->name
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
   // User
-  public static function user(mixed $value)
+  public static function user(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -48,7 +132,7 @@ class Valid
     return true;
   }
 
-  public static function userId(mixed $value)
+  public static function userId(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -63,7 +147,7 @@ class Valid
     return true;
   }
 
-  public static function userAddress(mixed $value)
+  public static function userAddress(mixed $value) : bool
   {
     if (!is_string($value))
     {
@@ -75,13 +159,13 @@ class Valid
       return false;
     }
 
-    if (!preg_match(YGGDRASIL_HOST_REGEX, $value))
+    if (!self::host($value))
     {
       array_push(
         self::$_error,
         sprintf(
-          _('User address format does not match condition "%s"'),
-          YGGDRASIL_HOST_REGEX
+          _('User address "%s" not supported'),
+          $value
         )
       );
 
@@ -91,7 +175,7 @@ class Valid
     return true;
   }
 
-  public static function userTimeAdded(mixed $value)
+  public static function userTimeAdded(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -116,7 +200,7 @@ class Valid
     return true;
   }
 
-  public static function userTimeUpdated(mixed $value)
+  public static function userTimeUpdated(mixed $value) : bool
   {
     if (!(is_int($value) || is_bool($value)))
     {
@@ -141,7 +225,7 @@ class Valid
     return true;
   }
 
-  public static function userApproved(mixed $value)
+  public static function userApproved(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -156,7 +240,7 @@ class Valid
     return true;
   }
 
-  public static function userPublic(mixed $value)
+  public static function userPublic(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -172,7 +256,7 @@ class Valid
   }
 
   // Magnet
-  public static function magnet(mixed $data)
+  public static function magnet(mixed $data) : bool
   {
     if (!is_object($data))
     {
@@ -224,7 +308,7 @@ class Valid
     return true;
   }
 
-  public static function magnetId(mixed $value)
+  public static function magnetId(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -239,7 +323,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTitle(mixed $value)
+  public static function magnetTitle(mixed $value) : bool
   {
     if (!is_string($value))
     {
@@ -282,7 +366,7 @@ class Valid
     return true;
   }
 
-  public static function magnetPreview(mixed $value)
+  public static function magnetPreview(mixed $value) : bool
   {
     if (!is_string($value))
     {
@@ -325,7 +409,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDescription(mixed $value)
+  public static function magnetDescription(mixed $value) : bool
   {
     if (!is_string($value))
     {
@@ -368,7 +452,7 @@ class Valid
     return true;
   }
 
-  public static function magnetComments(mixed $value)
+  public static function magnetComments(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -383,7 +467,7 @@ class Valid
     return true;
   }
 
-  public static function magnetPublic(mixed $value)
+  public static function magnetPublic(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -398,7 +482,7 @@ class Valid
     return true;
   }
 
-  public static function magnetApproved(mixed $value)
+  public static function magnetApproved(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -413,7 +497,7 @@ class Valid
     return true;
   }
 
-  public static function magnetSensitive(mixed $value)
+  public static function magnetSensitive(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -428,7 +512,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTimeAdded(mixed $value)
+  public static function magnetTimeAdded(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -453,7 +537,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTimeUpdated(mixed $value)
+  public static function magnetTimeUpdated(mixed $value) : bool
   {
     if (!(is_int($value) || is_bool($value)))
     {
@@ -478,7 +562,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDn(mixed $value)
+  public static function magnetDn(mixed $value) : bool
   {
     if (!is_string($value))
     {
@@ -521,7 +605,7 @@ class Valid
     return true;
   }
 
-  public static function magnetXl(mixed $value)
+  public static function magnetXl(mixed $value) : bool
   {
     if (!(is_int($value) || is_float($value)))
     {
@@ -536,7 +620,7 @@ class Valid
     return true;
   }
 
-  public static function magnetKt(mixed $value)
+  public static function magnetKt(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -611,7 +695,7 @@ class Valid
     return true;
   }
 
-  public static function magnetXt(mixed $value)
+  public static function magnetXt(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -689,7 +773,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTr(mixed $value)
+  public static function magnetTr(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -705,33 +789,13 @@ class Valid
 
     foreach ($value as $tr)
     {
-      if (!$url = Yggverse\Parser\Url::parse($tr))
-      {
-        array_push(
-          self::$_error,
-          _('Invalid magnet address tracker URL')
-        );
-
-        return false;
-      }
-
-      if (empty($url->host->name))
-      {
-        array_push(
-          self::$_error,
-          _('Invalid magnet address tracker host name')
-        );
-
-        return false;
-      }
-
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
+      if (!self::url($tr))
       {
         array_push(
           self::$_error,
           sprintf(
-            _('Magnet address tracker format does not match condition "%s"'),
-            YGGDRASIL_HOST_REGEX
+            _('Invalid magnet address tracker URL "%s"'),
+            $tr
           )
         );
 
@@ -759,7 +823,7 @@ class Valid
     return true;
   }
 
-  public static function magnetAs(mixed $value)
+  public static function magnetAs(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -775,33 +839,13 @@ class Valid
 
     foreach ($value as $as)
     {
-      if (!$url = Yggverse\Parser\Url::parse($as))
-      {
-        array_push(
-          self::$_error,
-          _('Invalid magnet acceptable source URL')
-        );
-
-        return false;
-      }
-
-      if (empty($url->host->name))
-      {
-        array_push(
-          self::$_error,
-          _('Invalid magnet acceptable source host name')
-        );
-
-        return false;
-      }
-
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
+      if (!self::url($as))
       {
         array_push(
           self::$_error,
           sprintf(
-            _('Magnet acceptable source format does not match condition "%s"'),
-            YGGDRASIL_HOST_REGEX
+            _('Invalid magnet acceptable source URL "%s"'),
+            $as
           )
         );
 
@@ -829,7 +873,7 @@ class Valid
     return true;
   }
 
-  public static function magnetWs(mixed $value)
+  public static function magnetWs(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -845,33 +889,13 @@ class Valid
 
     foreach ($value as $ws)
     {
-      if (!$url = Yggverse\Parser\Url::parse($ws))
-      {
-        array_push(
-          self::$_error,
-          _('Invalid magnet web seed URL')
-        );
-
-        return false;
-      }
-
-      if (empty($url->host->name))
-      {
-        array_push(
-          self::$_error,
-          _('Invalid magnet web seed host name')
-        );
-
-        return false;
-      }
-
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
+      if (!self::url($ws))
       {
         array_push(
           self::$_error,
           sprintf(
-            _('Magnet web seed format does not match condition "%s"'),
-            YGGDRASIL_HOST_REGEX
+            _('Invalid magnet web seed URL "%s"'),
+            $ws
           )
         );
 
@@ -900,7 +924,7 @@ class Valid
   }
 
   // Magnet comment
-  public static function magnetComment(mixed $value)
+  public static function magnetComment(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -933,7 +957,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentId(mixed $value)
+  public static function magnetCommentId(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -948,7 +972,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentIdParent(mixed $value)
+  public static function magnetCommentIdParent(mixed $value) : bool
   {
     if (!(is_bool($value) || is_int($value)))
     {
@@ -968,7 +992,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentTimeAdded(mixed $value)
+  public static function magnetCommentTimeAdded(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -993,7 +1017,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentApproved(mixed $value)
+  public static function magnetCommentApproved(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -1008,7 +1032,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentPublic(mixed $value)
+  public static function magnetCommentPublic(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -1023,7 +1047,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentValue(mixed $value)
+  public static function magnetCommentValue(mixed $value) : bool
   {
     if (!is_string($value))
     {
@@ -1054,7 +1078,7 @@ class Valid
   }
 
   // Magnet download
-  public static function magnetDownload(mixed $value)
+  public static function magnetDownload(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -1083,7 +1107,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDownloadId(mixed $value)
+  public static function magnetDownloadId(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -1098,7 +1122,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDownloadTimeAdded(mixed $value)
+  public static function magnetDownloadTimeAdded(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -1124,7 +1148,7 @@ class Valid
   }
 
   // Magnet star
-  public static function magnetStar(mixed $value)
+  public static function magnetStar(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -1154,7 +1178,7 @@ class Valid
     return true;
   }
 
-  public static function magnetStarId(mixed $value)
+  public static function magnetStarId(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -1169,7 +1193,7 @@ class Valid
     return true;
   }
 
-  public static function magnetStarValue(mixed $value)
+  public static function magnetStarValue(mixed $value) : bool
   {
     if (!is_bool($value))
     {
@@ -1184,7 +1208,7 @@ class Valid
     return true;
   }
 
-  public static function magnetStarTimeAdded(mixed $value)
+  public static function magnetStarTimeAdded(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -1210,7 +1234,7 @@ class Valid
   }
 
   // Magnet view
-  public static function magnetView(mixed $value)
+  public static function magnetView(mixed $value) : bool
   {
     if (!is_object($value))
     {
@@ -1239,7 +1263,7 @@ class Valid
     return true;
   }
 
-  public static function magnetViewId(mixed $value)
+  public static function magnetViewId(mixed $value) : bool
   {
     if (!is_int($value))
     {
@@ -1254,7 +1278,7 @@ class Valid
     return true;
   }
 
-  public static function magnetViewTimeAdded(mixed $value)
+  public static function magnetViewTimeAdded(mixed $value) : bool
   {
     if (!is_int($value))
     {

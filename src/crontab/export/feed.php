@@ -269,7 +269,7 @@ try
             $uri    = $db->getUri($addressTracker->uriId);
 
             // Yggdrasil host only
-            if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+            if (!Valid::host($host->value))
             {
               continue;
             }
@@ -295,7 +295,7 @@ try
             $uri    = $db->getUri($acceptableSource->uriId);
 
             // Yggdrasil host only
-            if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+            if (!Valid::host($host->value))
             {
               continue;
             }
@@ -321,7 +321,7 @@ try
             $uri    = $db->getUri($eXactSource->uriId);
 
             // Yggdrasil host only
-            if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+            if (!Valid::host($host->value))
             {
               continue;
             }

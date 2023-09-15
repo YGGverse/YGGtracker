@@ -23,7 +23,7 @@ $response = (object)
 ];
 
 // Yggdrasil connections only
-if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
+if (!Valid::host($_SERVER['REMOTE_ADDR']))
 {
   $response->success = false;
   $response->message = _('Yggdrasil connection required to enable resource features');

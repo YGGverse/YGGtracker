@@ -35,31 +35,19 @@ try
     file_get_contents(__DIR__ . '/../../config/nodes.json')
   ) as $node)
   {
-
-    // Skip reading to non-condition addresses
-    if ($manifestUrl = Yggverse\Parser\Url::parse($node->manifest))
-    {
-      if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $manifestUrl->host->name)))
-      {
-        continue;
-      }
-    }
-
-    else
+    // Skip non-condition addresses
+    if (!Valid::url($node->manifest))
     {
       continue;
     }
 
-    // Skip reading current host
-    if ($thisUrl = Yggverse\Parser\Url::parse(WEBSITE_URL))
-    {
-      if ($manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
-      {
-        continue;
-      }
-    }
+    // Skip current host
+    $thisUrl     = Yggverse\Parser\Url::parse(WEBSITE_URL);
+    $manifestUrl = Yggverse\Parser\Url::parse($node->manifest);
 
-    else
+    if (empty($manifestUrl->host->name) ||
+        empty($manifestUrl->host->name) ||
+        $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
     {
       continue;
     }

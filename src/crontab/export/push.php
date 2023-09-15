@@ -103,7 +103,7 @@ if (API_EXPORT_PUSH_ENABLED)
             $uri    = $db->getUri($addressTracker->uriId);
 
             // Yggdrasil host only
-            if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+            if (!Valid::host($host->value))
             {
               continue;
             }
@@ -129,7 +129,7 @@ if (API_EXPORT_PUSH_ENABLED)
             $uri    = $db->getUri($acceptableSource->uriId);
 
             // Yggdrasil host only
-            if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+            if (!Valid::host($host->value))
             {
               continue;
             }
@@ -155,7 +155,7 @@ if (API_EXPORT_PUSH_ENABLED)
             $uri    = $db->getUri($eXactSource->uriId);
 
             // Yggdrasil host only
-            if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $host->value)))
+            if (!Valid::host($host->value))
             {
               continue;
             }
@@ -310,12 +310,9 @@ if (API_EXPORT_PUSH_ENABLED)
         }
 
         // Skip sending to non-condition addresses
-        if ($pushUrl = Yggverse\Parser\Url::parse($manifest->import->push))
+        if (!Valid::url($manifest->import->push))
         {
-          if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $pushUrl->host->name)))
-          {
-            continue;
-          }
+          continue;
         }
 
         else

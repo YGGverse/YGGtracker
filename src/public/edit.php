@@ -126,7 +126,7 @@ $response = (object)
 ];
 
 // Yggdrasil connections only
-if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
+if (!Valid::host($_SERVER['REMOTE_ADDR']))
 {
   $response->success = false;
   $response->message = _('Yggdrasil connection required to enable resource features');
@@ -373,27 +373,22 @@ else {
 
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['tr'])) as $tr)
       {
-        $tr = trim($tr);
-
-        if (!empty($tr))
+        if (Valid::url($tr))
         {
           if ($url = Yggverse\Parser\Url::parse($tr))
           {
-            if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
-            {
-              $db->initMagnetToAddressTrackerId(
-                $magnet->magnetId,
-                $db->initAddressTrackerId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+            $db->initMagnetToAddressTrackerId(
+              $magnet->magnetId,
+              $db->initAddressTrackerId(
+                $db->initSchemeId($url->host->scheme),
+                $db->initHostId($url->host->name),
+                $db->initPortId($url->host->port),
+                $db->initUriId($url->page->uri)
+              )
+            );
 
-              $response->form->tr->valid->success = true;
-              $response->form->tr->valid->message = false;
-            }
+            $response->form->tr->valid->success = true;
+            $response->form->tr->valid->message = false;
           }
         }
       }
@@ -409,27 +404,22 @@ else {
 
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['as'])) as $as)
       {
-        $as = trim($as);
-
-        if (!empty($as))
+        if (Valid::url($as))
         {
           if ($url = Yggverse\Parser\Url::parse($as))
           {
-            if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
-            {
-              $db->initMagnetToAcceptableSourceId(
-                $magnet->magnetId,
-                $db->initAcceptableSourceId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+            $db->initMagnetToAcceptableSourceId(
+              $magnet->magnetId,
+              $db->initAcceptableSourceId(
+                $db->initSchemeId($url->host->scheme),
+                $db->initHostId($url->host->name),
+                $db->initPortId($url->host->port),
+                $db->initUriId($url->page->uri)
+              )
+            );
 
-              $response->form->as->valid->success = true;
-              $response->form->as->valid->message = false;
-            }
+            $response->form->as->valid->success = true;
+            $response->form->as->valid->message = false;
           }
         }
       }
@@ -445,27 +435,22 @@ else {
 
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['xs'])) as $xs)
       {
-        $xs = trim($xs);
-
-        if (!empty($xs))
+        if (Valid::url($xs))
         {
           if ($url = Yggverse\Parser\Url::parse($xs))
           {
-            if (preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
-            {
-              $db->initMagnetToExactSourceId(
-                $magnet->magnetId,
-                $db->initExactSourceId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+            $db->initMagnetToExactSourceId(
+              $magnet->magnetId,
+              $db->initExactSourceId(
+                $db->initSchemeId($url->host->scheme),
+                $db->initHostId($url->host->name),
+                $db->initPortId($url->host->port),
+                $db->initUriId($url->page->uri)
+              )
+            );
 
-              $response->form->xs->valid->success = true;
-              $response->form->xs->valid->message = false;
-            }
+            $response->form->xs->valid->success = true;
+            $response->form->xs->valid->message = false;
           }
         }
       }

@@ -16,29 +16,24 @@ $connectionWhiteList = [];
 foreach (json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')) as $node)
 {
   // Skip non-condition addresses
-  if ($manifestUrl = Yggverse\Parser\Url::parse($node->manifest))
+  if (!Valid::url($node->manifest))
   {
-    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $manifestUrl->host->name)))
-    {
-      continue;
-    }
-  }
+    $response =
+    [
+      'status'  => false,
+      'message' => Valid::getError()
+    ];
 
-  else
-  {
     continue;
   }
 
   // Skip current host
-  if ($thisUrl = Yggverse\Parser\Url::parse(WEBSITE_URL))
-  {
-    if ($manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
-    {
-      continue;
-    }
-  }
+  $thisUrl     = Yggverse\Parser\Url::parse(WEBSITE_URL);
+  $manifestUrl = Yggverse\Parser\Url::parse($node->manifest);
 
-  else
+  if (empty($manifestUrl->host->name) ||
+      empty($manifestUrl->host->name) ||
+      $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
   {
     continue;
   }
@@ -67,7 +62,7 @@ else if (!API_IMPORT_PUSH_ENABLED)
 }
 
 // Yggdrasil connections only
-else if (!preg_match(YGGDRASIL_HOST_REGEX, $_SERVER['REMOTE_ADDR']))
+else if (!Valid::host($_SERVER['REMOTE_ADDR']))
 {
   $response =
   [
