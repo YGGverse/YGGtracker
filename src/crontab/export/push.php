@@ -309,6 +309,36 @@ if (API_EXPORT_PUSH_ENABLED)
           continue;
         }
 
+        // Skip sending to non-condition addresses
+        if ($pushUrl = Yggverse\Parser\Url::parse($manifest->import->push))
+        {
+          if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $pushUrl->host->name)))
+          {
+            continue;
+          }
+        }
+
+        else
+        {
+          continue;
+        }
+
+        // Skip sending to the current host
+        if ($thisUrl = Yggverse\Parser\Url::parse(WEBSITE_URL))
+        {
+          if ($pushUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
+          {
+            continue;
+          }
+        }
+
+        else
+        {
+          continue;
+        }
+
+        // @TODO add recipient manifest check to not disturb API without needs
+
         // Send push request
         $debug['result'][$manifest->import->push]['request'] = $request;
 
@@ -324,11 +354,11 @@ if (API_EXPORT_PUSH_ENABLED)
     }
 
     // Drop processed item from queue
-    // unset($memoryApiExportPush[$id]);
+    unset($memoryApiExportPush[$id]);
   }
 
   // Update memory pool
-  // $memory->set('api.export.push', $memoryApiExportPush);
+  $memory->set('api.export.push', $memoryApiExportPush);
 }
 
 // Export push disabled, free api.export.push pool
