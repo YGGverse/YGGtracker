@@ -2,25 +2,13 @@
 
 class Valid
 {
-  private static $_error = [];
-
   // Common
-  public static function getError() : array
-  {
-    return self::$_error;
-  }
-
-  public static function setError(array $value) : void
-  {
-    self::$_error = $value;
-  }
-
-  public static function host(mixed $value) : bool
+  public static function host(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid host data type')
       );
 
@@ -30,7 +18,7 @@ class Valid
     if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $value)))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Host "%s" not match condition "%s"'),
           $value,
@@ -44,12 +32,12 @@ class Valid
     return true;
   }
 
-  public static function url(mixed $value) : bool
+  public static function url(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid URL data type')
       );
 
@@ -59,7 +47,7 @@ class Valid
     if (!$url = Yggverse\Parser\Url::parse($value))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('URL "%s" invalid'),
           $value
@@ -72,7 +60,7 @@ class Valid
     if (empty($url->host->name))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Could not init host name for URL "%s"'),
           $value
@@ -85,7 +73,7 @@ class Valid
     if (!self::host($url->host->name))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('URL host "%s" not supported'),
           $value,
@@ -100,12 +88,12 @@ class Valid
   }
 
   // User
-  public static function user(mixed $value) : bool
+  public static function user(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user data type')
       );
 
@@ -122,7 +110,7 @@ class Valid
         (isset($value->public)      && !self::userPublic($value->public)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user data protocol')
       );
 
@@ -132,12 +120,12 @@ class Valid
     return true;
   }
 
-  public static function userId(mixed $value) : bool
+  public static function userId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid userId data type')
       );
 
@@ -147,12 +135,12 @@ class Valid
     return true;
   }
 
-  public static function userAddress(mixed $value) : bool
+  public static function userAddress(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user address data type')
       );
 
@@ -162,7 +150,7 @@ class Valid
     if (!self::host($value))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('User address "%s" not supported'),
           $value
@@ -175,12 +163,12 @@ class Valid
     return true;
   }
 
-  public static function userTimeAdded(mixed $value) : bool
+  public static function userTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user timeAdded data type')
       );
 
@@ -190,7 +178,7 @@ class Valid
     if ($value > time() || $value < 0)
     {
       array_push(
-        self::$_error,
+        $error,
         _('User timeAdded out of range')
       );
 
@@ -200,12 +188,12 @@ class Valid
     return true;
   }
 
-  public static function userTimeUpdated(mixed $value) : bool
+  public static function userTimeUpdated(mixed $value, array &$error = []) : bool
   {
     if (!(is_int($value) || is_bool($value)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user timeUpdated data type')
       );
 
@@ -215,7 +203,7 @@ class Valid
     if (is_int($value) && ($value > time() || $value < 0))
     {
       array_push(
-        self::$_error,
+        $error,
         _('User timeUpdated out of range')
       );
 
@@ -225,12 +213,12 @@ class Valid
     return true;
   }
 
-  public static function userApproved(mixed $value) : bool
+  public static function userApproved(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user approved data type')
       );
 
@@ -240,12 +228,12 @@ class Valid
     return true;
   }
 
-  public static function userPublic(mixed $value) : bool
+  public static function userPublic(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid user public data type')
       );
 
@@ -256,12 +244,12 @@ class Valid
   }
 
   // Magnet
-  public static function magnet(mixed $value) : bool
+  public static function magnet(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet data type')
       );
 
@@ -298,7 +286,7 @@ class Valid
         (isset($value->public)      && !self::magnetPublic($value->public)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet data protocol')
       );
 
@@ -308,12 +296,12 @@ class Valid
     return true;
   }
 
-  public static function magnetId(mixed $value) : bool
+  public static function magnetId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnetId data type')
       );
 
@@ -323,12 +311,12 @@ class Valid
     return true;
   }
 
-  public static function magnetTitle(mixed $value) : bool
+  public static function magnetTitle(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet title data type')
       );
 
@@ -338,7 +326,7 @@ class Valid
     if (!preg_match(MAGNET_TITLE_REGEX, $value))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet title format does not match condition "%s"'),
           MAGNET_TITLE_REGEX
@@ -352,7 +340,7 @@ class Valid
         mb_strlen($value) > MAGNET_TITLE_MAX_LENGTH)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet title out of %s-%s chars range'),
           MAGNET_TITLE_MIN_LENGTH,
@@ -366,12 +354,12 @@ class Valid
     return true;
   }
 
-  public static function magnetPreview(mixed $value) : bool
+  public static function magnetPreview(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet preview data type')
       );
 
@@ -381,7 +369,7 @@ class Valid
     if (!preg_match(MAGNET_PREVIEW_REGEX, $value))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet preview format does not match condition "%s"'),
           MAGNET_PREVIEW_REGEX
@@ -395,7 +383,7 @@ class Valid
         mb_strlen($value) > MAGNET_PREVIEW_MAX_LENGTH)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet preview out of %s-%s chars range'),
           MAGNET_PREVIEW_MIN_LENGTH,
@@ -409,12 +397,12 @@ class Valid
     return true;
   }
 
-  public static function magnetDescription(mixed $value) : bool
+  public static function magnetDescription(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet description data type')
       );
 
@@ -424,7 +412,7 @@ class Valid
     if (!preg_match(MAGNET_DESCRIPTION_REGEX, $value))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet description format does not match condition "%s"'),
           MAGNET_DESCRIPTION_REGEX
@@ -438,7 +426,7 @@ class Valid
         mb_strlen($value) > MAGNET_DESCRIPTION_MAX_LENGTH)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet description out of %s-%s chars range'),
           MAGNET_DESCRIPTION_MIN_LENGTH,
@@ -452,12 +440,12 @@ class Valid
     return true;
   }
 
-  public static function magnetComments(mixed $value) : bool
+  public static function magnetComments(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comments data type')
       );
 
@@ -467,12 +455,12 @@ class Valid
     return true;
   }
 
-  public static function magnetPublic(mixed $value) : bool
+  public static function magnetPublic(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet public data type')
       );
 
@@ -482,12 +470,12 @@ class Valid
     return true;
   }
 
-  public static function magnetApproved(mixed $value) : bool
+  public static function magnetApproved(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet approved data type')
       );
 
@@ -497,12 +485,12 @@ class Valid
     return true;
   }
 
-  public static function magnetSensitive(mixed $value) : bool
+  public static function magnetSensitive(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet sensitive data type')
       );
 
@@ -512,12 +500,12 @@ class Valid
     return true;
   }
 
-  public static function magnetTimeAdded(mixed $value) : bool
+  public static function magnetTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet timeAdded data type')
       );
 
@@ -527,7 +515,7 @@ class Valid
     if ($value > time() || $value < 0)
     {
       array_push(
-        self::$_error,
+        $error,
         _('Magnet timeAdded out of range')
       );
 
@@ -537,12 +525,12 @@ class Valid
     return true;
   }
 
-  public static function magnetTimeUpdated(mixed $value) : bool
+  public static function magnetTimeUpdated(mixed $value, array &$error = []) : bool
   {
     if (!(is_int($value) || is_bool($value)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet timeUpdated data type')
       );
 
@@ -552,7 +540,7 @@ class Valid
     if (is_int($value) && ($value > time() || $value < 0))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Magnet timeUpdated out of range')
       );
 
@@ -562,12 +550,12 @@ class Valid
     return true;
   }
 
-  public static function magnetDn(mixed $value) : bool
+  public static function magnetDn(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet display name data type')
       );
 
@@ -577,7 +565,7 @@ class Valid
     if (!preg_match(MAGNET_DN_REGEX, $value))
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet display name format does not match condition "%s"'),
           MAGNET_DN_REGEX
@@ -591,7 +579,7 @@ class Valid
         mb_strlen($value) > MAGNET_DN_MAX_LENGTH)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet display name out of %s-%s chars range'),
           MAGNET_DN_MIN_LENGTH,
@@ -605,12 +593,12 @@ class Valid
     return true;
   }
 
-  public static function magnetXl(mixed $value) : bool
+  public static function magnetXl(mixed $value, array &$error = []) : bool
   {
     if (!(is_int($value) || is_float($value)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet exact length data type')
       );
 
@@ -620,12 +608,12 @@ class Valid
     return true;
   }
 
-  public static function magnetKt(mixed $value) : bool
+  public static function magnetKt(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet keyword data type')
       );
 
@@ -639,7 +627,7 @@ class Valid
       if (!is_string($value))
       {
         array_push(
-          self::$_error,
+          $error,
           _('Invalid magnet keyword value data type')
         );
 
@@ -649,7 +637,7 @@ class Valid
       if (!preg_match(MAGNET_KT_REGEX, $value))
       {
         array_push(
-          self::$_error,
+          $error,
           sprintf(
             _('Magnet keyword format does not match condition "%s"'),
             MAGNET_KT_REGEX
@@ -663,7 +651,7 @@ class Valid
           mb_strlen($value) > MAGNET_KT_MAX_LENGTH)
       {
         array_push(
-          self::$_error,
+          $error,
           sprintf(
             _('Magnet keyword out of %s-%s chars range'),
             MAGNET_KT_MIN_LENGTH,
@@ -681,7 +669,7 @@ class Valid
         $total > MAGNET_KT_MAX_QUANTITY)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet keywords quantity out of %s-%s range'),
           MAGNET_KT_MIN_QUANTITY,
@@ -695,12 +683,12 @@ class Valid
     return true;
   }
 
-  public static function magnetXt(mixed $value) : bool
+  public static function magnetXt(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet info hash data type')
       );
 
@@ -712,7 +700,7 @@ class Valid
       if (!(is_int($version) || is_float($version)))
       {
         array_push(
-          self::$_error,
+          $error,
           _('Invalid magnet info hash version data type')
         );
 
@@ -722,7 +710,7 @@ class Valid
       if (!is_string($xt))
       {
         array_push(
-          self::$_error,
+          $error,
           _('Invalid magnet info hash value data type')
         );
 
@@ -736,7 +724,7 @@ class Valid
           if (!Yggverse\Parser\Magnet::isXTv1($xt))
           {
             array_push(
-              self::$_error,
+              $error,
               _('Invalid magnet info hash v1 value')
             );
 
@@ -750,7 +738,7 @@ class Valid
           if (!Yggverse\Parser\Magnet::isXTv2($xt))
           {
             array_push(
-              self::$_error,
+              $error,
               _('Invalid magnet info hash v2 value')
             );
 
@@ -762,7 +750,7 @@ class Valid
         default:
 
           array_push(
-            self::$_error,
+            $error,
             _('Magnet info hash version not supported')
           );
 
@@ -773,12 +761,12 @@ class Valid
     return true;
   }
 
-  public static function magnetTr(mixed $value) : bool
+  public static function magnetTr(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet address tracker data type')
       );
 
@@ -792,7 +780,7 @@ class Valid
       if (!self::url($tr))
       {
         array_push(
-          self::$_error,
+          $error,
           sprintf(
             _('Invalid magnet address tracker URL "%s"'),
             $tr
@@ -809,7 +797,7 @@ class Valid
         $total > MAGNET_TR_MAX_QUANTITY)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet address trackers quantity out of %s-%s range'),
           MAGNET_TR_MIN_QUANTITY,
@@ -823,12 +811,12 @@ class Valid
     return true;
   }
 
-  public static function magnetAs(mixed $value) : bool
+  public static function magnetAs(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet acceptable source data type')
       );
 
@@ -842,7 +830,7 @@ class Valid
       if (!self::url($as))
       {
         array_push(
-          self::$_error,
+          $error,
           sprintf(
             _('Invalid magnet acceptable source URL "%s"'),
             $as
@@ -859,7 +847,7 @@ class Valid
         $total > MAGNET_AS_MAX_QUANTITY)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet acceptable sources quantity out of %s-%s range'),
           MAGNET_AS_MIN_QUANTITY,
@@ -873,12 +861,12 @@ class Valid
     return true;
   }
 
-  public static function magnetWs(mixed $value) : bool
+  public static function magnetWs(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet web seed data type')
       );
 
@@ -892,7 +880,7 @@ class Valid
       if (!self::url($ws))
       {
         array_push(
-          self::$_error,
+          $error,
           sprintf(
             _('Invalid magnet web seed URL "%s"'),
             $ws
@@ -909,7 +897,7 @@ class Valid
         $total > MAGNET_WS_MAX_QUANTITY)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet web seeds quantity out of %s-%s range'),
           MAGNET_WS_MIN_QUANTITY,
@@ -924,12 +912,12 @@ class Valid
   }
 
   // Magnet comment
-  public static function magnetComment(mixed $value) : bool
+  public static function magnetComment(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comment data type')
       );
 
@@ -947,7 +935,7 @@ class Valid
         (isset($value->public)                && !self::magnetCommentPublic($value->public)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comment data protocol')
       );
 
@@ -957,12 +945,12 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentId(mixed $value) : bool
+  public static function magnetCommentId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnetCommentId data type')
       );
 
@@ -972,12 +960,12 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentIdParent(mixed $value) : bool
+  public static function magnetCommentIdParent(mixed $value, array &$error = []) : bool
   {
     if (!(is_bool($value) || is_int($value)))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet magnetCommentIdParent data type')
       );
 
@@ -992,12 +980,12 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentTimeAdded(mixed $value) : bool
+  public static function magnetCommentTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comment timeAdded data type')
       );
 
@@ -1007,7 +995,7 @@ class Valid
     if ($value > time() || $value < 0)
     {
       array_push(
-        self::$_error,
+        $error,
         _('Magnet comment timeAdded out of range')
       );
 
@@ -1017,12 +1005,12 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentApproved(mixed $value) : bool
+  public static function magnetCommentApproved(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comment approved data type')
       );
 
@@ -1032,12 +1020,12 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentPublic(mixed $value) : bool
+  public static function magnetCommentPublic(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comment public data type')
       );
 
@@ -1047,12 +1035,12 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentValue(mixed $value) : bool
+  public static function magnetCommentValue(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet comment value data type')
       );
 
@@ -1063,7 +1051,7 @@ class Valid
         mb_strlen($value) > MAGNET_COMMENT_MAX_LENGTH)
     {
       array_push(
-        self::$_error,
+        $error,
         sprintf(
           _('Magnet comment value out of %s-%s chars range'),
           MAGNET_COMMENT_MIN_LENGTH,
@@ -1078,12 +1066,12 @@ class Valid
   }
 
   // Magnet download
-  public static function magnetDownload(mixed $value) : bool
+  public static function magnetDownload(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet download data type')
       );
 
@@ -1097,7 +1085,7 @@ class Valid
       )
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet download data protocol')
       );
 
@@ -1107,12 +1095,12 @@ class Valid
     return true;
   }
 
-  public static function magnetDownloadId(mixed $value) : bool
+  public static function magnetDownloadId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnetDownloadId data type')
       );
 
@@ -1122,12 +1110,12 @@ class Valid
     return true;
   }
 
-  public static function magnetDownloadTimeAdded(mixed $value) : bool
+  public static function magnetDownloadTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet download timeAdded data type')
       );
 
@@ -1137,7 +1125,7 @@ class Valid
     if ($value > time() || $value < 0)
     {
       array_push(
-        self::$_error,
+        $error,
         _('Magnet download timeAdded out of range')
       );
 
@@ -1148,12 +1136,12 @@ class Valid
   }
 
   // Magnet star
-  public static function magnetStar(mixed $value) : bool
+  public static function magnetStar(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet download data type')
       );
 
@@ -1168,7 +1156,7 @@ class Valid
       )
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet star data protocol')
       );
 
@@ -1178,12 +1166,12 @@ class Valid
     return true;
   }
 
-  public static function magnetStarId(mixed $value) : bool
+  public static function magnetStarId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnetStarId data type')
       );
 
@@ -1193,12 +1181,12 @@ class Valid
     return true;
   }
 
-  public static function magnetStarValue(mixed $value) : bool
+  public static function magnetStarValue(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet star value data type')
       );
 
@@ -1208,12 +1196,12 @@ class Valid
     return true;
   }
 
-  public static function magnetStarTimeAdded(mixed $value) : bool
+  public static function magnetStarTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet star timeAdded data type')
       );
 
@@ -1223,7 +1211,7 @@ class Valid
     if ($value > time() || $value < 0)
     {
       array_push(
-        self::$_error,
+        $error,
         _('Magnet star timeAdded out of range')
       );
 
@@ -1234,12 +1222,12 @@ class Valid
   }
 
   // Magnet view
-  public static function magnetView(mixed $value) : bool
+  public static function magnetView(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet download data type')
       );
 
@@ -1253,7 +1241,7 @@ class Valid
       )
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet view data protocol')
       );
 
@@ -1263,12 +1251,12 @@ class Valid
     return true;
   }
 
-  public static function magnetViewId(mixed $value) : bool
+  public static function magnetViewId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnetViewId data type')
       );
 
@@ -1278,12 +1266,12 @@ class Valid
     return true;
   }
 
-  public static function magnetViewTimeAdded(mixed $value) : bool
+  public static function magnetViewTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
       array_push(
-        self::$_error,
+        $error,
         _('Invalid magnet view timeAdded data type')
       );
 
@@ -1293,7 +1281,7 @@ class Valid
     if ($value > time() || $value < 0)
     {
       array_push(
-        self::$_error,
+        $error,
         _('Magnet view timeAdded out of range')
       );
 

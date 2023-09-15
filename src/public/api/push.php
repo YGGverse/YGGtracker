@@ -16,12 +16,14 @@ $connectionWhiteList = [];
 foreach (json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')) as $node)
 {
   // Skip non-condition addresses
-  if (!Valid::url($node->manifest))
+  $error = [];
+
+  if (!Valid::url($node->manifest, $error))
   {
     $response =
     [
       'status'  => false,
-      'message' => Valid::getError()
+      'message' => $error
     ];
 
     continue;
@@ -142,11 +144,13 @@ else
           }
 
           // Validate remote fields
-          if (!Valid::user($remote))
+          $error = [];
+
+          if (!Valid::user($remote, $error))
           {
             $response = [
               'status'  => false,
-              'message' => Valid::getError()
+              'message' => $error
             ];
 
             continue 2;
@@ -237,11 +241,13 @@ else
           }
 
           // Validate remote fields
-          if (!Valid::magnet($remote))
+          $error = [];
+
+          if (!Valid::magnet($remote, $error))
           {
             $response = [
               'status'  => false,
-              'message' => Valid::getError()
+              'message' => $error
             ];
 
             continue 2;
@@ -454,11 +460,13 @@ else
           }
 
           // Validate remote fields
-          if (!Valid::magnetComment($remote))
+          $error = [];
+
+          if (!Valid::magnetComment($remote, $error))
           {
             $response = [
               'status'  => false,
-              'message' => Valid::getError()
+              'message' => $error
             ];
 
             continue 2;
@@ -533,11 +541,13 @@ else
           }
 
           // Validate
-          if (!Valid::magnetDownload($remote))
+          $error = [];
+
+          if (!Valid::magnetDownload($remote, $error))
           {
             $response = [
               'status'  => false,
-              'message' => Valid::getError()
+              'message' => $error
             ];
 
             continue 2;
@@ -585,11 +595,13 @@ else
           }
 
           // Validate
-          if (!Valid::magnetStar($remote))
+          $error = [];
+
+          if (!Valid::magnetStar($remote, $error))
           {
             $response = [
               'status'  => false,
-              'message' => Valid::getError()
+              'message' => $error
             ];
 
             continue 2;
@@ -638,11 +650,13 @@ else
           }
 
           // Validate
-          if (!Valid::magnetView($remote))
+          $error = [];
+
+          if (!Valid::magnetView($remote, $error))
           {
             $response = [
               'status'  => false,
-              'message' => Valid::getError()
+              'message' => $error
             ];
 
             continue 2;
