@@ -1054,6 +1054,228 @@ class Valid
   }
 
   // Magnet download
+  public static function magnetDownload(mixed $value)
+  {
+    if (!is_object($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet download data type')
+      );
+
+      return false;
+    }
+
+    if (!isset($value->magnetDownloadId) || !self::magnetDownloadId($value->magnetDownloadId) ||
+        !isset($value->magnetId)         || !self::magnetId($value->magnetId) ||
+        !isset($value->userId)           || !self::userId($value->userId) ||
+        !isset($value->timeAdded)        || !self::magnetDownloadTimeAdded($value->timeAdded)
+      )
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet download data protocol')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetDownloadId(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnetDownloadId data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetDownloadTimeAdded(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet download timeAdded data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        self::$_error,
+        _('Magnet download timeAdded out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
   // Magnet star
+  public static function magnetStar(mixed $value)
+  {
+    if (!is_object($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet download data type')
+      );
+
+      return false;
+    }
+
+    if (!isset($value->magnetStarId) || !self::magnetViewId($value->magnetStarId)     ||
+        !isset($value->magnetId)     || !self::magnetId($value->magnetId)             ||
+        !isset($value->userId)       || !self::userId($value->userId)                 ||
+        !isset($value->timeAdded)    || !self::magnetStarTimeAdded($value->timeAdded) ||
+        !isset($value->value)        || !self::magnetStarValue($value->value)
+      )
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet star data protocol')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetStarId(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnetStarId data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetStarValue(mixed $value)
+  {
+    if (!is_bool($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet star value data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetStarTimeAdded(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet star timeAdded data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        self::$_error,
+        _('Magnet star timeAdded out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
   // Magnet view
+  public static function magnetView(mixed $value)
+  {
+    if (!is_object($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet download data type')
+      );
+
+      return false;
+    }
+
+    if (!isset($value->magnetViewId) || !self::magnetViewId($value->magnetViewId)     ||
+        !isset($value->magnetId)     || !self::magnetId($value->magnetId)             ||
+        !isset($value->userId)       || !self::userId($value->userId)                 ||
+        !isset($value->timeAdded)    || !self::magnetViewTimeAdded($value->timeAdded)
+      )
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet view data protocol')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetViewId(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnetViewId data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetViewTimeAdded(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet view timeAdded data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        self::$_error,
+        _('Magnet view timeAdded out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
 }
