@@ -15,6 +15,19 @@ class Valid
       return false;
     }
 
+    if (!filter_var(str_replace(['[',']'], false, $value), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Host of "%s" not supported'),
+          $value
+        )
+      );
+
+      return false;
+    }
+
     if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $value)))
     {
       array_push(
@@ -44,7 +57,7 @@ class Valid
       return false;
     }
 
-    if (!$url = Yggverse\Parser\Url::parse($value))
+    if (!filter_var($value, FILTER_VALIDATE_URL))
     {
       array_push(
         $error,
@@ -57,12 +70,12 @@ class Valid
       return false;
     }
 
-    if (empty($url->host->name))
+    if (!$host = parse_url($value, PHP_URL_HOST))
     {
       array_push(
         $error,
         sprintf(
-          _('Could not init host name for URL "%s"'),
+          _('Could not init host for URL "%s"'),
           $value
         )
       );
@@ -70,14 +83,14 @@ class Valid
       return false;
     }
 
-    if (!self::host($url->host->name, $error))
+    if (!self::host($host, $error))
     {
       array_push(
         $error,
         sprintf(
-          _('URL host "%s" not supported'),
+          _('URL "%s" has not supported host "%s"'),
           $value,
-          $url->host->name
+          $host,
         )
       );
 
