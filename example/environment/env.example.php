@@ -107,7 +107,7 @@ define('MAGNET_KT_MIN_LENGTH', 2);
 define('MAGNET_KT_MAX_LENGTH', 140);
 define('MAGNET_KT_REGEX', '/[\w]+/ui');
 define('MAGNET_KT_MIN_QUANTITY', 0);
-define('MAGNET_KT_MAX_QUANTITY', 10);
+define('MAGNET_KT_MAX_QUANTITY', 20);
 
 define('MAGNET_TR_MIN_QUANTITY', 1);
 define('MAGNET_TR_MAX_QUANTITY', 50);
