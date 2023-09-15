@@ -89,8 +89,8 @@ class Curl
     return curl_getinfo($this->_connection, CURLINFO_TOTAL_TIME_T);
   }
 
-  public function getResponse()
+  public function getResponse(bool $json = true)
   {
-    return $this->_response;
+    return $json ? json_decode($this->_response) : $this->_response;
   }
 }
