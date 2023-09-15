@@ -347,6 +347,14 @@ else if (is_null($user->public))
                       <td><?php echo MAGNET_DESCRIPTION_MIN_LENGTH ?>-<?php echo MAGNET_DESCRIPTION_MAX_LENGTH ?></td>
                     </tr>
                     <tr>
+                      <td><?php echo _('Keywords long, chars, quantity') ?></td>
+                      <td>
+                        <?php echo MAGNET_KT_MIN_LENGTH ?>-<?php echo MAGNET_KT_MAX_LENGTH ?>
+                        /
+                        <?php echo MAGNET_KT_MIN_QUANTITY ?>-<?php echo MAGNET_KT_MAX_QUANTITY ?>
+                      </td>
+                    </tr>
+                    <tr>
                       <td class="padding-y-8 border-bottom-default text-right" colspan="2">
                         <?php echo _('Comments') ?>
                       </td>

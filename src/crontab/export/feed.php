@@ -72,12 +72,25 @@ try
 
         'MAGNET_TITLE_MIN_LENGTH'                  => (int) MAGNET_TITLE_MIN_LENGTH,
         'MAGNET_TITLE_MAX_LENGTH'                  => (int) MAGNET_TITLE_MAX_LENGTH,
+        'MAGNET_TITLE_REGEX'                       => (string) MAGNET_TITLE_REGEX,
 
         'MAGNET_PREVIEW_MIN_LENGTH'                => (int) MAGNET_PREVIEW_MIN_LENGTH,
         'MAGNET_PREVIEW_MAX_LENGTH'                => (int) MAGNET_PREVIEW_MAX_LENGTH,
+        'MAGNET_PREVIEW_REGEX'                     => (string) MAGNET_PREVIEW_REGEX,
 
         'MAGNET_DESCRIPTION_MIN_LENGTH'            => (int) MAGNET_DESCRIPTION_MIN_LENGTH,
         'MAGNET_DESCRIPTION_MAX_LENGTH'            => (int) MAGNET_DESCRIPTION_MAX_LENGTH,
+        'MAGNET_DESCRIPTION_REGEX'                 => (string) MAGNET_DESCRIPTION_REGEX,
+
+        'MAGNET_DN_MIN_LENGTH'                     => (int) MAGNET_DN_MIN_LENGTH,
+        'MAGNET_DN_MAX_LENGTH'                     => (int) MAGNET_DN_MAX_LENGTH,
+        'MAGNET_DN_REGEX'                          => (string) MAGNET_DN_REGEX,
+
+        'MAGNET_KT_MIN_LENGTH'                     => (int) MAGNET_KT_MIN_LENGTH,
+        'MAGNET_KT_MAX_LENGTH'                     => (int) MAGNET_KT_MAX_LENGTH,
+        'MAGNET_KT_MIN_QUANTITY'                   => (int) MAGNET_KT_MIN_QUANTITY,
+        'MAGNET_KT_MAX_QUANTITY'                   => (int) MAGNET_KT_MAX_QUANTITY,
+        'MAGNET_KT_REGEX'                          => (string) MAGNET_KT_REGEX,
 
         'MAGNET_COMMENT_DEFAULT_APPROVED'          => (bool) MAGNET_COMMENT_DEFAULT_APPROVED,
         'MAGNET_COMMENT_DEFAULT_PUBLIC'            => (bool) MAGNET_COMMENT_DEFAULT_PUBLIC,
