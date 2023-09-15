@@ -109,6 +109,15 @@ define('MAGNET_KT_REGEX', '/[\w]+/ui');
 define('MAGNET_KT_MIN_QUANTITY', 0);
 define('MAGNET_KT_MAX_QUANTITY', 10);
 
+define('MAGNET_TR_MIN_QUANTITY', 1);
+define('MAGNET_TR_MAX_QUANTITY', 50);
+
+define('MAGNET_AS_MIN_QUANTITY', 0);
+define('MAGNET_AS_MAX_QUANTITY', 50);
+
+define('MAGNET_WS_MIN_QUANTITY', 0);
+define('MAGNET_WS_MAX_QUANTITY', 50);
+
 define('MAGNET_STOP_WORDS_SIMILAR',
   [
     'series',

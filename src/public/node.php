@@ -355,6 +355,24 @@ else if (is_null($user->public))
                       </td>
                     </tr>
                     <tr>
+                      <td><?php echo _('TR, quantity') ?></td>
+                      <td>
+                        <?php echo MAGNET_TR_MIN_QUANTITY ?>-<?php echo MAGNET_TR_MAX_QUANTITY ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('AS, quantity') ?></td>
+                      <td>
+                        <?php echo MAGNET_AS_MIN_QUANTITY ?>-<?php echo MAGNET_AS_MAX_QUANTITY ?>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><?php echo _('WS, quantity') ?></td>
+                      <td>
+                        <?php echo MAGNET_WS_MIN_QUANTITY ?>-<?php echo MAGNET_WS_MAX_QUANTITY ?>
+                      </td>
+                    </tr>
+                    <tr>
                       <td class="padding-y-8 border-bottom-default text-right" colspan="2">
                         <?php echo _('Comments') ?>
                       </td>

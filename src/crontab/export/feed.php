@@ -92,6 +92,15 @@ try
         'MAGNET_KT_MAX_QUANTITY'                   => (int) MAGNET_KT_MAX_QUANTITY,
         'MAGNET_KT_REGEX'                          => (string) MAGNET_KT_REGEX,
 
+        'MAGNET_TR_MIN_QUANTITY'                   => (int) MAGNET_TR_MIN_QUANTITY,
+        'MAGNET_TR_MAX_QUANTITY'                   => (int) MAGNET_TR_MAX_QUANTITY,
+
+        'MAGNET_AS_MIN_QUANTITY'                   => (int) MAGNET_AS_MIN_QUANTITY,
+        'MAGNET_AS_MAX_QUANTITY'                   => (int) MAGNET_AS_MAX_QUANTITY,
+
+        'MAGNET_WS_MIN_QUANTITY'                   => (int) MAGNET_WS_MIN_QUANTITY,
+        'MAGNET_WS_MAX_QUANTITY'                   => (int) MAGNET_WS_MAX_QUANTITY,
+
         'MAGNET_COMMENT_DEFAULT_APPROVED'          => (bool) MAGNET_COMMENT_DEFAULT_APPROVED,
         'MAGNET_COMMENT_DEFAULT_PUBLIC'            => (bool) MAGNET_COMMENT_DEFAULT_PUBLIC,
         'MAGNET_COMMENT_DEFAULT_PUBLIC'            => (bool) MAGNET_COMMENT_DEFAULT_PUBLIC,
