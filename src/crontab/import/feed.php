@@ -87,9 +87,10 @@ try
         foreach (@json_decode(@file_get_contents($manifest->export->users)) as $remoteUser)
         {
           // Validate required fields
-          if (!isset($remoteUser->address)     || !preg_match(YGGDRASIL_HOST_REGEX, $remoteUser->address) ||
-              !isset($remoteUser->timeAdded)   || !is_int($remoteUser->timeAdded)                         ||
-              !isset($remoteUser->timeUpdated) || !is_int($remoteUser->timeUpdated)                       ||
+          if (!isset($remoteUser->userId)      || !is_int($remoteUser->userId)      ||
+              !isset($remoteUser->address)     || !is_string($remoteUser->address)  ||
+              !isset($remoteUser->timeAdded)   || !is_int($remoteUser->timeAdded)   ||
+              !isset($remoteUser->timeUpdated) || !is_int($remoteUser->timeUpdated) ||
               !isset($remoteUser->approved)    || !is_bool($remoteUser->approved))
           {
             continue;
@@ -173,7 +174,8 @@ try
           foreach (@json_decode(@file_get_contents($manifest->export->magnets)) as $remoteMagnet)
           {
             // Validate required fields by protocol
-            if (!isset($remoteMagnet->userId)      || !is_int($remoteMagnet->userId)                                        ||
+            if (!isset($remoteMagnet->magnetId)    || !is_int($remoteMagnet->magnetId)                                      ||
+                !isset($remoteMagnet->userId)      || !is_int($remoteMagnet->userId)                                        ||
                                                       !isset($aliasUserId[$remoteMagnet->userId])                           ||
                                                       !$db->getUser($aliasUserId[$remoteMagnet->userId])                    ||
 
