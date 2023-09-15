@@ -27,7 +27,7 @@ class Valid
       return false;
     }
 
-    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
+    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $value)))
     {
       array_push(
         self::$_error,
