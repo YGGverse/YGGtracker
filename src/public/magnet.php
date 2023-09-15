@@ -55,10 +55,34 @@ else
   $accessRead = ($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST) || ($magnet->public && $magnet->approved));
   $accessEdit = ($user->address == $db->getUser($magnet->userId)->address || in_array($user->address, MODERATOR_IP_LIST));
 
-  // Update magnet viwed
+  // Update magnet viewed
   if ($accessRead)
   {
-    $db->addMagnetView($magnet->magnetId, $userId, time());
+    if ($magnetViewId = $db->addMagnetView($magnet->magnetId, $userId, time()))
+    {
+      // Push event to other nodes
+      if (API_EXPORT_ENABLED &&
+          API_EXPORT_PUSH_ENABLED &&
+          API_EXPORT_USERS_ENABLED &&
+          API_EXPORT_MAGNETS_ENABLED &&
+          API_EXPORT_MAGNET_VIEWS_ENABLED)
+        {
+        if (!$memoryApiExportPush = $memory->get('api.export.push'))
+        {
+          $memoryApiExportPush = [];
+        }
+
+        $memoryApiExportPush[] = (object)
+        [
+          'time'         => time(),
+          'userId'       => $user->userId,
+          'magnetId'     => $magnet->magnetId,
+          'magnetViewId' => $magnetViewId
+        ];
+
+        $memory->set('api.export.push', $memoryApiExportPush, 3600);
+      }
+    }
   }
 
   // Keywords
