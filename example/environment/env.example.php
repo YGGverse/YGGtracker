@@ -145,7 +145,9 @@ define('NODE_RULE_SUBJECT', 'Common');
 define('NODE_RULE_LANGUAGES', 'All');
 
 // API
-define('API_VERSION', 1);
+define('API_VERSION', '1.0.0');
+
+define('API_USER_AGENT', WEBSITE_NAME);
 
 /// Export
 define('API_EXPORT_ENABLED', true);

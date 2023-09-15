@@ -6,8 +6,8 @@ class Curl
   private $_response;
 
   public function __construct(string $url,
-                              array  $post = [],
                               string $userAgent = 'YGGtracker',
+                              array  $post = [],
                               int    $connectTimeout = 10,
                               bool   $header = false,
                               bool   $followLocation = false,
@@ -16,6 +16,11 @@ class Curl
                               bool   $sslVerifyPeer = false)
   {
     $this->_connection = curl_init($url);
+
+    if ($userAgent)
+    {
+      curl_setopt($this->_connection, CURLOPT_USERAGENT, $userAgent);
+    }
 
     if (!empty($post))
     {
@@ -37,11 +42,6 @@ class Curl
     curl_setopt($this->_connection, CURLOPT_TIMEOUT, $connectTimeout);
     curl_setopt($this->_connection, CURLOPT_SSL_VERIFYHOST, $sslVerifyHost);
     curl_setopt($this->_connection, CURLOPT_SSL_VERIFYPEER, $sslVerifyPeer);
-
-    if ($userAgent)
-    {
-      curl_setopt($this->_connection, CURLOPT_USERAGENT, $userAgent);
-    }
 
     $this->_response = curl_exec($this->_connection);
   }

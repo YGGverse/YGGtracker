@@ -339,7 +339,7 @@ if (API_EXPORT_PUSH_ENABLED)
         // Send push request
         $debug['result'][$manifest->import->push]['request'] = $request;
 
-        $curl = new Curl($manifest->import->push, $request);
+        $curl = new Curl($manifest->import->push, API_USER_AGENT, $request);
 
         if ($response = $curl->getResponse())
         {

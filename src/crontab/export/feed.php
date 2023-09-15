@@ -47,7 +47,6 @@ try
     // Manifest
     $manifest =
     [
-      'version'  => API_VERSION,
       'updated'  => time(),
 
       'settings' => (object)
@@ -108,6 +107,9 @@ try
         'MAGNET_COMMENT_MAX_LENGTH'                => (int)  MAGNET_COMMENT_MAX_LENGTH,
 
         'MAGNET_STOP_WORDS_SIMILAR'                => (object) MAGNET_STOP_WORDS_SIMILAR,
+
+        'API_VERSION'                              => (string) API_VERSION,
+        'API_USER_AGENT'                           => (string) API_USER_AGENT,
 
         'API_EXPORT_ENABLED'                       => (bool) API_EXPORT_ENABLED,
         'API_EXPORT_PUSH_ENABLED'                  => (bool) API_EXPORT_PUSH_ENABLED,
