@@ -256,9 +256,9 @@ class Valid
   }
 
   // Magnet
-  public static function magnet(mixed $data) : bool
+  public static function magnet(mixed $value) : bool
   {
-    if (!is_object($data))
+    if (!is_object($value))
     {
       array_push(
         self::$_error,
