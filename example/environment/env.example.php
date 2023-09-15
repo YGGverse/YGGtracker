@@ -100,7 +100,7 @@ define('MAGNET_DESCRIPTION_MAX_LENGTH', 10000);
 define('MAGNET_DESCRIPTION_REGEX', '/.*/ui');
 
 define('MAGNET_DN_MIN_LENGTH', 10);
-define('MAGNET_DN_MAX_LENGTH', 140);
+define('MAGNET_DN_MAX_LENGTH', 255);
 define('MAGNET_DN_REGEX', '/.*/ui');
 
 define('MAGNET_KT_MIN_LENGTH', 10);
