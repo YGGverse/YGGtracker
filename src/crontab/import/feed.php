@@ -409,6 +409,12 @@ try
                 continue;
               }
 
+              // Aliases check
+              if (!isset($aliasMagnetId[$remoteMagnetDownload->magnetId]) || !isset($aliasUserId[$remoteMagnetDownload->userId]))
+              {
+                continue;
+              }
+
               // Add new magnet download if not exist by timestamp added for this user
               if (!$db->findMagnetDownload($aliasMagnetId[$remoteMagnetDownload->magnetId],
                                            $aliasUserId[$remoteMagnetDownload->userId],
@@ -439,6 +445,12 @@ try
                 continue;
               }
 
+              // Aliases check
+              if (!isset($aliasMagnetId[$remoteMagnetView->magnetId]) || !isset($aliasUserId[$remoteMagnetView->userId]))
+              {
+                continue;
+              }
+
               // Add new magnet view if not exist by timestamp added for this user
               if (!$db->findMagnetView($aliasMagnetId[$remoteMagnetView->magnetId],
                                        $aliasUserId[$remoteMagnetView->userId],
@@ -465,6 +477,12 @@ try
             {
               // Validate
               if (!Valid::magnetStar($remoteMagnetStar))
+              {
+                continue;
+              }
+
+              // Aliases check
+              if (!isset($aliasMagnetId[$remoteMagnetStar->magnetId]) || !isset($aliasUserId[$remoteMagnetStar->userId]))
               {
                 continue;
               }
