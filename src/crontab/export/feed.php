@@ -52,40 +52,63 @@ try
 
       'settings' => (object)
       [
-        'YGGDRASIL_HOST_REGEX'                 => YGGDRASIL_HOST_REGEX,
+        'YGGDRASIL_HOST_REGEX'                     => (string) YGGDRASIL_HOST_REGEX,
 
-        'NODE_RULE_SUBJECT'                    => NODE_RULE_SUBJECT,
-        'NODE_RULE_LANGUAGES'                  => NODE_RULE_LANGUAGES,
+        'NODE_RULE_SUBJECT'                        => (string) NODE_RULE_SUBJECT,
+        'NODE_RULE_LANGUAGES'                      => (string) NODE_RULE_LANGUAGES,
 
-        'USER_DEFAULT_APPROVED'                => USER_DEFAULT_APPROVED,
-        'USER_AUTO_APPROVE_ON_MAGNET_APPROVE'  => USER_AUTO_APPROVE_ON_MAGNET_APPROVE,
-        'USER_AUTO_APPROVE_ON_COMMENT_APPROVE' => USER_AUTO_APPROVE_ON_COMMENT_APPROVE,
-        'USER_DEFAULT_IDENTICON'               => USER_DEFAULT_IDENTICON,
-        'USER_IDENTICON_FIELD'                 => USER_IDENTICON_FIELD,
+        'USER_DEFAULT_APPROVED'                    => (bool)   USER_DEFAULT_APPROVED,
+        'USER_AUTO_APPROVE_ON_MAGNET_APPROVE'      => (bool)   USER_AUTO_APPROVE_ON_MAGNET_APPROVE,
+        'USER_AUTO_APPROVE_ON_COMMENT_APPROVE'     => (bool)   USER_AUTO_APPROVE_ON_COMMENT_APPROVE,
+        'USER_DEFAULT_IDENTICON'                   => (string) USER_DEFAULT_IDENTICON,
+        'USER_IDENTICON_FIELD'                     => (string) USER_IDENTICON_FIELD,
 
-        'MAGNET_DEFAULT_APPROVED'              => MAGNET_DEFAULT_APPROVED,
-        'MAGNET_DEFAULT_PUBLIC'                => MAGNET_DEFAULT_PUBLIC,
-        'MAGNET_DEFAULT_COMMENTS'              => MAGNET_DEFAULT_COMMENTS,
-        'MAGNET_DEFAULT_SENSITIVE'             => MAGNET_DEFAULT_SENSITIVE,
+        'MAGNET_DEFAULT_APPROVED'                  => (bool) MAGNET_DEFAULT_APPROVED,
+        'MAGNET_DEFAULT_PUBLIC'                    => (bool) MAGNET_DEFAULT_PUBLIC,
+        'MAGNET_DEFAULT_COMMENTS'                  => (bool) MAGNET_DEFAULT_COMMENTS,
+        'MAGNET_DEFAULT_SENSITIVE'                 => (bool) MAGNET_DEFAULT_SENSITIVE,
 
-        'MAGNET_EDITOR_LOCK_TIMEOUT'           => MAGNET_EDITOR_LOCK_TIMEOUT,
+        'MAGNET_EDITOR_LOCK_TIMEOUT'               => (int) MAGNET_EDITOR_LOCK_TIMEOUT,
 
-        'MAGNET_TITLE_MIN_LENGTH'              => MAGNET_TITLE_MIN_LENGTH,
-        'MAGNET_TITLE_MAX_LENGTH'              => MAGNET_TITLE_MAX_LENGTH,
+        'MAGNET_TITLE_MIN_LENGTH'                  => (int) MAGNET_TITLE_MIN_LENGTH,
+        'MAGNET_TITLE_MAX_LENGTH'                  => (int) MAGNET_TITLE_MAX_LENGTH,
 
-        'MAGNET_PREVIEW_MIN_LENGTH'            => MAGNET_PREVIEW_MIN_LENGTH,
-        'MAGNET_PREVIEW_MAX_LENGTH'            => MAGNET_PREVIEW_MAX_LENGTH,
+        'MAGNET_PREVIEW_MIN_LENGTH'                => (int) MAGNET_PREVIEW_MIN_LENGTH,
+        'MAGNET_PREVIEW_MAX_LENGTH'                => (int) MAGNET_PREVIEW_MAX_LENGTH,
 
-        'MAGNET_DESCRIPTION_MIN_LENGTH'        => MAGNET_DESCRIPTION_MIN_LENGTH,
-        'MAGNET_DESCRIPTION_MAX_LENGTH'        => MAGNET_DESCRIPTION_MAX_LENGTH,
+        'MAGNET_DESCRIPTION_MIN_LENGTH'            => (int) MAGNET_DESCRIPTION_MIN_LENGTH,
+        'MAGNET_DESCRIPTION_MAX_LENGTH'            => (int) MAGNET_DESCRIPTION_MAX_LENGTH,
 
-        'MAGNET_COMMENT_DEFAULT_APPROVED'      => MAGNET_COMMENT_DEFAULT_APPROVED,
-        'MAGNET_COMMENT_DEFAULT_PUBLIC'        => MAGNET_COMMENT_DEFAULT_PUBLIC,
-        'MAGNET_COMMENT_DEFAULT_PUBLIC'        => MAGNET_COMMENT_DEFAULT_PUBLIC,
-        'MAGNET_COMMENT_MIN_LENGTH'            => MAGNET_COMMENT_MIN_LENGTH,
-        'MAGNET_COMMENT_MAX_LENGTH'            => MAGNET_COMMENT_MAX_LENGTH,
+        'MAGNET_COMMENT_DEFAULT_APPROVED'          => (bool) MAGNET_COMMENT_DEFAULT_APPROVED,
+        'MAGNET_COMMENT_DEFAULT_PUBLIC'            => (bool) MAGNET_COMMENT_DEFAULT_PUBLIC,
+        'MAGNET_COMMENT_DEFAULT_PUBLIC'            => (bool) MAGNET_COMMENT_DEFAULT_PUBLIC,
+        'MAGNET_COMMENT_MIN_LENGTH'                => (int)  MAGNET_COMMENT_MIN_LENGTH,
+        'MAGNET_COMMENT_MAX_LENGTH'                => (int)  MAGNET_COMMENT_MAX_LENGTH,
 
-        'MAGNET_STOP_WORDS_SIMILAR'            => (object) MAGNET_STOP_WORDS_SIMILAR,
+        'MAGNET_STOP_WORDS_SIMILAR'                => (object) MAGNET_STOP_WORDS_SIMILAR,
+
+        'API_EXPORT_ENABLED'                       => (bool) API_EXPORT_ENABLED,
+        'API_EXPORT_PUSH_ENABLED'                  => (bool) API_EXPORT_PUSH_ENABLED,
+        'API_EXPORT_USERS_ENABLED'                 => (bool) API_EXPORT_USERS_ENABLED,
+        'API_EXPORT_MAGNETS_ENABLED'               => (bool) API_EXPORT_MAGNETS_ENABLED,
+        'API_EXPORT_MAGNET_DOWNLOADS_ENABLED'      => (bool) API_EXPORT_MAGNET_DOWNLOADS_ENABLED,
+        'API_EXPORT_MAGNET_COMMENTS_ENABLED'       => (bool) API_EXPORT_MAGNET_COMMENTS_ENABLED,
+        'API_EXPORT_MAGNET_STARS_ENABLED'          => (bool) API_EXPORT_MAGNET_STARS_ENABLED,
+        'API_EXPORT_MAGNET_STARS_ENABLED'          => (bool) API_EXPORT_MAGNET_STARS_ENABLED,
+        'API_EXPORT_MAGNET_VIEWS_ENABLED'          => (bool) API_EXPORT_MAGNET_VIEWS_ENABLED,
+
+        'API_IMPORT_ENABLED'                       => (bool) API_IMPORT_ENABLED,
+        'API_IMPORT_PUSH_ENABLED'                  => (bool) API_IMPORT_PUSH_ENABLED,
+        'API_IMPORT_USERS_ENABLED'                 => (bool) API_IMPORT_USERS_ENABLED,
+
+        'API_IMPORT_USERS_APPROVED_ONLY'           => (bool) API_IMPORT_USERS_APPROVED_ONLY,
+        'API_IMPORT_MAGNETS_ENABLED'               => (bool) API_IMPORT_MAGNETS_ENABLED,
+        'API_IMPORT_MAGNETS_APPROVED_ONLY'         => (bool) API_IMPORT_MAGNETS_APPROVED_ONLY,
+        'API_IMPORT_MAGNET_DOWNLOADS_ENABLED'      => (bool) API_IMPORT_MAGNET_DOWNLOADS_ENABLED,
+        'API_IMPORT_MAGNET_COMMENTS_ENABLED'       => (bool) API_IMPORT_MAGNET_COMMENTS_ENABLED,
+        'API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY' => (bool) API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY,
+        'API_IMPORT_MAGNET_STARS_ENABLED'          => (bool) API_IMPORT_MAGNET_STARS_ENABLED,
+        'API_IMPORT_MAGNET_VIEWS_ENABLED'          => (bool) API_IMPORT_MAGNET_VIEWS_ENABLED,
       ],
       'totals' => (object)
       [
@@ -120,7 +143,11 @@ try
           'local'       => $db->findMagnetViewsTotalByUsersPublic(false),
         ],
       ],
-      'feeds' => (object)
+      'import' => (object)
+      [
+        'push' => API_IMPORT_PUSH_ENABLED ? sprintf('%s/api/push.php', WEBSITE_URL) : false,
+      ],
+      'export' => (object)
       [
         'users'           => API_EXPORT_USERS_ENABLED            ? sprintf('%s/api/users.json', WEBSITE_URL)     : false,
         'magnets'         => API_EXPORT_MAGNETS_ENABLED          ? sprintf('%s/api/magnets.json', WEBSITE_URL)   : false,
@@ -129,8 +156,8 @@ try
         'magnetStars'     => API_EXPORT_MAGNET_STARS_ENABLED     ? sprintf('%s/api/magnetStars.json', WEBSITE_URL)     : false,
         'magnetViews'     => API_EXPORT_MAGNET_VIEWS_ENABLED     ? sprintf('%s/api/magnetViews.json', WEBSITE_URL)     : false,
       ],
-      'trackers'  => (object) json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
-      'nodes'     => (object) json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
+      'trackers' => (object) json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
+      'nodes'    => (object) json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
     ];
 
     /// Dump feed

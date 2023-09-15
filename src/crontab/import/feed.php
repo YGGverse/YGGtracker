@@ -39,7 +39,7 @@ try
     if ($manifest = @json_decode(@file_get_contents($node->manifest)))
     {
       // Feed channel exists
-      if (empty($manifest->feeds))
+      if (empty($manifest->export))
       {
         continue;
       }
@@ -47,7 +47,7 @@ try
       // Users
       if (API_IMPORT_USERS_ENABLED)
       {
-        if (empty($manifest->feeds->users))
+        if (empty($manifest->export->users))
         {
           continue;
         }
@@ -55,7 +55,7 @@ try
         // Init alias registry for this host
         $aliasUserId = [];
 
-        foreach (@json_decode(@file_get_contents($manifest->feeds->users)) as $remoteUser)
+        foreach (@json_decode(@file_get_contents($manifest->export->users)) as $remoteUser)
         {
           // Validate required fields
           if (!isset($remoteUser->address)     || !preg_match(YGGDRASIL_HOST_REGEX, $remoteUser->address) ||
@@ -133,7 +133,7 @@ try
         // Magnets
         if (API_IMPORT_MAGNETS_ENABLED)
         {
-          if (empty($manifest->feeds->magnets))
+          if (empty($manifest->export->magnets))
           {
             continue;
           }
@@ -141,7 +141,7 @@ try
           // Init alias registry for this host
           $aliasMagnetId = [];
 
-          foreach (@json_decode(@file_get_contents($manifest->feeds->magnets)) as $remoteMagnet)
+          foreach (@json_decode(@file_get_contents($manifest->export->magnets)) as $remoteMagnet)
           {
             // Validate required fields by protocol
             if (!isset($remoteMagnet->userId)      || !is_int($remoteMagnet->userId)                                        ||
@@ -383,12 +383,12 @@ try
           // Magnet comments
           if (API_IMPORT_MAGNET_COMMENTS_ENABLED)
           {
-            if (empty($manifest->feeds->magnetComments))
+            if (empty($manifest->export->magnetComments))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetComments)) as $remoteMagnetComment)
+            foreach (@json_decode(@file_get_contents($manifest->export->magnetComments)) as $remoteMagnetComment)
             {
               // Validate
               if (
@@ -442,12 +442,12 @@ try
           // Magnet downloads
           if (API_IMPORT_MAGNET_DOWNLOADS_ENABLED)
           {
-            if (empty($manifest->feeds->magnetDownloads))
+            if (empty($manifest->export->magnetDownloads))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetDownloads)) as $remoteMagnetDownload)
+            foreach (@json_decode(@file_get_contents($manifest->export->magnetDownloads)) as $remoteMagnetDownload)
             {
               // Validate
               if (
@@ -476,12 +476,12 @@ try
           // Magnet views
           if (API_IMPORT_MAGNET_VIEWS_ENABLED)
           {
-            if (empty($manifest->feeds->magnetViews))
+            if (empty($manifest->export->magnetViews))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetViews)) as $remoteMagnetView)
+            foreach (@json_decode(@file_get_contents($manifest->export->magnetViews)) as $remoteMagnetView)
             {
               // Validate
               if (
@@ -510,12 +510,12 @@ try
           // Magnet stars
           if (API_IMPORT_MAGNET_STARS_ENABLED)
           {
-            if (empty($manifest->feeds->magnetStars))
+            if (empty($manifest->export->magnetStars))
             {
               continue;
             }
 
-            foreach (@json_decode(@file_get_contents($manifest->feeds->magnetStars)) as $remoteMagnetStar)
+            foreach (@json_decode(@file_get_contents($manifest->export->magnetStars)) as $remoteMagnetStar)
             {
               // Validate
               if (
