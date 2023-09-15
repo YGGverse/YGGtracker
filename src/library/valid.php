@@ -2,11 +2,29 @@
 
 class Valid
 {
+  private static $_error = [];
+
+  // Common
+  public static function getError()
+  {
+    return self::$_error;
+  }
+
+  public static function setError(array $value)
+  {
+    self::$_error = $value;
+  }
+
   // User
   public static function user(mixed $value)
   {
     if (!is_object($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user data type')
+      );
+
       return false;
     }
 
@@ -19,6 +37,11 @@ class Valid
 
         (isset($value->public)      && !self::userPublic($value->public)))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user data protocol')
+      );
+
       return false;
     }
 
@@ -29,6 +52,11 @@ class Valid
   {
     if (!is_int($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid userId data type')
+      );
+
       return false;
     }
 
@@ -39,11 +67,24 @@ class Valid
   {
     if (!is_string($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user address data type')
+      );
+
       return false;
     }
 
     if (!preg_match(YGGDRASIL_HOST_REGEX, $value))
     {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('User address format does not match condition "%s"'),
+          YGGDRASIL_HOST_REGEX
+        )
+      );
+
       return false;
     }
 
@@ -52,8 +93,23 @@ class Valid
 
   public static function userTimeAdded(mixed $value)
   {
-    if (!is_int($value) || $value > time() || $value < 0)
+    if (!is_int($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user timeAdded data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        self::$_error,
+        _('User timeAdded out of range')
+      );
+
       return false;
     }
 
@@ -62,8 +118,23 @@ class Valid
 
   public static function userTimeUpdated(mixed $value)
   {
-    if (!is_int($value) || $value > time() || $value < 0)
+    if (!(is_int($value) || is_bool($value)))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user timeUpdated data type')
+      );
+
+      return false;
+    }
+
+    if (is_int($value) && ($value > time() || $value < 0))
+    {
+      array_push(
+        self::$_error,
+        _('User timeUpdated out of range')
+      );
+
       return false;
     }
 
@@ -74,6 +145,11 @@ class Valid
   {
     if (!is_bool($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user approved data type')
+      );
+
       return false;
     }
 
@@ -84,6 +160,11 @@ class Valid
   {
     if (!is_bool($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid user public data type')
+      );
+
       return false;
     }
 
@@ -95,6 +176,11 @@ class Valid
   {
     if (!is_object($data))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet data type')
+      );
+
       return false;
     }
 
@@ -125,8 +211,13 @@ class Valid
         !isset($value->as)          || !self::magnetAs($value->as)                     ||
         !isset($value->xs)          || !self::magnetWs($value->xs)                     ||
 
-        (isset($value->public)      && !self::userPublic($value->public)))
+        (isset($value->public)      && !self::magnetPublic($value->public)))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet data protocol')
+      );
+
       return false;
     }
 
@@ -137,6 +228,11 @@ class Valid
   {
     if (!is_int($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnetId data type')
+      );
+
       return false;
     }
 
@@ -145,11 +241,41 @@ class Valid
 
   public static function magnetTitle(mixed $value)
   {
-    if (!is_string($value) ||
-        !preg_match(MAGNET_TITLE_REGEX, $value) ||
-         mb_strlen($value) < MAGNET_TITLE_MIN_LENGTH ||
-         mb_strlen($value) > MAGNET_TITLE_MAX_LENGTH)
+    if (!is_string($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet title data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(MAGNET_TITLE_REGEX, $value))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet title format does not match condition "%s"'),
+          MAGNET_TITLE_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < MAGNET_TITLE_MIN_LENGTH ||
+        mb_strlen($value) > MAGNET_TITLE_MAX_LENGTH)
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet title out of %s-%s chars range'),
+          MAGNET_TITLE_MIN_LENGTH,
+          MAGNET_TITLE_MAX_LENGTH
+        )
+      );
+
       return false;
     }
 
@@ -158,11 +284,41 @@ class Valid
 
   public static function magnetPreview(mixed $value)
   {
-    if (!is_string($value) ||
-        !preg_match(MAGNET_PREVIEW_REGEX, $value) ||
-         mb_strlen($value) < MAGNET_PREVIEW_MIN_LENGTH ||
-         mb_strlen($value) > MAGNET_PREVIEW_MAX_LENGTH)
+    if (!is_string($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet preview data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(MAGNET_PREVIEW_REGEX, $value))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet preview format does not match condition "%s"'),
+          MAGNET_PREVIEW_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < MAGNET_PREVIEW_MIN_LENGTH ||
+        mb_strlen($value) > MAGNET_PREVIEW_MAX_LENGTH)
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet preview out of %s-%s chars range'),
+          MAGNET_PREVIEW_MIN_LENGTH,
+          MAGNET_PREVIEW_MAX_LENGTH
+        )
+      );
+
       return false;
     }
 
@@ -171,11 +327,41 @@ class Valid
 
   public static function magnetDescription(mixed $value)
   {
-    if (!is_string($value) ||
-        !preg_match(MAGNET_DESCRIPTION_REGEX, $value) ||
-         mb_strlen($value) >= MAGNET_DESCRIPTION_MIN_LENGTH ||
-         mb_strlen($value) <= MAGNET_DESCRIPTION_MAX_LENGTH)
+    if (!is_string($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet description data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(MAGNET_DESCRIPTION_REGEX, $value))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet description format does not match condition "%s"'),
+          MAGNET_DESCRIPTION_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < MAGNET_DESCRIPTION_MIN_LENGTH ||
+        mb_strlen($value) > MAGNET_DESCRIPTION_MAX_LENGTH)
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet description out of %s-%s chars range'),
+          MAGNET_DESCRIPTION_MIN_LENGTH,
+          MAGNET_DESCRIPTION_MAX_LENGTH
+        )
+      );
+
       return false;
     }
 
@@ -186,6 +372,11 @@ class Valid
   {
     if (!is_bool($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comments data type')
+      );
+
       return false;
     }
 
@@ -196,6 +387,11 @@ class Valid
   {
     if (!is_bool($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet public data type')
+      );
+
       return false;
     }
 
@@ -206,6 +402,11 @@ class Valid
   {
     if (!is_bool($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet approved data type')
+      );
+
       return false;
     }
 
@@ -216,6 +417,11 @@ class Valid
   {
     if (!is_bool($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet sensitive data type')
+      );
+
       return false;
     }
 
@@ -224,8 +430,23 @@ class Valid
 
   public static function magnetTimeAdded(mixed $value)
   {
-    if (!is_int($value) || $value > time() || $value < 0)
+    if (!is_int($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet timeAdded data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        self::$_error,
+        _('Magnet timeAdded out of range')
+      );
+
       return false;
     }
 
@@ -234,8 +455,23 @@ class Valid
 
   public static function magnetTimeUpdated(mixed $value)
   {
-    if (!is_int($value) || $value > time() || $value < 0)
+    if (!(is_int($value) || is_bool($value)))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet timeUpdated data type')
+      );
+
+      return false;
+    }
+
+    if (is_int($value) && ($value > time() || $value < 0))
+    {
+      array_push(
+        self::$_error,
+        _('Magnet timeUpdated out of range')
+      );
+
       return false;
     }
 
@@ -244,11 +480,41 @@ class Valid
 
   public static function magnetDn(mixed $value)
   {
-    if (!is_string($value) ||
-        !preg_match(MAGNET_DN_REGEX, $value) ||
-         mb_strlen($value) < MAGNET_DN_MIN_LENGTH ||
-         mb_strlen($value) > MAGNET_DN_MAX_LENGTH)
+    if (!is_string($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet display name data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(MAGNET_DN_REGEX, $value))
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet display name format does not match condition "%s"'),
+          MAGNET_DN_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < MAGNET_DN_MIN_LENGTH ||
+        mb_strlen($value) > MAGNET_DN_MAX_LENGTH)
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet display name out of %s-%s chars range'),
+          MAGNET_DN_MIN_LENGTH,
+          MAGNET_DN_MAX_LENGTH
+        )
+      );
+
       return false;
     }
 
@@ -259,6 +525,11 @@ class Valid
   {
     if (!(is_int($value) || is_float($value)))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet exact length data type')
+      );
+
       return false;
     }
 
@@ -269,6 +540,11 @@ class Valid
   {
     if (!is_object($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet keyword data type')
+      );
+
       return false;
     }
 
@@ -276,11 +552,41 @@ class Valid
 
     foreach ($value as $kt)
     {
-      if (!is_string($kt) ||
-          !preg_match(MAGNET_KT_REGEX, $kt) ||
-           mb_strlen($value) < MAGNET_KT_MIN_LENGTH ||
-           mb_strlen($value) > MAGNET_KT_MAX_LENGTH)
+      if (!is_string($value))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet keyword value data type')
+        );
+
+        return false;
+      }
+
+      if (!preg_match(MAGNET_KT_REGEX, $value))
+      {
+        array_push(
+          self::$_error,
+          sprintf(
+            _('Magnet keyword format does not match condition "%s"'),
+            MAGNET_KT_REGEX
+          )
+        );
+
+        return false;
+      }
+
+      if (mb_strlen($value) < MAGNET_KT_MIN_LENGTH ||
+          mb_strlen($value) > MAGNET_KT_MAX_LENGTH)
+      {
+        array_push(
+          self::$_error,
+          sprintf(
+            _('Magnet keyword out of %s-%s chars range'),
+            MAGNET_KT_MIN_LENGTH,
+            MAGNET_KT_MAX_LENGTH
+          )
+        );
+
         return false;
       }
 
@@ -290,6 +596,15 @@ class Valid
     if ($total < MAGNET_KT_MIN_QUANTITY ||
         $total > MAGNET_KT_MAX_QUANTITY)
     {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet keywords quantity out of %s-%s range'),
+          MAGNET_KT_MIN_QUANTITY,
+          MAGNET_KT_MAX_QUANTITY
+        )
+      );
+
       return false;
     }
 
@@ -300,6 +615,11 @@ class Valid
   {
     if (!is_object($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet info hash data type')
+      );
+
       return false;
     }
 
@@ -307,11 +627,21 @@ class Valid
     {
       if (!(is_int($version) || is_float($version)))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet info hash version data type')
+        );
+
         return false;
       }
 
       if (!is_string($xt))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet info hash value data type')
+        );
+
         return false;
       }
 
@@ -321,6 +651,11 @@ class Valid
 
           if (!Yggverse\Parser\Magnet::isXTv1($xt))
           {
+            array_push(
+              self::$_error,
+              _('Invalid magnet info hash v1 value')
+            );
+
             return false;
           }
 
@@ -330,12 +665,22 @@ class Valid
 
           if (!Yggverse\Parser\Magnet::isXTv2($xt))
           {
+            array_push(
+              self::$_error,
+              _('Invalid magnet info hash v2 value')
+            );
+
             return false;
           }
 
         break;
 
         default:
+
+          array_push(
+            self::$_error,
+            _('Magnet info hash version not supported')
+          );
 
           return false;
       }
@@ -348,6 +693,11 @@ class Valid
   {
     if (!is_object($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet address tracker data type')
+      );
+
       return false;
     }
 
@@ -357,16 +707,34 @@ class Valid
     {
       if (!$url = Yggverse\Parser\Url::parse($tr))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet address tracker URL')
+        );
+
         return false;
       }
 
       if (empty($url->host->name))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet address tracker host name')
+        );
+
         return false;
       }
 
       if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
       {
+        array_push(
+          self::$_error,
+          sprintf(
+            _('Magnet address tracker format does not match condition "%s"'),
+            YGGDRASIL_HOST_REGEX
+          )
+        );
+
         return false;
       }
 
@@ -376,6 +744,15 @@ class Valid
     if ($total < MAGNET_TR_MIN_QUANTITY ||
         $total > MAGNET_TR_MAX_QUANTITY)
     {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet address trackers quantity out of %s-%s range'),
+          MAGNET_TR_MIN_QUANTITY,
+          MAGNET_TR_MAX_QUANTITY
+        )
+      );
+
       return false;
     }
 
@@ -386,6 +763,11 @@ class Valid
   {
     if (!is_object($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet acceptable source data type')
+      );
+
       return false;
     }
 
@@ -395,16 +777,34 @@ class Valid
     {
       if (!$url = Yggverse\Parser\Url::parse($as))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet acceptable source URL')
+        );
+
         return false;
       }
 
       if (empty($url->host->name))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet acceptable source host name')
+        );
+
         return false;
       }
 
       if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
       {
+        array_push(
+          self::$_error,
+          sprintf(
+            _('Magnet acceptable source format does not match condition "%s"'),
+            YGGDRASIL_HOST_REGEX
+          )
+        );
+
         return false;
       }
 
@@ -414,6 +814,15 @@ class Valid
     if ($total < MAGNET_AS_MIN_QUANTITY ||
         $total > MAGNET_AS_MAX_QUANTITY)
     {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet acceptable sources quantity out of %s-%s range'),
+          MAGNET_AS_MIN_QUANTITY,
+          MAGNET_AS_MAX_QUANTITY
+        )
+      );
+
       return false;
     }
 
@@ -424,6 +833,11 @@ class Valid
   {
     if (!is_object($value))
     {
+      array_push(
+        self::$_error,
+        _('Invalid magnet web seed data type')
+      );
+
       return false;
     }
 
@@ -433,16 +847,34 @@ class Valid
     {
       if (!$url = Yggverse\Parser\Url::parse($ws))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet web seed URL')
+        );
+
         return false;
       }
 
       if (empty($url->host->name))
       {
+        array_push(
+          self::$_error,
+          _('Invalid magnet web seed host name')
+        );
+
         return false;
       }
 
       if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $url->host->name)))
       {
+        array_push(
+          self::$_error,
+          sprintf(
+            _('Magnet web seed format does not match condition "%s"'),
+            YGGDRASIL_HOST_REGEX
+          )
+        );
+
         return false;
       }
 
@@ -452,9 +884,176 @@ class Valid
     if ($total < MAGNET_WS_MIN_QUANTITY ||
         $total > MAGNET_WS_MAX_QUANTITY)
     {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet web seeds quantity out of %s-%s range'),
+          MAGNET_WS_MIN_QUANTITY,
+          MAGNET_WS_MAX_QUANTITY
+        )
+      );
+
       return false;
     }
 
     return true;
   }
+
+  // Magnet comment
+  public static function magnetComment(mixed $value)
+  {
+    if (!is_object($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comment data type')
+      );
+
+      return false;
+    }
+
+    if (!isset($value->magnetCommentId)       || !self::magnetCommentId($value->magnetCommentId)   ||
+        !isset($value->magnetCommentIdParent) || !self::magnetCommentIdParent($value->value)       ||
+        !isset($value->magnetId)              || !self::magnetId($value->magnetId)                 ||
+        !isset($value->userId)                || !self::userId($value->userId)                     ||
+        !isset($value->timeAdded)             || !self::magnetCommentTimeAdded($value->timeAdded)  ||
+        !isset($value->approved)              || !self::magnetCommentApproved($value->approved)    ||
+        !isset($value->value)                 || !self::magnetCommentValue($value->value)          ||
+
+        (isset($value->public)                && !self::magnetCommentPublic($value->public)))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comment data protocol')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetCommentId(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnetCommentId data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetCommentIdParent(mixed $value)
+  {
+    if (!(is_bool($value) || is_int($value)))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet magnetCommentIdParent data type')
+      );
+
+      return false;
+    }
+
+    if (!self::magnetCommentId($value))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetCommentTimeAdded(mixed $value)
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comment timeAdded data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        self::$_error,
+        _('Magnet comment timeAdded out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetCommentApproved(mixed $value)
+  {
+    if (!is_bool($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comment approved data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetCommentPublic(mixed $value)
+  {
+    if (!is_bool($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comment public data type')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function magnetCommentValue(mixed $value)
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        self::$_error,
+        _('Invalid magnet comment value data type')
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < MAGNET_COMMENT_MIN_LENGTH ||
+        mb_strlen($value) > MAGNET_COMMENT_MAX_LENGTH)
+    {
+      array_push(
+        self::$_error,
+        sprintf(
+          _('Magnet comment value out of %s-%s chars range'),
+          MAGNET_COMMENT_MIN_LENGTH,
+          MAGNET_COMMENT_MAX_LENGTH
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  // Magnet download
+  // Magnet star
+  // Magnet view
 }
