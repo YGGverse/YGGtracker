@@ -132,7 +132,7 @@ git checkout -b my-pr-branch-name
 
 * [SVG icons](https://icons.getbootstrap.com)
 * [PHP Scrapper](https://github.com/medariox/scrapeer)
-* [Identicon](https://github.com/dmester/jdenticon-php)
+* [Identicons](https://github.com/dmester/jdenticon-php)
 
 #### Feedback
 
