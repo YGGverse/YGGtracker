@@ -70,7 +70,7 @@ class Valid
       return false;
     }
 
-    if (!self::host($url->host->name))
+    if (!self::host($url->host->name, $error))
     {
       array_push(
         $error,
@@ -101,13 +101,13 @@ class Valid
     }
 
     // Validate required fields
-    if (!isset($value->userId)      || !self::userId($value->userId)               ||
-        !isset($value->address)     || !self::userAddress($value->address)         ||
-        !isset($value->timeAdded)   || !self::userTimeAdded($value->timeAdded)     ||
-        !isset($value->timeUpdated) || !self::userTimeUpdated($value->timeUpdated) ||
-        !isset($value->approved)    || !self::userApproved($value->approved)       ||
+    if (!isset($value->userId)      || !self::userId($value->userId, $error)               ||
+        !isset($value->address)     || !self::userAddress($value->address, $error)         ||
+        !isset($value->timeAdded)   || !self::userTimeAdded($value->timeAdded, $error)     ||
+        !isset($value->timeUpdated) || !self::userTimeUpdated($value->timeUpdated, $error) ||
+        !isset($value->approved)    || !self::userApproved($value->approved, $error)       ||
 
-        (isset($value->public)      && !self::userPublic($value->public)))
+        (isset($value->public)      && !self::userPublic($value->public, $error)))
     {
       array_push(
         $error,
@@ -147,7 +147,7 @@ class Valid
       return false;
     }
 
-    if (!self::host($value))
+    if (!self::host($value, $error))
     {
       array_push(
         $error,
@@ -257,33 +257,33 @@ class Valid
     }
 
     // Validate required fields by protocol
-    if (!isset($value->userId)      || !self::userId($value->userId)                   ||
+    if (!isset($value->userId)      || !self::userId($value->userId, $error)                   ||
 
-        !isset($value->magnetId)    || !self::magnetId($value->magnetId)               ||
+        !isset($value->magnetId)    || !self::magnetId($value->magnetId, $error)               ||
 
 
-        !isset($value->title)       || !self::magnetTitle($value->title)               ||
-        !isset($value->preview)     || !self::magnetPreview($value->preview)           ||
-        !isset($value->description) || !self::magnetDescription($value->description)   ||
+        !isset($value->title)       || !self::magnetTitle($value->title, $error)               ||
+        !isset($value->preview)     || !self::magnetPreview($value->preview, $error)           ||
+        !isset($value->description) || !self::magnetDescription($value->description, $error)   ||
 
-        !isset($value->comments)    || !self::magnetComments($value->comments)         ||
-        !isset($value->sensitive)   || !self::magnetSensitive($value->sensitive)       ||
-        !isset($value->approved)    || !self::magnetApproved($value->approved)         ||
+        !isset($value->comments)    || !self::magnetComments($value->comments, $error)         ||
+        !isset($value->sensitive)   || !self::magnetSensitive($value->sensitive, $error)       ||
+        !isset($value->approved)    || !self::magnetApproved($value->approved, $error)         ||
 
-        !isset($value->timeAdded)   || !self::magnetTimeAdded($value->timeAdded)       ||
-        !isset($value->timeUpdated) || !self::magnetTimeUpdated($value->timeUpdated)   ||
+        !isset($value->timeAdded)   || !self::magnetTimeAdded($value->timeAdded, $error)       ||
+        !isset($value->timeUpdated) || !self::magnetTimeUpdated($value->timeUpdated, $error)   ||
 
-        !isset($value->dn)          || !self::magnetDn($value->dn)                     ||
-        !isset($value->xt)          || !self::magnetXt($value->xt)                     ||
+        !isset($value->dn)          || !self::magnetDn($value->dn, $error)                     ||
+        !isset($value->xt)          || !self::magnetXt($value->xt, $error)                     ||
 
-        !isset($value->xl)          || !self::magnetXl($value->xl)                     ||
+        !isset($value->xl)          || !self::magnetXl($value->xl, $error)                     ||
 
-        !isset($value->kt)          || !self::magnetKt($value->kt)                     ||
-        !isset($value->tr)          || !self::magnetTr($value->tr)                     ||
-        !isset($value->as)          || !self::magnetAs($value->as)                     ||
-        !isset($value->xs)          || !self::magnetWs($value->xs)                     ||
+        !isset($value->kt)          || !self::magnetKt($value->kt, $error)                     ||
+        !isset($value->tr)          || !self::magnetTr($value->tr, $error)                     ||
+        !isset($value->as)          || !self::magnetAs($value->as, $error)                     ||
+        !isset($value->xs)          || !self::magnetWs($value->xs, $error)                     ||
 
-        (isset($value->public)      && !self::magnetPublic($value->public)))
+        (isset($value->public)      && !self::magnetPublic($value->public, $error)))
     {
       array_push(
         $error,
@@ -777,7 +777,7 @@ class Valid
 
     foreach ($value as $tr)
     {
-      if (!self::url($tr))
+      if (!self::url($tr, $error))
       {
         array_push(
           $error,
@@ -827,7 +827,7 @@ class Valid
 
     foreach ($value as $as)
     {
-      if (!self::url($as))
+      if (!self::url($as, $error))
       {
         array_push(
           $error,
@@ -877,7 +877,7 @@ class Valid
 
     foreach ($value as $ws)
     {
-      if (!self::url($ws))
+      if (!self::url($ws, $error))
       {
         array_push(
           $error,
@@ -924,15 +924,15 @@ class Valid
       return false;
     }
 
-    if (!isset($value->magnetCommentId)       || !self::magnetCommentId($value->magnetCommentId)   ||
-        !isset($value->magnetCommentIdParent) || !self::magnetCommentIdParent($value->value)       ||
-        !isset($value->magnetId)              || !self::magnetId($value->magnetId)                 ||
-        !isset($value->userId)                || !self::userId($value->userId)                     ||
-        !isset($value->timeAdded)             || !self::magnetCommentTimeAdded($value->timeAdded)  ||
-        !isset($value->approved)              || !self::magnetCommentApproved($value->approved)    ||
-        !isset($value->value)                 || !self::magnetCommentValue($value->value)          ||
+    if (!isset($value->magnetCommentId)       || !self::magnetCommentId($value->magnetCommentId, $error)   ||
+        !isset($value->magnetCommentIdParent) || !self::magnetCommentIdParent($value->value, $error)       ||
+        !isset($value->magnetId)              || !self::magnetId($value->magnetId, $error)                 ||
+        !isset($value->userId)                || !self::userId($value->userId, $error)                     ||
+        !isset($value->timeAdded)             || !self::magnetCommentTimeAdded($value->timeAdded, $error)  ||
+        !isset($value->approved)              || !self::magnetCommentApproved($value->approved, $error)    ||
+        !isset($value->value)                 || !self::magnetCommentValue($value->value, $error)          ||
 
-        (isset($value->public)                && !self::magnetCommentPublic($value->public)))
+        (isset($value->public)                && !self::magnetCommentPublic($value->public, $error)))
     {
       array_push(
         $error,
@@ -972,7 +972,7 @@ class Valid
       return false;
     }
 
-    if (!self::magnetCommentId($value))
+    if (!self::magnetCommentId($value, $error))
     {
       return false;
     }
@@ -1078,10 +1078,10 @@ class Valid
       return false;
     }
 
-    if (!isset($value->magnetDownloadId) || !self::magnetDownloadId($value->magnetDownloadId) ||
-        !isset($value->magnetId)         || !self::magnetId($value->magnetId) ||
-        !isset($value->userId)           || !self::userId($value->userId) ||
-        !isset($value->timeAdded)        || !self::magnetDownloadTimeAdded($value->timeAdded)
+    if (!isset($value->magnetDownloadId) || !self::magnetDownloadId($value->magnetDownloadId, $error) ||
+        !isset($value->magnetId)         || !self::magnetId($value->magnetId, $error) ||
+        !isset($value->userId)           || !self::userId($value->userId, $error) ||
+        !isset($value->timeAdded)        || !self::magnetDownloadTimeAdded($value->timeAdded, $error)
       )
     {
       array_push(
@@ -1148,11 +1148,11 @@ class Valid
       return false;
     }
 
-    if (!isset($value->magnetStarId) || !self::magnetViewId($value->magnetStarId)     ||
-        !isset($value->magnetId)     || !self::magnetId($value->magnetId)             ||
-        !isset($value->userId)       || !self::userId($value->userId)                 ||
-        !isset($value->timeAdded)    || !self::magnetStarTimeAdded($value->timeAdded) ||
-        !isset($value->value)        || !self::magnetStarValue($value->value)
+    if (!isset($value->magnetStarId) || !self::magnetViewId($value->magnetStarId, $error)     ||
+        !isset($value->magnetId)     || !self::magnetId($value->magnetId, $error)             ||
+        !isset($value->userId)       || !self::userId($value->userId, $error)                 ||
+        !isset($value->timeAdded)    || !self::magnetStarTimeAdded($value->timeAdded, $error) ||
+        !isset($value->value)        || !self::magnetStarValue($value->value, $error)
       )
     {
       array_push(
@@ -1234,10 +1234,10 @@ class Valid
       return false;
     }
 
-    if (!isset($value->magnetViewId) || !self::magnetViewId($value->magnetViewId)     ||
-        !isset($value->magnetId)     || !self::magnetId($value->magnetId)             ||
-        !isset($value->userId)       || !self::userId($value->userId)                 ||
-        !isset($value->timeAdded)    || !self::magnetViewTimeAdded($value->timeAdded)
+    if (!isset($value->magnetViewId) || !self::magnetViewId($value->magnetViewId, $error)     ||
+        !isset($value->magnetId)     || !self::magnetId($value->magnetId, $error)             ||
+        !isset($value->userId)       || !self::userId($value->userId, $error)                 ||
+        !isset($value->timeAdded)    || !self::magnetViewTimeAdded($value->timeAdded, $error)
       )
     {
       array_push(
