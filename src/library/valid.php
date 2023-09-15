@@ -637,7 +637,7 @@ class Valid
 
     foreach ($value as $kt)
     {
-      if (!is_string($value))
+      if (!is_string($kt))
       {
         array_push(
           $error,
@@ -647,7 +647,7 @@ class Valid
         return false;
       }
 
-      if (!preg_match(MAGNET_KT_REGEX, $value))
+      if (!preg_match(MAGNET_KT_REGEX, $kt))
       {
         array_push(
           $error,
@@ -660,8 +660,8 @@ class Valid
         return false;
       }
 
-      if (mb_strlen($value) < MAGNET_KT_MIN_LENGTH ||
-          mb_strlen($value) > MAGNET_KT_MAX_LENGTH)
+      if (mb_strlen($kt) < MAGNET_KT_MIN_LENGTH ||
+          mb_strlen($kt) > MAGNET_KT_MAX_LENGTH)
       {
         array_push(
           $error,

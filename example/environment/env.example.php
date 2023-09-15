@@ -103,7 +103,7 @@ define('MAGNET_DN_MIN_LENGTH', 10);
 define('MAGNET_DN_MAX_LENGTH', 255);
 define('MAGNET_DN_REGEX', '/.*/ui');
 
-define('MAGNET_KT_MIN_LENGTH', 10);
+define('MAGNET_KT_MIN_LENGTH', 2);
 define('MAGNET_KT_MAX_LENGTH', 140);
 define('MAGNET_KT_REGEX', '/[\w]+/ui');
 define('MAGNET_KT_MIN_QUANTITY', 0);
