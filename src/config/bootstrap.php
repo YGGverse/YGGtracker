@@ -40,6 +40,7 @@ require_once __DIR__ . '/../library/sphinx.php';
 require_once __DIR__ . '/../library/scrapeer.php';
 require_once __DIR__ . '/../library/time.php';
 require_once __DIR__ . '/../library/curl.php';
+require_once __DIR__ . '/../library/valid.php';
 
 // Vendors autoload
 require_once __DIR__ . '/../../vendor/autoload.php';
