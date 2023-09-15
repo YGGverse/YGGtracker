@@ -63,29 +63,30 @@ else if (is_null($user->public))
 else
 {
   // Register magnet download
-  $magnetDownloadId = $db->addMagnetDownload($magnet->magnetId, $user->userId, time());
-
-  // Push event to other nodes
-  if (API_EXPORT_ENABLED &&
-      API_EXPORT_PUSH_ENABLED &&
-      API_EXPORT_USERS_ENABLED &&
-      API_EXPORT_MAGNETS_ENABLED &&
-      API_EXPORT_MAGNET_DOWNLOADS_ENABLED)
+  if ($magnetDownloadId = $db->addMagnetDownload($magnet->magnetId, $user->userId, time()))
   {
-    if (!$memoryApiExportPush = $memory->get('api.export.push'))
-    {
-      $memoryApiExportPush = [];
+    // Push event to other nodes
+    if (API_EXPORT_ENABLED &&
+        API_EXPORT_PUSH_ENABLED &&
+        API_EXPORT_USERS_ENABLED &&
+        API_EXPORT_MAGNETS_ENABLED &&
+        API_EXPORT_MAGNET_DOWNLOADS_ENABLED)
+      {
+      if (!$memoryApiExportPush = $memory->get('api.export.push'))
+      {
+        $memoryApiExportPush = [];
+      }
+
+      $memoryApiExportPush[] = (object)
+      [
+        'time'             => time(),
+        'userId'           => $user->userId,
+        'magnetId'         => $magnet->magnetId,
+        'magnetDownloadId' => $magnetDownloadId
+      ];
+
+      $memory->set('api.export.push', $memoryApiExportPush, 3600);
     }
-
-    $memoryApiExportPush[] = (object)
-    [
-      'time'             => time(),
-      'userId'           => $user->userId,
-      'magnetId'         => $magnet->magnetId,
-      'magnetDownloadId' => $magnetDownloadId
-    ];
-
-    $memory->set('api.export.push', $memoryApiExportPush, 3600);
   }
 
   // Build magnet link
