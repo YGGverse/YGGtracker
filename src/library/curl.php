@@ -37,6 +37,7 @@ class Curl
       curl_setopt($this->_connection, CURLOPT_MAXREDIRS, $maxRedirects);
     }
 
+    curl_setopt($this->_connection, CURLOPT_FRESH_CONNECT, true);
     curl_setopt($this->_connection, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($this->_connection, CURLOPT_CONNECTTIMEOUT, $connectTimeout);
     curl_setopt($this->_connection, CURLOPT_TIMEOUT, $connectTimeout);
