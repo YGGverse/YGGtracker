@@ -181,9 +181,8 @@ else
             $response['user'][] = [
               'status'  => false,
               'message' => sprintf(
-                _('User data mismatch protocol with error: %s data: %s'),
-                print_r($error, true),
-                print_r($remote, true)
+                _('User data mismatch protocol with error: %s'),
+                print_r($error, true)
               ),
             ];
 
@@ -195,10 +194,7 @@ else
           {
             $response['user'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Node accepting approved users only: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Node accepting approved users only')
             ];
 
             continue 2;
@@ -211,10 +207,7 @@ else
           {
             $response['user'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Could not init user profile: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Could not init user profile')
             ];
 
             continue 2;
@@ -326,9 +319,8 @@ else
             $response['magnet'][] = [
               'status'  => false,
               'message' => sprintf(
-                _('Magnet data mismatch protocol with error: %s data: %s'),
-                print_r($error, true),
-                print_r($remote, true)
+                _('Magnet data mismatch protocol with error: %s'),
+                print_r($error, true)
               ),
             ];
 
@@ -340,10 +332,7 @@ else
           {
             $response['magnet'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('User data relation not found for magnet: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('User data relation not found for magnet'),
             ];
 
             continue 2;
@@ -354,10 +343,7 @@ else
           {
             $response['magnet'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Node accepting approved magnets only: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Node accepting approved magnets only')
             ];
 
             continue 2;
@@ -609,9 +595,8 @@ else
             $response['magnetComment'][] = [
               'status'  => false,
               'message' => sprintf(
-                _('Magnet comment data mismatch protocol with error: %s data: %s'),
-                print_r($error, true),
-                print_r($remote, true)
+                _('Magnet comment data mismatch protocol with error: %s'),
+                print_r($error, true)
               ),
             ];
 
@@ -623,10 +608,7 @@ else
           {
             $response['magnetComment'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Node accepting approved magnet comments only: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Node accepting approved magnet comments only: %s')
             ];
 
             continue 2;
@@ -637,10 +619,7 @@ else
           {
             $response['magnetComment'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Magnet comment data relation not found for: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Magnet comment data relation not found for: %s')
             ];
 
             continue 2;
@@ -711,9 +690,8 @@ else
             $response['magnetDownload'][] = [
               'status'  => false,
               'message' => sprintf(
-                _('Magnet download data mismatch protocol with error: %s data: %s'),
-                print_r($error, true),
-                print_r($remote, true)
+                _('Magnet download data mismatch protocol with error: %s'),
+                print_r($error, true)
               ),
             ];
 
@@ -725,10 +703,7 @@ else
           {
             $response['magnetDownload'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Magnet download data relation not found for: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Magnet download data relation not found')
             ];
 
             continue 2;
@@ -783,9 +758,8 @@ else
             $response['magnetStar'][] = [
               'status'  => false,
               'message' => sprintf(
-                _('Magnet star data mismatch protocol with error: %s data: %s'),
-                print_r($error, true),
-                print_r($remote, true)
+                _('Magnet star data mismatch protocol with error: %s'),
+                print_r($error, true)
               ),
             ];
 
@@ -797,10 +771,7 @@ else
           {
             $response['magnetStar'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Magnet star data relation not found for: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Magnet star data relation not found')
             ];
 
             continue 2;
@@ -856,9 +827,8 @@ else
             $response['magnetView'][] = [
               'status'  => false,
               'message' => sprintf(
-                _('Magnet view data mismatch protocol with error: %s data: %s'),
-                print_r($error, true),
-                print_r($remote, true)
+                _('Magnet view data mismatch protocol with error: %s'),
+                print_r($error, true)
               ),
             ];
 
@@ -870,10 +840,7 @@ else
           {
             $response['magnetView'][] = [
               'status'  => false,
-              'message' => sprintf(
-                _('Magnet view data relation not found for: %s'),
-                print_r($remote, true)
-              ),
+              'message' => _('Magnet view data relation not found for: %s')
             ];
 
             continue 2;
