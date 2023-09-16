@@ -315,12 +315,9 @@ if (API_EXPORT_PUSH_ENABLED)
       // Manifest exists
       if (empty($node->manifest))
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest URL not provided for this node: %s'),
-            $node
-          )
+        $debug['dump']['warning'][] = sprintf(
+          _('Manifest URL not provided: %s'),
+          $node
         );
 
         continue;
@@ -331,15 +328,11 @@ if (API_EXPORT_PUSH_ENABLED)
 
       if (!Valid::url($node->manifest, $error))
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest URL "%s" invalid: %s'),
-            $node->manifest,
-            print_r(
-              $error,
-              true
-            )
+        $debug['dump'][$node->manifest]['warning'][] = sprintf(
+          _('Manifest URL invalid: %s'),
+          print_r(
+            $error,
+            true
           )
         );
 
@@ -367,13 +360,10 @@ if (API_EXPORT_PUSH_ENABLED)
 
       if (200 != $code = $curl->getCode())
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest URL "%s" unreachable with code: "%s"'),
-            $node->manifest,
-            $code
-          )
+        $debug['dump'][$node->manifest]['warning'][] = sprintf(
+          _('Manifest URL "%s" unreachable with code: "%s"'),
+          $node->manifest,
+          $code
         );
 
         continue;
@@ -381,12 +371,9 @@ if (API_EXPORT_PUSH_ENABLED)
 
       if (!$manifest = $curl->getResponse())
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest URL "%s" has broken response'),
-            $node->manifest
-          )
+        $debug['dump'][$node->manifest]['warning'][] = sprintf(
+          _('Manifest URL "%s" has broken response'),
+          $node->manifest
         );
 
         continue;
@@ -395,12 +382,9 @@ if (API_EXPORT_PUSH_ENABLED)
       // API channel not exists
       if (empty($manifest->import))
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest import URL not provided for this node: %s'),
-            $node
-          )
+        $debug['dump'][$node->manifest]['warning'][] = sprintf(
+          _('Manifest import URL not provided: %s'),
+          $node
         );
 
         continue;
@@ -409,12 +393,9 @@ if (API_EXPORT_PUSH_ENABLED)
       // Push API channel not exists
       if (empty($manifest->import->push))
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest import push URL not provided for this node: %s'),
-            $node
-          )
+        $debug['dump'][$manifest->import->push]['warning'][] = sprintf(
+          _('Manifest import push URL not provided: %s'),
+          $node
         );
 
         continue;
@@ -425,15 +406,11 @@ if (API_EXPORT_PUSH_ENABLED)
 
       if (!Valid::url($manifest->import->push, $error))
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest import push URL "%s" invalid: %s'),
-            $manifest->import->push,
-            print_r(
-              $error,
-              true
-            )
+        $debug['dump'][$manifest->import->push]['warning'][] = sprintf(
+          _('Manifest import push URL invalid: %s'),
+          print_r(
+            $error,
+            true
           )
         );
 
@@ -464,44 +441,26 @@ if (API_EXPORT_PUSH_ENABLED)
 
       if (200 != $code = $curl->getCode())
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Could not send manifest push to URL "%s" unreachable with code: "%s"'),
-            $manifest->import->push,
-            $code
-          )
+        $debug['dump'][$manifest->import->push]['warning'][] = sprintf(
+          _('Server returned code "%s"'),
+          $code
         );
 
         continue;
       }
 
-      if (!$manifest = $curl->getResponse())
+      if (!$response = $curl->getResponse())
       {
-        array_push(
-          $debug['dump'],
-          sprintf(
-            _('[warning] Manifest push URL "%s" has broken response on sending data: %s'),
-            $manifest->import->push,
-            $request
-          )
-        );
+        $debug['dump'][$manifest->import->push]['warning'][] = _('Could not receive server response');
 
         continue;
       }
 
-      array_push(
-        $debug['dump'],
-        sprintf(
-          _('[notice] Data successfully sent to manifest push URL "%s": %s'),
-          $manifest->import->push,
-          $request
-        )
-      );
+      $debug['dump'][$manifest->import->push]['response'] = json_decode($response, true);
     }
 
     // Drop processed item from queue
-    unset($memoryApiExportPush[$id]);
+    //unset($memoryApiExportPush[$id]);
   }
 
   // Update memory pool
