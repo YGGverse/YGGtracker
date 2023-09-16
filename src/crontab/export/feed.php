@@ -189,6 +189,8 @@ try
     {
       fwrite($handle, json_encode($manifest));
       fclose($handle);
+
+      chmod(__DIR__ . '/../../public/api/manifest.json', 0770);
     }
 
     // Users
@@ -225,6 +227,8 @@ try
       {
         fwrite($handle, json_encode($users));
         fclose($handle);
+
+        chmod(__DIR__ . '/../../public/api/users.json', 0770);
       }
     }
 
@@ -375,6 +379,8 @@ try
       {
         fwrite($handle, json_encode($magnets));
         fclose($handle);
+
+        chmod(__DIR__ . '/../../public/api/magnets.json', 0770);
       }
     }
 
@@ -404,6 +410,8 @@ try
       {
         fwrite($handle, json_encode($magnetDownloads));
         fclose($handle);
+
+        chmod(__DIR__ . '/../../public/api/magnetDownloads.json', 0770);
       }
     }
 
@@ -436,6 +444,8 @@ try
       {
         fwrite($handle, json_encode($magnetComments));
         fclose($handle);
+
+        chmod(__DIR__ . '/../../public/api/magnetComments.json', 0770);
       }
     }
 
@@ -466,6 +476,8 @@ try
       {
         fwrite($handle, json_encode($magnetStars));
         fclose($handle);
+
+        chmod(__DIR__ . '/../../public/api/magnetStars.json', 0770);
       }
     }
 
@@ -495,6 +507,8 @@ try
       {
         fwrite($handle, json_encode($magnetViews));
         fclose($handle);
+
+        chmod(__DIR__ . '/../../public/api/magnetViews.json', 0770);
       }
     }
   }
