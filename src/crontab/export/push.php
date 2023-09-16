@@ -455,7 +455,7 @@ if (API_EXPORT_PUSH_ENABLED)
         continue;
       }
 
-      $debug['dump'][$manifest->import->push]['response'] = json_decode($response, true);
+      $debug['dump'][$manifest->import->push]['response'] = $response;
     }
 
     // Drop processed item from queue
