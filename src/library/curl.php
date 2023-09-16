@@ -25,7 +25,7 @@ class Curl
     if (!empty($post))
     {
       curl_setopt($this->_connection, CURLOPT_POST, true);
-      curl_setopt($this->_connection, CURLOPT_POSTFIELDS, json_encode($post));
+      curl_setopt($this->_connection, CURLOPT_POSTFIELDS, http_build_query($post));
     }
 
     if ($header) {
