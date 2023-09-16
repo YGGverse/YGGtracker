@@ -76,8 +76,10 @@ if (API_EXPORT_PUSH_ENABLED)
       // Get magnet info
       if ($magnet = $db->getMagnet($push->magnetId))
       {
-        // Dump public data only
-        if ($magnet->public === '1')
+        if ($magnet->public &&
+            $public['user'][$magnet->userId]) // After upgrade, some users have not updated their public status.
+                                              // Remote node have warning on import, because user info still hidden to init new profile there.
+                                              // Stop magnets export without public profile available, even magnet is public.
         {
           // Info Hash
           $xt = [];
@@ -200,7 +202,12 @@ if (API_EXPORT_PUSH_ENABLED)
         }
 
         // Cache public status
-        $public['magnet'][$magnet->magnetId] = $magnet->public;
+        if (!empty($public['user'][$magnet->userId]))
+        {
+          $public['magnet'][$magnet->magnetId] = (bool) $magnet->public;
+        } else {
+          $public['magnet'][$magnet->magnetId] = false;
+        }
       }
     }
 
@@ -211,8 +218,8 @@ if (API_EXPORT_PUSH_ENABLED)
       if ($magnetDownload = $db->getMagnetDownload($push->magnetDownloadId))
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetDownload->magnetId]) && $public['magnet'][$magnetDownload->magnetId] === '1' &&
-            isset($public['user'][$magnetDownload->userId]    ) && $public['user'][$magnetDownload->userId] === '1')
+        if (!empty($public['magnet'][$magnetDownload->magnetId]) &&
+            !empty($public['user'][$magnetDownload->userId]))
         {
           $request['magnetDownload'] = (object)
           [
@@ -232,8 +239,8 @@ if (API_EXPORT_PUSH_ENABLED)
       if ($magnetComment = $db->getMagnetComment($push->magnetCommentId))
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetComment->magnetId]) && $public['magnet'][$magnetComment->magnetId] === '1' &&
-            isset($public['user'][$magnetComment->userId]    ) && $public['user'][$magnetComment->userId] === '1')
+        if (!empty($public['magnet'][$magnetComment->magnetId]) &&
+            !empty($public['user'][$magnetComment->userId]))
         {
           $request['magnetComment'] = (object)
           [
@@ -256,8 +263,8 @@ if (API_EXPORT_PUSH_ENABLED)
       if ($magnetStar = $db->getMagnetStar($push->magnetStarId))
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetStar->magnetId]) && $public['magnet'][$magnetStar->magnetId] === '1' &&
-            isset($public['user'][$magnetStar->userId]    ) && $public['user'][$magnetStar->userId] === '1')
+        if (!empty($public['magnet'][$magnetStar->magnetId]) &&
+            !empty($public['user'][$magnetStar->userId]))
         {
           $request['magnetStar'] = (object)
           [
@@ -278,8 +285,8 @@ if (API_EXPORT_PUSH_ENABLED)
       if ($magnetView = $db->getMagnetView($push->magnetViewId))
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetView->magnetId]) && $public['magnet'][$magnetView->magnetId] === '1' &&
-            isset($public['user'][$magnetView->userId]    ) && $public['user'][$magnetView->userId] === '1')
+        if (!empty($public['magnet'][$magnetView->magnetId]) &&
+            !empty($public['user'][$magnetView->userId]))
         {
           $request['magnetView'] = (object)
           [
