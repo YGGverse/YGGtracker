@@ -361,8 +361,7 @@ if (API_EXPORT_PUSH_ENABLED)
       if (200 != $code = $curl->getCode())
       {
         $debug['dump'][$node->manifest]['warning'][] = sprintf(
-          _('Manifest URL "%s" unreachable with code: "%s"'),
-          $node->manifest,
+          _('Manifest unreachable with code: "%s"'),
           $code
         );
 
