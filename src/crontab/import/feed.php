@@ -572,7 +572,7 @@ try
 
             foreach ($remoteMagnet->xs as $xs)
             {
-              if ($url = Yggverse\Parser\Url::parse($tr))
+              if ($url = Yggverse\Parser\Url::parse($xs))
               {
                 $db->initMagnetToExactSourceId(
                   $localMagnet->magnetId,

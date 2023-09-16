@@ -513,7 +513,7 @@ else
 
             foreach ($remote->tr as $tr)
             {
-              if ($url = Yggverse\Parser\Url::parse($xs))
+              if ($url = Yggverse\Parser\Url::parse($tr))
               {
                 $db->initMagnetToAddressTrackerId(
                   $local->magnetId,
@@ -532,7 +532,7 @@ else
 
             foreach ($remote->as as $as)
             {
-              if ($url = Yggverse\Parser\Url::parse($xs))
+              if ($url = Yggverse\Parser\Url::parse($as))
               {
                 $db->initMagnetToAcceptableSourceId(
                   $local->magnetId,
