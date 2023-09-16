@@ -3,11 +3,35 @@
 // Bootstrap
 require_once __DIR__ . '/../../config/bootstrap.php';
 
+// Init Debug
+$debug =
+[
+  'time' => [
+    'ISO8601' => date('c'),
+    'total'   => microtime(true),
+  ],
+  'memory' =>
+  [
+    'start' => memory_get_usage(),
+    'total' => 0,
+    'peaks' => 0
+  ],
+  'exception' => []
+];
+
 // Define response
 $response =
 [
   'status'  => false,
-  'message' => _('Request failed')
+  'message' => _('Internal server error'),
+  'data'    => [
+    'user'           => [],
+    'magnet'         => [],
+    'magnetDownload' => [],
+    'magnetComment'  => [],
+    'magnetView'     => [],
+    'magnetStar'     => [],
+  ]
 ];
 
 // Init connections whitelist
@@ -16,16 +40,8 @@ $connectionWhiteList = [];
 foreach (json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')) as $node)
 {
   // Skip non-condition addresses
-  $error = [];
-
-  if (!Valid::url($node->manifest, $error))
+  if (!Valid::url($node->manifest))
   {
-    $response =
-    [
-      'status'  => false,
-      'message' => $error
-    ];
-
     continue;
   }
 
@@ -44,6 +60,8 @@ foreach (json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')) as
 }
 
 // API import enabled
+$error = [];
+
 if (!API_IMPORT_ENABLED)
 {
   $response =
@@ -59,17 +77,17 @@ else if (!API_IMPORT_PUSH_ENABLED)
   $response =
   [
     'status'  => false,
-    'message' => _('Push API disabled')
+    'message' => _('Push API import disabled')
   ];
 }
 
 // Yggdrasil connections only
-else if (!Valid::host($_SERVER['REMOTE_ADDR']))
+else if (!Valid::host($_SERVER['REMOTE_ADDR'], $error))
 {
   $response =
   [
     'status'  => false,
-    'message' => _('Yggdrasil connection required for this action')
+    'message' => $error
   ];
 }
 
@@ -80,7 +98,7 @@ else if (!in_array($_SERVER['REMOTE_ADDR'], $connectionWhiteList))
   [
     'status'  => false,
     'message' => sprintf(
-      _('Access denied for host "%s"'),
+      _('Push API access denied for host "%s"'),
       $_SERVER['REMOTE_ADDR']
     )
   ];
@@ -92,45 +110,54 @@ else if (!$userId = $db->initUserId($_SERVER['REMOTE_ADDR'], USER_DEFAULT_APPROV
   $response =
   [
     'status'  => false,
-    'message' => _('Could not init user session')
-  ];
-}
-
-// Get user
-else if (!$user = $db->getUser($userId))
-{
-  $response =
-  [
-    'status'  => false,
-    'message' => _('Could not init user info')
+    'message' => _('Could not init user session for this connection')
   ];
 }
 
 // Validate required fields
-else if (empty($_POST))
+else if (empty($_POST['data']))
 {
   $response =
   [
     'status'  => false,
-    'message' => _('Import data required')
+    'message' => _('Request protocol invalid')
+  ];
+}
+
+// Validate required fields
+else if (false === $data = json_decode($_POST['data']))
+{
+  $response =
+  [
+    'status'  => false,
+    'message' => _('Could not decode data requested')
   ];
 }
 
 // Import begin
 else
 {
+  $response =
+  [
+    'status'  => true,
+    'message' => sprintf(
+      _('Connection for "%s" established'),
+      $_SERVER['REMOTE_ADDR']
+    )
+  ];
+
   // Init alias registry
   $aliasUserId = [];
   $aliasMagnetId = [];
 
-  // Process request
-  foreach ((object) $_POST as $field => $remote)
-  {
-    try
-    {
-      // Transaction begin
-      $db->beginTransaction();
+  try {
 
+    // Transaction begin
+    $db->beginTransaction();
+
+    // Process request
+    foreach ((object) $data as $field => $remote)
+    {
       // Process alias fields
       switch ($field)
       {
@@ -138,7 +165,7 @@ else
 
           if (!API_IMPORT_USERS_ENABLED)
           {
-            $response = [
+            $response['user'][] = [
               'status'  => false,
               'message' => _('Users import disabled on this node. Related content skipped.')
             ];
@@ -151,9 +178,13 @@ else
 
           if (!Valid::user($remote, $error))
           {
-            $response = [
+            $response['user'][] = [
               'status'  => false,
-              'message' => $error
+              'message' => sprintf(
+                _('User data mismatch protocol with error: %s data: %s'),
+                print_r($error, true),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -162,9 +193,12 @@ else
           // Skip import on user approved required
           if (API_IMPORT_USERS_APPROVED_ONLY && !$remote->approved)
           {
-            $response = [
+            $response['user'][] = [
               'status'  => false,
-              'message' => _('This host accept approved users only')
+              'message' => sprintf(
+                _('Node accepting approved users only: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -172,15 +206,29 @@ else
 
           // Init local user by remote address
           if (!$local = $db->getUser($db->initUserId($remote->address,
-                                                     USER_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remote->approved : USER_DEFAULT_APPROVED,
-                                                     $remote->timeAdded)))
+                                                      USER_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remote->approved : USER_DEFAULT_APPROVED,
+                                                      $remote->timeAdded)))
           {
-            $response = [
+            $response['user'][] = [
               'status'  => false,
-              'message' => _('Could not init user')
+              'message' => sprintf(
+                _('Could not init user profile: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
+          }
+
+          else
+          {
+            $response['user'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('User profile successfully associated with ID "%s"'),
+                $local->userId
+              )
+            ];
           }
 
           // Register user alias
@@ -193,6 +241,14 @@ else
               $local->userId,
               $remote->timeAdded
             );
+
+            $response['user'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Field "timeAdded" changed to newer value for user ID "%s"'),
+                $local->userId
+              )
+            ];
           }
 
           // Update user info if newer
@@ -204,6 +260,14 @@ else
               $remote->timeUpdated
             );
 
+            $response['user'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Field "timeUpdated" changed to newer value for user ID "%s"'),
+                $local->userId
+              )
+            ];
+
             // Update approved for existing user
             if (USER_AUTO_APPROVE_ON_IMPORT_APPROVED && $local->approved !== $remote->approved && $remote->approved)
             {
@@ -212,6 +276,14 @@ else
                 $remote->approved,
                 $remote->timeUpdated
               );
+
+              $response['user'][] = [
+                'status'  => true,
+                'message' => sprintf(
+                  _('Field "approved" changed to newer value for user ID "%s"'),
+                  $local->userId
+                )
+              ];
             }
 
             // Set public as received remotely
@@ -222,20 +294,23 @@ else
                 true,
                 $remote->timeUpdated
               );
+
+              $response['user'][] = [
+                'status'  => true,
+                'message' => sprintf(
+                  _('Field "public" changed to newer value for user ID "%s"'),
+                  $local->userId
+                )
+              ];
             }
           }
-
-          $response = [
-            'status'  => true,
-            'message' => _('User registered')
-          ];
 
         break;
         case 'magnet':
 
           if (!API_IMPORT_MAGNETS_ENABLED)
           {
-            $response = [
+            $response['magnet'][] = [
               'status'  => false,
               'message' => _('Magnets import disabled on this node. Related content skipped.')
             ];
@@ -248,9 +323,13 @@ else
 
           if (!Valid::magnet($remote, $error))
           {
-            $response = [
+            $response['magnet'][] = [
               'status'  => false,
-              'message' => $error
+              'message' => sprintf(
+                _('Magnet data mismatch protocol with error: %s data: %s'),
+                print_r($error, true),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -259,9 +338,12 @@ else
           // User local alias required
           if (!isset($aliasUserId[$remote->userId]))
           {
-            $response = [
+            $response['magnet'][] = [
               'status'  => false,
-              'message' => _('User data required for this action')
+              'message' => sprintf(
+                _('User data relation not found for magnet: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -270,30 +352,65 @@ else
           // Skip import on magnet approved required
           if (API_IMPORT_MAGNETS_APPROVED_ONLY && !$remote->approved)
           {
-            $response = [
+            $response['magnet'][] = [
               'status'  => false,
-              'message' => _('Node accept approved magnets only')
+              'message' => sprintf(
+                _('Node accepting approved magnets only: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
           }
 
           /// Add new magnet if not exist by timestamp added for this user
-          if (!$local = $db->findMagnet($aliasUserId[$remote->userId], $remote->timeAdded))
+          if ($local = $db->findMagnet($aliasUserId[$remote->userId], $remote->timeAdded))
           {
-               $local = $db->getMagnet(
-                 $db->addMagnet(
-                   $aliasUserId[$remote->userId],
-                   $remote->xl,
-                   $remote->dn,
-                   '', // @TODO linkSource used for debug only, will be deleted later
-                   true,
-                   $remote->comments,
-                   $remote->sensitive,
-                   MAGNET_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remote->approved : MAGNET_DEFAULT_APPROVED,
-                   $remote->timeAdded
-                 )
-               );
+            $response['magnet'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet successfully associated with ID "%s"'),
+                $local->magnetId
+              )
+            ];
+          }
+
+          /// Add and init new magnet if not exist
+          else if ($local = $db->getMagnet(
+                  $db->addMagnet(
+                    $aliasUserId[$remote->userId],
+                    $remote->xl,
+                    $remote->dn,
+                    '', // @TODO linkSource used for debug only, will be deleted later
+                    true,
+                    $remote->comments,
+                    $remote->sensitive,
+                    MAGNET_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remote->approved : MAGNET_DEFAULT_APPROVED,
+                    $remote->timeAdded
+                  )
+                )
+              )
+            {
+              $response['magnet'][] = [
+                'status'  => true,
+                'message' => sprintf(
+                  _('Magnet successfully synced with ID "%s"'),
+                  $local->magnetId
+                )
+              ];
+            }
+
+          else
+          {
+            $response['magnet'][] = [
+              'status'  => false,
+              'message' => sprintf(
+                _('Could not init magnet: %s'),
+                $remote
+              )
+            ];
+
+            continue 2;
           }
 
           /// Add magnet alias for this host
@@ -306,6 +423,14 @@ else
               $local->magnetId,
               $remote->timeAdded
             );
+
+            $response['magnet'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Field "timeAdded" changed to newer value for magnet ID "%s"'),
+                $local->magnetId
+              )
+            ];
           }
 
           /// Update info if remote newer
@@ -387,6 +512,8 @@ else
             }
 
             // kt
+            $db->deleteMagnetToKeywordTopicByMagnetId($local->magnetId);
+
             foreach ($remote->kt as $kt)
             {
               $db->initMagnetToKeywordTopicId(
@@ -396,6 +523,8 @@ else
             }
 
             // tr
+            $db->deleteMagnetToAddressTrackerByMagnetId($local->magnetId);
+
             foreach ($remote->tr as $tr)
             {
               if ($url = Yggverse\Parser\Url::parse($xs))
@@ -413,6 +542,8 @@ else
             }
 
             // as
+            $db->deleteMagnetToAcceptableSourceByMagnetId($local->magnetId);
+
             foreach ($remote->as as $as)
             {
               if ($url = Yggverse\Parser\Url::parse($xs))
@@ -430,6 +561,8 @@ else
             }
 
             // xs
+            $db->deleteMagnetToExactSourceByMagnetId($local->magnetId);
+
             foreach ($remote->xs as $xs)
             {
               if ($url = Yggverse\Parser\Url::parse($xs))
@@ -445,19 +578,22 @@ else
                 );
               }
             }
-          }
 
-          $response = [
-            'status'  => true,
-            'message' => _('Magnet registered')
-          ];
+            $response['magnet'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet fields updated to newer version for magnet ID "%s"'),
+                $local->magnetId
+              )
+            ];
+          }
 
         break;
         case 'magnetComment':
 
           if (!API_IMPORT_MAGNET_COMMENTS_ENABLED)
           {
-            $response = [
+            $response['magnetComment'][] = [
               'status'  => false,
               'message' => _('Magnet comments import disabled on this node')
             ];
@@ -465,25 +601,18 @@ else
             continue 2;
           }
 
-          // Validate remote fields
+          // Validate
           $error = [];
 
           if (!Valid::magnetComment($remote, $error))
           {
-            $response = [
+            $response['magnetComment'][] = [
               'status'  => false,
-              'message' => $error
-            ];
-
-            continue 2;
-          }
-
-          // User local alias required
-          if (!isset($aliasUserId[$remote->userId]) || !isset($aliasMagnetId[$remote->magnetId]))
-          {
-            $response = [
-              'status'  => false,
-              'message' => _('User and magnet data required for magnet comments import')
+              'message' => sprintf(
+                _('Magnet comment data mismatch protocol with error: %s data: %s'),
+                print_r($error, true),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -492,45 +621,73 @@ else
           // Skip import on magnet approved required
           if (API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY && !$remote->approved)
           {
-            $response = [
+            $response['magnetComment'][] = [
               'status'  => false,
-              'message' => _('Node accept approved magnet comments only')
+              'message' => sprintf(
+                _('Node accepting approved magnet comments only: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
           }
 
-          // Add new magnet comment if not exist by timestamp added for this user
-          if (!$db->findMagnetComment($aliasMagnetId[$remote->magnetId],
-                                      $aliasUserId[$remote->userId],
-                                      $remote->timeAdded))
+          // User local alias required
+          if (!isset($aliasUserId[$remote->userId]) || !isset($aliasMagnetId[$remote->magnetId]))
           {
-            // Parent comment provided
-            if (is_int($remote->magnetCommentIdParent))
-            {
-              $localMagnetCommentIdParent = null; // @TODO feature not in use yet
-            }
+            $response['magnetComment'][] = [
+              'status'  => false,
+              'message' => sprintf(
+                _('Magnet comment data relation not found for: %s'),
+                print_r($remote, true)
+              ),
+            ];
 
-            else
-            {
-              $localMagnetCommentIdParent = null;
-            }
-
-            $db->addMagnetComment(
-              $aliasMagnetId[$remoteMagnetComment->magnetId],
-              $aliasUserId[$remoteMagnetComment->userId],
-              $localMagnetCommentIdParent,
-              $remote->value,
-              $remote->approved,
-              true,
-              $remote->timeAdded
-            );
+            continue 2;
           }
 
-          $response = [
-            'status'  => true,
-            'message' => _('Magnet comment registered')
-          ];
+          // Parent comment provided
+          if (is_int($remote->magnetCommentIdParent))
+          {
+            $localMagnetCommentIdParent = null; // @TODO feature not in use yet
+          }
+
+          else
+          {
+            $localMagnetCommentIdParent = null;
+          }
+
+          // Magnet comment exists by timestamp added for this user
+          if ($local = $db->findMagnetComment($aliasMagnetId[$remote->magnetId],
+                                              $aliasUserId[$remote->userId],
+                                              $remote->timeAdded))
+          {
+            $response['magnetComment'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet comment successfully associated with ID "%s"'),
+                $local->magnetCommentId
+              )
+            ];
+          }
+
+          // Magnet comment exists by timestamp added for this user, register new one
+          else if ($magnetCommentId = $db->addMagnetComment($aliasMagnetId[$remote->magnetId],
+                                                            $aliasUserId[$remote->userId],
+                                                            $localMagnetCommentIdParent,
+                                                            $remote->value,
+                                                            $remote->approved,
+                                                            true,
+                                                            $remote->timeAdded))
+          {
+            $response['magnetComment'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet comment successfully synced with ID "%s"'),
+                $magnetCommentId
+              )
+            ];
+          }
 
         break;
         case 'magnetDownload':
@@ -538,7 +695,7 @@ else
           // Magnet downloads
           if (!API_IMPORT_MAGNET_DOWNLOADS_ENABLED)
           {
-            $response = [
+            $response['magnetDownload'][] = [
               'status'  => false,
               'message' => _('Magnet downloads import disabled on this node')
             ];
@@ -551,9 +708,13 @@ else
 
           if (!Valid::magnetDownload($remote, $error))
           {
-            $response = [
+            $response['magnetDownload'][] = [
               'status'  => false,
-              'message' => $error,
+              'message' => sprintf(
+                _('Magnet download data mismatch protocol with error: %s data: %s'),
+                print_r($error, true),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -562,37 +723,51 @@ else
           // User local alias required
           if (!isset($aliasUserId[$remote->userId]) || !isset($aliasMagnetId[$remote->magnetId]))
           {
-            $response = [
+            $response['magnetDownload'][] = [
               'status'  => false,
-              'message' => _('User and magnet data required for magnet downloads import')
+              'message' => sprintf(
+                _('Magnet download data relation not found for: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
           }
 
-          // Add new magnet download if not exist by timestamp added for this user
-          if (!$db->findMagnetDownload($aliasMagnetId[$remote->magnetId],
-                                       $aliasUserId[$remote->userId],
-                                       $remote->timeAdded))
+          // Magnet download exists by timestamp added for this user
+          if ($local = $db->findMagnetDownload($aliasMagnetId[$remote->magnetId],
+                                                $aliasUserId[$remote->userId],
+                                                $remote->timeAdded))
           {
-            $db->addMagnetDownload(
-              $aliasMagnetId[$remote->magnetId],
-              $aliasUserId[$remote->userId],
-              $remote->timeAdded
-            );
+            $response['magnetDownload'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet download successfully associated with ID "%s"'),
+                $local->magnetDownloadId
+              )
+            ];
           }
 
-          $response = [
-            'status'  => true,
-            'message' => _('Magnet download registered')
-          ];
+          // Magnet download exists by timestamp added for this user, register new one
+          else if ($magnetDownloadId = $db->addMagnetDownload($aliasMagnetId[$remote->magnetId],
+                                                              $aliasUserId[$remote->userId],
+                                                              $remote->timeAdded))
+          {
+            $response['magnetDownload'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet download successfully synced with ID "%s"'),
+                $magnetDownloadId
+              )
+            ];
+          }
 
         break;
         case 'magnetStar':
 
           if (!API_IMPORT_MAGNET_STARS_ENABLED)
           {
-            $response = [
+            $response['magnetStar'][] = [
               'status'  => false,
               'message' => _('Magnet stars import disabled on this node')
             ];
@@ -605,9 +780,13 @@ else
 
           if (!Valid::magnetStar($remote, $error))
           {
-            $response = [
+            $response['magnetStar'][] = [
               'status'  => false,
-              'message' => $error
+              'message' => sprintf(
+                _('Magnet star data mismatch protocol with error: %s data: %s'),
+                print_r($error, true),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -616,38 +795,52 @@ else
           // User local alias required
           if (!isset($aliasUserId[$remote->userId]) || !isset($aliasMagnetId[$remote->magnetId]))
           {
-            $response = [
+            $response['magnetStar'][] = [
               'status'  => false,
-              'message' => _('User and magnet data required for magnet stars import')
+              'message' => sprintf(
+                _('Magnet star data relation not found for: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
           }
 
-          // Add new magnet star if not exist by timestamp added for this user
-          if (!$db->findMagnetStar($aliasMagnetId[$remote->magnetId],
-                                   $aliasUserId[$remote->userId],
-                                   $remote->timeAdded))
+          // Magnet star exists by timestamp added for this user
+          if ($local = $db->findMagnetStar($aliasMagnetId[$remote->magnetId],
+                                           $aliasUserId[$remote->userId],
+                                           $remote->timeAdded))
           {
-            $db->addMagnetStar(
-              $aliasMagnetId[$remote->magnetId],
-              $aliasUserId[$remote->userId],
-              $remote->value,
-              $remote->timeAdded
-            );
+            $response['magnetStar'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet star successfully associated with ID "%s"'),
+                $local->magnetStarId
+              )
+            ];
           }
 
-          $response = [
-            'status'  => true,
-            'message' => _('Magnet star registered')
-          ];
+          // Magnet star exists by timestamp added for this user, register new one
+          else if ($magnetStarId = $db->addMagnetStar($aliasMagnetId[$remote->magnetId],
+                                                      $aliasUserId[$remote->userId],
+                                                      $remote->value,
+                                                      $remote->timeAdded))
+          {
+            $response['magnetStar'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet star successfully synced with ID "%s"'),
+                $magnetStarId
+              )
+            ];
+          }
 
         break;
         case 'magnetView':
 
           if (!API_IMPORT_MAGNET_VIEWS_ENABLED)
           {
-            $response = [
+            $response['magnetView'][] = [
               'status'  => false,
               'message' => _('Magnet views import disabled on this node')
             ];
@@ -660,9 +853,13 @@ else
 
           if (!Valid::magnetView($remote, $error))
           {
-            $response = [
+            $response['magnetView'][] = [
               'status'  => false,
-              'message' => $error
+              'message' => sprintf(
+                _('Magnet view data mismatch protocol with error: %s data: %s'),
+                print_r($error, true),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
@@ -671,54 +868,100 @@ else
           // User local alias required
           if (!isset($aliasUserId[$remote->userId]) || !isset($aliasMagnetId[$remote->magnetId]))
           {
-            $response = [
+            $response['magnetView'][] = [
               'status'  => false,
-              'message' => _('User and magnet data required for magnet views import')
+              'message' => sprintf(
+                _('Magnet view data relation not found for: %s'),
+                print_r($remote, true)
+              ),
             ];
 
             continue 2;
           }
 
-          // Add new magnet view if not exist by timestamp added for this user
-          if (!$db->findMagnetView($aliasMagnetId[$remote->magnetId],
-                                   $aliasUserId[$remote->userId],
-                                   $remote->timeAdded))
+          // Magnet view exists by timestamp added for this user
+          if ($local = $db->findMagnetView($aliasMagnetId[$remote->magnetId],
+                                            $aliasUserId[$remote->userId],
+                                            $remote->timeAdded))
           {
-            $db->addMagnetView(
-              $aliasMagnetId[$remote->magnetId],
-              $aliasUserId[$remote->userId],
-              $remote->timeAdded
-            );
+            $response['magnetView'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet view successfully associated with ID "%s"'),
+                $local->magnetViewId
+              )
+            ];
           }
 
-          $response = [
-            'status'  => true,
-            'message' => _('Magnet view registered')
-          ];
+          // Magnet view exists by timestamp added for this user, register new one
+          else if ($magnetViewId = $db->addMagnetView($aliasMagnetId[$remote->magnetId],
+                                                      $aliasUserId[$remote->userId],
+                                                      $remote->timeAdded))
+          {
+            $response['magnetView'][] = [
+              'status'  => true,
+              'message' => sprintf(
+                _('Magnet view successfully synced with ID "%s"'),
+                $magnetViewId
+              )
+            ];
+          }
 
         break;
         default:
 
-          $response =
+          $response[$field][] =
           [
             'status'  => false,
-            'message' => _('Data field not supported')
+            'message' => _('Field "%s" not supported by protocol')
           ];
+
+          continue 2;
       }
-
-      $db->commit();
     }
 
-    catch (EXception $error)
-    {
-      $db->rollBack();
+    $db->commit();
+  }
 
-      $response =
-      [
-        'status'  => false,
-        'message' => $error
-      ];
-    }
+  catch (Exception $error)
+  {
+    $debug['exception'][] = print_r($error, true);
+
+    $db->rollBack();
+  }
+}
+
+// Debug log
+if (LOG_API_PUSH_ENABLED)
+{
+  @mkdir(LOG_DIRECTORY, 0770, true);
+
+  if ($handle = fopen(LOG_DIRECTORY . '/' . LOG_API_PUSH_FILENAME, 'a+'))
+  {
+    $debug['time']['total']   = microtime(true) - $debug['time']['total'];
+
+    $debug['memory']['total'] = memory_get_usage() - $debug['memory']['start'];
+    $debug['memory']['peaks'] = memory_get_peak_usage();
+
+    $debug['db']['total']['select'] = $db->getDebug()->query->select->total;
+    $debug['db']['total']['insert'] = $db->getDebug()->query->insert->total;
+    $debug['db']['total']['update'] = $db->getDebug()->query->update->total;
+    $debug['db']['total']['delete'] = $db->getDebug()->query->delete->total;
+
+    fwrite(
+      $handle,
+      print_r(
+        [
+          'response' => $response,
+          'debug'    => $debug
+        ],
+        true
+      )
+    );
+
+    fclose($handle);
+
+    chmod(LOG_DIRECTORY . '/' . LOG_API_PUSH_FILENAME, 0770);
   }
 }
 
