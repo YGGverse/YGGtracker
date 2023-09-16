@@ -201,7 +201,7 @@ try
       fwrite($handle, json_encode($manifest));
       fclose($handle);
 
-      chmod(__DIR__ . '/../../public/api/manifest.json', 0770);
+      chmod(__DIR__ . '/../../public/api/manifest.json', 0774);
     }
 
     // Users
@@ -239,7 +239,7 @@ try
         fwrite($handle, json_encode($users));
         fclose($handle);
 
-        chmod(__DIR__ . '/../../public/api/users.json', 0770);
+        chmod(__DIR__ . '/../../public/api/users.json', 0774);
       }
     }
 
@@ -391,7 +391,7 @@ try
         fwrite($handle, json_encode($magnets));
         fclose($handle);
 
-        chmod(__DIR__ . '/../../public/api/magnets.json', 0770);
+        chmod(__DIR__ . '/../../public/api/magnets.json', 0774);
       }
     }
 
@@ -422,7 +422,7 @@ try
         fwrite($handle, json_encode($magnetDownloads));
         fclose($handle);
 
-        chmod(__DIR__ . '/../../public/api/magnetDownloads.json', 0770);
+        chmod(__DIR__ . '/../../public/api/magnetDownloads.json', 0774);
       }
     }
 
@@ -456,7 +456,7 @@ try
         fwrite($handle, json_encode($magnetComments));
         fclose($handle);
 
-        chmod(__DIR__ . '/../../public/api/magnetComments.json', 0770);
+        chmod(__DIR__ . '/../../public/api/magnetComments.json', 0774);
       }
     }
 
@@ -488,7 +488,7 @@ try
         fwrite($handle, json_encode($magnetStars));
         fclose($handle);
 
-        chmod(__DIR__ . '/../../public/api/magnetStars.json', 0770);
+        chmod(__DIR__ . '/../../public/api/magnetStars.json', 0774);
       }
     }
 
@@ -519,7 +519,7 @@ try
         fwrite($handle, json_encode($magnetViews));
         fclose($handle);
 
-        chmod(__DIR__ . '/../../public/api/magnetViews.json', 0770);
+        chmod(__DIR__ . '/../../public/api/magnetViews.json', 0774);
       }
     }
   }
@@ -545,13 +545,13 @@ print_r($debug);
 // Debug log
 if (LOG_CRONTAB_EXPORT_FEED_ENABLED)
 {
-  @mkdir(LOG_DIRECTORY, 0770, true);
+  @mkdir(LOG_DIRECTORY, 0774, true);
 
   if ($handle = fopen(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_FEED_FILENAME, 'a+'))
   {
     fwrite($handle, print_r($debug, true));
     fclose($handle);
 
-    chmod(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_FEED_FILENAME, 0770);
+    chmod(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_FEED_FILENAME, 0774);
   }
 }
