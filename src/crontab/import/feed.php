@@ -56,6 +56,20 @@ try
     file_get_contents(__DIR__ . '/../../config/nodes.json')
   ) as $node)
   {
+    // Manifest exists
+    if (empty($node->manifest))
+    {
+      array_push(
+        $debug['dump'],
+        sprintf(
+          _('Manifest URL not provided for this node: %s'),
+          $node
+        )
+      );
+
+      continue;
+    }
+
     // Skip non-condition addresses
     $error = [];
 
