@@ -353,6 +353,8 @@ else {
     {
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['kt'])) as $kt)
       {
+        $kt = trim($kt);
+
         if (!empty(trim($kt)))
         {
           $db->initMagnetToKeywordTopicId(
@@ -373,6 +375,8 @@ else {
 
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['tr'])) as $tr)
       {
+        $tr = trim($tr);
+
         if (Valid::url($tr))
         {
           if ($url = Yggverse\Parser\Url::parse($tr))
@@ -404,6 +408,8 @@ else {
 
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['as'])) as $as)
       {
+        $xs = trim($as);
+
         if (Valid::url($as))
         {
           if ($url = Yggverse\Parser\Url::parse($as))
@@ -435,6 +441,8 @@ else {
 
       foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $_POST['xs'])) as $xs)
       {
+        $xs = trim($xs);
+
         if (Valid::url($xs))
         {
           if ($url = Yggverse\Parser\Url::parse($xs))
