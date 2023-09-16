@@ -161,7 +161,7 @@ else
           {
             $response = [
               'status'  => false,
-              'message' => _('This host not accept approved users only')
+              'message' => _('This host accept approved users only')
             ];
 
             continue 2;
