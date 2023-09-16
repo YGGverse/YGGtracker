@@ -217,7 +217,7 @@ try
         }
 
         // Cache public status
-        $public['user'][$user->userId] = $user->public;
+        $public['user'][$user->userId] = (bool) $user->public;
       }
 
       /// Dump users feed
@@ -359,7 +359,12 @@ try
         }
 
         // Cache public status
-        $public['magnet'][$magnet->magnetId] = $magnet->public;
+        if (!empty($public['user'][$magnet->userId]))
+        {
+          $public['magnet'][$magnet->magnetId] = (bool) $magnet->public;
+        } else {
+          $public['magnet'][$magnet->magnetId] = false;
+        }
       }
 
       /// Dump magnets feed
@@ -378,8 +383,8 @@ try
       foreach ($db->getMagnetDownloads() as $magnetDownload)
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetDownload->magnetId]) && $public['magnet'][$magnetDownload->magnetId] === '1' &&
-            isset($public['user'][$magnetDownload->userId])     && $public['user'][$magnetDownload->userId] === '1')
+        if (!empty($public['magnet'][$magnetDownload->magnetId]) &&
+            !empty($public['user'][$magnetDownload->userId]))
         {
           $magnetDownloads[] = (object)
           [
@@ -407,8 +412,8 @@ try
       foreach ($db->getMagnetComments() as $magnetComment)
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetComment->magnetId]) && $public['magnet'][$magnetComment->magnetId] === '1' &&
-            isset($public['user'][$magnetComment->userId])     && $public['user'][$magnetComment->userId] === '1')
+        if (!empty($public['magnet'][$magnetComment->magnetId]) &&
+            !empty($public['user'][$magnetComment->userId]))
         {
           $magnetComments[] = (object)
           [
@@ -439,8 +444,8 @@ try
       foreach ($db->getMagnetStars() as $magnetStar)
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetStar->magnetId]) && $public['magnet'][$magnetStar->magnetId] === '1' &&
-            isset($public['user'][$magnetStar->userId])     && $public['user'][$magnetStar->userId] === '1')
+        if (!empty($public['magnet'][$magnetStar->magnetId]) &&
+            !empty($public['user'][$magnetStar->userId]))
         {
           $magnetStars[] = (object)
           [
@@ -469,8 +474,8 @@ try
       foreach ($db->getMagnetViews() as $magnetView)
       {
         // Dump public data only
-        if (isset($public['magnet'][$magnetView->magnetId]) && $public['magnet'][$magnetView->magnetId] === '1' &&
-            isset($public['user'][$magnetView->userId]    ) && $public['user'][$magnetView->userId] === '1')
+        if (!empty($public['magnet'][$magnetView->magnetId]) &&
+            !empty($public['user'][$magnetView->userId]))
         {
           $magnetViews[] = (object)
           [
