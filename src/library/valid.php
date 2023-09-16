@@ -1176,7 +1176,7 @@ class Valid
     {
       array_push(
         $error,
-        _('Invalid magnet download data type')
+        _('Invalid magnet star data type')
       );
 
       return false;
@@ -1262,7 +1262,7 @@ class Valid
     {
       array_push(
         $error,
-        _('Invalid magnet download data type')
+        _('Invalid magnet view data type')
       );
 
       return false;
