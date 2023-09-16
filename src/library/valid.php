@@ -995,7 +995,7 @@ class Valid
 
   public static function magnetCommentIdParent(mixed $value, array &$error = []) : bool
   {
-    if (!(is_bool($value) || is_int($value)))
+    if (!(is_null($value) || is_int($value)))
     {
       array_push(
         $error,

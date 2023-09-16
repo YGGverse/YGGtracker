@@ -413,7 +413,7 @@ try
           $magnetComments[] = (object)
           [
             'magnetCommentId'       => (int) $magnetComment->magnetCommentId,
-            'magnetCommentIdParent' => (int) $magnetComment->magnetCommentIdParent,
+            'magnetCommentIdParent' => $magnetComment->magnetCommentIdParent,
             'userId'                => (int) $magnetComment->userId,
             'magnetId'              => (int) $magnetComment->magnetId,
             'timeAdded'             => (int) $magnetComment->timeAdded,
