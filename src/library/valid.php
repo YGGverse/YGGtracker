@@ -957,13 +957,14 @@ class Valid
       return false;
     }
 
-    if (!isset($value->magnetCommentId)       || !self::magnetCommentId($value->magnetCommentId, $error)   ||
-        !isset($value->magnetCommentIdParent) || !self::magnetCommentIdParent($value->value, $error)       ||
-        !isset($value->magnetId)              || !self::magnetId($value->magnetId, $error)                 ||
-        !isset($value->userId)                || !self::userId($value->userId, $error)                     ||
-        !isset($value->timeAdded)             || !self::magnetCommentTimeAdded($value->timeAdded, $error)  ||
-        !isset($value->approved)              || !self::magnetCommentApproved($value->approved, $error)    ||
-        !isset($value->value)                 || !self::magnetCommentValue($value->value, $error)          ||
+    if (!isset($value->magnetCommentId)       || !self::magnetCommentId($value->magnetCommentId, $error)                   ||
+        !isset($value->magnetId)              || !self::magnetId($value->magnetId, $error)                                 ||
+        !isset($value->userId)                || !self::userId($value->userId, $error)                                     ||
+        !isset($value->timeAdded)             || !self::magnetCommentTimeAdded($value->timeAdded, $error)                  ||
+        !isset($value->approved)              || !self::magnetCommentApproved($value->approved, $error)                    ||
+        !isset($value->value)                 || !self::magnetCommentValue($value->value, $error)                          ||
+
+        (isset($value->magnetCommentIdParent) && !self::magnetCommentIdParent($value->magnetCommentIdParent, $error))      ||
 
         (isset($value->public)                && !self::magnetCommentPublic($value->public, $error)))
     {
@@ -1005,7 +1006,7 @@ class Valid
       return false;
     }
 
-    if (!self::magnetCommentId($value, $error))
+    if (is_int($value) && !self::magnetCommentId($value, $error))
     {
       return false;
     }
