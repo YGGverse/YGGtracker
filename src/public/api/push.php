@@ -33,7 +33,7 @@ foreach (json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')) as
   $thisUrl     = Yggverse\Parser\Url::parse(WEBSITE_URL);
   $manifestUrl = Yggverse\Parser\Url::parse($node->manifest);
 
-  if (empty($manifestUrl->host->name) ||
+  if (empty($thisUrl->host->name) ||
       empty($manifestUrl->host->name) ||
       $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
   {
