@@ -199,7 +199,7 @@ try
       foreach ($db->getUsers() as $user)
       {
         // Dump public data only
-        if ($user->public === '1')
+        if ($user->public)
         {
           $users[] = (object)
           [
@@ -236,7 +236,10 @@ try
       foreach ($db->getMagnets($user->userId) as $magnet)
       {
         // Dump public data only
-        if ($magnet->public === '1')
+        if ($magnet->public &&
+            $public['user'][$magnet->userId]) // After upgrade, some users have not updated their public status.
+                                              // Remote node have warning on import, because user info still hidden to init new profile there.
+                                              // Stop magnets export without public profile available, even magnet is public.
         {
           // Info Hash
           $xt = [];
