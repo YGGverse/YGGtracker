@@ -519,6 +519,8 @@ try
             }
 
             // kt
+            $db->deleteMagnetToKeywordTopicByMagnetId($localMagnet->magnetId);
+
             foreach ($remoteMagnet->kt as $kt)
             {
               $db->initMagnetToKeywordTopicId(
@@ -528,6 +530,8 @@ try
             }
 
             // tr
+            $db->deleteMagnetToAddressTrackerByMagnetId($localMagnet->magnetId);
+
             foreach ($remoteMagnet->tr as $tr)
             {
               if ($url = Yggverse\Parser\Url::parse($tr))
@@ -545,6 +549,8 @@ try
             }
 
             // as
+            $db->deleteMagnetToAcceptableSourceByMagnetId($localMagnet->magnetId);
+
             foreach ($remoteMagnet->as as $as)
             {
               if ($url = Yggverse\Parser\Url::parse($as))
@@ -562,6 +568,8 @@ try
             }
 
             // xs
+            $db->deleteMagnetToExactSourceByMagnetId($localMagnet->magnetId);
+
             foreach ($remoteMagnet->xs as $xs)
             {
               if ($url = Yggverse\Parser\Url::parse($tr))
