@@ -5,7 +5,7 @@ $semaphore = sem_get(crc32('yggtracker.crontab.import.feed'), 1);
 
 if (false === sem_acquire($semaphore, true))
 {
-  exit (PHP_EOL . 'yggtracker.crontab.import.feed process locked by another thread.' . PHP_EOL);
+  exit(_('yggtracker.crontab.import.feed process locked by another thread.'));
 }
 
 // Bootstrap
@@ -13,19 +13,40 @@ require_once __DIR__ . '/../../config/bootstrap.php';
 
 if (empty(API_IMPORT_ENABLED))
 {
-  exit;
+  exit(_('Import disabled in settings'));
 }
 
-// Init Debug
+// Init debug
 $debug =
 [
-  'time' => [
+  'data' => [],
+  'time' =>
+  [
     'ISO8601' => date('c'),
     'total'   => microtime(true),
   ],
+  'http' =>
+  [
+    'total' => 0,
+  ],
+  'memory' =>
+  [
+    'start' => memory_get_usage(),
+    'total' => 0,
+    'peaks' => 0
+  ],
+  'db' =>
+  [
+    'total' => [
+      'select' => 0,
+      'insert' => 0,
+      'update' => 0,
+      'delete' => 0,
+    ]
+  ],
 ];
 
-// Begin export
+// Begin import
 try
 {
   // Transaction begin
@@ -36,8 +57,22 @@ try
   ) as $node)
   {
     // Skip non-condition addresses
-    if (!Valid::url($node->manifest))
+    $error = [];
+
+    if (!Valid::url($node->manifest, $error))
     {
+      array_push(
+        $debug['data'],
+        sprintf(
+          _('Manifest URL "%s" invalid: %s'),
+          $node->manifest,
+          print_r(
+            $error,
+            true
+          )
+        )
+      );
+
       continue;
     }
 
@@ -49,45 +84,107 @@ try
         empty($manifestUrl->host->name) ||
         $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
     {
+      // No debug warnings in this case, continue next item
+
       continue;
     }
 
     // Get node manifest
     $curl = new Curl($node->manifest, API_USER_AGENT);
 
-    if (200 != $curl->getCode())
+    $debug['http']['total']++;
+
+    if (200 != $code = $curl->getCode())
     {
+      array_push(
+        $debug['data'],
+        sprintf(
+          _('Manifest URL "%s" unreachable with code: "%s"'),
+          $node->manifest,
+          $code
+        )
+      );
+
       continue;
     }
 
     if (!$manifest = $curl->getResponse())
     {
+      array_push(
+        $debug['data'],
+        sprintf(
+          _('Manifest URL "%s" has broken response'),
+          $node->manifest
+        )
+      );
+
       continue;
     }
 
     if (empty($manifest->export))
     {
+      array_push(
+        $debug['data'],
+        sprintf(
+          _('Manifest URL "%s" has broken protocol'),
+          $node->manifest
+        )
+      );
+
       continue;
     }
 
     // Users
     if (API_IMPORT_USERS_ENABLED)
     {
-      if (Valid::url($manifest->export->users))
+      $error = [];
+
+      if (!Valid::url($manifest->export->users, $error))
       {
+        array_push(
+          $debug['data'],
+          sprintf(
+            _('Users feed URL "%s" invalid: %s'),
+            $manifest->export->users,
+            print_r(
+              $error,
+              true
+            )
+          )
+        );
+
         continue;
       }
 
       // Call feed
       $curl = new Curl($manifest->export->users, API_USER_AGENT);
 
-      if (200 != $curl->getCode())
+      $debug['http']['total']++;
+
+      if (200 != $code = $curl->getCode())
       {
+        array_push(
+          $debug['data'],
+          sprintf(
+            _('Users feed URL "%s" unreachable with code: "%s"'),
+            $manifest->export->users,
+            $code
+          )
+        );
+
         continue;
       }
 
       if (!$remoteUsers = $curl->getResponse())
       {
+        array_push(
+          $debug['data'],
+          sprintf(
+            _('Users feed URL "%s" has broken response'),
+            $manifest->export->users
+          )
+        );
+
         continue;
       }
 
@@ -97,23 +194,55 @@ try
       foreach ((object) $remoteUsers as $remoteUser)
       {
         // Validate required fields
-        if (!Valid::user($remoteUser))
+        $error = [];
+
+        if (!Valid::user($remoteUser, $error))
         {
+          array_push(
+            $debug['data'],
+            sprintf(
+              _('Users feed URL "%s" has invalid protocol: "%s" error: "%s"'),
+              $manifest->export->users,
+              print_r(
+                $remoteUser,
+                true
+              ),
+              print_r(
+                $error,
+                true
+              )
+            )
+          );
+
           continue;
         }
 
         // Skip import on user approved required
         if (API_IMPORT_USERS_APPROVED_ONLY && !$remoteUser->approved)
         {
+          // No debug warnings in this case, continue next item
+
           continue;
         }
 
         // Init session
         else if (!$localUser = $db->getUser(
-          $db->initUserId($remoteUser->address,
-                          USER_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remoteUser->approved : USER_DEFAULT_APPROVED,
-                          $remoteUser->timeAdded)))
+          $db->initUserId(
+            $remoteUser->address,
+            USER_AUTO_APPROVE_ON_IMPORT_APPROVED ? $remoteUser->approved : USER_DEFAULT_APPROVED,
+            $remoteUser->timeAdded
+          )
+        ))
         {
+          array_push(
+            $debug['data'],
+            sprintf(
+              _('Could not init user with address "%s" using feed URL "%s"'),
+              $remoteUser->address,
+              $manifest->export->users
+            )
+          );
+
           continue;
         }
 
@@ -163,21 +292,54 @@ try
       // Magnets
       if (API_IMPORT_MAGNETS_ENABLED)
       {
-        if (Valid::url($manifest->export->magnets))
+        $error = [];
+
+        if (!Valid::url($manifest->export->magnets, $error))
         {
+          array_push(
+            $debug['data'],
+            sprintf(
+              _('Magnets feed URL "%s" invalid: %s'),
+              $manifest->export->magnets,
+              print_r(
+                $error,
+                true
+              )
+            )
+          );
+
           continue;
         }
 
         // Call feed
         $curl = new Curl($manifest->export->magnets, API_USER_AGENT);
 
-        if (200 != $curl->getCode())
+        $debug['http']['total']++;
+
+        if (200 != $code = $curl->getCode())
         {
+          array_push(
+            $debug['data'],
+            sprintf(
+              _('Magnets feed URL "%s" unreachable with code: "%s"'),
+              $manifest->export->magnets,
+              $code
+            )
+          );
+
           continue;
         }
 
         if (!$remoteMagnets = $curl->getResponse())
         {
+          array_push(
+            $debug['data'],
+            sprintf(
+              _('Magnets feed URL "%s" has broken response'),
+              $manifest->export->magnets
+            )
+          );
+
           continue;
         }
 
@@ -187,20 +349,53 @@ try
         foreach ((object) $remoteMagnets as $remoteMagnet)
         {
           // Validate required fields by protocol
-          if (!Valid::magnet($remoteMagnet))
+          $error = [];
+
+          if (!Valid::magnet($remoteMagnet, $error))
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnets feed URL "%s" has invalid protocol: "%s" error: "%s"'),
+                $manifest->export->magnets,
+                print_r(
+                  $remoteMagnet,
+                  true
+                ),
+                print_r(
+                  $error,
+                  true
+                )
+              )
+            );
+
             continue;
           }
 
           // Aliases check
           if (!isset($aliasUserId[$remoteMagnet->userId]))
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Local alias for remote userId "%s" not found in URL "%s" %s'),
+                $remoteMagnet->userId,
+                $manifest->export->magnets,
+                print_r(
+                  $remoteMagnet,
+                  true
+                ),
+              )
+            );
+
             continue;
           }
 
           // Skip import on magnet approved required
           if (API_IMPORT_MAGNETS_APPROVED_ONLY && !$remoteMagnet->approved)
           {
+            // No debug warnings in this case, continue next item
+
             continue;
           }
 
@@ -255,60 +450,54 @@ try
               {
                 case 1:
 
-                  if (Yggverse\Parser\Magnet::isXTv1($xt->value))
-                  {
-                    $exist = false;
+                  $exist = false;
 
-                    foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
+                  foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
+                  {
+                    if ($infoHash = $db->getInfoHash($result->infoHashId))
                     {
-                      if ($infoHash = $db->getInfoHash($result->infoHashId))
+                      if ($infoHash->version == 1)
                       {
-                        if ($infoHash->version == 1)
-                        {
-                          $exist = true;
-                        }
+                        $exist = true;
                       }
                     }
+                  }
 
-                    if (!$exist)
-                    {
-                      $db->addMagnetToInfoHash(
-                        $localMagnet->magnetId,
-                        $db->initInfoHashId(
-                          Yggverse\Parser\Magnet::filterInfoHash($xt->value), 1
-                        )
-                      );
-                    }
+                  if (!$exist)
+                  {
+                    $db->addMagnetToInfoHash(
+                      $localMagnet->magnetId,
+                      $db->initInfoHashId(
+                        $xt->value, 1
+                      )
+                    );
                   }
 
                 break;
 
                 case 2:
 
-                  if (Yggverse\Parser\Magnet::isXTv2($xt->value))
-                  {
-                    $exist = false;
+                  $exist = false;
 
-                    foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
+                  foreach ($db->findMagnetToInfoHashByMagnetId($localMagnet->magnetId) as $result)
+                  {
+                    if ($infoHash = $db->getInfoHash($result->infoHashId))
                     {
-                      if ($infoHash = $db->getInfoHash($result->infoHashId))
+                      if ($infoHash->version == 2)
                       {
-                        if ($infoHash->version == 2)
-                        {
-                          $exist = true;
-                        }
+                        $exist = true;
                       }
                     }
+                  }
 
-                    if (!$exist)
-                    {
-                      $db->addMagnetToInfoHash(
-                        $localMagnet->magnetId,
-                        $db->initInfoHashId(
-                          Yggverse\Parser\Magnet::filterInfoHash($xt->value), 2
-                        )
-                      );
-                    }
+                  if (!$exist)
+                  {
+                    $db->addMagnetToInfoHash(
+                      $localMagnet->magnetId,
+                      $db->initInfoHashId(
+                        $xt->value, 2
+                      )
+                    );
                   }
 
                 break;
@@ -320,50 +509,59 @@ try
             {
               $db->initMagnetToKeywordTopicId(
                 $localMagnet->magnetId,
-                $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
+                $db->initKeywordTopicId(trim(mb_strtolower($kt))) // @TODO
               );
             }
 
             // tr
             foreach ($remoteMagnet->tr as $tr)
             {
-              $db->initMagnetToAddressTrackerId(
-                $localMagnet->magnetId,
-                $db->initAddressTrackerId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+              if ($url = Yggverse\Parser\Url::parse($tr))
+              {
+                $db->initMagnetToAddressTrackerId(
+                  $localMagnet->magnetId,
+                  $db->initAddressTrackerId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
+              }
             }
 
             // as
             foreach ($remoteMagnet->as as $as)
             {
-              $db->initMagnetToAcceptableSourceId(
-                $localMagnet->magnetId,
-                $db->initAcceptableSourceId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+              if ($url = Yggverse\Parser\Url::parse($as))
+              {
+                $db->initMagnetToAcceptableSourceId(
+                  $localMagnet->magnetId,
+                  $db->initAcceptableSourceId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
+              }
             }
 
             // xs
             foreach ($remoteMagnet->xs as $xs)
             {
-              $db->initMagnetToExactSourceId(
-                $localMagnet->magnetId,
-                $db->initExactSourceId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+              if ($url = Yggverse\Parser\Url::parse($tr))
+              {
+                $db->initMagnetToExactSourceId(
+                  $localMagnet->magnetId,
+                  $db->initExactSourceId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
+              }
             }
           }
 
@@ -374,41 +572,125 @@ try
         // Magnet comments
         if (API_IMPORT_MAGNET_COMMENTS_ENABLED)
         {
-          if (Valid::url($manifest->export->magnetComments))
+          $error = [];
+
+          if (!Valid::url($manifest->export->magnetComments, $error))
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet comments feed URL "%s" invalid: %s'),
+                $manifest->export->magnetComments,
+                print_r(
+                  $error,
+                  true
+                )
+              )
+            );
+
             continue;
           }
 
           // Call feed
           $curl = new Curl($manifest->export->magnetComments, API_USER_AGENT);
 
-          if (200 != $curl->getCode())
+          $debug['http']['total']++;
+
+          if (200 != $code = $curl->getCode())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet comments feed URL "%s" unreachable with code: "%s"'),
+                $manifest->export->magnetComments,
+                $code
+              )
+            );
+
             continue;
           }
 
           if (!$remoteMagnetComments = $curl->getResponse())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet comments feed URL "%s" has broken response'),
+                $manifest->export->magnetComments
+              )
+            );
+
             continue;
           }
 
           foreach ((object) $remoteMagnetComments as $remoteMagnetComment)
           {
             // Validate
-            if (!Valid::magnetComment($remoteMagnetComment))
+            $error = [];
+
+            if (!Valid::magnetComment($remoteMagnetComment, $error))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Magnet comments feed URL "%s" has invalid protocol: "%s" error: "%s"'),
+                  $manifest->export->magnetComments,
+                  print_r(
+                    $remoteMagnetComment,
+                    true
+                  ),
+                  print_r(
+                    $error,
+                    true
+                  )
+                )
+              );
+
               continue;
             }
 
             // Aliases check
-            if (!isset($aliasMagnetId[$remoteMagnetComment->magnetId]) || !isset($aliasUserId[$remoteMagnetComment->userId]))
+            if (!isset($aliasUserId[$remoteMagnetComment->userId]))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote userId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetComment->userId,
+                  $manifest->export->magnetComments,
+                  print_r(
+                    $remoteMagnetComment,
+                    true
+                  ),
+                )
+              );
+
+              continue;
+            }
+
+            if (!isset($aliasMagnetId[$remoteMagnetComment->magnetId]))
+            {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetComment->magnetId,
+                  $manifest->export->magnetComments,
+                  print_r(
+                    $remoteMagnetComment,
+                    true
+                  ),
+                )
+              );
+
               continue;
             }
 
             // Skip import on magnet comment approved required
             if (API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY && !$remoteMagnetComment->approved)
             {
+              // No debug warnings in this case, continue next item
+
               continue;
             }
 
@@ -444,42 +726,125 @@ try
         // Magnet downloads
         if (API_IMPORT_MAGNET_DOWNLOADS_ENABLED)
         {
-          if (Valid::url($manifest->export->magnetDownloads))
+          // Skip non-condition addresses
+          $error = [];
+
+          if (!Valid::url($manifest->export->magnetDownloads, $error))
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet downloads feed URL "%s" invalid: %s'),
+                $manifest->export->magnetDownloads,
+                print_r(
+                  $error,
+                  true
+                )
+              )
+            );
+
             continue;
           }
 
           // Call feed
           $curl = new Curl($manifest->export->magnetDownloads, API_USER_AGENT);
 
-          if (200 != $curl->getCode())
+          $debug['http']['total']++;
+
+          if (200 != $code = $curl->getCode())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet downloads feed URL "%s" unreachable with code: "%s"'),
+                $manifest->export->magnetDownloads,
+                $code
+              )
+            );
+
             continue;
           }
 
           if (!$remoteMagnetDownloads = $curl->getResponse())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet downloads feed URL "%s" has broken response'),
+                $manifest->export->magnetDownloads
+              )
+            );
+
             continue;
           }
 
           foreach ((object) $remoteMagnetDownloads as $remoteMagnetDownload)
           {
             // Validate
-            if (!Valid::magnetDownload($remoteMagnetDownload))
+            $error = [];
+
+            if (!Valid::magnetDownload($remoteMagnetDownload, $error))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Magnet downloads feed URL "%s" has invalid protocol: "%s" error: "%s"'),
+                  $manifest->export->magnetDownloads,
+                  print_r(
+                    $remoteMagnetDownload,
+                    true
+                  ),
+                  print_r(
+                    $error,
+                    true
+                  )
+                )
+              );
+
               continue;
             }
 
             // Aliases check
-            if (!isset($aliasMagnetId[$remoteMagnetDownload->magnetId]) || !isset($aliasUserId[$remoteMagnetDownload->userId]))
+            if (!isset($aliasUserId[$remoteMagnetDownload->userId]))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote userId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetDownload->userId,
+                  $manifest->export->magnetDownloads,
+                  print_r(
+                    $remoteMagnetDownload,
+                    true
+                  ),
+                )
+              );
+
+              continue;
+            }
+
+            if (!isset($aliasMagnetId[$remoteMagnetDownload->magnetId]))
+            {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetDownload->magnetId,
+                  $manifest->export->magnetDownloads,
+                  print_r(
+                    $remoteMagnetDownload,
+                    true
+                  ),
+                )
+              );
+
               continue;
             }
 
             // Add new magnet download if not exist by timestamp added for this user
             if (!$db->findMagnetDownload($aliasMagnetId[$remoteMagnetDownload->magnetId],
-                                          $aliasUserId[$remoteMagnetDownload->userId],
-                                          $remoteMagnetDownload->timeAdded))
+                                         $aliasUserId[$remoteMagnetDownload->userId],
+                                         $remoteMagnetDownload->timeAdded))
             {
               $db->addMagnetDownload(
                 $aliasMagnetId[$remoteMagnetDownload->magnetId],
@@ -493,42 +858,124 @@ try
         // Magnet views
         if (API_IMPORT_MAGNET_VIEWS_ENABLED)
         {
-          if (Valid::url($manifest->export->magnetViews))
+          $error = [];
+
+          if (!Valid::url($manifest->export->magnetViews, $error))
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet views feed URL "%s" invalid: %s'),
+                $manifest->export->magnetViews,
+                print_r(
+                  $error,
+                  true
+                )
+              )
+            );
+
             continue;
           }
 
           // Call feed
           $curl = new Curl($manifest->export->magnetViews, API_USER_AGENT);
 
-          if (200 != $curl->getCode())
+          $debug['http']['total']++;
+
+          if (200 != $code = $curl->getCode())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet views feed URL "%s" unreachable with code: "%s"'),
+                $manifest->export->magnetViews,
+                $code
+              )
+            );
+
             continue;
           }
 
           if (!$remoteMagnetViews = $curl->getResponse())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet views feed URL "%s" has broken response'),
+                $manifest->export->magnetViews
+              )
+            );
+
             continue;
           }
 
           foreach ((object) $remoteMagnetViews as $remoteMagnetView)
           {
             // Validate
-            if (!Valid::magnetView($remoteMagnetView))
+            $error = [];
+
+            if (!Valid::magnetView($remoteMagnetView, $error))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Magnet views feed URL "%s" has invalid protocol: "%s" error: "%s"'),
+                  $manifest->export->magnetViews,
+                  print_r(
+                    $remoteMagnetView,
+                    true
+                  ),
+                  print_r(
+                    $error,
+                    true
+                  )
+                )
+              );
+
               continue;
             }
 
             // Aliases check
-            if (!isset($aliasMagnetId[$remoteMagnetView->magnetId]) || !isset($aliasUserId[$remoteMagnetView->userId]))
+            if (!isset($aliasUserId[$remoteMagnetView->userId]))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote userId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetView->userId,
+                  $manifest->export->magnetViews,
+                  print_r(
+                    $remoteMagnetView,
+                    true
+                  ),
+                )
+              );
+
+              continue;
+            }
+
+            if (!isset($aliasMagnetId[$remoteMagnetView->magnetId]))
+            {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetView->magnetId,
+                  $manifest->export->magnetViews,
+                  print_r(
+                    $remoteMagnetView,
+                    true
+                  ),
+                )
+              );
+
               continue;
             }
 
             // Add new magnet view if not exist by timestamp added for this user
             if (!$db->findMagnetView($aliasMagnetId[$remoteMagnetView->magnetId],
-                                      $aliasUserId[$remoteMagnetView->userId],
-                                      $remoteMagnetView->timeAdded))
+                                     $aliasUserId[$remoteMagnetView->userId],
+                                     $remoteMagnetView->timeAdded))
             {
               $db->addMagnetView(
                 $aliasMagnetId[$remoteMagnetView->magnetId],
@@ -542,42 +989,124 @@ try
         // Magnet stars
         if (API_IMPORT_MAGNET_STARS_ENABLED)
         {
-          if (Valid::url($manifest->export->magnetStars))
+          $error = [];
+
+          if (!Valid::url($manifest->export->magnetStars, $error))
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet stars feed URL "%s" invalid: %s'),
+                $manifest->export->magnetStars,
+                print_r(
+                  $error,
+                  true
+                )
+              )
+            );
+
             continue;
           }
 
           // Call feed
           $curl = new Curl($manifest->export->magnetStars, API_USER_AGENT);
 
-          if (200 != $curl->getCode())
+          $debug['http']['total']++;
+
+          if (200 != $code = $curl->getCode())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet stars feed URL "%s" unreachable with code: "%s"'),
+                $manifest->export->magnetStars,
+                $code
+              )
+            );
+
             continue;
           }
 
           if (!$remoteMagnetStars = $curl->getResponse())
           {
+            array_push(
+              $debug['data'],
+              sprintf(
+                _('Magnet stars feed URL "%s" has broken response'),
+                $manifest->export->magnetStars
+              )
+            );
+
             continue;
           }
 
           foreach ((object) $remoteMagnetStars as $remoteMagnetStar)
           {
             // Validate
-            if (!Valid::magnetStar($remoteMagnetStar))
+            $error = [];
+
+            if (!Valid::magnetStar($remoteMagnetStar, $error))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Magnet stars feed URL "%s" has invalid protocol: "%s" error: "%s"'),
+                  $manifest->export->magnetStars,
+                  print_r(
+                    $remoteMagnetStar,
+                    true
+                  ),
+                  print_r(
+                    $error,
+                    true
+                  )
+                )
+              );
+
               continue;
             }
 
             // Aliases check
-            if (!isset($aliasMagnetId[$remoteMagnetStar->magnetId]) || !isset($aliasUserId[$remoteMagnetStar->userId]))
+            if (!isset($aliasUserId[$remoteMagnetStar->userId]))
             {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote userId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetStar->userId,
+                  $manifest->export->magnetStars,
+                  print_r(
+                    $remoteMagnetStar,
+                    true
+                  ),
+                )
+              );
+
+              continue;
+            }
+
+            if (!isset($aliasMagnetId[$remoteMagnetStar->magnetId]))
+            {
+              array_push(
+                $debug['data'],
+                sprintf(
+                  _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
+                  $remoteMagnetStar->magnetId,
+                  $manifest->export->magnetStars,
+                  print_r(
+                    $remoteMagnetStar,
+                    true
+                  ),
+                )
+              );
+
               continue;
             }
 
             // Add new magnet star if not exist by timestamp added for this user
             if (!$db->findMagnetStar($aliasMagnetId[$remoteMagnetStar->magnetId],
-                                      $aliasUserId[$remoteMagnetStar->userId],
-                                      $remoteMagnetStar->timeAdded))
+                                     $aliasUserId[$remoteMagnetStar->userId],
+                                     $remoteMagnetStar->timeAdded))
             {
               $db->addMagnetStar(
                 $aliasMagnetId[$remoteMagnetStar->magnetId],
@@ -602,17 +1131,14 @@ try
 }
 
 // Debug output
-$debug['time']['total'] = microtime(true) - $debug['time']['total'];
+$debug['time']['total']   = microtime(true) - $debug['time']['total'];
 
-print_r(
-  array_merge($debug, [
-    'db' => [
-      'total' => [
-        'select' => $db->getDebug()->query->select->total,
-        'insert' => $db->getDebug()->query->insert->total,
-        'update' => $db->getDebug()->query->update->total,
-        'delete' => $db->getDebug()->query->delete->total,
-      ]
-    ]
-  ])
-);
+$debug['memory']['total'] = memory_get_usage() - $debug['memory']['start'];
+$debug['memory']['peaks'] = memory_get_peak_usage();
+
+$debug['db']['total']['select'] = $db->getDebug()->query->select->total;
+$debug['db']['total']['insert'] = $db->getDebug()->query->insert->total;
+$debug['db']['total']['update'] = $db->getDebug()->query->update->total;
+$debug['db']['total']['delete'] = $db->getDebug()->query->delete->total;
+
+print_r($debug);
