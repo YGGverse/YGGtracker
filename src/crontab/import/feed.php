@@ -19,7 +19,7 @@ if (empty(API_IMPORT_ENABLED))
 // Init debug
 $debug =
 [
-  'data' => [],
+  'dump' => [],
   'time' =>
   [
     'ISO8601' => date('c'),
@@ -62,7 +62,7 @@ try
     if (!Valid::url($node->manifest, $error))
     {
       array_push(
-        $debug['data'],
+        $debug['dump'],
         sprintf(
           _('Manifest URL "%s" invalid: %s'),
           $node->manifest,
@@ -97,7 +97,7 @@ try
     if (200 != $code = $curl->getCode())
     {
       array_push(
-        $debug['data'],
+        $debug['dump'],
         sprintf(
           _('Manifest URL "%s" unreachable with code: "%s"'),
           $node->manifest,
@@ -111,7 +111,7 @@ try
     if (!$manifest = $curl->getResponse())
     {
       array_push(
-        $debug['data'],
+        $debug['dump'],
         sprintf(
           _('Manifest URL "%s" has broken response'),
           $node->manifest
@@ -124,7 +124,7 @@ try
     if (empty($manifest->export))
     {
       array_push(
-        $debug['data'],
+        $debug['dump'],
         sprintf(
           _('Manifest URL "%s" has broken protocol'),
           $node->manifest
@@ -142,7 +142,7 @@ try
       if (!Valid::url($manifest->export->users, $error))
       {
         array_push(
-          $debug['data'],
+          $debug['dump'],
           sprintf(
             _('Users feed URL "%s" invalid: %s'),
             $manifest->export->users,
@@ -164,7 +164,7 @@ try
       if (200 != $code = $curl->getCode())
       {
         array_push(
-          $debug['data'],
+          $debug['dump'],
           sprintf(
             _('Users feed URL "%s" unreachable with code: "%s"'),
             $manifest->export->users,
@@ -178,7 +178,7 @@ try
       if (!$remoteUsers = $curl->getResponse())
       {
         array_push(
-          $debug['data'],
+          $debug['dump'],
           sprintf(
             _('Users feed URL "%s" has broken response'),
             $manifest->export->users
@@ -199,7 +199,7 @@ try
         if (!Valid::user($remoteUser, $error))
         {
           array_push(
-            $debug['data'],
+            $debug['dump'],
             sprintf(
               _('Users feed URL "%s" has invalid protocol: "%s" error: "%s"'),
               $manifest->export->users,
@@ -235,7 +235,7 @@ try
         ))
         {
           array_push(
-            $debug['data'],
+            $debug['dump'],
             sprintf(
               _('Could not init user with address "%s" using feed URL "%s"'),
               $remoteUser->address,
@@ -297,7 +297,7 @@ try
         if (!Valid::url($manifest->export->magnets, $error))
         {
           array_push(
-            $debug['data'],
+            $debug['dump'],
             sprintf(
               _('Magnets feed URL "%s" invalid: %s'),
               $manifest->export->magnets,
@@ -319,7 +319,7 @@ try
         if (200 != $code = $curl->getCode())
         {
           array_push(
-            $debug['data'],
+            $debug['dump'],
             sprintf(
               _('Magnets feed URL "%s" unreachable with code: "%s"'),
               $manifest->export->magnets,
@@ -333,7 +333,7 @@ try
         if (!$remoteMagnets = $curl->getResponse())
         {
           array_push(
-            $debug['data'],
+            $debug['dump'],
             sprintf(
               _('Magnets feed URL "%s" has broken response'),
               $manifest->export->magnets
@@ -354,7 +354,7 @@ try
           if (!Valid::magnet($remoteMagnet, $error))
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnets feed URL "%s" has invalid protocol: "%s" error: "%s"'),
                 $manifest->export->magnets,
@@ -376,7 +376,7 @@ try
           if (!isset($aliasUserId[$remoteMagnet->userId]))
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Local alias for remote userId "%s" not found in URL "%s" %s'),
                 $remoteMagnet->userId,
@@ -577,7 +577,7 @@ try
           if (!Valid::url($manifest->export->magnetComments, $error))
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet comments feed URL "%s" invalid: %s'),
                 $manifest->export->magnetComments,
@@ -599,7 +599,7 @@ try
           if (200 != $code = $curl->getCode())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet comments feed URL "%s" unreachable with code: "%s"'),
                 $manifest->export->magnetComments,
@@ -613,7 +613,7 @@ try
           if (!$remoteMagnetComments = $curl->getResponse())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet comments feed URL "%s" has broken response'),
                 $manifest->export->magnetComments
@@ -631,7 +631,7 @@ try
             if (!Valid::magnetComment($remoteMagnetComment, $error))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Magnet comments feed URL "%s" has invalid protocol: "%s" error: "%s"'),
                   $manifest->export->magnetComments,
@@ -653,7 +653,7 @@ try
             if (!isset($aliasUserId[$remoteMagnetComment->userId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote userId "%s" not found in URL "%s" %s'),
                   $remoteMagnetComment->userId,
@@ -671,7 +671,7 @@ try
             if (!isset($aliasMagnetId[$remoteMagnetComment->magnetId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
                   $remoteMagnetComment->magnetId,
@@ -732,7 +732,7 @@ try
           if (!Valid::url($manifest->export->magnetDownloads, $error))
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet downloads feed URL "%s" invalid: %s'),
                 $manifest->export->magnetDownloads,
@@ -754,7 +754,7 @@ try
           if (200 != $code = $curl->getCode())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet downloads feed URL "%s" unreachable with code: "%s"'),
                 $manifest->export->magnetDownloads,
@@ -768,7 +768,7 @@ try
           if (!$remoteMagnetDownloads = $curl->getResponse())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet downloads feed URL "%s" has broken response'),
                 $manifest->export->magnetDownloads
@@ -786,7 +786,7 @@ try
             if (!Valid::magnetDownload($remoteMagnetDownload, $error))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Magnet downloads feed URL "%s" has invalid protocol: "%s" error: "%s"'),
                   $manifest->export->magnetDownloads,
@@ -808,7 +808,7 @@ try
             if (!isset($aliasUserId[$remoteMagnetDownload->userId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote userId "%s" not found in URL "%s" %s'),
                   $remoteMagnetDownload->userId,
@@ -826,7 +826,7 @@ try
             if (!isset($aliasMagnetId[$remoteMagnetDownload->magnetId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
                   $remoteMagnetDownload->magnetId,
@@ -863,7 +863,7 @@ try
           if (!Valid::url($manifest->export->magnetViews, $error))
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet views feed URL "%s" invalid: %s'),
                 $manifest->export->magnetViews,
@@ -885,7 +885,7 @@ try
           if (200 != $code = $curl->getCode())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet views feed URL "%s" unreachable with code: "%s"'),
                 $manifest->export->magnetViews,
@@ -899,7 +899,7 @@ try
           if (!$remoteMagnetViews = $curl->getResponse())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet views feed URL "%s" has broken response'),
                 $manifest->export->magnetViews
@@ -917,7 +917,7 @@ try
             if (!Valid::magnetView($remoteMagnetView, $error))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Magnet views feed URL "%s" has invalid protocol: "%s" error: "%s"'),
                   $manifest->export->magnetViews,
@@ -939,7 +939,7 @@ try
             if (!isset($aliasUserId[$remoteMagnetView->userId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote userId "%s" not found in URL "%s" %s'),
                   $remoteMagnetView->userId,
@@ -957,7 +957,7 @@ try
             if (!isset($aliasMagnetId[$remoteMagnetView->magnetId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
                   $remoteMagnetView->magnetId,
@@ -994,7 +994,7 @@ try
           if (!Valid::url($manifest->export->magnetStars, $error))
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet stars feed URL "%s" invalid: %s'),
                 $manifest->export->magnetStars,
@@ -1016,7 +1016,7 @@ try
           if (200 != $code = $curl->getCode())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet stars feed URL "%s" unreachable with code: "%s"'),
                 $manifest->export->magnetStars,
@@ -1030,7 +1030,7 @@ try
           if (!$remoteMagnetStars = $curl->getResponse())
           {
             array_push(
-              $debug['data'],
+              $debug['dump'],
               sprintf(
                 _('Magnet stars feed URL "%s" has broken response'),
                 $manifest->export->magnetStars
@@ -1048,7 +1048,7 @@ try
             if (!Valid::magnetStar($remoteMagnetStar, $error))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Magnet stars feed URL "%s" has invalid protocol: "%s" error: "%s"'),
                   $manifest->export->magnetStars,
@@ -1070,7 +1070,7 @@ try
             if (!isset($aliasUserId[$remoteMagnetStar->userId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote userId "%s" not found in URL "%s" %s'),
                   $remoteMagnetStar->userId,
@@ -1088,7 +1088,7 @@ try
             if (!isset($aliasMagnetId[$remoteMagnetStar->magnetId]))
             {
               array_push(
-                $debug['data'],
+                $debug['dump'],
                 sprintf(
                   _('Local alias for remote magnetId "%s" not found in URL "%s" %s'),
                   $remoteMagnetStar->magnetId,
