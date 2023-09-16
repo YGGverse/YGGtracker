@@ -5,7 +5,7 @@ $semaphore = sem_get(crc32('yggtracker.crontab.export.push'), 1);
 
 if (false === sem_acquire($semaphore, true))
 {
-  exit (PHP_EOL . 'yggtracker.crontab.export.push process locked by another thread.' . PHP_EOL);
+  exit (_('yggtracker.crontab.export.push process locked by another thread.'));
 }
 
 // Bootstrap
@@ -53,7 +53,7 @@ if (API_EXPORT_PUSH_ENABLED)
       if ($user = $db->getUser($push->userId))
       {
         // Dump public data only
-        if ($user->public === '1')
+        if ($user->public)
         {
           $request['user'] = (object)
           [
@@ -65,7 +65,7 @@ if (API_EXPORT_PUSH_ENABLED)
           ];
 
           // Cache public status
-          $public['user'][$user->userId] = $user->public;
+          $public['user'][$user->userId] = (bool) $user->public;
         }
       }
     }
@@ -302,6 +302,8 @@ if (API_EXPORT_PUSH_ENABLED)
     // Check request
     if (empty($request))
     {
+      // Amy request data match conditions, skip
+
       continue;
     }
 
@@ -310,60 +312,192 @@ if (API_EXPORT_PUSH_ENABLED)
       file_get_contents(__DIR__ . '/../../config/nodes.json')
     ) as $node)
     {
-      // Manifest
-      if ($manifest = @json_decode(@file_get_contents($node->manifest)))
+      // Manifest exists
+      if (empty($node->manifest))
       {
-        // API channel not exists
-        if (empty($manifest->import))
-        {
-          continue;
-        }
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest URL not provided for this node: %s'),
+            $node
+          )
+        );
 
-        // Push API channel not exists
-        if (empty($manifest->import->push))
-        {
-          continue;
-        }
-
-        // Skip sending to non-condition addresses
-        if (!Valid::url($manifest->import->push))
-        {
-          continue;
-        }
-
-        else
-        {
-          continue;
-        }
-
-        // Skip sending to the current host
-        if ($thisUrl = Yggverse\Parser\Url::parse(WEBSITE_URL))
-        {
-          if ($pushUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
-          {
-            continue;
-          }
-        }
-
-        else
-        {
-          continue;
-        }
-
-        // @TODO add recipient manifest check to not disturb API without needs
-
-        // Send push request
-        $debug['result'][$manifest->import->push]['request'] = $request;
-
-        $curl = new Curl($manifest->import->push, API_USER_AGENT, $request);
-
-        if ($response = $curl->getResponse())
-        {
-          $debug['result'][$manifest->import->push]['response'] = $response;
-        }
-
-        $debug['result'][$manifest->import->push]['code'] = $curl->getCode();
+        continue;
       }
+
+      // Skip non-condition addresses
+      $error = [];
+
+      if (!Valid::url($node->manifest, $error))
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest URL "%s" invalid: %s'),
+            $node->manifest,
+            print_r(
+              $error,
+              true
+            )
+          )
+        );
+
+        continue;
+      }
+
+      // Skip current host
+      $thisUrl     = Yggverse\Parser\Url::parse(WEBSITE_URL);
+      $manifestUrl = Yggverse\Parser\Url::parse($node->manifest);
+
+      if (empty($thisUrl->host->name) ||
+          empty($manifestUrl->host->name) ||
+          $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
+      {
+        // No debug warnings in this case, continue next item
+
+        continue;
+      }
+
+      // Get node manifest
+      // @TODO cache to prevent extra-queries as usually this script running every minute
+      $curl = new Curl($node->manifest, API_USER_AGENT);
+
+      $debug['http']['total']++;
+
+      if (200 != $code = $curl->getCode())
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest URL "%s" unreachable with code: "%s"'),
+            $node->manifest,
+            $code
+          )
+        );
+
+        continue;
+      }
+
+      if (!$manifest = $curl->getResponse())
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest URL "%s" has broken response'),
+            $node->manifest
+          )
+        );
+
+        continue;
+      }
+
+      // API channel not exists
+      if (empty($manifest->import))
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest import URL not provided for this node: %s'),
+            $node
+          )
+        );
+
+        continue;
+      }
+
+      // Push API channel not exists
+      if (empty($manifest->import->push))
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest import push URL not provided for this node: %s'),
+            $node
+          )
+        );
+
+        continue;
+      }
+
+      // Skip sending to non-condition addresses
+      $error = [];
+
+      if (!Valid::url($manifest->import->push, $error))
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest import push URL "%s" invalid: %s'),
+            $manifest->import->push,
+            print_r(
+              $error,
+              true
+            )
+          )
+        );
+
+        continue;
+      }
+
+      // Skip current host
+      $thisUrl = Yggverse\Parser\Url::parse(WEBSITE_URL);
+      $pushUrl = Yggverse\Parser\Url::parse($manifest->import->push);
+
+      if (empty($thisUrl->host->name) ||
+          empty($pushUrl->host->name) ||
+          $pushUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
+      {
+        // No debug warnings in this case, continue next item
+
+        continue;
+      }
+
+      // @TODO add recipient manifest conditions check to not disturb it API without needs
+
+      // Send push request
+      $debug['dump'][$manifest->import->push]['request'] = $request;
+
+      $curl = new Curl($manifest->import->push, API_USER_AGENT, $request);
+
+      $debug['http']['total']++;
+
+      if (200 != $code = $curl->getCode())
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Could not send manifest push to URL "%s" unreachable with code: "%s"'),
+            $manifest->import->push,
+            $code
+          )
+        );
+
+        continue;
+      }
+
+      if (!$manifest = $curl->getResponse())
+      {
+        array_push(
+          $debug['dump'],
+          sprintf(
+            _('[warning] Manifest push URL "%s" has broken response on sending data: %s'),
+            $manifest->import->push,
+            $request
+          )
+        );
+
+        continue;
+      }
+
+      array_push(
+        $debug['dump'],
+        sprintf(
+          _('[notice] Data successfully sent to manifest push URL "%s": %s'),
+          $manifest->import->push,
+          $request
+        )
+      );
     }
 
     // Drop processed item from queue
