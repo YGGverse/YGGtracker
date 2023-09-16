@@ -40,12 +40,12 @@ $public = [
 // Push export enabled
 if (API_EXPORT_PUSH_ENABLED)
 {
-  // Init request
-  $request = [];
-
   // Get push queue from memory pool
   foreach((array) $memoryApiExportPush = $memory->get('api.export.push') as $id => $push)
   {
+    // Init request
+    $request = [];
+
     // User request
     if (!empty($push->userId) && API_EXPORT_USERS_ENABLED)
     {
@@ -432,7 +432,7 @@ if (API_EXPORT_PUSH_ENABLED)
       // @TODO add recipient manifest conditions check to not disturb it API without needs
 
       // Send push request
-      $debug['dump'][$manifest->import->push]['request'] = $request;
+      $debug['dump'][$manifest->import->push]['request'][] = $request;
 
       $curl = new Curl(
         $manifest->import->push,
@@ -461,11 +461,11 @@ if (API_EXPORT_PUSH_ENABLED)
         continue;
       }
 
-      $debug['dump'][$manifest->import->push]['response'] = $response;
+      $debug['dump'][$manifest->import->push]['response'][] = $response;
     }
 
     // Drop processed item from queue
-    //unset($memoryApiExportPush[$id]);
+    unset($memoryApiExportPush[$id]);
   }
 
   // Update memory pool
