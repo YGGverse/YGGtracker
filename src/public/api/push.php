@@ -35,12 +35,12 @@ foreach (json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')) as
 
   if (empty($thisUrl->host->name) ||
       empty($manifestUrl->host->name) ||
-      $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available, improve condition
+      $manifestUrl->host->name == $thisUrl->host->name) // @TODO some mirrors could be available on same host sub-folders, improve condition
   {
     continue;
   }
 
-  $connectionWhiteList[] = $manifestUrl->host->name;
+  $connectionWhiteList[] = str_replace(['[',']'], false, $manifestUrl->host->name);
 }
 
 // API import enabled
@@ -79,7 +79,10 @@ else if (!in_array($_SERVER['REMOTE_ADDR'], $connectionWhiteList))
   $response =
   [
     'status'  => false,
-    'message' => _('Access denied for this host')
+    'message' => sprintf(
+      _('Access denied for host "%s"'),
+      $_SERVER['REMOTE_ADDR']
+    )
   ];
 }
 
