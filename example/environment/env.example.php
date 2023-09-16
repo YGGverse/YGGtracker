@@ -179,6 +179,12 @@ define('API_IMPORT_MAGNET_VIEWS_ENABLED', true);           // depends of API_IMP
 // Logs
 define('LOG_DIRECTORY', __DIR__ . '/../storage/log');
 
+define('LOG_CRONTAB_SCRAPE_ENABLED', true);
+define('LOG_CRONTAB_SCRAPE_FILENAME', sprintf('crontab_scrape_%s.log', date('Y-m-d')));
+
+define('LOG_CRONTAB_SITEMAP_ENABLED', true);
+define('LOG_CRONTAB_SITEMAP_FILENAME', sprintf('crontab_sitemap_%s.log', date('Y-m-d')));
+
 define('LOG_CRONTAB_EXPORT_FEED_ENABLED', true);
 define('LOG_CRONTAB_EXPORT_FEED_FILENAME', sprintf('crontab_export_feed_%s.log', date('Y-m-d')));
 
