@@ -434,7 +434,13 @@ if (API_EXPORT_PUSH_ENABLED)
       // Send push request
       $debug['dump'][$manifest->import->push]['request'] = $request;
 
-      $curl = new Curl($manifest->import->push, API_USER_AGENT, $request);
+      $curl = new Curl(
+        $manifest->import->push,
+        API_USER_AGENT,
+        [
+          'data' => json_encode($request)
+        ]
+      );
 
       $debug['http']['total']++;
 
@@ -463,7 +469,7 @@ if (API_EXPORT_PUSH_ENABLED)
   }
 
   // Update memory pool
-  $memory->set('api.export.push', $memoryApiExportPush);
+  $memory->set('api.export.push', $memoryApiExportPush, 3600);
 }
 
 // Export push disabled, free api.export.push pool
