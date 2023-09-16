@@ -332,60 +332,54 @@ else
               {
                 case 1:
 
-                  if (Yggverse\Parser\Magnet::isXTv1($xt->value))
-                  {
-                    $exist = false;
+                  $exist = false;
 
-                    foreach ($db->findMagnetToInfoHashByMagnetId($local->magnetId) as $result)
+                  foreach ($db->findMagnetToInfoHashByMagnetId($local->magnetId) as $result)
+                  {
+                    if ($infoHash = $db->getInfoHash($result->infoHashId))
                     {
-                      if ($infoHash = $db->getInfoHash($result->infoHashId))
+                      if ($infoHash->version == 1)
                       {
-                        if ($infoHash->version == 1)
-                        {
-                          $exist = true;
-                        }
+                        $exist = true;
                       }
                     }
+                  }
 
-                    if (!$exist)
-                    {
-                      $db->addMagnetToInfoHash(
-                        $local->magnetId,
-                        $db->initInfoHashId(
-                          Yggverse\Parser\Magnet::filterInfoHash($xt->value), 1
-                        )
-                      );
-                    }
+                  if (!$exist)
+                  {
+                    $db->addMagnetToInfoHash(
+                      $local->magnetId,
+                      $db->initInfoHashId(
+                        $xt->value, 1
+                      )
+                    );
                   }
 
                 break;
 
                 case 2:
 
-                  if (Yggverse\Parser\Magnet::isXTv2($xt->value))
-                  {
-                    $exist = false;
+                  $exist = false;
 
-                    foreach ($db->findMagnetToInfoHashByMagnetId($local->magnetId) as $result)
+                  foreach ($db->findMagnetToInfoHashByMagnetId($local->magnetId) as $result)
+                  {
+                    if ($infoHash = $db->getInfoHash($result->infoHashId))
                     {
-                      if ($infoHash = $db->getInfoHash($result->infoHashId))
+                      if ($infoHash->version == 2)
                       {
-                        if ($infoHash->version == 2)
-                        {
-                          $exist = true;
-                        }
+                        $exist = true;
                       }
                     }
+                  }
 
-                    if (!$exist)
-                    {
-                      $db->addMagnetToInfoHash(
-                        $local->magnetId,
-                        $db->initInfoHashId(
-                          Yggverse\Parser\Magnet::filterInfoHash($xt->value), 2
-                        )
-                      );
-                    }
+                  if (!$exist)
+                  {
+                    $db->addMagnetToInfoHash(
+                      $local->magnetId,
+                      $db->initInfoHashId(
+                        $xt->value, 2
+                      )
+                    );
                   }
 
                 break;
@@ -397,50 +391,59 @@ else
             {
               $db->initMagnetToKeywordTopicId(
                 $local->magnetId,
-                $db->initKeywordTopicId(trim(mb_strtolower(strip_tags(html_entity_decode($kt)))))
+                $db->initKeywordTopicId(trim(mb_strtolower($kt)))
               );
             }
 
             // tr
             foreach ($remote->tr as $tr)
             {
-              $db->initMagnetToAddressTrackerId(
-                $local->magnetId,
-                $db->initAddressTrackerId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+              if ($url = Yggverse\Parser\Url::parse($xs))
+              {
+                $db->initMagnetToAddressTrackerId(
+                  $local->magnetId,
+                  $db->initAddressTrackerId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
+              }
             }
 
             // as
             foreach ($remote->as as $as)
             {
-              $db->initMagnetToAcceptableSourceId(
-                $local->magnetId,
-                $db->initAcceptableSourceId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+              if ($url = Yggverse\Parser\Url::parse($xs))
+              {
+                $db->initMagnetToAcceptableSourceId(
+                  $local->magnetId,
+                  $db->initAcceptableSourceId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
+              }
             }
 
             // xs
             foreach ($remote->xs as $xs)
             {
-              $db->initMagnetToExactSourceId(
-                $local->magnetId,
-                $db->initExactSourceId(
-                  $db->initSchemeId($url->host->scheme),
-                  $db->initHostId($url->host->name),
-                  $db->initPortId($url->host->port),
-                  $db->initUriId($url->page->uri)
-                )
-              );
+              if ($url = Yggverse\Parser\Url::parse($xs))
+              {
+                $db->initMagnetToExactSourceId(
+                  $local->magnetId,
+                  $db->initExactSourceId(
+                    $db->initSchemeId($url->host->scheme),
+                    $db->initHostId($url->host->name),
+                    $db->initPortId($url->host->port),
+                    $db->initUriId($url->page->uri)
+                  )
+                );
+              }
             }
           }
 
@@ -550,7 +553,7 @@ else
           {
             $response = [
               'status'  => false,
-              'message' => $error
+              'message' => $error,
             ];
 
             continue 2;
@@ -695,10 +698,11 @@ else
 
         break;
         default:
+
           $response =
           [
             'status'  => false,
-            'message' => _('Data type not supported')
+            'message' => _('Data field not supported')
           ];
       }
 
