@@ -5,7 +5,7 @@ $semaphore = sem_get(crc32('yggtracker.crontab.export.feed'), 1);
 
 if (false === sem_acquire($semaphore, true))
 {
-  exit (PHP_EOL . 'yggtracker.crontab.export.feed process locked by another thread.' . PHP_EOL);
+  exit (_('yggtracker.crontab.export.feed process locked by another thread.'));
 }
 
 // Bootstrap
@@ -14,9 +14,20 @@ require_once __DIR__ . '/../../config/bootstrap.php';
 // Init Debug
 $debug =
 [
+  'dump' => [],
   'time' => [
     'ISO8601' => date('c'),
     'total'   => microtime(true),
+  ],
+  'http' =>
+  [
+    'total' => 0,
+  ],
+  'memory' =>
+  [
+    'start' => memory_get_usage(),
+    'total' => 0,
+    'peaks' => 0
   ],
 ];
 
@@ -519,17 +530,28 @@ try
 }
 
 // Debug output
-$debug['time']['total'] = microtime(true) - $debug['time']['total'];
+$debug['time']['total']   = microtime(true) - $debug['time']['total'];
 
-print_r(
-  array_merge($debug, [
-    'db' => [
-      'total' => [
-        'select' => $db->getDebug()->query->select->total,
-        'insert' => $db->getDebug()->query->insert->total,
-        'update' => $db->getDebug()->query->update->total,
-        'delete' => $db->getDebug()->query->delete->total,
-      ]
-    ]
-  ])
-);
+$debug['memory']['total'] = memory_get_usage() - $debug['memory']['start'];
+$debug['memory']['peaks'] = memory_get_peak_usage();
+
+$debug['db']['total']['select'] = $db->getDebug()->query->select->total;
+$debug['db']['total']['insert'] = $db->getDebug()->query->insert->total;
+$debug['db']['total']['update'] = $db->getDebug()->query->update->total;
+$debug['db']['total']['delete'] = $db->getDebug()->query->delete->total;
+
+print_r($debug);
+
+// Debug log
+if (LOG_CRONTAB_EXPORT_FEED_ENABLED)
+{
+  @mkdir(LOG_DIRECTORY, 0770, true);
+
+  if ($handle = fopen(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_FEED_FILENAME, 'a+'))
+  {
+    fwrite($handle, print_r($debug, true));
+    fclose($handle);
+
+    chmod(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_FEED_FILENAME, 0770);
+  }
+}

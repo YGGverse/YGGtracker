@@ -1142,3 +1142,17 @@ $debug['db']['total']['update'] = $db->getDebug()->query->update->total;
 $debug['db']['total']['delete'] = $db->getDebug()->query->delete->total;
 
 print_r($debug);
+
+// Debug log
+if (LOG_CRONTAB_IMPORT_FEED_ENABLED)
+{
+  @mkdir(LOG_DIRECTORY, 0770, true);
+
+  if ($handle = fopen(LOG_DIRECTORY . '/' . LOG_CRONTAB_IMPORT_FEED_FILENAME, 'a+'))
+  {
+    fwrite($handle, print_r($debug, true));
+    fclose($handle);
+
+    chmod(LOG_DIRECTORY . '/' . LOG_CRONTAB_IMPORT_FEED_FILENAME, 0770);
+  }
+}

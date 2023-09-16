@@ -14,12 +14,21 @@ require_once __DIR__ . '/../../config/bootstrap.php';
 // Init Debug
 $debug =
 [
-  'time' =>
-  [
+  'dump' => [],
+  'time' => [
     'ISO8601' => date('c'),
     'total'   => microtime(true),
   ],
-  'result' => []
+  'http' =>
+  [
+    'total' => 0,
+  ],
+  'memory' =>
+  [
+    'start' => memory_get_usage(),
+    'total' => 0,
+    'peaks' => 0
+  ],
 ];
 
 // Define public registry
@@ -365,17 +374,28 @@ else
 }
 
 // Debug output
-$debug['time']['total'] = microtime(true) - $debug['time']['total'];
+$debug['time']['total']   = microtime(true) - $debug['time']['total'];
 
-print_r(
-  array_merge($debug, [
-    'db' => [
-      'total' => [
-        'select' => $db->getDebug()->query->select->total,
-        'insert' => $db->getDebug()->query->insert->total,
-        'update' => $db->getDebug()->query->update->total,
-        'delete' => $db->getDebug()->query->delete->total,
-      ]
-    ]
-  ])
-);
+$debug['memory']['total'] = memory_get_usage() - $debug['memory']['start'];
+$debug['memory']['peaks'] = memory_get_peak_usage();
+
+$debug['db']['total']['select'] = $db->getDebug()->query->select->total;
+$debug['db']['total']['insert'] = $db->getDebug()->query->insert->total;
+$debug['db']['total']['update'] = $db->getDebug()->query->update->total;
+$debug['db']['total']['delete'] = $db->getDebug()->query->delete->total;
+
+print_r($debug);
+
+// Debug log
+if (LOG_CRONTAB_EXPORT_PUSH_ENABLED)
+{
+  @mkdir(LOG_DIRECTORY, 0770, true);
+
+  if ($handle = fopen(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_PUSH_FILENAME, 'a+'))
+  {
+    fwrite($handle, print_r($debug, true));
+    fclose($handle);
+
+    chmod(LOG_DIRECTORY . '/' . LOG_CRONTAB_EXPORT_PUSH_FILENAME, 0770);
+  }
+}

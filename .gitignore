@@ -6,12 +6,14 @@
 
 /src/public/api/*.json
 
-/src/config/*
+/src/config/
 !/src/config/bootstrap.php
 !/src/config/nodes.php
 !/src/config/trackers.php
 
 /src/public/sitemap.xml
+
+/src/storage/log/*.log
 
 /composer.lock
 

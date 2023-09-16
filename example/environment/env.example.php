@@ -175,3 +175,18 @@ define('API_IMPORT_MAGNET_COMMENTS_ENABLED', true);        // depends of API_IMP
 define('API_IMPORT_MAGNET_COMMENTS_APPROVED_ONLY', false); // depends of API_IMPORT_ENABLED, API_IMPORT_USERS_ENABLED, API_IMPORT_MAGNETS_ENABLED, API_IMPORT_MAGNET_COMMENTS_ENABLED
 define('API_IMPORT_MAGNET_STARS_ENABLED', true);           // depends of API_IMPORT_ENABLED, API_IMPORT_USERS_ENABLED, API_IMPORT_MAGNETS_ENABLED
 define('API_IMPORT_MAGNET_VIEWS_ENABLED', true);           // depends of API_IMPORT_ENABLED, API_IMPORT_USERS_ENABLED, API_IMPORT_MAGNETS_ENABLED
+
+// Logs
+define('LOG_DIRECTORY', __DIR__ . '/../storage/log');
+
+define('LOG_CRONTAB_EXPORT_FEED_ENABLED', true);
+define('LOG_CRONTAB_EXPORT_FEED_FILENAME', sprintf('crontab_export_feed_%s.log', date('Y-m-d')));
+
+define('LOG_CRONTAB_EXPORT_PUSH_ENABLED', true);
+define('LOG_CRONTAB_EXPORT_PUSH_FILENAME', sprintf('crontab_export_push_%s.log', date('Y-m-d')));
+
+define('LOG_CRONTAB_IMPORT_FEED_ENABLED', true);
+define('LOG_CRONTAB_IMPORT_FEED_FILENAME', sprintf('crontab_import_feed_%s.log', date('Y-m-d')));
+
+define('LOG_API_PUSH_ENABLED', true);
+define('LOG_API_PUSH_FILENAME', sprintf('api_push_%s.log', date('Y-m-d')));
