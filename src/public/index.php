@@ -138,7 +138,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
       <atom:link href="<?php echo WEBSITE_URL ?>/index.php<?php echo $request->query ? sprintf('?query=%s', urlencode($request->query)) : false ?>" rel="self" type="application/rss+xml"></atom:link>
-      <title><?php echo WEBSITE_NAME ?></title>
+      <title><?php echo !empty($request->query) ? sprintf(_('%s - Search - %s'), htmlspecialchars($request->query, ENT_QUOTES, 'UTF-8'), WEBSITE_NAME)
+                                                : WEBSITE_NAME ?></title>
       <description><?php echo _('BitTorrent Registry for Yggdrasil') ?></description>
       <link><?php echo sprintf('%s/index.php%s', WEBSITE_URL, $request->query ? sprintf('?query=%s', urlencode($request->query)) : false) ?></link>
       <?php foreach ($response->magnets as $magnet) { ?>
@@ -160,7 +161,8 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
     <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE_URL ?>/assets/theme/default/css/common.css?<?php echo WEBSITE_CSS_VERSION ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo WEBSITE_URL ?>/assets/theme/default/css/framework.css?<?php echo WEBSITE_CSS_VERSION ?>" />
     <title>
-      <?php echo sprintf(_('%s - BitTorrent Registry for Yggdrasil'), WEBSITE_NAME) ?>
+      <?php echo !empty($request->query) ? sprintf(_('%s - Search - %s'), htmlspecialchars($request->query, ENT_QUOTES, 'UTF-8'), WEBSITE_NAME)
+                                         : sprintf(_('%s - BitTorrent Registry for Yggdrasil'), WEBSITE_NAME) ?>
     </title>
     <meta name="description" content="<?php echo _('BitTorrent Registry for Yggdrasil') ?>" />
     <meta name="keywords" content="yggdrasil, yggverse, yggtracker, bittorrent, magnet, catalog" />
