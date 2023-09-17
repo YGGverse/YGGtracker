@@ -227,40 +227,6 @@ else {
       $db->updateMagnetApproved($magnet->magnetId, (bool) $user->approved, time());
     }
 
-    // Meta
-    if (MAGNET_TITLE_MIN_LENGTH <= mb_strlen($_POST['title']) && MAGNET_TITLE_MAX_LENGTH >= mb_strlen($_POST['title']))
-    {
-      $db->updateMagnetTitle($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['title']))), time());
-
-      $response->form->title->valid->success = true;
-      $response->form->title->valid->message = false;
-    }
-    else
-    {
-      $response->form->title->valid->success = false;
-      $response->form->title->valid->message = sprintf(_('* required, %s-%s chars'), MAGNET_TITLE_MIN_LENGTH, MAGNET_TITLE_MAX_LENGTH);
-    }
-
-    if (mb_strlen($_POST['preview']) < MAGNET_PREVIEW_MIN_LENGTH || mb_strlen($_POST['preview']) > MAGNET_PREVIEW_MAX_LENGTH)
-    {
-      $response->form->preview->valid->success = false;
-      $response->form->preview->valid->message = sprintf(_('* required, %s-%s chars, %s provided'), MAGNET_PREVIEW_MIN_LENGTH, MAGNET_PREVIEW_MAX_LENGTH, mb_strlen($_POST['preview']));
-    }
-    else
-    {
-      $db->updateMagnetPreview($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['preview']))), time());
-    }
-
-    if (mb_strlen($_POST['description']) < MAGNET_DESCRIPTION_MIN_LENGTH || mb_strlen($_POST['description']) > MAGNET_DESCRIPTION_MAX_LENGTH)
-    {
-      $response->form->description->valid->success = false;
-      $response->form->description->valid->message = sprintf(_('* required, %s-%s chars, %s provided'), MAGNET_DESCRIPTION_MIN_LENGTH, MAGNET_DESCRIPTION_MAX_LENGTH, mb_strlen($_POST['description']));
-    }
-    else
-    {
-      $db->updateMagnetDescription($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['description']))), time());
-    }
-
     // Social
     $db->updateMagnetComments($magnet->magnetId, isset($_POST['comments']) ? true : false, time());
     $db->updateMagnetSensitive($magnet->magnetId, isset($_POST['sensitive']) ? true : false, time());
@@ -270,10 +236,76 @@ else {
       $db->updateMagnetPublic($magnet->magnetId, true, time());
     }
 
-    // Display Name
-    if (isset($_POST['dn']))
+    // Title
+    $response->form->title->valid->success = true;
+    $response->form->title->valid->message = [];
+
+    if (!Valid::magnetTitle($_POST['title'], $response->form->title->valid->message))
     {
-      $db->updateMagnetDn($magnet->magnetId, trim(strip_tags(html_entity_decode($_POST['dn']))), time());
+      $response->form->title->valid->success = false;
+    }
+
+    else
+    {
+      $db->updateMagnetTitle(
+        $magnet->magnetId,
+        Filter::magnetTitle($_POST['title']),
+        time()
+      );
+    }
+
+    // Preview
+    $response->form->preview->valid->success = true;
+    $response->form->preview->valid->message = [];
+
+    if (!Valid::magnetPreview($_POST['preview'], $response->form->preview->valid->message))
+    {
+      $response->form->preview->valid->success = false;
+    }
+
+    else
+    {
+      $db->updateMagnetPreview(
+        $magnet->magnetId,
+        Filter::magnetPreview($_POST['preview']),
+        time()
+      );
+    }
+
+    // Description
+    $response->form->description->valid->success = true;
+    $response->form->description->valid->message = [];
+
+    if (!Valid::magnetDescription($_POST['description'], $response->form->description->valid->message))
+    {
+      $response->form->description->valid->success = false;
+    }
+
+    else
+    {
+      $db->updateMagnetDescription(
+        $magnet->magnetId,
+        Filter::magnetDescription($_POST['description']),
+        time()
+      );
+    }
+
+    // Display Name
+    $response->form->dn->valid->success = true;
+    $response->form->dn->valid->message = [];
+
+    if (!Valid::magnetDn($_POST['dn'], $response->form->dn->valid->message))
+    {
+      $response->form->dn->valid->success = false;
+    }
+
+    else
+    {
+      $db->updateMagnetDn(
+        $magnet->magnetId,
+        Filter::magnetDn($_POST['dn']),
+        time()
+      );
     }
 
     // Exact Topic
@@ -469,6 +501,7 @@ else {
         $response->form->title->valid->success &&
         $response->form->preview->valid->success &&
         $response->form->description->valid->success &&
+        $response->form->dn->valid->success &&
         $response->form->tr->valid->success &&
         $response->form->as->valid->success &&
         $response->form->xs->valid->success)
@@ -643,7 +676,7 @@ else {
                         </svg>
                       </sub>
                       <?php if ($response->form->title->valid->message) { ?>
-                        <div class="margin-b-8"><?php echo $response->form->title->valid->message ?></div>
+                        <div class="margin-b-8"><?php echo implode('<br />', $response->form->title->valid->message) ?></div>
                       <?php } ?>
                       <input class="width-100 margin-t-8 <?php echo ($response->form->title->valid->success ? false : 'background-color-red') ?>" type="text" name="title" value="<?php echo $response->form->title->value ?>" placeholder="<?php echo _('Main title') ?>" maxlength="255" />
                     </label>
@@ -655,7 +688,7 @@ else {
                         </svg>
                       </sub>
                       <?php if ($response->form->preview->valid->message) { ?>
-                        <div class="margin-b-8"><?php echo $response->form->preview->valid->message ?></div>
+                        <div class="margin-b-8"><?php echo implode('<br />', $response->form->preview->valid->message) ?></div>
                       <?php } ?>
                       <textarea class="width-100 margin-t-8 <?php echo ($response->form->preview->valid->success ? false : 'background-color-red') ?>" name="preview" placeholder="<?php echo _('Shows in listing and meta tags') ?>"><?php echo $response->form->preview->value ?></textarea>
                     </label>
@@ -667,7 +700,7 @@ else {
                         </svg>
                       </sub>
                       <?php if ($response->form->description->valid->message) { ?>
-                        <div class="margin-b-8"><?php echo $response->form->description->valid->message ?></div>
+                        <div class="margin-b-8"><?php echo implode('<br />', $response->form->description->valid->message) ?></div>
                       <?php } ?>
                       <textarea class="width-100 margin-t-8 <?php echo ($response->form->description->valid->success ? false : 'background-color-red') ?>" name="description" placeholder="<?php echo _('Shows on magnet page') ?>"><?php echo $response->form->description->value ?></textarea>
                     </label>
@@ -720,7 +753,10 @@ else {
                           <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                         </svg>
                       </sub>
-                      <input class="width-100 margin-t-8" type="text" name="dn" id="dn" value="<?php echo $response->form->dn->value ?>" placeholder="<?php echo _('A filename to display to the user, for convenience') ?>" maxlength="255" />
+                      <?php if ($response->form->dn->valid->message) { ?>
+                        <div class="margin-b-8"><?php echo implode('<br />', $response->form->dn->valid->message) ?></div>
+                      <?php } ?>
+                      <input class="width-100 margin-t-8 <?php echo ($response->form->dn->valid->success ? false : 'background-color-red') ?>" type="text" name="dn" id="dn" value="<?php echo $response->form->dn->value ?>" placeholder="<?php echo _('A filename to display to the user, for convenience') ?>" maxlength="255" />
                     </label>
                     <label class="display-block margin-y-8 padding-t-4" for="kt">
                       <?php echo _('Keyword Topic (kt)') ?>

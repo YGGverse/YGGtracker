@@ -41,6 +41,7 @@ require_once __DIR__ . '/../library/scrapeer.php';
 require_once __DIR__ . '/../library/time.php';
 require_once __DIR__ . '/../library/curl.php';
 require_once __DIR__ . '/../library/valid.php';
+require_once __DIR__ . '/../library/filter.php';
 
 // Vendors autoload
 require_once __DIR__ . '/../../vendor/autoload.php';
