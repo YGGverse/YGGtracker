@@ -6,7 +6,8 @@
         "php": "^8.1",
         "yggverse/cache": ">=0.3.0",
         "yggverse/parser": ">=0.4.0",
-        "jdenticon/jdenticon": "^1.0"
+        "jdenticon/jdenticon": "^1.0",
+        "christeredvartsen/php-bittorrent": "^2.0"
     },
     "license": "MIT",
     "autoload": {
