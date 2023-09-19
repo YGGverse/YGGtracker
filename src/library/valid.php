@@ -1852,7 +1852,25 @@ class Valid
 
   public static function torrentInfoPrivate(mixed $value, array &$error = []) : bool
   {
-    // @TODO
+    if (!is_int($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent info private data type')
+      );
+
+      return false;
+    }
+
+    if (!in_array($value, [0, 1]))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent info private value')
+      );
+
+      return false;
+    }
 
     return true;
   }
