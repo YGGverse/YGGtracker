@@ -6,10 +6,11 @@
 
 /src/public/api/*.json
 
-/src/config/
-!/src/config/bootstrap.php
-!/src/config/nodes.php
-!/src/config/trackers.php
+/src/config/*
+!/src/config/bootstrap.json
+!/src/config/nodes.json
+!/src/config/trackers.json
+!/src/config/peers.json
 
 /src/public/sitemap.xml
 

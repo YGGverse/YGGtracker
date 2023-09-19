@@ -193,6 +193,7 @@ try
       ],
       'trackers' => (object) json_decode(file_get_contents(__DIR__ . '/../../config/trackers.json')),
       'nodes'    => (object) json_decode(file_get_contents(__DIR__ . '/../../config/nodes.json')),
+      'peers'    => (object) json_decode(file_get_contents(__DIR__ . '/../../config/peers.json')),
     ];
 
     /// Dump feed
