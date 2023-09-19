@@ -141,8 +141,8 @@ git checkout -b my-pr-branch-name
 
 * [x] Other
   + [x] Moderation
-  + [x] UI
-  + [ ] CLI
+    + [x] UI
+    + [ ] CLI
   + [ ] Installation tools
 
 
