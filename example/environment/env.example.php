@@ -70,8 +70,8 @@ define('MODERATOR_IP_LIST', (array)
 // User
 define('USER_DEFAULT_APPROVED', false);
 
-define('USER_AUTO_APPROVE_ON_MAGNET_APPROVE', false);
-define('USER_AUTO_APPROVE_ON_COMMENT_APPROVE', false);
+define('USER_AUTO_APPROVE_ON_MAGNET_APPROVE', true);
+define('USER_AUTO_APPROVE_ON_COMMENT_APPROVE', true);
 define('USER_AUTO_APPROVE_ON_IMPORT_APPROVED', false);
 
 define('USER_DEFAULT_IDENTICON', 'jidenticon'); // jidenticon|false
