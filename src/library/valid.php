@@ -1324,4 +1324,557 @@ class Valid
 
     return true;
   }
+
+  // Torrent
+  public static function torrentAnnounce(mixed $value, array &$error = []) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent announce data type')
+      );
+
+      return false;
+    }
+
+    if (!self::url($tr, $error))
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Invalid torrent announce URL "%s"'),
+          $tr
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentAnnounceList(mixed $value, array &$error = []) : bool
+  {
+    if (!is_array($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent announce data type')
+      );
+
+      return false;
+    }
+
+    $total = 0;
+
+    foreach ($value as $list)
+    {
+      if (!is_array($list))
+      {
+        array_push(
+          $error,
+          _('Invalid torrent announce list')
+        );
+
+        return false;
+      }
+
+      foreach ($list as $announce)
+      {
+        if (!self::torrentAnnounce($announce, $error))
+        {
+          array_push(
+            $error,
+            sprintf(
+              _('Invalid torrent announce list URL "%s"'),
+              $announce
+            )
+          );
+
+          return false;
+        }
+
+        $total++;
+      }
+    }
+
+    if ($total < TORRENT_ANNOUNCE_MIN_QUANTITY ||
+        $total > TORRENT_ANNOUNCE_MAX_QUANTITY)
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent announces quantity out of %s-%s range'),
+          TORRENT_ANNOUNCE_MIN_QUANTITY,
+          TORRENT_ANNOUNCE_MAX_QUANTITY
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentComment(mixed $value, array &$error = []) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent comment data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(TORRENT_COMMENT_REGEX, $value))
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent comment format does not match condition "%s"'),
+          TORRENT_COMMENT_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < TORRENT_COMMENT_MIN_LENGTH ||
+        mb_strlen($value) > TORRENT_COMMENT_MAX_LENGTH)
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent comment out of %s-%s chars range'),
+          TORRENT_COMMENT_MIN_LENGTH,
+          TORRENT_COMMENT_MAX_LENGTH
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentCreatedBy(mixed $value, array &$error = []) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent created by data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(TORRENT_CREATED_BY_REGEX, $value))
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent created by format does not match condition "%s"'),
+          TORRENT_CREATED_BY_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < TORRENT_CREATED_BY_MIN_LENGTH ||
+        mb_strlen($value) > TORRENT_CREATED_BY_MAX_LENGTH)
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent created by out of %s-%s chars range'),
+          TORRENT_CREATED_BY_MIN_LENGTH,
+          TORRENT_CREATED_BY_MAX_LENGTH
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentCreationDate(mixed $value, array &$error = []) : bool
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent creation date data type')
+      );
+
+      return false;
+    }
+
+    if ($value > time() || $value < 0)
+    {
+      array_push(
+        $error,
+        _('Torrent creation date out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentInfo(mixed $value, array &$error = []) : bool
+  {
+    if (!is_array($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent info data type')
+      );
+
+      return false;
+    }
+
+    if (empty($value))
+    {
+      array_push(
+        $error,
+        _('Torrent info has no keys')
+      );
+
+      return false;
+    }
+
+    foreach ($value as $info)
+    {
+      if (!is_array($info))
+      {
+        array_push(
+          $error,
+          _('Invalid torrent info protocol')
+        );
+
+        return false;
+      }
+
+      if (empty($info))
+      {
+        array_push(
+          $error,
+          _('Torrent info has no values')
+        );
+
+        return false;
+      }
+
+      foreach ($info as $key => $data)
+      {
+        switch ($key)
+        {
+          case 'file-duration':
+
+            if (!self::torrentInfoFileDuration($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info file-duration')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'file-media':
+
+            if (!self::torrentInfoFileMedia($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info file-media')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'files':
+
+            if (!self::torrentInfoFiles($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info files')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'name':
+
+            if (!self::torrentInfoName($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info name')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'piece length':
+
+            if (!self::torrentInfoPieceLength($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info piece length')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'pieces':
+
+            if (!self::torrentInfoPieces($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info pieces')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'private':
+
+            if (!self::torrentInfoPrivate($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info private')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'profiles':
+
+            if (!self::torrentInfoProfiles($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info profiles')
+              );
+
+              return false;
+            }
+
+          break;
+          case 'source':
+
+            if (!self::torrentInfoSource($data, $error))
+            {
+              array_push(
+                $error,
+                _('Invalid torrent info source')
+              );
+
+              return false;
+            }
+
+          break;
+          default:
+            array_push(
+              $error,
+              _('Not supported torrent info key')
+            );
+        }
+      }
+    }
+
+    return true;
+  }
+
+  public static function torrentInfoName(mixed $value, array &$error = []) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent info name data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(TORRENT_INFO_NAME_REGEX, $value))
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent info name format does not match condition "%s"'),
+          TORRENT_INFO_NAME_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < TORRENT_INFO_NAME_MIN_LENGTH ||
+        mb_strlen($value) > TORRENT_INFO_NAME_MAX_LENGTH)
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent info name out of %s-%s chars range'),
+          TORRENT_INFO_NAME_MIN_LENGTH,
+          TORRENT_INFO_NAME_MAX_LENGTH
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentInfoSource(mixed $value, array &$error = []) : bool
+  {
+    if (!is_string($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent info source data type')
+      );
+
+      return false;
+    }
+
+    if (!preg_match(TORRENT_INFO_SOURCE_REGEX, $value))
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent info source format does not match condition "%s"'),
+          TORRENT_INFO_SOURCE_REGEX
+        )
+      );
+
+      return false;
+    }
+
+    if (mb_strlen($value) < TORRENT_INFO_SOURCE_MIN_LENGTH ||
+        mb_strlen($value) > TORRENT_INFO_SOURCE_MAX_LENGTH)
+    {
+      array_push(
+        $error,
+        sprintf(
+          _('Torrent info source out of %s-%s chars range'),
+          TORRENT_INFO_SOURCE_MIN_LENGTH,
+          TORRENT_INFO_SOURCE_MAX_LENGTH
+        )
+      );
+
+      return false;
+    }
+
+    return true;
+
+    return true;
+  }
+
+  public static function torrentInfoFileDuration(mixed $value, array &$error = []) : bool
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent file-duration data type')
+      );
+
+      return false;
+    }
+
+    if ($value < 0)
+    {
+      array_push(
+        $error,
+        _('Torrent file-duration out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentInfoPieceLength(mixed $value, array &$error = []) : bool
+  {
+    if (!is_int($value))
+    {
+      array_push(
+        $error,
+        _('Invalid torrent info piece length data type')
+      );
+
+      return false;
+    }
+
+    if ($value < 0)
+    {
+      array_push(
+        $error,
+        _('Torrent torrent info piece length out of range')
+      );
+
+      return false;
+    }
+
+    return true;
+  }
+
+  public static function torrentInfoPieces(mixed $value, array &$error = []) : bool
+  {
+    // @TODO
+
+    return true;
+  }
+
+  public static function torrentInfoPrivate(mixed $value, array &$error = []) : bool
+  {
+    // @TODO
+
+    return true;
+  }
+
+  public static function torrentInfoProfiles(mixed $value, array &$error = []) : bool
+  {
+    // @TODO
+
+    return true;
+  }
+
+  public static function torrentInfoFileMedia(mixed $value, array &$error = []) : bool
+  {
+    // @TODO
+
+    return true;
+  }
+
+  public static function torrentInfoFiles(mixed $value, array &$error = []) : bool
+  {
+    // @TODO
+
+    return true;
+  }
 }

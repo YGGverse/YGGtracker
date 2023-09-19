@@ -127,11 +127,31 @@ define('MAGNET_STOP_WORDS_SIMILAR',
   ]
 );
 
-// Comment
+// Magnet comment
 define('MAGNET_COMMENT_DEFAULT_APPROVED', false);
 define('MAGNET_COMMENT_DEFAULT_PUBLIC', false);
 define('MAGNET_COMMENT_MIN_LENGTH', 1);
 define('MAGNET_COMMENT_MAX_LENGTH', 1000);
+
+// Torrent
+define('TORRENT_ANNOUNCE_MIN_QUANTITY', 1);
+define('TORRENT_ANNOUNCE_MAX_QUANTITY', 50);
+
+define('TORRENT_COMMENT_MIN_LENGTH', 0);
+define('TORRENT_COMMENT_MAX_LENGTH', 255);
+define('TORRENT_COMMENT_REGEX', '/.*/ui');
+
+define('TORRENT_INFO_NAME_MIN_LENGTH', 0);
+define('TORRENT_INFO_NAME_MAX_LENGTH', 255);
+define('TORRENT_INFO_NAME_REGEX', '/.*/ui');
+
+define('TORRENT_INFO_SOURCE_MIN_LENGTH', 0);
+define('TORRENT_INFO_SOURCE_MAX_LENGTH', 255);
+define('TORRENT_INFO_SOURCE_REGEX', '/.*/ui');
+
+define('TORRENT_CREATED_BY_MIN_LENGTH', 0);
+define('TORRENT_CREATED_BY_MAX_LENGTH', 255);
+define('TORRENT_CREATED_BY_REGEX', '/.*/ui');
 
 // Yggdrasil
 define('YGGDRASIL_HOST_REGEX', '/^0{0,1}[2-3][a-f0-9]{0,2}:/'); // thanks to @ygguser (https://github.com/YGGverse/YGGo/issues/1#issuecomment-1498182228 )
