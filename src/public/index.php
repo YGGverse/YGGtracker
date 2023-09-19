@@ -284,6 +284,18 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL ?>
                             <sup><?php echo $magnet->directs ?></sup>
                           </span>
                         <?php } ?>
+                        <!-- @TODO doubts
+                        <?php if ($user->public && $magnet->public) { ?>
+                          <span class="margin-t-8 margin-r-8 cursor-default opacity-0 parent-hover-opacity-09" title="<?php echo _('Distributed') ?>">
+                            <svg class="width-13px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-all" viewBox="0 0 16 16">
+                              <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z"/>
+                            </svg>
+                            <a href="<?php echo sprintf('%s/node.php#nodes', WEBSITE_URL) ?>">
+                              <sup><?php echo 2 ?></sup>
+                            </a>
+                          </span>
+                        <?php } ?>
+                        -->
                         <span class="float-right margin-l-12">
                         <a rel="nofollow" href="<?php echo sprintf('%s/action.php?target=magnet&toggle=star&magnetId=%s&callback=%s',
                                                                       WEBSITE_URL,
