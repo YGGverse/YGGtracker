@@ -54,24 +54,40 @@ git checkout -b my-pr-branch-name
 
 #### Roadmap
 
-* [ ] Magnet
+* [ ] BitTorrent protocol
   + [ ] Protocol
-    + [x] Exact Topic / xt
-    + [x] Display Name / dn
-    + [x] eXact Length / xl
-    + [x] Address Tracker / rt
-    + [x] Web Seed / ws
-    + [x] Acceptable Source / as
-    + [x] eXact Source / xs
-    + [x] Keyword Topic / kt
-    + [ ] Manifest Topic / mt
-    + [ ] Select Only / so
-    + [ ] PEer / x.pe
-  + [x] Options
-    + [x] Public
-    + [x] Sensitive
+    + [ ] announce
+    + [ ] announce-list
+    + [ ] comment
+    + [ ] created by
+    + [ ] creation date
+    + [ ] info
+      + [ ] file-duration
+      + [ ] file-media
+      + [ ] files
+      + [ ] name
+      + [ ] piece length
+      + [ ] pieces
+      + [ ] private
+      + [ ] profiles
+
+* [ ] Magnet protocol
+  + [x] Exact Topic / xt
+  + [x] Display Name / dn
+  + [x] eXact Length / xl
+  + [x] Address Tracker / rt
+  + [x] Web Seed / ws
+  + [x] Acceptable Source / as
+  + [x] eXact Source / xs
+  + [x] Keyword Topic / kt
+  + [ ] Manifest Topic / mt
+  + [ ] Select Only / so
+  + [ ] PEer / x.pe
+
+* [ ] Catalog
+    + [x] Public levels
+    + [x] Sensitive filter
     + [x] Comments
-  + [ ] Features
     + [x] Scrape trackers
       + [x] Peers
       + [x] Completed
@@ -83,7 +99,7 @@ git checkout -b my-pr-branch-name
     + [x] Threading comments
     + [ ] Forks
 
-+ [ ] Profile
+* [ ] Profile
   + [ ] Listing
     + [ ] Uploads
     + [ ] Downloads
@@ -100,13 +116,15 @@ git checkout -b my-pr-branch-name
       + [ ] eXact Source
     + [ ] Content filters
 
-* [x] Other
-  + [x] Sitemap
-  + [x] RSS
-    + [x] Magnets
-    + [x] Comments
-  + [x] Moderation
-  + [x] API
+* [x] API
+  + [x] Active (push)
+    + [x] Magnet
+      + [x] Edit
+      + [x] Download
+      + [x] Comment
+      + [x] Star
+      + [x] View
+  + [x] Passive (feed)
     + [x] Manifest
     + [x] Users
     + [x] Magnets
@@ -114,6 +132,19 @@ git checkout -b my-pr-branch-name
     + [x] Comments
     + [x] Stars
     + [x] Views
+
+* [x] Export
+  + [x] Sitemap
+  + [x] RSS
+    + [x] Magnets
+    + [x] Comments
+
+* [x] Other
+  + [x] Moderation
+  + [x] UI
+  + [ ] CLI
+  + [ ] Installation tools
+
 
 #### Donate to contributors
 
