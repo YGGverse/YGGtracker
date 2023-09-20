@@ -31,6 +31,12 @@ memcached
 ```
 #### Installation
 
+##### Production
+
+* `composer create-project yggverse/yggtracker YGGtracker`
+
+##### Development
+
 * `git clone https://github.com/YGGverse/YGGtracker.git`
 * `cd YGGtracker`
 * `composer update`
