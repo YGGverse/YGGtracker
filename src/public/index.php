@@ -58,7 +58,7 @@ else
   if ($magnet = Yggverse\Parser\Magnet::is($request->query))
   {
     header(
-      sprintf('Location: %s/action.php?target=magnet&toggle=new&magnet=%s', WEBSITE_URL, base64_encode($request->query))
+      sprintf('Location: %s/action.php?target=magnet&toggle=new&magnet=%s', WEBSITE_URL, urlencode($request->query))
     );
   }
 

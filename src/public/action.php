@@ -428,15 +428,8 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
           $response->message = _('Link required');
         }
 
-        // Validate base64
-        else if (!$link = (string) @base64_decode($_GET['magnet']))
-        {
-          $response->success = false;
-          $response->message = _('Invalid link encoding');
-        }
-
         // Validate magnet
-        else if (!$magnet = Yggverse\Parser\Magnet::parse($link))
+        else if (!$magnet = Yggverse\Parser\Magnet::parse($_GET['magnet']))
         {
           $response->success = false;
           $response->message = _('Invalid magnet link');
@@ -454,7 +447,7 @@ switch (isset($_GET['target']) ? urldecode($_GET['target']) : false)
             if ($magnetId = $db->addMagnet( $user->userId,
                                             $magnet->xl,
                                             $magnet->dn,
-                                            $link,
+                                            '', // @TODO deprecated, remove
                                             MAGNET_DEFAULT_PUBLIC,
                                             MAGNET_DEFAULT_COMMENTS,
                                             MAGNET_DEFAULT_SENSITIVE,
