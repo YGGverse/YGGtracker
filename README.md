@@ -33,7 +33,7 @@ memcached
 
 ##### Production
 
-* `composer create-project yggverse/yggtracker YGGtracker`
+* `composer create-project yggverse/yggtracker`
 
 ##### Development
 
