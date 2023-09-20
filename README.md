@@ -18,6 +18,10 @@ Open trackers defined in [trackers.json](https://github.com/YGGverse/YGGtracker/
 * Trackers not in list will be cropped by the application filter
 * Feel free to PR new yggdrasil tracker!
 
+#### Public peers
+
+Traffic-oriented public peers for Yggdrasil defined in [peers.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/peers.json)
+
 #### Requirements
 
 ```
