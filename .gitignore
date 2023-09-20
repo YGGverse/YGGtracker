@@ -2,7 +2,8 @@
 
 /vendor/
 
-/database/yggtracker.mwb.bak
+/database/*
+!/database/yggtracker.mwb
 
 /src/public/api/*.json
 
