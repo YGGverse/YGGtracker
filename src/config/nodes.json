@@ -1,11 +1,11 @@
 [
   {
-    "description":"YGGtracker instance #1 with main branch updates",
+    "description":"YGGtracker instance #1 running latest stable release",
     "url":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker",
     "manifest":"http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/api/manifest.json"
   },
   {
-    "description":"YGGtracker instance #2 with main branch updates",
+    "description":"YGGtracker instance #2 running latest stable release",
     "url":"http://[200:e6fd:bb3c:b354:cd3a:f939:753e:cd72]/yggtracker",
     "manifest":"http://[200:e6fd:bb3c:b354:cd3a:f939:753e:cd72]/yggtracker/api/manifest.json"
   }
