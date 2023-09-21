@@ -135,6 +135,19 @@ try
       continue;
     }
 
+    if (empty($manifest->version) || $manifest->version !== API_VERSION)
+    {
+      array_push(
+        $debug['dump'],
+        sprintf(
+          _('Manifest API not compatible with local version "%s"'),
+          API_VERSION
+        )
+      );
+
+      continue;
+    }
+
     if (empty($manifest->export))
     {
       array_push(

@@ -58,7 +58,8 @@ try
     // Manifest
     $manifest =
     [
-      'updated'  => time(),
+      'updated' => time(),
+      'version' => (string) API_VERSION,
 
       'settings' => (object)
       [
@@ -119,7 +120,6 @@ try
 
         'MAGNET_STOP_WORDS_SIMILAR'                => (object) MAGNET_STOP_WORDS_SIMILAR,
 
-        'API_VERSION'                              => (string) API_VERSION,
         'API_USER_AGENT'                           => (string) API_USER_AGENT,
 
         'API_EXPORT_ENABLED'                       => (bool) API_EXPORT_ENABLED,

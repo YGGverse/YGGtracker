@@ -3,6 +3,10 @@
 // PHP
 declare(strict_types=1);
 
+// Application
+define('APP_VERSION', '2.0.0');
+define('API_VERSION', APP_VERSION);
+
 // Init environment
 if (!file_exists(__DIR__ . '/.env'))
 {
