@@ -100,9 +100,34 @@ class AppControllerUser
     exit;
   }
 
+  public function getIdenticon(int $size)
+  {
+    $icon = new Jdenticon\Identicon();
+
+    $icon->setValue($this->_user->public ? $this->_user->address : $this->_user->userId);
+    $icon->setSize($size);
+    $icon->setStyle(
+      [
+        'backgroundColor' => 'rgba(255, 255, 255, 0)',
+      ]
+    );
+
+    return $icon->getImageDataUri('webp');
+  }
+
   public function getUser()
   {
     return $this->_user;
+  }
+
+  public function getPublic()
+  {
+    return $this->_user->public;
+  }
+
+  public function getAddress()
+  {
+    return $this->_user->address;
   }
 
   public function findUserPageStarsDistinctTotalByValue(bool $value) : int

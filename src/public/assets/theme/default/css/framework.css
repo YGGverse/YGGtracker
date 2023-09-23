@@ -108,6 +108,10 @@ a.label-green:hover {
   position: fixed;
 }
 
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
 .top--2 {
   top: -2px;
 }
@@ -124,12 +128,20 @@ a.label-green:hover {
   border-radius: 3px;
 }
 
+.border-radius-50 {
+  border-radius: 50%;
+}
+
 .border-pink-light {
   border: 1px #9b6895 solid;
 }
 
-.border-pink {
+.border-color-pink {
   border: 1px #a44399 solid;
+}
+
+.border-color-green {
+  border: 1px #65916d solid;
 }
 
 .border-bottom-pink {
@@ -146,6 +158,10 @@ a.label-green:hover {
 
 .border-top-default {
   border-top: 1px #5d627d solid;
+}
+
+.border-width-2 {
+  border-width: 2px;
 }
 
 .background-color-night {
@@ -312,6 +328,11 @@ a:visited.background-color-hover-night-light:hover {
 
 .margin-b-8 {
   margin-bottom: 8px;
+}
+
+.margin-y-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 .margin-t-16 {

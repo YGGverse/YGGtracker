@@ -1,4 +1,11 @@
-<div class="position-fixed width-160-px margin-l--176 margin-y-8 padding-y-8 background-color-night border-radius-3">
+<div class="margin-y-8 padding-b-8 position-fixed width-160-px margin-l--176 background-color-night border-radius-3">
+  <div class="padding-8 margin-b-8 border-bottom-default">
+    <?php if ($public) { ?>
+      <img class="border-radius-50 border-color-green border-width-2 margin-r-8 vertical-align-middle" src="<?php echo $identicon ?>" alt="identicon" />
+    <?php } else { ?>
+      <img class="border-radius-50 border-color-pink border-width-2 margin-r-8 vertical-align-middle" src="<?php echo $identicon ?>" alt="identicon" />
+    <?php } ?>
+  </div>
   <?php if ($route == '') { ?>
     <span class="padding-x-16 padding-y-8 display-block  background-color-green cursor-default text-color-white">
       <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">

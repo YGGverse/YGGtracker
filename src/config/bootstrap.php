@@ -38,6 +38,9 @@ if (!file_exists(__DIR__ . '/env.' . PHP_ENV . '.php'))
 // Load environment
 require_once __DIR__ . '/env.' . PHP_ENV . '.php';
 
+// Autoload vendors
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 // Route
 parse_str($_SERVER['QUERY_STRING'], $request);
 
