@@ -1,6 +1,6 @@
 <?php
 
-class Database {
+class AppModelDatabase {
 
   private PDO $_db;
 
@@ -595,6 +595,65 @@ class Database {
     $query->execute([$timeUpdated, $userId]);
 
     return $query->rowCount();
+  }
+
+  public function findUserPageStarsDistinctTotal(int $userId, bool $value) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `pageId`) AS `result` FROM `userPageStar` WHERE `userId` = ? AND `value` = ?');
+
+    $query->execute([$userId, (int) $value]);
+
+    return $query->fetch()->result;
+  }
+
+  public function findUserPageViewsDistinctTotal(int $userId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `pageId`) AS `result` FROM `userPageView` WHERE `userId` = ?');
+
+    $query->execute([$userId]);
+
+    return $query->fetch()->result;
+  }
+
+  public function findUserPageDownloadsDistinctTotal(int $userId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `pageId`) AS `result` FROM `userPageDownload` WHERE `userId` = ?');
+
+    $query->execute([$userId]);
+
+    return $query->fetch()->result;
+  }
+
+  public function findUserPageCommentsDistinctTotal(int $userId) : int {
+
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `pageId`) AS `result` FROM `userPageComment` WHERE `userId` = ?');
+
+    $query->execute([$userId]);
+
+    return $query->fetch()->result;
+  }
+
+  public function findUserPageEditionsDistinctTotal(int $userId) : int {
+
+    return 0;
+
+    /* @TODO
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT COUNT(DISTINCT `pageId`) AS `result` FROM `userPageEdition` WHERE `userId` = ?');
+
+    $query->execute([$userId]);
+
+    return $query->fetch()->result;
+    */
   }
 
   // Magnet

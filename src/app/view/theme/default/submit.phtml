@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <?php $appControllerModuleHead->render() ?>
+  <body>
+    <?php $appControllerModuleHeader->render() ?>
+    <main>
+      <div class="container">
+        <div class="row">
+          <div class="column width-100">
+            <?php $appControllerModuleProfile->render() ?>
+            <div class="padding-16 margin-y-8 border-radius-3 background-color-night">
+              <div class="margin-b-24 padding-b-16 border-bottom-default">
+                <h2><?php echo _('Submit') ?></h2>
+              </div>
+              <form class="margin-t-8" name="search" method="post" action="submit">
+                <div class="margin-b-16">
+                  <label class="margin-b-16 display-block" for="magnet"><?php echo _('Magnet URL') ?></label>
+                  <textarea class="width-100" name="magnet" id="magnet" placeholder="<?php echo _('magnet: ...') ?>"></textarea>
+                </div>
+                <div class="margin-b-16">
+                  <label class="margin-b-16 display-block" for="torrent"><?php echo _('Torrent file') ?></label>
+                  <input class="width-100" type="file" name="torrent" id="torrent" value="" />
+                </div>
+                <div class="text-right">
+                  <input type="submit" value="<?php echo _('submit') ?>" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <?php $appControllerModuleFooter->render() ?>
+  </body>
+</html>

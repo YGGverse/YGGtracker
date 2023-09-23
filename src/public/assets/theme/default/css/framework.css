@@ -32,20 +32,44 @@
   text-align: right;
 }
 
-.text-color-green {
+.text-color-green,
+a.text-color-green,
+a.text-color-green:active,
+a.text-color-green:visited,
+a.text-color-green:hover {
   color: #96d9a1;
 }
 
-.text-color-red {
+.text-color-red,
+a.text-color-red,
+a.text-color-red:active,
+a.text-color-red:visited,
+a.text-color-red:hover {
   color: #d77575;
 }
 
-.text-color-pink {
+.text-color-pink,
+a.text-color-pink,
+a.text-color-pink:active,
+a.text-color-pink:visited,
+a.text-color-pink:hover {
   color: #b55cab;
 }
 
-.text-color-default {
+.text-color-default,
+a.text-color-default,
+a.text-color-default:active,
+a.text-color-default:visited,
+a.text-color-default:hover {
   color: #ccc;
+}
+
+.text-color-white,
+a.text-color-white,
+a.text-color-white:active,
+a.text-color-white:visited,
+a.text-color-white:hover {
+  color: #fff;
 }
 
 /*
@@ -67,13 +91,21 @@
   border-radius: 3px;
 }
 
-.label-green {
+.label-green,
+a.label-green,
+a.label-green:active,
+a.label-green:visited,
+a.label-green:hover {
   color: #fff;
   background-color: #65916d;
 }
 
 .position-relative {
   position: relative;
+}
+
+.position-fixed {
+  position: fixed;
 }
 
 .top--2 {
@@ -120,11 +152,17 @@
   background-color: #34384f;
 }
 
-/*
-.background-color-hover-night-light:hover {
-  background-color: #363a51;
+.background-color-green {
+  background-color: #65916d;
 }
-*/
+
+.background-color-hover-night-light:hover,
+a.background-color-hover-night-light:hover,
+a:active.background-color-hover-night-light:hover,
+a:visited.background-color-hover-night-light:hover {
+  /*color: #fff;*/
+  background-color: #3d4159;
+}
 
 .background-color-red {
   background-color: #9b4a4a;
@@ -184,6 +222,11 @@
 .padding-x-8 {
   padding-left: 8px;
   padding-right: 8px;
+}
+
+.padding-y-6 {
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .padding-8 {
@@ -254,6 +297,10 @@
   margin-left: 12px;
 }
 
+.margin-l--176 {
+  margin-left: -176px;
+}
+
 .margin-y-8 {
   margin-top: 8px;
   margin-bottom: 8px;
@@ -319,8 +366,20 @@
   width: 50%;
 }
 
+.width-20 {
+  width: 20%;
+}
+
+.width-80 {
+  width: 80%;
+}
+
 .width-13px {
   width: 13px;
+}
+
+.width-160-px {
+  width: 160px;
 }
 
 @media (max-width: 1220px) {

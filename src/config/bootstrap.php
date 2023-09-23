@@ -38,50 +38,90 @@ if (!file_exists(__DIR__ . '/env.' . PHP_ENV . '.php'))
 // Load environment
 require_once __DIR__ . '/env.' . PHP_ENV . '.php';
 
-// Local internal dependencies
-require_once __DIR__ . '/../library/database.php';
-require_once __DIR__ . '/../library/sphinx.php';
-require_once __DIR__ . '/../library/scrapeer.php';
-require_once __DIR__ . '/../library/time.php';
-require_once __DIR__ . '/../library/curl.php';
-require_once __DIR__ . '/../library/valid.php';
-require_once __DIR__ . '/../library/filter.php';
+// Route
+parse_str($_SERVER['QUERY_STRING'], $request);
 
-// Vendors autoload
-require_once __DIR__ . '/../../vendor/autoload.php';
+if (isset($request['_route_']))
+{
+  switch ($request['_route_'])
+  {
+    case 'stars':
 
-// Connect database
-try {
+      require_once(__DIR__ . '/../app/controller/stars.php');
 
-  $db = new Database(DB_HOST, DB_PORT, DB_NAME, DB_USERNAME, DB_PASSWORD);
+      $controller = new AppControllerStars();
 
-} catch (Exception $e) {
+    break;
 
-  var_dump($e);
+    case 'views':
 
-  exit;
+      require_once(__DIR__ . '/../app/controller/views.php');
+
+      $controller = new AppControllerViews();
+
+    break;
+
+    case 'downloads':
+
+      require_once(__DIR__ . '/../app/controller/downloads.php');
+
+      $controller = new AppControllerDownloads();
+
+    break;
+
+    case 'comments':
+
+      require_once(__DIR__ . '/../app/controller/comments.php');
+
+      $controller = new AppControllerComments();
+
+    break;
+
+    case 'editions':
+
+      require_once(__DIR__ . '/../app/controller/editions.php');
+
+      $controller = new AppControllerEditions();
+
+    break;
+
+    case 'welcome':
+
+      require_once(__DIR__ . '/../app/controller/welcome.php');
+
+      $controller = new AppControllerWelcome();
+
+    break;
+
+    case 'submit':
+
+      require_once(__DIR__ . '/../app/controller/submit.php');
+
+      $controller = new AppControllerSubmit();
+
+    break;
+
+    default:
+
+      require_once(__DIR__ . '/../app/controller/response.php');
+
+      $controller = new AppControllerResponse(
+        sprintf(
+          _('404 - Not found - %s'),
+          WEBSITE_NAME
+        ),
+        _('404'),
+        _('Page not found'),
+        404
+      );
+  }
 }
 
-// Connect Sphinx
-try {
+else
+{
+  require_once(__DIR__ . '/../app/controller/index.php');
 
-  $sphinx = new Sphinx(SPHINX_HOST, SPHINX_PORT);
-
-} catch(Exception $e) {
-
-  var_dump($e);
-
-  exit;
+  $controller = new AppControllerIndex();
 }
 
-// Connect memcached
-try {
-
-  $memory = new Yggverse\Cache\Memory(MEMCACHED_HOST, MEMCACHED_PORT, MEMCACHED_NAMESPACE, MEMCACHED_TIMEOUT + time());
-
-} catch(Exception $e) {
-
-  var_dump($e);
-
-  exit;
-}
+$controller->render();

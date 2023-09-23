@@ -1,6 +1,6 @@
 <?php
 
-class Sphinx {
+class AppModelSphinx {
 
   private $_sphinx;
 
