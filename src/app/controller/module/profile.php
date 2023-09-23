@@ -17,6 +17,7 @@ class AppControllerModuleProfile
     $views     = $this->_user->getUserPageViewsTotal();
     $downloads = $this->_user->getUserPageDownloadsTotal();
     $comments  = $this->_user->getUserPageCommentsTotal();
+    $editions  = $this->_user->getUserPageEditionsTotal();
 
     include __DIR__ . '../../../view/theme/default/module/profile.phtml';
   }
