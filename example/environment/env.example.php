@@ -55,7 +55,7 @@ define('MEMCACHED_TIMEOUT', 60 * 5);
 // Webapp
 define('WEBSITE_URL', '');
 define('WEBSITE_NAME', 'YGGtracker');
-define('WEBSITE_CSS_VERSION', 1);
+define('WEBSITE_CSS_VERSION', 2);
 
 define('WEBSITE_PAGINATION_LIMIT', 20);
 
