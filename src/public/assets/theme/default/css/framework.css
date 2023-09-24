@@ -100,6 +100,16 @@ a.label-green:hover {
   background-color: #65916d;
 }
 
+.button-green {
+  color: #fff;
+  background-color: #65916d;
+}
+
+.button-green:hover {
+  color: #fff;
+  background-color: #709e79;
+}
+
 .position-relative {
   position: relative;
 }
@@ -401,6 +411,10 @@ a:visited.background-color-hover-night-light:hover {
 
 .width-180-px {
   width: 180px;
+}
+
+.min-width-200-px {
+  width: 200px;
 }
 
 @media (max-width: 1220px) {
