@@ -1,4 +1,15 @@
 {
   "name":"YGGtracker",
-  "url":""
+  "url":"",
+  "default":
+  {
+    "user":
+    {
+      "approved": false
+    }
+  },
+  "api":
+  {
+    "export": true
+  }
 }
