@@ -167,16 +167,6 @@ class AppModelValidator
     return $this->_config->page->keywords->required;
   }
 
-  public function getPageKeywordsLengthMin() : int
-  {
-    return $this->_config->page->keywords->length->min;
-  }
-
-  public function getPageKeywordsLengthMax() : int
-  {
-    return $this->_config->page->keywords->length->max;
-  }
-
   public function getPageKeywordsQuantityMin() : int
   {
     return $this->_config->page->keywords->quantity->min;
@@ -187,14 +177,9 @@ class AppModelValidator
     return $this->_config->page->keywords->quantity->max;
   }
 
-  public function getPageKeywordsRegex() : string
-  {
-    return $this->_config->page->keywords->regex;
-  }
-
   public function pageKeywords(mixed $value, array &$error = []) : bool
   {
-    if (!is_array($value))
+    if (!is_string($value))
     {
       array_push(
         $error,
@@ -214,67 +199,60 @@ class AppModelValidator
       return false;
     }
 
-    $total = 0;
-
-    foreach ($value as $keywords)
+    if ($this->getPageKeywordsRequired())
     {
-      if (!is_string($kt))
-      {
-        array_push(
-          $error,
-          _('Invalid magnet keyword value data type')
-        );
+      $total = 0;
 
-        return false;
+      foreach (explode(PHP_EOL, str_replace(['#', ',', ' '], PHP_EOL, $value)) as $keyword)
+      {
+        $error = [];
+
+        if (!$this->pageKeyword($keyword, $error))
+        {
+          array_push(
+            $error,
+            _('Invalid page keyword'),
+          );
+
+          return false;
+        }
+
+        $total++;
       }
 
-      if (!preg_match(MAGNET_KT_REGEX, $kt))
+      if ($total < $this->getPageKeywordsQuantityMin() ||
+          $total > $this->getPageKeywordsQuantityMax())
       {
         array_push(
           $error,
           sprintf(
-            _('Magnet keyword format does not match condition "%s"'),
-            MAGNET_KT_REGEX
+            _('Page keywords quantity out of %s-%s range'),
+            $this->getPageKeywordsQuantityMin(),
+            $this->getPageKeywordsQuantityMax()
           )
         );
 
         return false;
       }
-
-      if (mb_strlen($kt) < MAGNET_KT_MIN_LENGTH ||
-          mb_strlen($kt) > MAGNET_KT_MAX_LENGTH)
-      {
-        array_push(
-          $error,
-          sprintf(
-            _('Magnet keyword out of %s-%s chars range'),
-            MAGNET_KT_MIN_LENGTH,
-            MAGNET_KT_MAX_LENGTH
-          )
-        );
-
-        return false;
-      }
-
-      $total++;
-    }
-
-    if ($total < MAGNET_KT_MIN_QUANTITY ||
-        $total > MAGNET_KT_MAX_QUANTITY)
-    {
-      array_push(
-        $error,
-        sprintf(
-          _('Magnet keywords quantity out of %s-%s range'),
-          MAGNET_KT_MIN_QUANTITY,
-          MAGNET_KT_MAX_QUANTITY
-        )
-      );
-
-      return false;
     }
 
     return true;
+  }
+
+  /// Page keyword
+  public function getPageKeywordLengthMin() : int
+  {
+    return $this->_config->page->keyword->length->min;
+  }
+
+  public function getPageKeywordLengthMax() : int
+  {
+    return $this->_config->page->keyword->length->max;
+  }
+
+  public function getPageKeywordRegex() : string
+  {
+    return $this->_config->page->keyword->regex;
   }
 
   public function pageKeyword(mixed $value, array &$error = []) : bool
@@ -289,29 +267,28 @@ class AppModelValidator
       return false;
     }
 
-    if (!preg_match($this->getPageKeywordsRegex(), $value))
+    if (!preg_match($this->getPageKeywordRegex(), $value))
     {
       array_push(
         $error,
         sprintf(
-          _('Page keyword "%s" format does not match condition "%s"'),
-          $value,
-          $this->getPageKeywordsRegex()
+          _('Page keyword format does not match condition "%s"'),
+          $this->getPageKeywordRegex()
         )
       );
 
       return false;
     }
 
-    if (mb_strlen($value) < $this->getPageDescriptionLengthMin() ||
-        mb_strlen($value) > $this->getPageDescriptionLengthMax())
+    if (mb_strlen($value) < $this->getPageKeywordLengthMin() ||
+        mb_strlen($value) > $this->getPageKeywordLengthMax())
     {
       array_push(
         $error,
         sprintf(
-          _('Page description out of %s-%s chars range'),
-          $this->getPageDescriptionLengthMin(),
-          $this->getPageDescriptionLengthMax()
+          _('Page keyword out of %s-%s chars range'),
+          $this->getPageKeywordLengthMin(),
+          $this->getPageKeywordLengthMax()
         )
       );
 
@@ -325,6 +302,11 @@ class AppModelValidator
   public function getPageTorrentRequired() : bool
   {
     return $this->_config->page->torrent->required;
+  }
+
+  public function getPageTorrentMimeTypes() : array
+  {
+    return $this->_config->page->torrent->mime;
   }
 
   // Common

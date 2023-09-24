@@ -12,7 +12,7 @@
               <div class="margin-b-24 padding-b-16 border-bottom-default">
                 <h2><?php echo _('Submit') ?></h2>
               </div>
-              <form class="margin-t-8" name="submit" method="post" action="submit">
+              <form class="margin-t-8" name="submit" method="post" enctype="multipart/form-data" action="submit">
                 <div class="margin-b-16">
                   <label for="title">
                     <?php echo _('Title') ?>
@@ -23,12 +23,14 @@
                       <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                     </svg>
                   </sub>
-                  <?php foreach ($form->title->error as $error) { ?>
-                    <div class="text-color-red margin-b-8">
-                      <?php echo $error ?>
-                    </div>
+                  <?php foreach ($form->title->error as $errors) { ?>
+                    <?php foreach ($errors as $error) { ?>
+                      <div class="text-color-red margin-y-8">
+                        <?php echo $error ?>
+                      </div>
+                    <?php } ?>
                   <?php } ?>
-                  <input class="width-100 margin-t-8 <?php echo ($form->title->error ? 'background-color-red' : false) ?>"
+                  <input class="width-100 margin-t-8"
                           type="text"
                           name="title"
                           id="title"
@@ -48,12 +50,14 @@
                       <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                     </svg>
                   </sub>
-                  <?php foreach ($form->description->error as $error) { ?>
-                    <div class="text-color-red margin-b-8">
-                      <?php echo $error ?>
-                    </div>
+                  <?php foreach ($form->description->error as $errors) { ?>
+                    <?php foreach ($errors as $error) { ?>
+                      <div class="text-color-red margin-y-8">
+                        <?php echo $error ?>
+                      </div>
+                    <?php } ?>
                   <?php } ?>
-                  <textarea class="width-100 margin-t-8 <?php echo ($form->description->error ? 'background-color-red' : false) ?>"
+                  <textarea class="width-100 margin-t-8"
                             name="description"
                             id="description"
                             <?php echo $form->description->attribute->required ? 'required="required"' : false ?>
@@ -71,12 +75,14 @@
                       <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                     </svg>
                   </sub>
-                  <?php foreach ($form->keywords->error as $error) { ?>
-                    <div class="text-color-red margin-b-8">
-                      <?php echo $error ?>
-                    </div>
+                  <?php foreach ($form->keywords->error as $errors) { ?>
+                    <?php foreach ($errors as $error) { ?>
+                      <div class="text-color-red margin-y-8">
+                        <?php echo $error ?>
+                      </div>
+                    <?php } ?>
                   <?php } ?>
-                  <textarea class="width-100 margin-t-8 <?php echo ($form->keywords->error ? 'background-color-red' : false) ?>"
+                  <textarea class="width-100 margin-t-8"
                             name="keywords"
                             <?php echo $form->keywords->attribute->required ? 'required="required"' : false ?>
                             placeholder="<?php echo $form->keywords->attribute->placeholder ?>"
@@ -93,18 +99,20 @@
                       <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                     </svg>
                   </sub>
-                  <?php foreach ($form->torrent->error as $error) { ?>
-                    <div class="text-color-red margin-b-8">
-                      <?php echo $error ?>
-                    </div>
+                  <?php foreach ($form->torrent->error as $errors) { ?>
+                    <?php foreach ($errors as $error) { ?>
+                      <div class="text-color-red margin-y-8">
+                        <?php echo $error ?>
+                      </div>
+                    <?php } ?>
                   <?php } ?>
-                  <input class="width-100 margin-t-8 <?php echo ($form->torrent->error ? 'background-color-red' : false) ?>"
+                  <input class="width-100 margin-t-8"
                          type="file"
                          multiple="multiple"
                          name="torrent"
                          id="torrent"
-                         <?php echo $form->torrent->attribute->required ? 'required="required"' : false ?>
-                         value="<?php echo $form->torrent->attribute->value ?>" />
+                         accept="<?php echo $form->torrent->attribute->accept ?>"
+                         <?php echo $form->torrent->attribute->required ? 'required="required"' : false ?> />
                 </div>
                 <!--
                 <div class="margin-y-8 padding-t-4">

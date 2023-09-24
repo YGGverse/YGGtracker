@@ -21,14 +21,8 @@
       },
       "regex": "/.*/ui"
     },
-    "keywords":
+    "keyword":
     {
-      "required": false,
-      "quantity":
-      {
-        "min": 0,
-        "max": 20
-      },
       "length":
       {
         "min": 0,
@@ -36,9 +30,21 @@
       },
       "regex": "/[\\w]+/ui"
     },
+    "keywords":
+    {
+      "required": false,
+      "quantity":
+      {
+        "min": 0,
+        "max": 20
+      }
+    },
     "torrent":
     {
       "required": true,
+      "mime": [
+        "application/x-bittorrent"
+      ],
       "quantity":
       {
         "min": 0,

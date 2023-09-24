@@ -97,14 +97,12 @@ class AppControllerSubmit
         [
           'value'       => null,
           'required'    => $this->_validator->getPageKeywordsRequired(),
-          'minlength'   => $this->_validator->getPageKeywordsLengthMin(),
-          'maxlength'   => $this->_validator->getPageKeywordsLengthMax(),
           'placeholder' => sprintf(
             _('Page keywords (%s-%s total / %s-%s chars per item)'),
             number_format($this->_validator->getPageKeywordsQuantityMin()),
             number_format($this->_validator->getPageKeywordsQuantityMax()),
-            number_format($this->_validator->getPageKeywordsLengthMin()),
-            number_format($this->_validator->getPageKeywordsLengthMax())
+            number_format($this->_validator->getPageKeywordLengthMin()),
+            number_format($this->_validator->getPageKeywordLengthMax())
           ),
         ]
       ],
@@ -115,6 +113,7 @@ class AppControllerSubmit
         [
           'value'       => null,
           'required'    => $this->_validator->getPageTorrentRequired(),
+          'accept'      => implode(',', $this->_validator->getPageTorrentMimeTypes()),
           'placeholder' => sprintf(
             _('Torrent file (use Ctrl to select multiple files)')
           ),
@@ -134,9 +133,9 @@ class AppControllerSubmit
       {
         $error = [];
 
-        if ($this->_validator->pageTitle($_POST['title'], $error))
+        if (!$this->_validator->pageTitle($_POST['title'], $error))
         {
-          $form->title->error = $error;
+          $form->title->error[] = $error;
         }
 
         // @TODO check for page duplicates
@@ -148,9 +147,9 @@ class AppControllerSubmit
       {
         $error = [];
 
-        if ($this->_validator->pageDescription($_POST['description'], $error))
+        if (!$this->_validator->pageDescription($_POST['description'], $error))
         {
-          $form->description->error = $error;
+          $form->description->error[] = $error;
         }
 
         $form->description->attribute->value = htmlentities($_POST['description']);
@@ -160,12 +159,19 @@ class AppControllerSubmit
       {
         $error = [];
 
-        if ($this->_validator->pageKeywords($_POST['keywords'], $error))
+        if (!$this->_validator->pageKeywords($_POST['keywords'], $error))
         {
-          $form->keywords->error = $error;
+          $form->keywords->error[] = $error;
         }
 
         $form->keywords->attribute->value = htmlentities($_POST['keywords']);
+      }
+
+      if (isset($_FILES['torrent']))
+      {
+        $error = [];
+
+        // @TODO
       }
 
       // Request valid
