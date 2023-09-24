@@ -46,9 +46,32 @@ class AppControllerPage
 
   public function renderFormDescription()
   {
+    // Prepare locales
+    $locales = [];
+
+    foreach (Environment::config('locales') as $key => $value)
+    {
+      $locales[$key] = (object)
+      [
+        'key'    => $key,
+        'value'  => $value[0],
+        'active' => false !== stripos($_SERVER['HTTP_ACCEPT_LANGUAGE'], $key) ? true : false,
+      ];
+    }
+
     // Init form
     $form = (object)
     [
+      'locale' => (object)
+      [
+        'error'  => [],
+        'values' => $locales,
+        'attribute' => (object)
+        [
+          'value'       => null,
+          'placeholder' => _('Page content language'),
+        ]
+      ],
       'title' => (object)
       [
         'error' => [],

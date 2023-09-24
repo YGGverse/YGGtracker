@@ -48,6 +48,7 @@ a:active h2 {
 }
 
 input,
+select,
 textarea {
   background: #5d627d;
   color: #ccc;

@@ -1,5 +1,5 @@
 {
-  "af_ZA":
+  "af-ZA":
   [
     "Afrikaans",
     "Afrikaans"
@@ -9,77 +9,77 @@
     "العربية",
     "Arabic"
   ],
-  "bg_BG":
+  "bg-BG":
   [
     "Български",
     "Bulgarian"
   ],
-  "ca_AD":
+  "ca-AD":
   [
     "Català",
     "Catalan"
   ],
-  "cs_CZ":
+  "cs-CZ":
   [
     "Čeština",
     "Czech"
   ],
-  "cy_GB":
+  "cy-GB":
   [
     "Cymraeg",
     "Welsh"
   ],
-  "da_DK":
+  "da-DK":
   [
     "Dansk",
     "Danish"
   ],
-  "de_AT":
+  "de-AT":
   [
     "Deutsch (Österreich)",
     "German (Austria)"
   ],
-  "de_CH":
+  "de-CH":
   [
     "Deutsch (Schweiz)",
     "German (Switzerland)"
   ],
-  "de_DE":
+  "de-DE":
   [
     "Deutsch (Deutschland)",
     "German (Germany)"
   ],
-  "el_GR":
+  "el-GR":
   [
     "Ελληνικά",
     "Greek"
   ],
-  "en_GB":
+  "en-GB":
   [
     "English (UK)",
     "English (UK)"
   ],
-  "en_US":
+  "en-US":
   [
     "English (US)",
     "English (US)"
   ],
-  "es_CL":
+  "es-CL":
   [
     "Español (Chile)",
     "Spanish (Chile)"
   ],
-  "es_ES":
+  "es-ES":
   [
     "Español (España)",
     "Spanish (Spain)"
   ],
-  "es_MX":
+  "es-MX":
   [
     "Español (México)",
     "Spanish (Mexico)"
   ],
-  "et_EE":
+  "et-EE":
   [
     "Eesti keel",
     "Estonian"
@@ -89,77 +89,77 @@
     "Euskara",
     "Basque"
   ],
-  "fa_IR":
+  "fa-IR":
   [
     "فارسی",
     "Persian"
   ],
-  "fi_FI":
+  "fi-FI":
   [
     "Suomi",
     "Finnish"
   ],
-  "fr_CA":
+  "fr-CA":
   [
     "Français (Canada)",
     "French (Canada)"
   ],
-  "fr_FR":
+  "fr-FR":
   [
     "Français (France)",
     "French (France)"
   ],
-  "gl_ES":
+  "gl-ES":
   [
     "Galego (Spain)",
     "Galician (Spain)"
   ],
-  "he_IL":
+  "he-IL":
   [
     "עברית",
     "Hebrew"
   ],
-  "hi_IN":
+  "hi-IN":
   [
     "हिंदी",
     "Hindi"
   ],
-  "hr_HR":
+  "hr-HR":
   [
     "Hrvatski",
     "Croatian"
   ],
-  "hu_HU":
+  "hu-HU":
   [
     "Magyar",
     "Hungarian"
   ],
-  "id_ID":
+  "id-ID":
   [
     "Bahasa Indonesia",
     "Indonesian"
   ],
-  "is_IS":
+  "is-IS":
   [
     "Íslenska",
     "Icelandic"
   ],
-  "it_IT":
+  "it-IT":
   [
     "Italiano",
     "Italian"
   ],
-  "ja_JP":
+  "ja-JP":
   [
     "日本語",
     "Japanese"
   ],
-  "km_KH":
+  "km-KH":
   [
     "ភាសាខ្មែរ",
     "Khmer"
   ],
-  "ko_KR":
+  "ko-KR":
   [
     "한국어",
     "Korean"
@@ -169,107 +169,107 @@
     "Latina",
     "Latin"
   ],
-  "lt_LT":
+  "lt-LT":
   [
     "Lietuvių kalba",
     "Lithuanian"
   ],
-  "lv_LV":
+  "lv-LV":
   [
     "Latviešu",
     "Latvian"
   ],
-  "mn_MN":
+  "mn-MN":
   [
     "Монгол",
     "Mongolian"
   ],
-  "nb_NO":
+  "nb-NO":
   [
     "Norsk bokmål",
     "Norwegian (Bokmål)"
   ],
-  "nl_NL":
+  "nl-NL":
   [
     "Nederlands",
     "Dutch"
   ],
-  "nn_NO":
+  "nn-NO":
   [
     "Norsk nynorsk",
     "Norwegian (Nynorsk)"
   ],
-  "pl_PL":
+  "pl-PL":
   [
     "Polski",
     "Polish"
   ],
-  "pt_BR":
+  "pt-BR":
   [
     "Português (Brasil)",
     "Portuguese (Brazil)"
   ],
-  "pt_PT":
+  "pt-PT":
   [
     "Português (Portugal)",
     "Portuguese (Portugal)"
   ],
-  "ro_RO":
+  "ro-RO":
   [
     "Română",
     "Romanian"
   ],
-  "ru_RU":
+  "ru-RU":
   [
     "Русский",
     "Russian"
   ],
-  "sk_SK":
+  "sk-SK":
   [
     "Slovenčina",
     "Slovak"
   ],
-  "sl_SI":
+  "sl-SI":
   [
     "Slovenščina",
     "Slovenian"
   ],
-  "sr_RS":
+  "sr-RS":
   [
     "Српски / Srpski",
     "Serbian"
   ],
-  "sv_SE":
+  "sv-SE":
   [
     "Svenska",
     "Swedish"
   ],
-  "th_TH":
+  "th-TH":
   [
     "ไทย",
     "Thai"
   ],
-  "tr_TR":
+  "tr-TR":
   [
     "Türkçe",
     "Turkish"
   ],
-  "uk_UA":
+  "uk-UA":
   [
     "Українська",
     "Ukrainian"
   ],
-  "vi_VN":
+  "vi-VN":
   [
     "Tiếng Việt",
     "Vietnamese"
   ],
-  "zh_CN":
+  "zh-CN":
   [
     "中文 (中国大陆)",
     "Chinese (PRC)"
   ],
-  "zh_TW":
+  "zh-TW":
   [
     "中文 (台灣)",
     "Chinese (Taiwan)"
