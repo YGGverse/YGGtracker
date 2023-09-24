@@ -1,17 +1,36 @@
 <?php
 
-class AppModelDatabase {
-
+class AppModelDatabase
+{
   private PDO $_db;
 
   private object $_debug;
 
-  public function __construct(string $host, int $port, string $database, string $username, string $password) {
+  public function __construct(object $config)
+  {
+    $this->_db = new PDO(
+      'mysql:dbname=' . $config->name . ';host=' . $config->host . ';port=' . $config->port . ';charset=utf8',
+      $config->user,
+      $config->password,
+      [
+        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+      ]
+    );
 
-    $this->_db = new PDO('mysql:dbname=' . $database . ';host=' . $host . ';port=' . $port . ';charset=utf8', $username, $password, [PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8']);
-    $this->_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $this->_db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-    $this->_db->setAttribute(PDO::ATTR_TIMEOUT, 600);
+    $this->_db->setAttribute(
+      PDO::ATTR_ERRMODE,
+      PDO::ERRMODE_EXCEPTION
+    );
+
+    $this->_db->setAttribute(
+      PDO::ATTR_DEFAULT_FETCH_MODE,
+      PDO::FETCH_OBJ
+    );
+
+    $this->_db->setAttribute(
+      PDO::ATTR_TIMEOUT,
+      600
+    );
 
     $this->_debug = (object)
     [
@@ -38,23 +57,23 @@ class AppModelDatabase {
   }
 
   // Tools
-  public function beginTransaction() {
-
+  public function beginTransaction() : void
+  {
     $this->_db->beginTransaction();
   }
 
-  public function commit() {
-
+  public function commit() : void
+  {
     $this->_db->commit();
   }
 
-  public function rollBack() {
-
+  public function rollBack() : void
+  {
     $this->_db->rollBack();
   }
 
-  public function getDebug() {
-
+  public function getDebug() : object
+  {
     return $this->_debug;
   }
 

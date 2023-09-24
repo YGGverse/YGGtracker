@@ -9,7 +9,12 @@
 
 /src/config/*
 !/src/config/bootstrap.php
+!/src/config/website.json
+!/src/config/sphinx.json
+!/src/config/memcached.json
+!/src/config/database.json
 !/src/config/validator.json
+!/src/config/moderators.json
 !/src/config/nodes.json
 !/src/config/trackers.json
 !/src/config/peers.json

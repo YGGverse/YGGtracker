@@ -50,8 +50,9 @@ memcached
 * The web root dir is `/src/public`
 * Deploy the database using [MySQL Workbench](https://www.mysql.com/products/workbench) project presented in the `/database` folder
 * Install [Sphinx Search Server](https://sphinxsearch.com)
-* Configuration examples presented at `/example/environment` folder. On first app launch, configuration file will be auto-generated in `/src/config`
-* Make sure `/src/api` folder writable
+* Server environment examples presented at `/example/environment` folder
+* App config available at `/src/config` folder in JSON format.
+  + To make environment-based configuration for JSON files, create subfolder `/src/config/env` and define `env` in `/src/config/.env` file
 
 #### Contribute
 

@@ -3,42 +3,20 @@
 // PHP
 declare(strict_types=1);
 
+// Debug
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 // Application
 define('APP_VERSION', '2.0.0');
 define('API_VERSION', APP_VERSION);
+define('CSS_VERSION', APP_VERSION);
 
-// Init environment
-if (!file_exists(__DIR__ . '/.env'))
-{
-  if ($handle = fopen(__DIR__ . '/.env', 'w+'))
-  {
-    fwrite($handle, 'default');
-    fclose($handle);
+// Environment
+require_once __DIR__ . '/../library/environment.php';
 
-    chmod(__DIR__ . '/.env', 0770);
-  }
-
-  else exit (_('Could not init environment file. Please check permissions.'));
-}
-
-define('PHP_ENV', file_get_contents(__DIR__ . '/.env'));
-
-// Init config
-if (!file_exists(__DIR__ . '/env.' . PHP_ENV . '.php'))
-{
-  if (copy(__DIR__ . '/../../example/environment/env.example.php',
-           __DIR__ . '/env.' . PHP_ENV . '.php'))
-  {
-     chmod(__DIR__ . '/env.' . PHP_ENV . '.php', 0770);
-  }
-
-  else exit (_('Could not init configuration file. Please check permissions.'));
-}
-
-// Load environment
-require_once __DIR__ . '/env.' . PHP_ENV . '.php';
-
-// Autoload vendors
+// Autoload
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 // Route
@@ -50,93 +28,109 @@ if (isset($request['_route_']))
   {
     case 'stars':
 
-      require_once(__DIR__ . '/../app/controller/stars.php');
+      require_once __DIR__ . '/../app/controller/stars.php';
 
-      $controller = new AppControllerStars();
+      $appControllerStars = new AppControllerStars();
+
+      $appControllerStars->render();
 
     break;
 
     case 'views':
 
-      require_once(__DIR__ . '/../app/controller/views.php');
+      require_once __DIR__ . '/../app/controller/views.php';
 
-      $controller = new AppControllerViews();
+      $appControllerViews = new AppControllerViews();
+
+      $appControllerViews->render();
 
     break;
 
     case 'downloads':
 
-      require_once(__DIR__ . '/../app/controller/downloads.php');
+      require_once __DIR__ . '/../app/controller/downloads.php';
 
-      $controller = new AppControllerDownloads();
+      $appControllerDownloads = new AppControllerDownloads();
+
+      $appControllerDownloads->render();
 
     break;
 
     case 'comments':
 
-      require_once(__DIR__ . '/../app/controller/comments.php');
+      require_once __DIR__ . '/../app/controller/comments.php';
 
-      $controller = new AppControllerComments();
+      $appControllerComments = new AppControllerComments();
+
+      $appControllerComments->render();
 
     break;
 
     case 'editions':
 
-      require_once(__DIR__ . '/../app/controller/editions.php');
+      require_once __DIR__ . '/../app/controller/editions.php';
 
-      $controller = new AppControllerEditions();
+      $appControllerEditions = new AppControllerEditions();
+
+      $appControllerEditions->render();
 
     break;
 
     case 'welcome':
 
-      require_once(__DIR__ . '/../app/controller/welcome.php');
+      require_once __DIR__ . '/../app/controller/welcome.php';
 
-      $controller = new AppControllerWelcome();
+      $appControllerWelcome = new AppControllerWelcome();
+
+      $appControllerWelcome->render();
 
     break;
 
-    case 'submit':
+    case 'page/form':
 
-      require_once(__DIR__ . '/../app/model/validator.php');
+      require_once __DIR__ . '/../app/controller/page.php';
 
-      $validator = new AppModelValidator(
-        json_decode(
-          file_get_contents(
-            __DIR__ . '/../config/validator.json'
-          )
-        )
+      $appControllerPage = new AppControllerPage(
+        Environment::config('website')
       );
 
-      require_once(__DIR__ . '/../app/controller/submit.php');
+      require_once __DIR__ . '/../app/model/database.php';
+      require_once __DIR__ . '/../app/model/validator.php';
 
-      $controller = new AppControllerSubmit(
-        $validator
+      $appControllerPage->renderFormDescription(
+        new AppModelDatabase(
+          Environment::config('database')
+        ),
+        new AppModelValidator(
+          Environment::config('validator')
+        )
       );
 
     break;
 
     default:
 
-      require_once(__DIR__ . '/../app/controller/response.php');
+      require_once __DIR__ . '/../app/controller/response.php';
 
-      $controller = new AppControllerResponse(
+      $appControllerResponse = new AppControllerResponse(
         sprintf(
           _('404 - Not found - %s'),
-          WEBSITE_NAME
+          Environment::config('website')->name
         ),
         _('404'),
         _('Page not found'),
         404
       );
+
+      $appControllerResponse->render();
   }
 }
 
 else
 {
-  require_once(__DIR__ . '/../app/controller/index.php');
+  require_once __DIR__ . '/../app/controller/index.php';
 
-  $controller = new AppControllerIndex();
+  $appControllerIndex = new AppControllerIndex();
+
+  $appControllerIndex->render();
 }
-
-$controller->render();

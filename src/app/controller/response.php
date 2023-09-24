@@ -38,7 +38,7 @@ class AppControllerResponse
           'type' => 'text/css',
           'href' => sprintf(
             'assets/theme/default/css/common.css?%s',
-            WEBSITE_CSS_VERSION
+            CSS_VERSION
           ),
         ],
         [
@@ -46,7 +46,7 @@ class AppControllerResponse
           'type' => 'text/css',
           'href' => sprintf(
             'assets/theme/default/css/framework.css?%s',
-            WEBSITE_CSS_VERSION
+            CSS_VERSION
           ),
         ],
       ]
