@@ -13,7 +13,7 @@
             <a href="node"><?php echo _('Node') ?></a>
             |
             <a rel="nofollow" href="rss"><?php echo _('RSS') ?></a>
-            <?php if (API_EXPORT_ENABLED) { ?>
+            <?php if ($api) { ?>
               |
               <a rel="nofollow" href="api/manifest.json"><?php echo _('API') ?></a>
             <?php } ?>

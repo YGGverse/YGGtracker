@@ -7,7 +7,7 @@ class AppControllerModuleHeader
     $name = str_replace(
       'YGG',
       '<span>YGG</span>',
-      WEBSITE_NAME
+      Environment::config('website')->name
     );
 
     require_once __DIR__ . '/search.php';

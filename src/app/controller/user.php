@@ -3,48 +3,33 @@
 class AppControllerUser
 {
   private $_database;
+  private $_validator;
 
   private $_user;
 
   public function __construct(string $address)
   {
-    // Connect DB
     require_once __DIR__ . '/../model/database.php';
 
-    try
-    {
-      $this->_database = new AppModelDatabase(
-        DB_HOST,
-        DB_PORT,
-        DB_NAME,
-        DB_USERNAME,
-        DB_PASSWORD
-      );
-    }
+    $this->_database = new AppModelDatabase(
+      Environment::config('database')
+    );
 
-    catch (Exception $error)
-    {
-      $this->_response(
-        sprintf(
-          _('Error - %s'),
-          WEBSITE_NAME
-        ),
-        _('500'),
-        print_r($error, true),
-        500
-      );
-    }
+    require_once __DIR__ . '/../model/validator.php';
 
-    // Validate user address
-    require_once __DIR__ . '/../../library/valid.php';
+    $this->_validator = new AppModelValidator(
+      Environment::config('validator')
+    );
 
+    // Validate address
     $error = [];
-    if (!Valid::host($address, $error))
+
+    if (!$this->_validator->host($address, $error))
     {
       $this->_response(
         sprintf(
           _('Error - %s'),
-          WEBSITE_NAME
+          Environment::config('website')->name
         ),
         _('406'),
         print_r($error, true),
@@ -60,7 +45,7 @@ class AppControllerUser
       $this->_user = $this->_database->getUser(
         $this->_database->initUserId(
           $address,
-          USER_DEFAULT_APPROVED,
+          Environment::config('website')->default->user->approved,
           time()
         )
       );
@@ -75,11 +60,22 @@ class AppControllerUser
       $this->_response(
         sprintf(
           _('Error - %s'),
-          WEBSITE_NAME
+          Environment::config('website')->name
         ),
         _('500'),
         print_r($error, true),
         500
+      );
+    }
+
+    // Require account type selection
+    if (is_null($this->getPublic()))
+    {
+      header(
+        sprintf(
+          'Location: %s/welcome',
+          trim($this->_config->url, '/')
+        )
       );
     }
   }

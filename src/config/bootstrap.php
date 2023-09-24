@@ -90,21 +90,9 @@ if (isset($request['_route_']))
 
       require_once __DIR__ . '/../app/controller/page.php';
 
-      $appControllerPage = new AppControllerPage(
-        Environment::config('website')
-      );
+      $appControllerPage = new AppControllerPage();
 
-      require_once __DIR__ . '/../app/model/database.php';
-      require_once __DIR__ . '/../app/model/validator.php';
-
-      $appControllerPage->renderFormDescription(
-        new AppModelDatabase(
-          Environment::config('database')
-        ),
-        new AppModelValidator(
-          Environment::config('validator')
-        )
-      );
+      $appControllerPage->renderFormDescription();
 
     break;
 
