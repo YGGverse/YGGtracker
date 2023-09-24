@@ -106,12 +106,23 @@ class AppControllerSubmit
           ),
         ]
       ],
+      'image' => (object)
+      [
+        'error' => [],
+        'attribute' => (object)
+        [
+          'required'    => $this->_validator->getPageImageRequired(),
+          'accept'      => implode(',', $this->_validator->getPageImageMimeTypes()),
+          'placeholder' => sprintf(
+            _('Image file (use Ctrl to select multiple files)')
+          ),
+        ],
+      ],
       'torrent' => (object)
       [
         'error' => [],
         'attribute' => (object)
         [
-          'value'       => null,
           'required'    => $this->_validator->getPageTorrentRequired(),
           'accept'      => implode(',', $this->_validator->getPageTorrentMimeTypes()),
           'placeholder' => sprintf(

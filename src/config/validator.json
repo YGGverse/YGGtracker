@@ -39,6 +39,21 @@
         "max": 20
       }
     },
+    "image":
+    {
+      "required": false,
+      "mime": [
+        "image/png",
+        "image/gif",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "quantity":
+      {
+        "min": 0,
+        "max": 20
+      }
+    },
     "torrent":
     {
       "required": true,

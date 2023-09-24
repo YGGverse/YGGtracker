@@ -298,6 +298,17 @@ class AppModelValidator
     return true;
   }
 
+  /// Page image
+  public function getPageImageRequired() : bool
+  {
+    return $this->_config->page->image->required;
+  }
+
+  public function getPageImageMimeTypes() : array
+  {
+    return $this->_config->page->image->mime;
+  }
+
   /// Page torrent
   public function getPageTorrentRequired() : bool
   {
