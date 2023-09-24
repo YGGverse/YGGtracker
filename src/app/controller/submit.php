@@ -2,6 +2,13 @@
 
 class AppControllerSubmit
 {
+  private $_validator;
+
+  public function __construct(AppModelValidator $validator)
+  {
+    $this->_validator = $validator;
+  }
+
   private function _response(string $title, string $h1, string $text, int $code = 200)
   {
     require_once __DIR__ . '/response.php';
@@ -46,6 +53,79 @@ class AppControllerSubmit
       header(
         sprintf('Location: %s/welcome', trim(WEBSITE_URL, '/'))
       );
+    }
+
+    // Form
+    $form = (object)
+    [
+      'title' => (object)
+      [
+        'error' => [],
+        'attribute' => (object)
+        [
+          'value'       => null,
+          'minlength'   => $this->_validator->getPageTitleLengthMin(),
+          'maxlength'   => $this->_validator->getPageTitleLengthMax(),
+          'placeholder' => sprintf(
+            _('Page subject (%s-%s chars)'),
+            number_format($this->_validator->getPageTitleLengthMin()),
+            number_format($this->_validator->getPageTitleLengthMax())
+          ),
+        ]
+      ],
+      'description' => (object)
+      [
+        'error' => [],
+        'attribute' => (object)
+        [
+          'value'       => null,
+          'minlength'   => $this->_validator->getPageDescriptionLengthMin(),
+          'maxlength'   => $this->_validator->getPageDescriptionLengthMax(),
+          'placeholder' => sprintf(
+            _('Page description text (%s-%s chars)'),
+            number_format($this->_validator->getPageDescriptionLengthMin()),
+            number_format($this->_validator->getPageDescriptionLengthMax())
+          ),
+        ]
+      ],
+      'keywords' => (object)
+      [
+        'error' => [],
+        'attribute' => (object)
+        [
+          'value'       => null,
+          'minlength'   => $this->_validator->getPageKeywordsLengthMin(),
+          'maxlength'   => $this->_validator->getPageKeywordsLengthMax(),
+          'placeholder' => sprintf(
+            _('Page keywords (%s-%s total / %s-%s chars per item)'),
+            number_format($this->_validator->getPageKeywordsQuantityMin()),
+            number_format($this->_validator->getPageKeywordsQuantityMax()),
+            number_format($this->_validator->getPageKeywordsLengthMin()),
+            number_format($this->_validator->getPageKeywordsLengthMax())
+          ),
+        ]
+      ],
+      'torrent' => (object)
+      [
+        'error' => [],
+        'attribute' => (object)
+        [
+          'value'       => null,
+          'placeholder' => sprintf(
+            _('Torrent file (use Ctrl to select multiple files)')
+          ),
+        ],
+      ],
+      'magnet' => (object)
+      [
+        'error' => [],
+        'value' => null,
+      ],
+    ];
+
+    if (isset($_POST))
+    {
+
     }
 
     // Render
