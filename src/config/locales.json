@@ -1,0 +1,277 @@
+{
+  "af_ZA":
+  [
+    "Afrikaans",
+    "Afrikaans"
+  ],
+  "ar":
+  [
+    "العربية",
+    "Arabic"
+  ],
+  "bg_BG":
+  [
+    "Български",
+    "Bulgarian"
+  ],
+  "ca_AD":
+  [
+    "Català",
+    "Catalan"
+  ],
+  "cs_CZ":
+  [
+    "Čeština",
+    "Czech"
+  ],
+  "cy_GB":
+  [
+    "Cymraeg",
+    "Welsh"
+  ],
+  "da_DK":
+  [
+    "Dansk",
+    "Danish"
+  ],
+  "de_AT":
+  [
+    "Deutsch (Österreich)",
+    "German (Austria)"
+  ],
+  "de_CH":
+  [
+    "Deutsch (Schweiz)",
+    "German (Switzerland)"
+  ],
+  "de_DE":
+  [
+    "Deutsch (Deutschland)",
+    "German (Germany)"
+  ],
+  "el_GR":
+  [
+    "Ελληνικά",
+    "Greek"
+  ],
+  "en_GB":
+  [
+    "English (UK)",
+    "English (UK)"
+  ],
+  "en_US":
+  [
+    "English (US)",
+    "English (US)"
+  ],
+  "es_CL":
+  [
+    "Español (Chile)",
+    "Spanish (Chile)"
+  ],
+  "es_ES":
+  [
+    "Español (España)",
+    "Spanish (Spain)"
+  ],
+  "es_MX":
+  [
+    "Español (México)",
+    "Spanish (Mexico)"
+  ],
+  "et_EE":
+  [
+    "Eesti keel",
+    "Estonian"
+  ],
+  "eu":
+  [
+    "Euskara",
+    "Basque"
+  ],
+  "fa_IR":
+  [
+    "فارسی",
+    "Persian"
+  ],
+  "fi_FI":
+  [
+    "Suomi",
+    "Finnish"
+  ],
+  "fr_CA":
+  [
+    "Français (Canada)",
+    "French (Canada)"
+  ],
+  "fr_FR":
+  [
+    "Français (France)",
+    "French (France)"
+  ],
+  "gl_ES":
+  [
+    "Galego (Spain)",
+    "Galician (Spain)"
+  ],
+  "he_IL":
+  [
+    "עברית",
+    "Hebrew"
+  ],
+  "hi_IN":
+  [
+    "हिंदी",
+    "Hindi"
+  ],
+  "hr_HR":
+  [
+    "Hrvatski",
+    "Croatian"
+  ],
+  "hu_HU":
+  [
+    "Magyar",
+    "Hungarian"
+  ],
+  "id_ID":
+  [
+    "Bahasa Indonesia",
+    "Indonesian"
+  ],
+  "is_IS":
+  [
+    "Íslenska",
+    "Icelandic"
+  ],
+  "it_IT":
+  [
+    "Italiano",
+    "Italian"
+  ],
+  "ja_JP":
+  [
+    "日本語",
+    "Japanese"
+  ],
+  "km_KH":
+  [
+    "ភាសាខ្មែរ",
+    "Khmer"
+  ],
+  "ko_KR":
+  [
+    "한국어",
+    "Korean"
+  ],
+  "la":
+  [
+    "Latina",
+    "Latin"
+  ],
+  "lt_LT":
+  [
+    "Lietuvių kalba",
+    "Lithuanian"
+  ],
+  "lv_LV":
+  [
+    "Latviešu",
+    "Latvian"
+  ],
+  "mn_MN":
+  [
+    "Монгол",
+    "Mongolian"
+  ],
+  "nb_NO":
+  [
+    "Norsk bokmål",
+    "Norwegian (Bokmål)"
+  ],
+  "nl_NL":
+  [
+    "Nederlands",
+    "Dutch"
+  ],
+  "nn_NO":
+  [
+    "Norsk nynorsk",
+    "Norwegian (Nynorsk)"
+  ],
+  "pl_PL":
+  [
+    "Polski",
+    "Polish"
+  ],
+  "pt_BR":
+  [
+    "Português (Brasil)",
+    "Portuguese (Brazil)"
+  ],
+  "pt_PT":
+  [
+    "Português (Portugal)",
+    "Portuguese (Portugal)"
+  ],
+  "ro_RO":
+  [
+    "Română",
+    "Romanian"
+  ],
+  "ru_RU":
+  [
+    "Русский",
+    "Russian"
+  ],
+  "sk_SK":
+  [
+    "Slovenčina",
+    "Slovak"
+  ],
+  "sl_SI":
+  [
+    "Slovenščina",
+    "Slovenian"
+  ],
+  "sr_RS":
+  [
+    "Српски / Srpski",
+    "Serbian"
+  ],
+  "sv_SE":
+  [
+    "Svenska",
+    "Swedish"
+  ],
+  "th_TH":
+  [
+    "ไทย",
+    "Thai"
+  ],
+  "tr_TR":
+  [
+    "Türkçe",
+    "Turkish"
+  ],
+  "uk_UA":
+  [
+    "Українська",
+    "Ukrainian"
+  ],
+  "vi_VN":
+  [
+    "Tiếng Việt",
+    "Vietnamese"
+  ],
+  "zh_CN":
+  [
+    "中文 (中国大陆)",
+    "Chinese (PRC)"
+  ],
+  "zh_TW":
+  [
+    "中文 (台灣)",
+    "Chinese (Taiwan)"
+  ]
+}
