@@ -98,9 +98,21 @@ if (isset($request['_route_']))
 
     case 'submit':
 
+      require_once(__DIR__ . '/../app/model/validator.php');
+
+      $validator = new AppModelValidator(
+        json_decode(
+          file_get_contents(
+            __DIR__ . '/../config/validator.json'
+          )
+        )
+      );
+
       require_once(__DIR__ . '/../app/controller/submit.php');
 
-      $controller = new AppControllerSubmit();
+      $controller = new AppControllerSubmit(
+        $validator
+      );
 
     break;
 

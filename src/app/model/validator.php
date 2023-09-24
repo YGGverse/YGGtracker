@@ -1,9 +1,78 @@
 <?php
 
-class Valid
+class AppModelValidator
 {
+  private $_config;
+
+  public function __construct(object $config)
+  {
+    // @TODO validate config
+
+    $this->_config = $config;
+  }
+
+  // Page
+
+  /// Page title
+  public function getPageTitleLengthMin() : int
+  {
+    return $this->_config->page->title->length->min;
+  }
+
+  public function getPageTitleLengthMax() : int
+  {
+    return $this->_config->page->title->length->max;
+  }
+
+  public function getPageTitleRegex() : string
+  {
+    return $this->_config->page->title->regex;
+  }
+
+  /// Page description
+  public function getPageDescriptionLengthMin() : int
+  {
+    return $this->_config->page->description->length->min;
+  }
+
+  public function getPageDescriptionLengthMax() : int
+  {
+    return $this->_config->page->description->length->max;
+  }
+
+  public function getPageDescriptionRegex() : string
+  {
+    return $this->_config->page->description->regex;
+  }
+
+  /// Page keywords
+  public function getPageKeywordsLengthMin() : int
+  {
+    return $this->_config->page->keywords->length->min;
+  }
+
+  public function getPageKeywordsLengthMax() : int
+  {
+    return $this->_config->page->keywords->length->max;
+  }
+
+  public function getPageKeywordsQuantityMin() : int
+  {
+    return $this->_config->page->keywords->quantity->min;
+  }
+
+  public function getPageKeywordsQuantityMax() : int
+  {
+    return $this->_config->page->keywords->quantity->max;
+  }
+
+  public function getPageKeywordsRegex() : string
+  {
+    return $this->_config->page->keywords->regex;
+  }
+
   // Common
-  public static function host(mixed $value, array &$error = []) : bool
+  public function host(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -45,7 +114,7 @@ class Valid
     return true;
   }
 
-  public static function url(mixed $value, array &$error = []) : bool
+  public function url(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -101,7 +170,7 @@ class Valid
   }
 
   // User
-  public static function user(mixed $value, array &$error = []) : bool
+  public function user(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -133,7 +202,7 @@ class Valid
     return true;
   }
 
-  public static function userId(mixed $value, array &$error = []) : bool
+  public function userId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -148,7 +217,7 @@ class Valid
     return true;
   }
 
-  public static function userAddress(mixed $value, array &$error = []) : bool
+  public function userAddress(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -176,7 +245,7 @@ class Valid
     return true;
   }
 
-  public static function userTimeAdded(mixed $value, array &$error = []) : bool
+  public function userTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -201,7 +270,7 @@ class Valid
     return true;
   }
 
-  public static function userTimeUpdated(mixed $value, array &$error = []) : bool
+  public function userTimeUpdated(mixed $value, array &$error = []) : bool
   {
     if (!(is_int($value) || is_bool($value)))
     {
@@ -226,7 +295,7 @@ class Valid
     return true;
   }
 
-  public static function userApproved(mixed $value, array &$error = []) : bool
+  public function userApproved(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -241,7 +310,7 @@ class Valid
     return true;
   }
 
-  public static function userPublic(mixed $value, array &$error = []) : bool
+  public function userPublic(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -257,7 +326,7 @@ class Valid
   }
 
   // Magnet
-  public static function magnet(mixed $value, array &$error = []) : bool
+  public function magnet(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -309,7 +378,7 @@ class Valid
     return true;
   }
 
-  public static function magnetId(mixed $value, array &$error = []) : bool
+  public function magnetId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -324,7 +393,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTitle(mixed $value, array &$error = []) : bool
+  public function magnetTitle(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -367,7 +436,7 @@ class Valid
     return true;
   }
 
-  public static function magnetPreview(mixed $value, array &$error = []) : bool
+  public function magnetPreview(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -410,7 +479,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDescription(mixed $value, array &$error = []) : bool
+  public function magnetDescription(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -453,7 +522,7 @@ class Valid
     return true;
   }
 
-  public static function magnetComments(mixed $value, array &$error = []) : bool
+  public function magnetComments(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -468,7 +537,7 @@ class Valid
     return true;
   }
 
-  public static function magnetPublic(mixed $value, array &$error = []) : bool
+  public function magnetPublic(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -483,7 +552,7 @@ class Valid
     return true;
   }
 
-  public static function magnetApproved(mixed $value, array &$error = []) : bool
+  public function magnetApproved(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -498,7 +567,7 @@ class Valid
     return true;
   }
 
-  public static function magnetSensitive(mixed $value, array &$error = []) : bool
+  public function magnetSensitive(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -513,7 +582,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTimeAdded(mixed $value, array &$error = []) : bool
+  public function magnetTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -538,7 +607,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTimeUpdated(mixed $value, array &$error = []) : bool
+  public function magnetTimeUpdated(mixed $value, array &$error = []) : bool
   {
     if (!(is_int($value) || is_bool($value)))
     {
@@ -563,7 +632,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDn(mixed $value, array &$error = []) : bool
+  public function magnetDn(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -606,7 +675,7 @@ class Valid
     return true;
   }
 
-  public static function magnetXl(mixed $value, array &$error = []) : bool
+  public function magnetXl(mixed $value, array &$error = []) : bool
   {
     if (!(is_int($value) || is_float($value)))
     {
@@ -621,7 +690,7 @@ class Valid
     return true;
   }
 
-  public static function magnetKt(mixed $value, array &$error = []) : bool
+  public function magnetKt(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -696,7 +765,7 @@ class Valid
     return true;
   }
 
-  public static function magnetXt(mixed $value, array &$error = []) : bool
+  public function magnetXt(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -794,7 +863,7 @@ class Valid
     return true;
   }
 
-  public static function magnetTr(mixed $value, array &$error = []) : bool
+  public function magnetTr(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -844,7 +913,7 @@ class Valid
     return true;
   }
 
-  public static function magnetAs(mixed $value, array &$error = []) : bool
+  public function magnetAs(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -894,7 +963,7 @@ class Valid
     return true;
   }
 
-  public static function magnetWs(mixed $value, array &$error = []) : bool
+  public function magnetWs(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -945,7 +1014,7 @@ class Valid
   }
 
   // Magnet comment
-  public static function magnetComment(mixed $value, array &$error = []) : bool
+  public function magnetComment(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -979,7 +1048,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentId(mixed $value, array &$error = []) : bool
+  public function magnetCommentId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -994,7 +1063,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentIdParent(mixed $value, array &$error = []) : bool
+  public function magnetCommentIdParent(mixed $value, array &$error = []) : bool
   {
     if (!(is_null($value) || is_int($value)))
     {
@@ -1014,7 +1083,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentTimeAdded(mixed $value, array &$error = []) : bool
+  public function magnetCommentTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1039,7 +1108,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentApproved(mixed $value, array &$error = []) : bool
+  public function magnetCommentApproved(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -1054,7 +1123,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentPublic(mixed $value, array &$error = []) : bool
+  public function magnetCommentPublic(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -1069,7 +1138,7 @@ class Valid
     return true;
   }
 
-  public static function magnetCommentValue(mixed $value, array &$error = []) : bool
+  public function magnetCommentValue(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -1100,7 +1169,7 @@ class Valid
   }
 
   // Magnet download
-  public static function magnetDownload(mixed $value, array &$error = []) : bool
+  public function magnetDownload(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -1129,7 +1198,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDownloadId(mixed $value, array &$error = []) : bool
+  public function magnetDownloadId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1144,7 +1213,7 @@ class Valid
     return true;
   }
 
-  public static function magnetDownloadTimeAdded(mixed $value, array &$error = []) : bool
+  public function magnetDownloadTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1170,7 +1239,7 @@ class Valid
   }
 
   // Magnet star
-  public static function magnetStar(mixed $value, array &$error = []) : bool
+  public function magnetStar(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -1200,7 +1269,7 @@ class Valid
     return true;
   }
 
-  public static function magnetStarId(mixed $value, array &$error = []) : bool
+  public function magnetStarId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1215,7 +1284,7 @@ class Valid
     return true;
   }
 
-  public static function magnetStarValue(mixed $value, array &$error = []) : bool
+  public function magnetStarValue(mixed $value, array &$error = []) : bool
   {
     if (!is_bool($value))
     {
@@ -1230,7 +1299,7 @@ class Valid
     return true;
   }
 
-  public static function magnetStarTimeAdded(mixed $value, array &$error = []) : bool
+  public function magnetStarTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1256,7 +1325,7 @@ class Valid
   }
 
   // Magnet view
-  public static function magnetView(mixed $value, array &$error = []) : bool
+  public function magnetView(mixed $value, array &$error = []) : bool
   {
     if (!is_object($value))
     {
@@ -1285,7 +1354,7 @@ class Valid
     return true;
   }
 
-  public static function magnetViewId(mixed $value, array &$error = []) : bool
+  public function magnetViewId(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1300,7 +1369,7 @@ class Valid
     return true;
   }
 
-  public static function magnetViewTimeAdded(mixed $value, array &$error = []) : bool
+  public function magnetViewTimeAdded(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1326,7 +1395,7 @@ class Valid
   }
 
   // Torrent
-  public static function torrentAnnounce(mixed $value, array &$error = []) : bool
+  public function torrentAnnounce(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -1354,7 +1423,7 @@ class Valid
     return true;
   }
 
-  public static function torrentAnnounceList(mixed $value, array &$error = []) : bool
+  public function torrentAnnounceList(mixed $value, array &$error = []) : bool
   {
     if (!is_array($value))
     {
@@ -1417,7 +1486,7 @@ class Valid
     return true;
   }
 
-  public static function torrentComment(mixed $value, array &$error = []) : bool
+  public function torrentComment(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -1460,7 +1529,7 @@ class Valid
     return true;
   }
 
-  public static function torrentCreatedBy(mixed $value, array &$error = []) : bool
+  public function torrentCreatedBy(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -1503,7 +1572,7 @@ class Valid
     return true;
   }
 
-  public static function torrentCreationDate(mixed $value, array &$error = []) : bool
+  public function torrentCreationDate(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1528,7 +1597,7 @@ class Valid
     return true;
   }
 
-  public static function torrentInfo(mixed $value, array &$error = []) : bool
+  public function torrentInfo(mixed $value, array &$error = []) : bool
   {
     if (!is_array($value))
     {
@@ -1705,7 +1774,7 @@ class Valid
     return true;
   }
 
-  public static function torrentInfoName(mixed $value, array &$error = []) : bool
+  public function torrentInfoName(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -1748,7 +1817,7 @@ class Valid
     return true;
   }
 
-  public static function torrentInfoSource(mixed $value, array &$error = []) : bool
+  public function torrentInfoSource(mixed $value, array &$error = []) : bool
   {
     if (!is_string($value))
     {
@@ -1793,7 +1862,7 @@ class Valid
     return true;
   }
 
-  public static function torrentInfoFileDuration(mixed $value, array &$error = []) : bool
+  public function torrentInfoFileDuration(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1818,7 +1887,7 @@ class Valid
     return true;
   }
 
-  public static function torrentInfoPieceLength(mixed $value, array &$error = []) : bool
+  public function torrentInfoPieceLength(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1843,14 +1912,14 @@ class Valid
     return true;
   }
 
-  public static function torrentInfoPieces(mixed $value, array &$error = []) : bool
+  public function torrentInfoPieces(mixed $value, array &$error = []) : bool
   {
     // @TODO
 
     return true;
   }
 
-  public static function torrentInfoPrivate(mixed $value, array &$error = []) : bool
+  public function torrentInfoPrivate(mixed $value, array &$error = []) : bool
   {
     if (!is_int($value))
     {
@@ -1875,21 +1944,21 @@ class Valid
     return true;
   }
 
-  public static function torrentInfoProfiles(mixed $value, array &$error = []) : bool
+  public function torrentInfoProfiles(mixed $value, array &$error = []) : bool
   {
     // @TODO
 
     return true;
   }
 
-  public static function torrentInfoFileMedia(mixed $value, array &$error = []) : bool
+  public function torrentInfoFileMedia(mixed $value, array &$error = []) : bool
   {
     // @TODO
 
     return true;
   }
 
-  public static function torrentInfoFiles(mixed $value, array &$error = []) : bool
+  public function torrentInfoFiles(mixed $value, array &$error = []) : bool
   {
     // @TODO
 

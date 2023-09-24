@@ -8,7 +8,8 @@
 /src/public/api/*.json
 
 /src/config/*
-!/src/config/bootstrap.json
+!/src/config/bootstrap.php
+!/src/config/validator.json
 !/src/config/nodes.json
 !/src/config/trackers.json
 !/src/config/peers.json

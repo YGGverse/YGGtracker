@@ -1,0 +1,37 @@
+{
+  "page":
+  {
+    "title":
+    {
+      "length":
+      {
+        "min": 10,
+        "max": 255
+      },
+      "regex": "/.*/ui"
+    },
+    "description":
+    {
+      "length":
+      {
+        "min": 0,
+        "max": 10000
+      },
+      "regex": "/.*/ui"
+    },
+    "keywords":
+    {
+      "quantity":
+      {
+        "min": 0,
+        "max": 20
+      },
+      "length":
+      {
+        "min": 0,
+        "max": 140
+      },
+      "regex": "/[\\w]+/ui"
+    }
+  }
+}
