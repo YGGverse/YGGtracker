@@ -64,6 +64,7 @@ class AppControllerSubmit
         'attribute' => (object)
         [
           'value'       => null,
+          'required'    => $this->_validator->getPageTitleRequired(),
           'minlength'   => $this->_validator->getPageTitleLengthMin(),
           'maxlength'   => $this->_validator->getPageTitleLengthMax(),
           'placeholder' => sprintf(
@@ -79,6 +80,7 @@ class AppControllerSubmit
         'attribute' => (object)
         [
           'value'       => null,
+          'required'    => $this->_validator->getPageDescriptionRequired(),
           'minlength'   => $this->_validator->getPageDescriptionLengthMin(),
           'maxlength'   => $this->_validator->getPageDescriptionLengthMax(),
           'placeholder' => sprintf(
@@ -94,6 +96,7 @@ class AppControllerSubmit
         'attribute' => (object)
         [
           'value'       => null,
+          'required'    => $this->_validator->getPageKeywordsRequired(),
           'minlength'   => $this->_validator->getPageKeywordsLengthMin(),
           'maxlength'   => $this->_validator->getPageKeywordsLengthMax(),
           'placeholder' => sprintf(
@@ -111,6 +114,7 @@ class AppControllerSubmit
         'attribute' => (object)
         [
           'value'       => null,
+          'required'    => $this->_validator->getPageTorrentRequired(),
           'placeholder' => sprintf(
             _('Torrent file (use Ctrl to select multiple files)')
           ),
@@ -123,9 +127,52 @@ class AppControllerSubmit
       ],
     ];
 
+    // Submit request
     if (isset($_POST))
     {
+      if (isset($_POST['title']))
+      {
+        $error = [];
 
+        if ($this->_validator->pageTitle($_POST['title'], $error))
+        {
+          $form->title->error = $error;
+        }
+
+        // @TODO check for page duplicates
+
+        $form->title->attribute->value = htmlentities($_POST['title']);
+      }
+
+      if (isset($_POST['description']))
+      {
+        $error = [];
+
+        if ($this->_validator->pageDescription($_POST['description'], $error))
+        {
+          $form->description->error = $error;
+        }
+
+        $form->description->attribute->value = htmlentities($_POST['description']);
+      }
+
+      if (isset($_POST['keywords']))
+      {
+        $error = [];
+
+        if ($this->_validator->pageKeywords($_POST['keywords'], $error))
+        {
+          $form->keywords->error = $error;
+        }
+
+        $form->keywords->attribute->value = htmlentities($_POST['keywords']);
+      }
+
+      // Request valid
+      if (empty($error))
+      {
+        // @TODO redirect
+      }
     }
 
     // Render

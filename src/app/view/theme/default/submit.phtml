@@ -32,6 +32,7 @@
                           type="text"
                           name="title"
                           id="title"
+                          <?php echo $form->title->attribute->required ? 'required="required"' : false ?>
                           value="<?php echo $form->title->attribute->value ?>"
                           placeholder="<?php echo $form->title->attribute->placeholder ?>"
                           minlength="<?php echo $form->title->attribute->minlength ?>"
@@ -55,6 +56,7 @@
                   <textarea class="width-100 margin-t-8 <?php echo ($form->description->error ? 'background-color-red' : false) ?>"
                             name="description"
                             id="description"
+                            <?php echo $form->description->attribute->required ? 'required="required"' : false ?>
                             placeholder="<?php echo $form->description->attribute->placeholder ?>"
                             minlength="<?php echo $form->description->attribute->minlength ?>"
                             maxlength="<?php echo $form->description->attribute->maxlength ?>"><?php echo $form->description->attribute->value ?></textarea>
@@ -76,7 +78,7 @@
                   <?php } ?>
                   <textarea class="width-100 margin-t-8 <?php echo ($form->keywords->error ? 'background-color-red' : false) ?>"
                             name="keywords"
-                            id="keywords"
+                            <?php echo $form->keywords->attribute->required ? 'required="required"' : false ?>
                             placeholder="<?php echo $form->keywords->attribute->placeholder ?>"
                             minlength="<?php echo $form->keywords->attribute->minlength ?>"
                             maxlength="<?php echo $form->keywords->attribute->maxlength ?>"><?php echo $form->keywords->attribute->value ?></textarea>
@@ -101,6 +103,7 @@
                          multiple="multiple"
                          name="torrent"
                          id="torrent"
+                         <?php echo $form->torrent->attribute->required ? 'required="required"' : false ?>
                          value="<?php echo $form->torrent->attribute->value ?>" />
                 </div>
                 <!--

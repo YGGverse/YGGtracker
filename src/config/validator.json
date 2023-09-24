@@ -3,6 +3,7 @@
   {
     "title":
     {
+      "required": true,
       "length":
       {
         "min": 10,
@@ -12,6 +13,7 @@
     },
     "description":
     {
+      "required": false,
       "length":
       {
         "min": 0,
@@ -21,6 +23,7 @@
     },
     "keywords":
     {
+      "required": false,
       "quantity":
       {
         "min": 0,
@@ -32,6 +35,15 @@
         "max": 140
       },
       "regex": "/[\\w]+/ui"
+    },
+    "torrent":
+    {
+      "required": true,
+      "quantity":
+      {
+        "min": 0,
+        "max": 20
+      }
     }
   }
 }
