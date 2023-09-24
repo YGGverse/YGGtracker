@@ -346,14 +346,14 @@ class AppModelValidator
       return false;
     }
 
-    if (!preg_match(YGGDRASIL_HOST_REGEX, str_replace(['[',']'], false, $value)))
+    if (!preg_match($this->_config->host->regex, str_replace(['[',']'], false, $value)))
     {
       array_push(
         $error,
         sprintf(
           _('Host "%s" not match condition "%s"'),
           $value,
-          YGGDRASIL_HOST_REGEX
+          $this->_config->host->regex
         )
       );
 
