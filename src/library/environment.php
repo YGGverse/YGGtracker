@@ -18,7 +18,7 @@ class Environment
       }
     }
 
-    return json_decode(
+    return (object) json_decode(
       file_get_contents(
         $config
       )
