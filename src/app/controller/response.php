@@ -30,7 +30,7 @@ class AppControllerResponse
     require_once __DIR__ . '/module/head.php';
 
     $appControllerModuleHead = new AppControllerModuleHead(
-      WEBSITE_URL,
+      Environment::config('website')->url,
       $this->_title,
       [
         [

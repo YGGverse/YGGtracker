@@ -2,57 +2,15 @@
 
 class AppControllerIndex
 {
-  private $_db;
-  private $_sphinx;
-  private $_memory;
+  private $_user;
 
   public function __construct()
   {
-    require_once __DIR__ . '/../../library/database.php';
-    require_once __DIR__ . '/../../library/sphinx.php';
-    require_once __DIR__ . '/../../library/scrapeer.php';
-    require_once __DIR__ . '/../../library/time.php';
-    require_once __DIR__ . '/../../library/curl.php';
-    require_once __DIR__ . '/../../library/valid.php';
-    require_once __DIR__ . '/../../library/filter.php';
+    require_once __DIR__ . '/user.php';
 
-    require_once __DIR__ . '/../../../vendor/autoload.php';
-
-    try
-    {
-      $this->_db = new Database(
-        DB_HOST,
-        DB_PORT,
-        DB_NAME,
-        DB_USERNAME,
-        DB_PASSWORD
-      );
-
-      $this->_sphinx = new Sphinx(
-        SPHINX_HOST,
-        SPHINX_PORT
-      );
-
-      $this->_memory = new \Yggverse\Cache\Memory(
-        MEMCACHED_HOST,
-        MEMCACHED_PORT,
-        MEMCACHED_NAMESPACE,
-        MEMCACHED_TIMEOUT + time()
-      );
-    }
-
-    catch (Exception $error)
-    {
-      require_once __DIR__ . '/error/500.php';
-
-      $controller = new AppControllerError500(
-        print_r($error, true)
-      );
-
-      $controller->render();
-
-      exit;
-    }
+    $this->_user = new AppControllerUser(
+      $_SERVER['REMOTE_ADDR']
+    );
   }
 
   public function render()
@@ -68,16 +26,16 @@ class AppControllerIndex
     require_once __DIR__ . '/module/head.php';
 
     $appControllerModuleHead = new AppControllerModuleHead(
-      WEBSITE_URL,
+      Environment::config('website')->url,
       $page > 1 ?
       sprintf(
         _('Page %s - BitTorrent Registry for Yggdrasil - %s'),
         $page,
-        WEBSITE_NAME
+        Environment::config('website')->name
       ) :
       sprintf(
         _('%s - BitTorrent Registry for Yggdrasil'),
-        WEBSITE_NAME
+        Environment::config('website')->name
       ),
       [
         [
@@ -101,7 +59,9 @@ class AppControllerIndex
 
     require_once __DIR__ . '/module/profile.php';
 
-    $appControllerModuleProfile = new AppControllerModuleProfile($user->userId);
+    $appControllerModuleProfile = new AppControllerModuleProfile(
+      $this->_user
+    );
 
     require_once __DIR__ . '/module/header.php';
 

@@ -6,12 +6,13 @@ class AppControllerWelcome
 
   public function __construct()
   {
-    require_once __DIR__ . '/../model/user.php';
+    require_once __DIR__ . '/user.php';
 
-    $this->_user = new AppModelUser(
+    $this->_user = new AppControllerUser(
       $_SERVER['REMOTE_ADDR']
     );
   }
+
 
   private function _response(string $title, string $h1, string $text, int $code = 200)
   {
@@ -31,12 +32,12 @@ class AppControllerWelcome
 
   public function render()
   {
-    if (!$user = $this->_user->get())
+    if (!$address = $this->_user->getAddress())
     {
       $this->_response(
         sprintf(
           _('Error - %s'),
-          WEBSITE_NAME
+          Environment::config('website')->name
         ),
         _('500'),
         _('Could not init user'),
@@ -44,17 +45,17 @@ class AppControllerWelcome
       );
     }
 
-    if (!is_null($user->public))
+    if (!is_null($this->_user->getPublic()))
     {
       $this->_response(
         sprintf(
           _('Welcome back - %s'),
-          WEBSITE_NAME
+          Environment::config('website')->name
         ),
         _('Welcome back!'),
         sprintf(
           _('You already have selected account type to %s'),
-          $user->public ? _('Distributed') : _('Local')
+          $this->_user->getPublic() ? _('Distributed') : _('Local')
         ),
         405
       );
@@ -67,7 +68,7 @@ class AppControllerWelcome
         $this->_response(
           sprintf(
             _('Success - %s'),
-            WEBSITE_NAME
+            Environment::config('website')->name
           ),
           _('Success!'),
           sprintf(
@@ -81,10 +82,10 @@ class AppControllerWelcome
     require_once __DIR__ . '/module/head.php';
 
     $appControllerModuleHead = new AppControllerModuleHead(
-      WEBSITE_URL,
+      Environment::config('website')->url,
       sprintf(
         _('Welcome to %s'),
-        WEBSITE_NAME
+        Environment::config('website')->name
       ),
       [
         [
