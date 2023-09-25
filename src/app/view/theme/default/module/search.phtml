@@ -1,4 +1,20 @@
 <form class="margin-t-8" name="search" method="get" action="search">
-  <input class="min-width-200-px" type="text" name="query" value="<?php echo $query ?>" placeholder="<?php echo _('keyword, file, extension, hash...') ?>" />
-  <input type="submit" value="<?php echo _('search') ?>" />
+  <input class="min-width-200-px" type="text" name="query" value="<?php echo $query ?>" placeholder="<?php echo _('Keyword, file, extension, hash...') ?>" />
+  <select class="min-width-120-px" type="text" name="locale">
+    <option value="">
+      <?php echo _('All languages') ?>
+    </option>
+    <?php foreach ($locales as $locale) { ?>
+      <?php if ($locale->active) { ?>
+        <option value="<?php echo $locale->key ?>" selected="selected">
+          <?php echo $locale->value ?>
+        </option>
+      <?php } else { ?>
+        <option value="<?php echo $locale->key ?>">
+          <?php echo $locale->value ?>
+        </option>
+      <?php } ?>
+    <?php } ?>
+  </select>
+  <input type="submit" value="<?php echo _('Search') ?>" />
 </form>

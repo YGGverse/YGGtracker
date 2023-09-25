@@ -413,8 +413,12 @@ a:visited.background-color-hover-night-light:hover {
   width: 180px;
 }
 
+.min-width-120-px {
+  min-width: 120px;
+}
+
 .min-width-200-px {
-  width: 200px;
+  min-width: 200px;
 }
 
 @media (max-width: 1220px) {
