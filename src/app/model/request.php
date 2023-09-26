@@ -2,9 +2,9 @@
 
 class AppModelRequest {
 
-  private $_get;
-  private $_post;
-  private $_files;
+  private array $_get;
+  private array $_post;
+  private array $_files;
 
   public function __construct(array $get, array $post, array $files)
   {
