@@ -13,7 +13,7 @@ class AppControllerPage
     AppModelValidator $validator,
     AppModelLocale    $locale,
     AppModelWebsite   $website,
-    AppModelSession   $session,
+    AppModelSession   $session
   )
   {
     $this->_database  = $database;
@@ -334,7 +334,9 @@ class AppControllerPage
     require_once __DIR__ . '/module/profile.php';
 
     $appControllerModuleProfile = new AppControllerModuleProfile(
-      $user
+      $this->_database,
+      $this->_website,
+      $this->_session
     );
 
     require_once __DIR__ . '/module/header.php';

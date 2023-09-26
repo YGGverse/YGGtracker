@@ -156,9 +156,27 @@ if (isset($request['_route_']))
 
 else
 {
+  require_once __DIR__ . '/../app/model/database.php';
+  require_once __DIR__ . '/../app/model/validator.php';
+  require_once __DIR__ . '/../app/model/website.php';
+  require_once __DIR__ . '/../app/model/session.php';
+
   require_once __DIR__ . '/../app/controller/index.php';
 
-  $appControllerIndex = new AppControllerIndex();
+  $appControllerIndex = new AppControllerIndex(
+    new AppModelDatabase(
+      Environment::config('database')
+    ),
+    new AppModelValidator(
+      Environment::config('validator')
+    ),
+    new AppModelWebsite(
+      Environment::config('website')
+    ),
+    new AppModelSession(
+      $_SERVER['REMOTE_ADDR']
+    )
+  );
 
   $appControllerIndex->render();
 }
