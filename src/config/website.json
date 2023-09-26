@@ -5,6 +5,7 @@
   {
     "user":
     {
+      "status": true,
       "approved": false
     }
   },
