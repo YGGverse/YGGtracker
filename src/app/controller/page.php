@@ -4,38 +4,38 @@ class AppControllerPage
 {
   private $_database;
   private $_validator;
+  private $_locale;
+  private $_website;
+  private $_session;
 
-  private $_user;
-
-  public function __construct()
+  public function __construct(
+    AppModelDatabase  $database,
+    AppModelValidator $validator,
+    AppModelLocale    $locale,
+    AppModelWebsite   $website,
+    AppModelSession   $session,
+  )
   {
-    require_once __DIR__ . '/../model/database.php';
-
-    $this->_database = new AppModelDatabase(
-      Environment::config('database')
-    );
-
-    require_once __DIR__ . '/../model/validator.php';
-
-    $this->_validator = new AppModelValidator(
-      Environment::config('validator')
-    );
-
-    require_once __DIR__ . '/user.php';
-
-    $this->_user = new AppControllerUser(
-      $_SERVER['REMOTE_ADDR']
-    );
+    $this->_database  = $database;
+    $this->_validator = $validator;
+    $this->_locale    = $locale;
+    $this->_website   = $website;
+    $this->_session   = $session;
   }
 
-  private function _response(string $title, string $h1, string $text, int $code = 200)
+  private function _response(string $title, string $h1, mixed $data, int $code = 200)
   {
     require_once __DIR__ . '/response.php';
+
+    if (is_array($data))
+    {
+      $data = implode('<br />', $data);
+    }
 
     $appControllerResponse = new AppControllerResponse(
       $title,
       $h1,
-      $text,
+      $data,
       $code
     );
 
@@ -44,20 +44,115 @@ class AppControllerPage
     exit;
   }
 
-  public function renderFormDescription()
+  private function _initUser(string $address)
   {
-    // Prepare locales
-    $locales = [];
-
-    foreach (Environment::config('locales') as $key => $value)
+    if (empty($address))
     {
-      $locales[$key] = (object)
-      [
-        'key'    => $key,
-        'value'  => $value[0],
-        'active' => false !== stripos($_SERVER['HTTP_ACCEPT_LANGUAGE'], $key) ? true : false,
-      ];
+      $this->_response(
+        sprintf(
+          _('Error - %s'),
+          $this->_website->getName()
+        ),
+        _('500'),
+        _('Could not init session'),
+        500
+      );
     }
+
+    $error = [];
+    if (!$this->_validator->host($address, $error))
+    {
+      $this->_response(
+        sprintf(
+          _('Error - %s'),
+          $this->_website->getName()
+        ),
+        _('406'),
+        $error,
+        406
+      );
+    }
+
+    try
+    {
+      $this->_database->beginTransaction();
+
+      $user = $this->_database->getUser(
+        $this->_database->initUserId(
+          $address,
+          $this->_website->getDefaultUserStatus(),
+          $this->_website->getDefaultUserApproved(),
+          time()
+        )
+      );
+
+      $this->_database->commit();
+    }
+
+    catch (Exception $error)
+    {
+      $this->_database->rollback();
+
+      $this->_response(
+        sprintf(
+          _('Error - %s'),
+          $this->_website->getName()
+        ),
+        _('500'),
+        $error,
+        500
+      );
+    }
+
+    // Access denied
+    if (!$user->status)
+    {
+      $this->_response(
+        sprintf(
+          _('Error - %s'),
+          $this->_website->getName()
+        ),
+        _('403'),
+        _('Access denied'),
+        403
+      );
+    }
+
+    // Require account type selection
+    if (is_null($user->public))
+    {
+      header(
+        sprintf(
+          'Location: %s/welcome',
+          trim($this->_website->getUrl(), '/')
+        )
+      );
+    }
+  }
+
+
+  public function get(int $pageId)
+  {
+    return $this->_database->getPage($pageId);
+  }
+
+  public function add(int $timeAdded)
+  {
+    return $this->_database->addPage($timeAdded);
+  }
+
+  public function commitTitle(int $localeId, string $value)
+  {
+
+  }
+
+
+  public function renderFormSubmit()
+  {
+
+    $user = $this->_initUser(
+      $this->_session->getAddress()
+    );
 
     // Init form
     $form = (object)
@@ -65,7 +160,7 @@ class AppControllerPage
       'locale' => (object)
       [
         'error'  => [],
-        'values' => $locales,
+        'values' => $this->_locale->getLocales(),
         'attribute' => (object)
         [
           'value'       => null,
@@ -134,6 +229,18 @@ class AppControllerPage
     // Submit request
     if (isset($_POST))
     {
+      if (isset($_POST['locale']))
+      {
+        if (!$this->_locale->localeKeyExists($_POST['locale']))
+        {
+          $form->locale->error[] = [
+            _('Locale not supported')
+          ];
+        }
+
+        $form->locale->attribute->value = htmlentities($_POST['locale']);
+      }
+
       if (isset($_POST['title']))
       {
         $error = [];
@@ -141,11 +248,16 @@ class AppControllerPage
         if (!$this->_validator->pageTitle($_POST['title'], $error))
         {
           $form->title->error[] = $error;
+
+          $form->title->attribute->value = htmlentities($_POST['title']);
         }
 
-        // @TODO check for page duplicates
+        else
+        {
+          $this->commitTitle($_POST['locale'], $_POST['title']);
 
-        $form->title->attribute->value = htmlentities($_POST['title']);
+          $form->title->attribute->value = $this->getTitle();
+        }
       }
 
       if (isset($_POST['description']))
@@ -180,6 +292,26 @@ class AppControllerPage
       // Request valid
       if (empty($error))
       {
+        // Init page
+        if (isset($_GET['pageId']))
+        {
+          $page = $this->_database->getPage((int) $_GET['pageId']);
+        }
+
+        else if (isset($_POST['pageId']))
+        {
+          $page = $this->_database->getPage((int) $_POST['pageId']);
+        }
+
+        else
+        {
+          $page = $this->_database->getPage(
+            $this->_database->addPage(
+              time()
+            )
+          );
+        }
+
         // @TODO redirect
       }
     }
@@ -188,10 +320,10 @@ class AppControllerPage
     require_once __DIR__ . '/module/head.php';
 
     $appControllerModuleHead = new AppControllerModuleHead(
-      Environment::config('website')->url,
+      $this->_website->getUrl(),
       sprintf(
         _('Submit - %s'),
-        Environment::config('website')->name
+        $this->_website->getName()
       ),
       [
         [
@@ -216,7 +348,7 @@ class AppControllerPage
     require_once __DIR__ . '/module/profile.php';
 
     $appControllerModuleProfile = new AppControllerModuleProfile(
-      $this->_user
+      $user
     );
 
     require_once __DIR__ . '/module/header.php';
@@ -227,6 +359,6 @@ class AppControllerPage
 
     $appControllerModuleFooter = new AppControllerModuleFooter();
 
-    include __DIR__ . '../../view/theme/default/page/form/description.phtml';
+    include __DIR__ . '../../view/theme/default/page/form/submit.phtml';
   }
 }
