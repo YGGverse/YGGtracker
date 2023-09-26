@@ -19,6 +19,19 @@ class AppModelLocale {
 
   public function getLocales() : object
   {
-    return $this->_locales;
+    return (object) $this->_locales;
+  }
+
+  public function localeKeyExists(string $key) : bool
+  {
+    foreach ($this->_locales as $locale)
+    {
+      if ($locale->key === $key)
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
