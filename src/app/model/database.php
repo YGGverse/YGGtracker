@@ -77,6 +77,40 @@ class AppModelDatabase
     return $this->_debug;
   }
 
+  // Text
+  public function addText(string $mime, string $hash, string $value) : int
+  {
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `text` SET `mime` = ?, `hash` = ?, `value` = ?');
+
+    $query->execute([$mime, $hash, $value]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function getText(int $textId)
+  {
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `text` WHERE `textId` = ?');
+
+    $query->execute([$textId]);
+
+    return $query->fetch();
+  }
+
+  public function findText(string $mime, string $hash)
+  {
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `text` WHERE `mime` = ? AND `hash` = ?');
+
+    $query->execute([$mime, $hash]);
+
+    return $query->fetch();
+  }
+
   // Page
   public function addPage(int $timeAdded) : int
   {
