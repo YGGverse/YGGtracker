@@ -24,6 +24,11 @@ class AppModelWebsite
     return $this->_config->url;
   }
 
+  public function getDefaultUserStatus() : bool
+  {
+    return $this->_config->default->user->status;
+  }
+
   public function getDefaultUserApproved() : bool
   {
     return $this->_config->default->user->approved;
