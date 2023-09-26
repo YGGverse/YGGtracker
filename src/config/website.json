@@ -3,6 +3,7 @@
   "url":"",
   "default":
   {
+    "locale":"en-US",
     "user":
     {
       "status": true,
