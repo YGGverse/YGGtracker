@@ -111,6 +111,7 @@ if (isset($request['_route_']))
       require_once __DIR__ . '/../app/model/locale.php';
       require_once __DIR__ . '/../app/model/website.php';
       require_once __DIR__ . '/../app/model/session.php';
+      require_once __DIR__ . '/../app/model/request.php';
 
       require_once __DIR__ . '/../app/controller/page.php';
 
@@ -129,6 +130,11 @@ if (isset($request['_route_']))
         ),
         new AppModelSession(
           $_SERVER['REMOTE_ADDR']
+        ),
+        new AppModelRequest(
+          $_GET,
+          $_POST,
+          $_FILES
         )
       );
 
