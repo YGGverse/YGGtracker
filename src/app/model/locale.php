@@ -6,27 +6,27 @@ class AppModelLocale {
 
   public function __construct(object $locales)
   {
-    foreach ($locales as $key => $value)
+    foreach ($locales as $code => $value)
     {
       $this->_locales[] = (object)
       [
-        'key'    => $key,
+        'code'   => $code,
         'value'  => $value[0],
-        'active' => false !== stripos($_SERVER['HTTP_ACCEPT_LANGUAGE'], $key) ? true : false,
+        'active' => false,
       ];
     }
   }
 
-  public function getLocales() : object
+  public function getList() : object
   {
     return (object) $this->_locales;
   }
 
-  public function localeKeyExists(string $key) : bool
+  public function codeExists(string $code) : bool
   {
     foreach ($this->_locales as $locale)
     {
-      if ($locale->key === $key)
+      if ($locale->code === $code)
       {
         return true;
       }
