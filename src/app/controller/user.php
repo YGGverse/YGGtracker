@@ -4,90 +4,34 @@ class AppControllerUser
 {
   private $_database;
   private $_validator;
+  private $_website;
 
   private $_user;
 
-  public function __construct(string $address)
+  public function __construct(
+    AppModelDatabase  $database,
+    AppModelValidator $validator,
+    AppModelWebsite   $website
+  )
   {
-    require_once __DIR__ . '/../model/database.php';
-
-    $this->_database = new AppModelDatabase(
-      Environment::config('database')
-    );
-
-    require_once __DIR__ . '/../model/validator.php';
-
-    $this->_validator = new AppModelValidator(
-      Environment::config('validator')
-    );
-
-    // Validate address
-    $error = [];
-
-    if (!$this->_validator->host($address, $error))
-    {
-      $this->_response(
-        sprintf(
-          _('Error - %s'),
-          Environment::config('website')->name
-        ),
-        _('406'),
-        print_r($error, true),
-        406
-      );
-    }
-
-    // Init user session
-    try
-    {
-      $this->_database->beginTransaction();
-
-      $this->_user = $this->_database->getUser(
-        $this->_database->initUserId(
-          $address,
-          Environment::config('website')->default->user->approved,
-          time()
-        )
-      );
-
-      $this->_database->commit();
-    }
-
-    catch (Exception $error)
-    {
-      $this->_database->rollback();
-
-      $this->_response(
-        sprintf(
-          _('Error - %s'),
-          Environment::config('website')->name
-        ),
-        _('500'),
-        print_r($error, true),
-        500
-      );
-    }
-
-    // Require account type selection
-    if (is_null($this->getPublic()))
-    {
-      header(
-        sprintf(
-          'Location: %s/welcome',
-          trim($this->_config->url, '/')
-        )
-      );
-    }
+    $this->_database  = $database;
+    $this->_validator = $validator;
+    $this->_website   = $website;
   }
 
-  private function _response(string $title, string $h1, string $text, int $code = 200)
+  private function _response(string $title, string $h1, mixed $data, int $code = 200)
   {
     require_once __DIR__ . '/response.php';
+
+    if (is_array($data))
+    {
+      $data = implode('<br />', $data);
+    }
 
     $appControllerResponse = new AppControllerResponse(
       $title,
       $h1,
-      $text,
+      $data,
       $code
     );
 

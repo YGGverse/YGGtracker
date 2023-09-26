@@ -2,26 +2,37 @@
 
 class AppControllerWelcome
 {
-  private $_user;
+  private $_database;
+  private $_validator;
+  private $_website;
+  private $_session;
 
-  public function __construct()
+  public function __construct(
+    AppModelDatabase  $database,
+    AppModelValidator $validator,
+    AppModelWebsite   $website,
+    AppModelSession   $session,
+  )
   {
-    require_once __DIR__ . '/user.php';
-
-    $this->_user = new AppControllerUser(
-      $_SERVER['REMOTE_ADDR']
-    );
+    $this->_database  = $database;
+    $this->_validator = $validator;
+    $this->_website   = $website;
+    $this->_session   = $session;
   }
 
-
-  private function _response(string $title, string $h1, string $text, int $code = 200)
+  private function _response(string $title, string $h1, mixed $data, int $code = 200)
   {
     require_once __DIR__ . '/response.php';
+
+    if (is_array($data))
+    {
+      $data = implode('<br />', $data);
+    }
 
     $appControllerResponse = new AppControllerResponse(
       $title,
       $h1,
-      $text,
+      $data,
       $code
     );
 
@@ -32,30 +43,76 @@ class AppControllerWelcome
 
   public function render()
   {
-    if (!$address = $this->_user->getAddress())
+    $error = [];
+    if (!$this->_validator->host($this->_session->getAddress(), $error))
     {
       $this->_response(
         sprintf(
           _('Error - %s'),
-          Environment::config('website')->name
+          $this->_website->getName()
+        ),
+        _('406'),
+        $error,
+        406
+      );
+    }
+
+    try
+    {
+      $this->_database->beginTransaction();
+
+      $user = $this->_database->getUser(
+        $this->_database->initUserId(
+          $this->_session->getAddress(),
+          $this->_website->getDefaultUserStatus(),
+          $this->_website->getDefaultUserApproved(),
+          time()
+        )
+      );
+
+      $this->_database->commit();
+    }
+
+    catch (Exception $error)
+    {
+      $this->_database->rollback();
+
+      $this->_response(
+        sprintf(
+          _('Error - %s'),
+          $this->_website->getName()
         ),
         _('500'),
-        _('Could not init user'),
+        $error,
         500
       );
     }
 
-    if (!is_null($this->_user->getPublic()))
+    // Access denied
+    if (!$user->status)
+    {
+      $this->_response(
+        sprintf(
+          _('Error - %s'),
+          $this->_website->getName()
+        ),
+        _('403'),
+        _('Access denied'),
+        403
+      );
+    }
+
+    if (!is_null($user->public))
     {
       $this->_response(
         sprintf(
           _('Welcome back - %s'),
-          Environment::config('website')->name
+          $this->_website->getName()
         ),
         _('Welcome back!'),
         sprintf(
           _('You already have selected account type to %s'),
-          $this->_user->getPublic() ? _('Distributed') : _('Local')
+          $user->public ? _('Distributed') : _('Local')
         ),
         405
       );
@@ -63,12 +120,12 @@ class AppControllerWelcome
 
     if (isset($_POST['public']))
     {
-      if ($this->_user->updateUserPublic((bool) $_POST['public'], time()))
+      if ($this->_database->updateUserPublic($user->userId, (bool) $_POST['public'], time()))
       {
         $this->_response(
           sprintf(
             _('Success - %s'),
-            Environment::config('website')->name
+            $this->_website->getName()
           ),
           _('Success!'),
           sprintf(
@@ -82,10 +139,10 @@ class AppControllerWelcome
     require_once __DIR__ . '/module/head.php';
 
     $appControllerModuleHead = new AppControllerModuleHead(
-      Environment::config('website')->url,
+      $this->_website->getUrl(),
       sprintf(
         _('Welcome to %s'),
-        Environment::config('website')->name
+        $this->_website->getName()
       ),
       [
         [

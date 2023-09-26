@@ -78,9 +78,27 @@ if (isset($request['_route_']))
 
     case 'welcome':
 
+      require_once __DIR__ . '/../app/model/database.php';
+      require_once __DIR__ . '/../app/model/validator.php';
+      require_once __DIR__ . '/../app/model/website.php';
+      require_once __DIR__ . '/../app/model/session.php';
+
       require_once __DIR__ . '/../app/controller/welcome.php';
 
-      $appControllerWelcome = new AppControllerWelcome();
+      $appControllerWelcome = new AppControllerWelcome(
+        new AppModelDatabase(
+          Environment::config('database')
+        ),
+        new AppModelValidator(
+          Environment::config('validator')
+        ),
+        new AppModelWebsite(
+          Environment::config('website')
+        ),
+        new AppModelSession(
+          $_SERVER['REMOTE_ADDR']
+        )
+      );
 
       $appControllerWelcome->render();
 
