@@ -86,13 +86,35 @@ if (isset($request['_route_']))
 
     break;
 
-    case 'page/form':
+    case 'submit':
+
+      require_once __DIR__ . '/../app/model/database.php';
+      require_once __DIR__ . '/../app/model/validator.php';
+      require_once __DIR__ . '/../app/model/locale.php';
+      require_once __DIR__ . '/../app/model/website.php';
+      require_once __DIR__ . '/../app/model/session.php';
 
       require_once __DIR__ . '/../app/controller/page.php';
 
-      $appControllerPage = new AppControllerPage();
+      $appControllerPage = new AppControllerPage(
+        new AppModelDatabase(
+          Environment::config('database')
+        ),
+        new AppModelValidator(
+          Environment::config('validator')
+        ),
+        new AppModelLocale(
+          Environment::config('locales')
+        ),
+        new AppModelWebsite(
+          Environment::config('website')
+        ),
+        new AppModelSession(
+          $_SERVER['REMOTE_ADDR']
+        )
+      );
 
-      $appControllerPage->renderFormDescription();
+      $appControllerPage->renderFormSubmit();
 
     break;
 
