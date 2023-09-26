@@ -13,6 +13,7 @@
                 <h1><?php echo _('Submit') ?></h1>
               </div>
               <form class="margin-t-8" name="submit" method="post" enctype="multipart/form-data" action="submit">
+                <input type="hidden" name="pageId" value="<?php echo $pageId ?>" />
                 <div class="margin-b-16">
                   <label for="locale">
                     <?php echo _('Content language') ?>
