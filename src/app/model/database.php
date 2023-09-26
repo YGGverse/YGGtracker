@@ -77,6 +77,29 @@ class AppModelDatabase
     return $this->_debug;
   }
 
+  // Page
+  public function addPage(int $timeAdded) : int
+  {
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `page` SET `timeAdded` = ?');
+
+    $query->execute([$timeAdded]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function getPage(int $pageId)
+  {
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `page` WHERE `pageId` = ?');
+
+    $query->execute([$pageId]);
+
+    return $query->fetch();
+  }
+
   // Scheme
   public function addScheme(string $value) : int {
 
@@ -491,13 +514,13 @@ class AppModelDatabase
   }
 
   // User
-  public function addUser(string $address, bool $approved, $timeAdded) : int {
+  public function addUser(string $address, bool $status, bool $approved, $timeAdded) : int {
 
     $this->_debug->query->insert->total++;
 
-    $query = $this->_db->prepare('INSERT INTO `user` SET `address` = ?, `approved` = ?, `timeAdded` = ?');
+    $query = $this->_db->prepare('INSERT INTO `user` SET `address` = ?, `status` = ?, `approved` = ?, `timeAdded` = ?');
 
-    $query->execute([$address, (int) $approved, $timeAdded]);
+    $query->execute([$address, (int) $status, (int) $approved, $timeAdded]);
 
     return $this->_db->lastInsertId();
   }
@@ -562,14 +585,14 @@ class AppModelDatabase
     return $query->fetch();
   }
 
-  public function initUserId(string $address, bool $approved, int $timeAdded) : int {
+  public function initUserId(string $address, bool $status, bool $approved, int $timeAdded) : int {
 
     if ($result = $this->findUserByAddress($address)) {
 
       return $result->userId;
     }
 
-    return $this->addUser($address, $approved, $timeAdded);
+    return $this->addUser($address, $status, $approved, $timeAdded);
   }
 
   public function updateUserApproved(int $userId, mixed $approved, int $timeUpdated) : int {
