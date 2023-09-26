@@ -8,9 +8,9 @@ class AppModelRequest {
 
   public function __construct(array $get, array $post, array $files)
   {
-    $this->_address = $address;
-    $this->_post    = $post;
-    $this->_files   = $files;
+    $this->_get   = $get;
+    $this->_post  = $post;
+    $this->_files = $files;
   }
 
   public function get(string $key) : mixed
