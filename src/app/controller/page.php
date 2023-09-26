@@ -46,19 +46,6 @@ class AppControllerPage
 
   private function _initUser(string $address)
   {
-    if (empty($address))
-    {
-      $this->_response(
-        sprintf(
-          _('Error - %s'),
-          $this->_website->getName()
-        ),
-        _('500'),
-        _('Could not init session'),
-        500
-      );
-    }
-
     $error = [];
     if (!$this->_validator->host($address, $error))
     {
@@ -129,7 +116,6 @@ class AppControllerPage
       );
     }
   }
-
 
   public function get(int $pageId)
   {
