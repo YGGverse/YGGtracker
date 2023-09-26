@@ -7,13 +7,15 @@ class AppControllerPage
   private $_locale;
   private $_website;
   private $_session;
+  private $_request;
 
   public function __construct(
     AppModelDatabase  $database,
     AppModelValidator $validator,
     AppModelLocale    $locale,
     AppModelWebsite   $website,
-    AppModelSession   $session
+    AppModelSession   $session,
+    AppModelRequest   $request
   )
   {
     $this->_database  = $database;
@@ -21,6 +23,7 @@ class AppControllerPage
     $this->_locale    = $locale;
     $this->_website   = $website;
     $this->_session   = $session;
+    $this->_request   = $request;
   }
 
   private function _response(string $title, string $h1, mixed $data, int $code = 200)
@@ -117,45 +120,154 @@ class AppControllerPage
     }
   }
 
-  public function get(int $pageId)
+  private function _initLocale(string $value)
   {
-    return $this->_database->getPage($pageId);
+    if (!$locale = $this->_database->findLocale($value))
+    {
+      $locale = $this->_database->getLocale(
+        $this->_database->addLocale(
+          $value
+        )
+      );
+    }
+
+    return $locale;
   }
 
-  public function add(int $timeAdded)
+  private function _initPage(int $pageId = 0)
   {
-    return $this->_database->addPage($timeAdded);
+    if (!$page = $this->_database->getPage($pageId))
+    {
+      $page = $this->_database->getPage(
+        $this->_database->addPage(
+          time()
+        )
+      );
+    }
+
+    return $page;
   }
 
-  public function commitTitle(int $localeId, string $value)
+  private function _initText(string $value, string $mime = 'text/plain')
   {
+    if (!$text = $this->_database->findText($mime, md5($value)))
+    {
+      $text = $this->_database->getText(
+        $this->_database->addText(
+          $mime,
+          md5($value),
+          $value,
+          time()
+        )
+      );
+    }
 
+    return $text;
   }
 
+  private function _commitPageTitle(int $pageId, int $userId, int $localeId, string $text, string $mime = 'text/plain')
+  {
+    $textId = $this->_initText(
+      $text,
+      $mime
+    )->textId;
+
+    if (!$this->_database->findPageTitleLatest($pageId,
+                                               $userId,
+                                               $localeId,
+                                               $textId))
+    {
+      $this->_database->addPageTitle(
+        $pageId,
+        $userId,
+        $localeId,
+        $textId,
+        time()
+      );
+    }
+  }
 
   public function renderFormSubmit()
   {
-
+    // Init user
     $user = $this->_initUser(
       $this->_session->getAddress()
     );
 
+    // Init page
+    if ($this->_request->get('pageId'))
+    {
+      $page = $this->_initPage(
+        (int) $this->_request->get('pageId')
+      );
+    }
+
+    else if ($this->_request->post('pageId'))
+    {
+      $page = $this->_initPage(
+        (int) $this->_request->post('pageId')
+      );
+    }
+
+    else
+    {
+      $page = $this->_initPage();
+    }
+
+    // Init locale
+    if ($this->_locale->codeExists($this->_request->get('locale')))
+    {
+      $localeCode = (int) $this->_request->get('locale');
+    }
+
+    else if ($this->_locale->codeExists($this->_request->post('locale')))
+    {
+      $localeCode = (int) $this->_request->post('locale');
+    }
+
+    else
+    {
+      $localeCode = $this->_website->getDefaultLocale();
+
+      if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) // @TODO environment
+      {
+        foreach ($this->_locale->getList() as $value)
+        {
+          if (false !== stripos($_SERVER['HTTP_ACCEPT_LANGUAGE'], $value->code))
+          {
+            $localeCode = $value->code;
+            break;
+          }
+        }
+      }
+    }
+
+    $locale = $this->_initLocale($localeCode);
+
     // Init form
     $form = (object)
     [
-      'locale' => (object)
+      'pageId' => (object)
       [
-        'error'  => [],
-        'values' => $this->_locale->getLocales(),
+        'error' => [],
+        'type'  => 'hidden',
         'attribute' => (object)
         [
-          'value'       => null,
-          'placeholder' => _('Page content language'),
+          'value' => $page->pageId,
         ]
+      ],
+      'locale' => (object)
+      [
+        'error'        => [],
+        'type'        => 'select',
+        'options'     => $this->_locale->getList(),
+        'value'       => $locale->value,
+        'placeholder' => _('Page content language'),
       ],
       'title' => (object)
       [
         'error' => [],
+        'type'      => 'text',
         'attribute' => (object)
         [
           'value'       => null,
@@ -172,6 +284,7 @@ class AppControllerPage
       'description' => (object)
       [
         'error' => [],
+        'type'      => 'textarea',
         'attribute' => (object)
         [
           'value'       => null,
@@ -188,6 +301,7 @@ class AppControllerPage
       'keywords' => (object)
       [
         'error' => [],
+        'type'      => 'textarea',
         'attribute' => (object)
         [
           'value'       => null,
@@ -204,6 +318,7 @@ class AppControllerPage
       'sensitive' => (object)
       [
         'error' => [],
+        'type'      => 'checkbox',
         'attribute' => (object)
         [
           'value'       => null,
@@ -213,37 +328,29 @@ class AppControllerPage
     ];
 
     // Submit request
-    if (isset($_POST))
+    if ($this->_request->hasPost())
     {
-      if (isset($_POST['locale']))
-      {
-        if (!$this->_locale->localeKeyExists($_POST['locale']))
-        {
-          $form->locale->error[] = [
-            _('Locale not supported')
-          ];
-        }
-
-        $form->locale->attribute->value = htmlentities($_POST['locale']);
-      }
-
-      if (isset($_POST['title']))
+      /// Title
+      if ($title = $this->_request->post('title'))
       {
         $error = [];
 
-        if (!$this->_validator->pageTitle($_POST['title'], $error))
+        if (!$this->_validator->pageTitle($title, $error))
         {
           $form->title->error[] = $error;
-
-          $form->title->attribute->value = htmlentities($_POST['title']);
         }
 
         else
         {
-          $this->commitTitle($_POST['locale'], $_POST['title']);
-
-          $form->title->attribute->value = $this->getTitle();
+          $this->_commitPageTitle(
+            $page->pageId,
+            $user->userId,
+            $locale->localeId,
+            $title
+          );
         }
+
+        $form->title->attribute->value = htmlentities($title);
       }
 
       if (isset($_POST['description']))
@@ -278,26 +385,6 @@ class AppControllerPage
       // Request valid
       if (empty($error))
       {
-        // Init page
-        if (isset($_GET['pageId']))
-        {
-          $page = $this->_database->getPage((int) $_GET['pageId']);
-        }
-
-        else if (isset($_POST['pageId']))
-        {
-          $page = $this->_database->getPage((int) $_POST['pageId']);
-        }
-
-        else
-        {
-          $page = $this->_database->getPage(
-            $this->_database->addPage(
-              time()
-            )
-          );
-        }
-
         // @TODO redirect
       }
     }
