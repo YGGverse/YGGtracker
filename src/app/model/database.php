@@ -77,6 +77,40 @@ class AppModelDatabase
     return $this->_debug;
   }
 
+  // Locale
+  public function addLocale(string $value) : int
+  {
+    $this->_debug->query->insert->total++;
+
+    $query = $this->_db->prepare('INSERT INTO `locale` SET `value` = ?');
+
+    $query->execute([$value]);
+
+    return $this->_db->lastInsertId();
+  }
+
+  public function getLocale(int $localeId)
+  {
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `locale` WHERE `localeId` = ?');
+
+    $query->execute([$localeId]);
+
+    return $query->fetch();
+  }
+
+  public function findLocale(string $value)
+  {
+    $this->_debug->query->select->total++;
+
+    $query = $this->_db->prepare('SELECT * FROM `locale` WHERE `value` = ?');
+
+    $query->execute([$value]);
+
+    return $query->fetch();
+  }
+
   // Text
   public function addText(string $mime, string $hash, string $value) : int
   {
