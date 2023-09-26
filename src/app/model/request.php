@@ -51,4 +51,19 @@ class AppModelRequest {
       return false;
     }
   }
+
+  public function hasPost() : bool
+  {
+    return !empty($this->_post);
+  }
+
+  public function hasGet() : bool
+  {
+    return !empty($this->_post);
+  }
+
+  public function hasFiles() : bool
+  {
+    return !empty($this->_post);
+  }
 }
