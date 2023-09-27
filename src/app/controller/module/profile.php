@@ -35,10 +35,19 @@ class AppControllerModuleProfile
     $comments  = $this->_database->findUserPageCommentsDistinctTotal($user->userId);
     $editions  = 0; // @TODO $this->_database->findUserPageEditionsDistinctTotal($user->userId);
 
-    $identicon = false; // @TODO $this->_database->getIdenticon(24);
-
-    $public    = $user->public;
     $address   = $user->address;
+
+    $icon = new Jdenticon\Identicon();
+
+    $icon->setValue($user->address);
+    $icon->setSize(16);
+    $icon->setStyle(
+      [
+        'backgroundColor' => 'rgba(255, 255, 255, 0)',
+      ]
+    );
+
+    $identicon = $icon->getImageDataUri('webp');
 
     include __DIR__ . '../../../view/theme/default/module/profile.phtml';
   }

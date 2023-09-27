@@ -272,6 +272,11 @@ a:visited.background-color-hover-night-light:hover {
   padding-bottom: 8px;
 }
 
+.padding-y-12 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
 .padding-b-16 {
   padding-bottom: 16px;
 }
