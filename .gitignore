@@ -11,6 +11,7 @@
 !/src/config/bootstrap.php
 !/src/config/website.json
 !/src/config/locales.json
+!/src/config/themes.json
 !/src/config/sphinx.json
 !/src/config/memcached.json
 !/src/config/database.json
