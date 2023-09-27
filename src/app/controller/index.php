@@ -80,17 +80,6 @@ class AppControllerIndex
         403
       );
     }
-
-    // Require account type selection
-    if (is_null($user->public))
-    {
-      header(
-        sprintf(
-          'Location: %s/welcome',
-          trim($this->_website->getUrl(), '/')
-        )
-      );
-    }
   }
 
   public function render()
