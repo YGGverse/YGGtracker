@@ -1,6 +1,9 @@
 {
   "name":"YGGtracker",
-  "url":"",
+  "scheme":"",
+  "host":"",
+  "port":"",
+  "path":"",
   "default":
   {
     "locale":"en-US",
