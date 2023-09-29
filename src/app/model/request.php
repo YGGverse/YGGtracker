@@ -15,8 +15,13 @@ class AppModelRequest {
     $this->_server = $server;
   }
 
-  public function get(string $key) : mixed
+  public function get(string $key, mixed $value = null) : mixed
   {
+    if ($value)
+    {
+      $this->_get[$key] = $value;
+    }
+
     if (isset($this->_get[$key]))
     {
       return $this->_get[$key];
@@ -28,8 +33,13 @@ class AppModelRequest {
     }
   }
 
-  public function post(string $key) : mixed
+  public function post(string $key, mixed $value = null) : mixed
   {
+    if ($value)
+    {
+      $this->_get[$key] = $value;
+    }
+
     if (isset($this->_post[$key]))
     {
       return $this->_post[$key];
@@ -41,8 +51,13 @@ class AppModelRequest {
     }
   }
 
-  public function files(string $key) : mixed
+  public function files(string $key, mixed $value = null) : mixed
   {
+    if ($value)
+    {
+      $this->_get[$key] = $value;
+    }
+
     if (isset($this->_files[$key]))
     {
       return $this->_files[$key];
@@ -54,8 +69,13 @@ class AppModelRequest {
     }
   }
 
-  public function server(string $key) : mixed
+  public function server(string $key, mixed $value = null) : mixed
   {
+    if ($value)
+    {
+      $this->_get[$key] = $value;
+    }
+
     if (isset($this->_get[$key]))
     {
       return $this->_get[$key];
