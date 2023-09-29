@@ -94,11 +94,11 @@ class AppModelRequest {
 
   public function hasGet() : bool
   {
-    return !empty($this->_post);
+    return !empty($this->_get);
   }
 
   public function hasFiles() : bool
   {
-    return !empty($this->_post);
+    return !empty($this->_files);
   }
 }
