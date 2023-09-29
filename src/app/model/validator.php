@@ -338,7 +338,7 @@ class AppModelValidator
       array_push(
         $error,
         sprintf(
-          _('Host of "%s" not supported'),
+          _('Host "%s" not supported'),
           $value
         )
       );
