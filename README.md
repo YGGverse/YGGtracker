@@ -4,57 +4,19 @@ Distributed BitTorrent Registry for Yggdrasil
 
 YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
 
-#### Nodes online
-
-YGGtracker is distributed index engine, default nodes list defined in [nodes.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/nodes.json)
-
-If you have launched new one, feel free to participate by PR.
-
-#### Trackers
-
-Open trackers defined in [trackers.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/trackers.json)
-
-* Application appends initial trackers to all download links and magnet forms
-* Trackers not in list will be cropped by the application filter
-* Feel free to PR new yggdrasil tracker!
-
-#### Public peers
-
-Traffic-oriented public peers for Yggdrasil defined in [peers.json](https://github.com/YGGverse/YGGtracker/blob/main/src/config/peers.json)
-
-#### Requirements
-
-```
-php8^
-php-pdo
-php-mysql
-php-curl
-php-memcached
-sphinxsearch
-memcached
-```
 #### Installation
 
-##### Production
+##### Production (v.1)
 
 * `composer create-project yggverse/yggtracker`
 
-##### Development
+##### Development (v.2)
 
 * `git clone https://github.com/YGGverse/YGGtracker.git`
 * `cd YGGtracker`
 * `composer update`
 
-#### Setup
-* Server configuration `/example/environment`
-* The web root dir is `/src/public`
-* Deploy the database using [MySQL Workbench](https://www.mysql.com/products/workbench) project presented in the `/database` folder
-* Install [Sphinx Search Server](https://sphinxsearch.com)
-* Server environment examples presented at `/example/environment` folder
-* App config available at `/src/config` folder in JSON format.
-  + To make environment-based configuration for JSON files, create subfolder `/src/config/env` and define `env` in `/src/config/.env` file
-
-#### Contribute
+#### Contribution
 
 Please make new branch for each PR
 
@@ -62,100 +24,6 @@ Please make new branch for each PR
 git checkout main
 git checkout -b my-pr-branch-name
 ```
-
-#### Roadmap
-
-* [ ] BitTorrent protocol
-  + [ ] Protocol
-    + [ ] announce
-    + [ ] announce-list
-    + [ ] comment
-    + [ ] created by
-    + [ ] creation date
-    + [ ] info
-      + [ ] file-duration
-      + [ ] file-media
-      + [ ] files
-      + [ ] name
-      + [ ] piece length
-      + [ ] pieces
-      + [ ] private
-      + [ ] profiles
-
-* [ ] Magnet protocol
-  + [x] Exact Topic / xt
-  + [x] Display Name / dn
-  + [x] eXact Length / xl
-  + [x] Address Tracker / rt
-  + [x] Web Seed / ws
-  + [x] Acceptable Source / as
-  + [x] eXact Source / xs
-  + [x] Keyword Topic / kt
-  + [ ] Manifest Topic / mt
-  + [ ] Select Only / so
-  + [ ] PEer / x.pe
-
-* [ ] Catalog
-    + [x] Public levels
-    + [x] Sensitive filter
-    + [x] Comments
-    + [x] Scrape trackers
-      + [x] Peers
-      + [x] Completed
-      + [x] Leechers
-    + [x] Stars
-    + [x] Views
-    + [x] Downloads
-    + [x] Wanted
-    + [x] Threading comments
-    + [ ] Forks
-
-* [ ] Profile
-  + [ ] Listing
-    + [ ] Uploads
-    + [ ] Downloads
-    + [ ] Stars
-    + [ ] Following
-    + [ ] Followers
-    + [ ] Comments
-  + [ ] Settings
-    + [ ] Public name
-    + [ ] Downloads customization
-      + [ ] Address Tracker
-      + [ ] Web Seed
-      + [ ] Acceptable Source
-      + [ ] eXact Source
-    + [ ] Content filters
-
-* [x] API
-  + [x] Active (push)
-    + [x] Magnet
-      + [x] Edit
-      + [x] Download
-      + [x] Comment
-      + [x] Star
-      + [x] View
-  + [x] Passive (feed)
-    + [x] Manifest
-    + [x] Users
-    + [x] Magnets
-    + [x] Downloads
-    + [x] Comments
-    + [x] Stars
-    + [x] Views
-
-* [x] Export
-  + [x] Sitemap
-  + [x] RSS
-    + [x] Magnets
-    + [x] Comments
-
-* [x] Other
-  + [x] Moderation
-    + [x] UI
-    + [ ] CLI
-  + [ ] Installation tools
-
 
 #### Donate to contributors
 
