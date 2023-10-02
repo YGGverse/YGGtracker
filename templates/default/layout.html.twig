@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}{{ name }}{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('asset/default/css/framework.css') }}" rel="stylesheet" />
+            <link href="{{ asset('asset/default/css/common.css') }}" rel="stylesheet" />
+        {% endblock %}
+    </head>
+    <body>
+        {% block header %}
+            <header>
+                <div class="container">
+                    <div class="row margin-t-8-px text-center">
+                        <a class="logo" href="{{ path('home_index') }}">
+                            <span>YGG</span>tracker
+                        </a>
+                        {% block header_search %}
+                            {{ render(controller(
+                                'App\\Controller\\SearchController::module'
+                            )) }}
+                        {% endblock %}
+                    </div>
+                </div>
+            </header>
+        {% endblock %}
+        {% block main %}
+            <main>
+                <div class="container">
+                    <div class="row">
+                        <div class="column width-100">
+                            {% block main_profile %}
+                                {{ render(controller(
+                                    'App\\Controller\\ProfileController::module',
+                                    {route : app.request.get('_route')}
+                                )) }}
+                            {% endblock %}
+                            <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night text-center">
+                                {% block main_content %}{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        {% endblock %}
+        {% block footer %}
+            <footer>
+                <div class="container">
+                    <div class="row">
+                        <div class="column width-100 text-center margin-y-8-px">
+                            {% block footer_trackers %}{% endblock %}
+                            <a href="https://github.com/YGGverse/YGGtracker">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        {% endblock %}
+    </body>
+</html>

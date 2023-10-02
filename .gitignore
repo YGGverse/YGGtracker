@@ -1,30 +1,22 @@
-/.vscode/
 
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
 /vendor/
+###< symfony/framework-bundle ###
 
-/database/*
-!/database/yggtracker.mwb
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
 
-/src/public/api/*.json
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
 
-/src/config/*
-!/src/config/bootstrap.php
-!/src/config/website.json
-!/src/config/locales.json
-!/src/config/themes.json
-!/src/config/sphinx.json
-!/src/config/memcached.json
-!/src/config/database.json
-!/src/config/validator.json
-!/src/config/moderators.json
-!/src/config/nodes.json
-!/src/config/trackers.json
-!/src/config/peers.json
-
-/src/public/sitemap.xml
-
-/src/storage/log/*.log
-
-/composer.lock
-
-*test*
+.vscode
