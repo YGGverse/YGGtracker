@@ -71,9 +71,13 @@
                         <select name="locale">
                             {% for locale in locales %}
                                 {% if locale == user.locale %}
-                                    <option value="{{ locale }}" selected="selected">{{ locale|trans }}</option>
+                                    <option value="{{ locale }}" selected="selected">
+                                        {{ locale|locale_name(locale)|u.title }}
+                                    </option>
                                 {% else %}
-                                    <option value="{{ locale }}">{{ locale|trans }}</option>
+                                    <option value="{{ locale }}">
+                                        {{ locale|locale_name(locale)|u.title }}
+                                    </option>
                                 {% endif %}
                             {% endfor %}
                         </select>
@@ -90,7 +94,7 @@
                                     <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" />
                                 {% endif %}
                                 <label for="{{ locale }}">
-                                    {{ locale|trans }}
+                                    {{ locale|locale_name(locale)|u.title }}
                                 </label>
                             </div>
                         {% endfor %}

@@ -74,17 +74,13 @@
             <tr>
                 <td class="padding-t-16-px">{{ 'Interface'|trans }}</td>
                 <td class="padding-t-16-px">
-                    {{ user.locale|trans }}
+                    {{ user.locale|locale_name(user.locale)|u.title }}
                 </td>
             </tr>
             <tr>
                 <td>{{ 'Content filter'|trans }}</td>
                 <td>
-                  {% for locale in user.locales %}
-                      <div class="padding-y-4-px">
-                           {{ locale|trans }}
-                      </div>
-                  {% endfor %}
+                    {% for i, locale in user.locales %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
                 </td>
             </tr>
         </tbody>
