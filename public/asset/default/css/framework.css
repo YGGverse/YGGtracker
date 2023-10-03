@@ -118,6 +118,10 @@ a.label-green:hover {
   position: fixed;
 }
 
+.position-absolute {
+  position: absolute;
+}
+
 .vertical-align-middle {
   vertical-align: middle;
 }
@@ -170,7 +174,7 @@ a.label-green:hover {
   border-top: 1px #5d627d solid;
 }
 
-.border-width-2 {
+.border-width-2-px {
   border-width: 2px;
 }
 
@@ -299,6 +303,10 @@ a:visited.background-color-hover-night-light:hover {
   padding: 16px;
 }
 
+.padding-24-px {
+  padding: 24px;
+}
+
 .margin-l-4-px {
   margin-left: 4px;
 }
@@ -326,6 +334,10 @@ a:visited.background-color-hover-night-light:hover {
 
 .margin-l-12-px {
   margin-left: 12px;
+}
+
+.margin-l-96-px {
+  margin-left: 96px;
 }
 
 .margin-l--196-px {
@@ -364,6 +376,10 @@ a:visited.background-color-hover-night-light:hover {
 
 .display-block {
   display: block;
+}
+
+.display-flex {
+  display: flex;
 }
 
 .opacity-0 {
@@ -408,6 +424,10 @@ a:visited.background-color-hover-night-light:hover {
 
 .width-80 {
   width: 80%;
+}
+
+.width-80-px {
+  width: 80px;
 }
 
 .width-180-px {

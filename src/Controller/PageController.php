@@ -15,6 +15,11 @@ class PageController extends AbstractController
     )]
     public function submit(): Response
     {
+        /*
+        return $this->redirectToRoute('page', [
+            'id' => $page->getId()
+        ]);
+        */
         return $this->render('default/page/submit.html.twig', [
             // @TODO
         ]);

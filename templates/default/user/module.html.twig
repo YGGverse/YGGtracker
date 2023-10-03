@@ -1,0 +1,186 @@
+<div class="margin-y-8-px position-fixed width-180-px margin-l--196-px background-color-night border-radius-3-px">
+    <div class="padding-y-8-px">
+        {% if route == 'dashboard_index' %}
+            <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+                </svg>
+                <span class="margin-l-4-px">
+                    {{ 'Home'|trans }}
+                </span>
+            </span>
+        {% else %}
+            <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('dashboard_index') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+                </svg>
+                <span class="margin-l-4-px">
+                    {{ 'Home'|trans }}
+                </span>
+            </a>
+        {% endif %}
+        {% if route == 'user_profile' %}
+            <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                </svg>
+                <span class="margin-l-4-px">
+                    {{ 'Profile'|trans }}
+                </span>
+            </span>
+        {% else %}
+            <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('user_profile') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                </svg>
+                <span class="margin-l-4-px">
+                    {{ 'Profile'|trans }}
+                </span>
+            </a>
+        {% endif %}
+        {% if route == 'page_stars' %}
+        <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Stars'|trans }}
+            </span>
+            <span class="float-right">
+                {{ stars }}
+            </span>
+        </span>
+        {% else %}
+        <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('page_stars') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Stars'|trans }}
+            </span>
+            <span class="float-right">
+                {{ stars }}
+            </span>
+        </a>
+        {% endif %}
+        {% if route == 'page_views' %}
+        <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Views'|trans }}
+            </span>
+            <span class="float-right">
+                {{ views }}
+            </span>
+        </span>
+        {% else %}
+        <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('page_views') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Views'|trans }}
+            </span>
+            <span class="float-right">
+                {{ views }}
+            </span>
+        </a>
+        {% endif %}
+        {% if route == 'page_comments' %}
+        <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Comments'|trans }}
+            </span>
+            <span class="float-right">
+                {{ comments }}
+            </span>
+        </span>
+        {% else %}
+        <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('page_comments') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Comments'|trans }}
+            </span>
+            <span class="float-right">
+                {{ comments }}
+            </span>
+        </a>
+        {% endif %}
+        {% if route == 'page_downloads' %}
+        <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Downloads'|trans }}
+            </span>
+            <span class="float-right">
+                {{ downloads }}
+            </span>
+        </span>
+        {% else %}
+        <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('page_downloads') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Downloads'|trans }}
+            </span>
+            <span class="float-right">
+                {{ downloads }}
+            </span>
+        </a>
+        {% endif %}
+        {% if route == 'page_editions' %}
+        <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM8.5 4.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5a.5.5 0 0 1 1 0zM6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Editions'|trans }}
+            </span>
+            <span class="float-right">
+                {{ editions }}
+            </span>
+        </span>
+        {% else %}
+        <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('page_editions') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM8.5 4.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5a.5.5 0 0 1 1 0zM6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Editions'|trans }}
+            </span>
+            <span class="float-right">
+                {{ editions }}
+            </span>
+        </a>
+        {% endif %}
+        {% if route == 'page_submit' %}
+        <span class="padding-x-16-px padding-y-8-px display-block background-color-green cursor-default text-color-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Submit'|trans }}
+            </span>
+        </span>
+        {% else %}
+        <a class="padding-x-16-px padding-y-8-px display-block background-color-hover-night-light text-color-default" href="{{ path('page_submit') }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg>
+            <span class="margin-l-4-px">
+                {{ 'Submit'|trans }}
+            </span>
+        </a>
+        {% endif %}
+    </div>
+</div>

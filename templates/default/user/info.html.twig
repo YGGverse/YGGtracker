@@ -1,0 +1,92 @@
+{% extends 'default/layout.html.twig' %}
+{% block title %}{{ 'User'|trans }} #{{ user.id }} - {{ name }}{% endblock %}
+{% block main_content %}
+    <div class="text-center">
+        <img class="border-radius-50 border-default border-width-2-px" src="{{ user.identicon }}" alt="identicon" />
+    </div>
+    <h2>{{ 'Profile'|trans }}</h2>
+    <table class="width-100">
+        <tbody>
+            <tr>
+                <td class="padding-b-8-px border-bottom-default text-right" colspan="2">{{ 'Common'|trans }}</td>
+            </tr>
+            {% if user.address %}
+                <tr>
+                    <td class="padding-t-16-px">{{ 'Address'|trans }}</td>
+                    <td class="padding-t-16-px">
+                        {{ user.address }}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2zM3 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1H3z"/>
+                        </svg>
+                        <span class="opacity-0 parent-hover-opacity-09" title="{{ 'Address hidden for others'|trans }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                            </svg>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ 'Joined'|trans }}</td>
+                    <td>{{ user.added }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="padding-t-16-px">{{ 'Joined'|trans }}</td>
+                    <td class="padding-t-16-px">{{ user.added }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td class="padding-b-8-px border-bottom-default text-right" colspan="2">{{ 'Access'|trans }}</td>
+            </tr>
+            <tr>
+                <td class="padding-t-16-px">{{ 'Status'|trans }}</td>
+                <td class="padding-t-16-px">
+                {% if user.status %}
+                    {{ 'active'|trans }}
+                {% else %}
+                    {{ 'disabled'|trans }}
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>{{ 'Approved'|trans }}</td>
+                <td>
+                {% if user.approved %}
+                    {{ 'yes'|trans }}
+                {% else %}
+                    {{ 'no'|trans }}
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>{{ 'Moderator'|trans }}</td>
+                <td>
+                {% if user.moderator %}
+                    {{ 'yes'|trans }}
+                {% else %}
+                    {{ 'no'|trans }}
+                {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="padding-b-8-px border-bottom-default text-right" colspan="2">{{ 'Settings'|trans }}</td>
+            </tr>
+            <tr>
+                <td class="padding-t-16-px">{{ 'Interface'|trans }}</td>
+                <td class="padding-t-16-px">
+                    {{ user.locale|trans }}
+                </td>
+            </tr>
+            <tr>
+                <td>{{ 'Content filter'|trans }}</td>
+                <td>
+                  {% for locale in user.locales %}
+                      <div class="padding-y-4-px">
+                           {{ locale|trans }}
+                      </div>
+                  {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

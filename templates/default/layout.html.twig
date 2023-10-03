@@ -13,7 +13,7 @@
             <header>
                 <div class="container">
                     <div class="row margin-t-8-px text-center">
-                        <a class="logo" href="{{ path('home_index') }}">
+                        <a class="logo" href="{{ path('dashboard_index') }}">
                             <span>YGG</span>tracker
                         </a>
                         {% block header_search %}
@@ -32,11 +32,11 @@
                         <div class="column width-100">
                             {% block main_profile %}
                                 {{ render(controller(
-                                    'App\\Controller\\ProfileController::module',
+                                    'App\\Controller\\UserController::module',
                                     {route : app.request.get('_route')}
                                 )) }}
                             {% endblock %}
-                            <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night">
+                            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
                                 {% block main_content %}{% endblock %}
                             </div>
                         </div>

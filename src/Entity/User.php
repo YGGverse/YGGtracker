@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -20,15 +21,6 @@ class User
     private ?int $added = null;
 
     #[ORM\Column]
-    private ?int $updated = null;
-
-    #[ORM\Column]
-    private ?int $visited = null;
-
-    #[ORM\Column]
-    private ?bool $public = null;
-
-    #[ORM\Column]
     private ?bool $moderator = null;
 
     #[ORM\Column]
@@ -36,6 +28,12 @@ class User
 
     #[ORM\Column]
     private ?bool $status = null;
+
+    #[ORM\Column(length: 2)]
+    private ?string $locale = null;
+
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $locales = [];
 
     public function getId(): ?int
     {
@@ -73,42 +71,6 @@ class User
         return $this;
     }
 
-    public function getUpdated(): ?int
-    {
-        return $this->updated;
-    }
-
-    public function setUpdated(int $updated): static
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    public function getVisited(): ?int
-    {
-        return $this->visited;
-    }
-
-    public function setVisited(int $visited): static
-    {
-        $this->visited = $visited;
-
-        return $this;
-    }
-
-    public function isPublic(): ?bool
-    {
-        return $this->public;
-    }
-
-    public function setPublic(bool $public): static
-    {
-        $this->public = $public;
-
-        return $this;
-    }
-
     public function isModerator(): ?bool
     {
         return $this->moderator;
@@ -141,6 +103,30 @@ class User
     public function setStatus(bool $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): static
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    public function getLocales(): array
+    {
+        return $this->locales;
+    }
+
+    public function setLocales(array $locales): static
+    {
+        $this->locales = $locales;
 
         return $this;
     }
