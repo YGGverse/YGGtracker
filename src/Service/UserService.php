@@ -14,7 +14,10 @@ class UserService
     private UserRepository $userRepository;
     private ParameterBagInterface $parameterBagInterface;
 
-    public function __construct(EntityManagerInterface $entityManager, ParameterBagInterface $parameterBagInterface)
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ParameterBagInterface $parameterBagInterface
+    )
     {
         $this->entityManager = $entityManager;
         $this->userRepository = $entityManager->getRepository(User::class);

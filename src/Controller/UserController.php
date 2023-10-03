@@ -25,7 +25,8 @@ class UserController extends AbstractController
     public function profile(
         Request $request,
         UserService $userService,
-        TimeService $timeService): Response
+        TimeService $timeService
+    ): Response
     {
         // Init user
         $user = $userService->init(
@@ -53,6 +54,14 @@ class UserController extends AbstractController
 
             // Save changes to DB
             $userService->save($user);
+
+            // Redirect user to new locale
+            return $this->redirectToRoute(
+                'user_profile',
+                [
+                    '_locale' => $user->getLocale()
+                ]
+            );
         }
 
         // Generate identicon

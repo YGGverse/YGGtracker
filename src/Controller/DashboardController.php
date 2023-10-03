@@ -7,15 +7,25 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
+use App\Service\UserService;
+
 class DashboardController extends AbstractController
 {
     #[Route('/')]
-    public function root(): Response
+    public function root(
+        Request $request,
+        UserService $userService
+    ): Response
     {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
         return $this->redirectToRoute(
             'dashboard_index',
             [
-                '_locale' => $this->getParameter('app.locale')
+                '_locale' => $user->getLocale()
             ]
         );
     }
