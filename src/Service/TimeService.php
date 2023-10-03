@@ -19,7 +19,7 @@ class TimeService
 
         if ($diff < 1)
         {
-            return self::$translator->trans('now');
+            return $this->translator->trans('now');
         }
 
         $values =
