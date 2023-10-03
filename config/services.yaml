@@ -6,6 +6,8 @@
 parameters:
     app.version: '%env(APP_VERSION)%'
     app.name: '%env(APP_NAME)%'
+    app.locale: '%env(APP_LOCALE)%'
+    app.locales: '%env(APP_LOCALES)%'
 
 services:
     # default configuration for services in *this* file
