@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 class DashboardController extends AbstractController
 {
     #[Route('/')]
-    public function indexNoLocale(): Response
+    public function root(): Response
     {
         return $this->redirectToRoute(
             'dashboard_index',
