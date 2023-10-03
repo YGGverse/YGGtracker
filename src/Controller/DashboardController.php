@@ -15,7 +15,7 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute(
             'dashboard_index',
             [
-                '_locale' => 'en'
+                '_locale' => $this->getParameter('app.locale')
             ]
         );
     }
