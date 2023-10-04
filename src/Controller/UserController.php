@@ -47,8 +47,17 @@ class UserController extends AbstractController
             // Update locales
             if ($request->get('locales'))
             {
+                $locales = [];
+                foreach ((array) $request->get('locales') as $locale)
+                {
+                    if (in_array($locale, explode('|', $this->getParameter('app.locales'))))
+                    {
+                        $locales[] = $locale;
+                    }
+                }
+
                 $user->setLocales(
-                    $request->get('locales')
+                    $locales
                 );
             }
 
