@@ -15,6 +15,8 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 * `git clone https://github.com/YGGverse/YGGtracker.git`
 * `cd YGGtracker`
 * `composer update`
+* `php bin/console doctrine:schema:update --force`
+* `symfony server:start`
 
 #### Contribution
 
