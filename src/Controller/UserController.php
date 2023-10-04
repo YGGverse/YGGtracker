@@ -40,6 +40,12 @@ class UserController extends AbstractController
         TimeService $timeService
     ): Response
     {
+        // Init user session
+        $userService->init(
+            $request->getClientIp()
+        );
+
+        // Build activity history
         $activities = [];
         foreach ($userService->getAllByAddedFieldDesc() as $user)
         {
