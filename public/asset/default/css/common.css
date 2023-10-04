@@ -65,7 +65,7 @@ input:focus {
 }
 
 textarea {
-  min-height: 86px;
+  min-height: 160px;
 }
 
 /* @TODO improve focus out
