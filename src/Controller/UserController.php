@@ -129,18 +129,6 @@ class UserController extends AbstractController
             );
         }
 
-        // Generate identicon
-        $identicon = new \Jdenticon\Identicon();
-
-        $identicon->setValue($user->getAddress());
-        $identicon->setSize(48);
-        $identicon->setStyle(
-            [
-                'backgroundColor' => 'rgba(255, 255, 255, 0)',
-                'padding' => 0
-            ]
-        );
-
         // Render template
         return $this->render(
             'default/user/profile.html.twig',
@@ -156,7 +144,10 @@ class UserController extends AbstractController
                     'added'     => $timeService->ago(
                         $user->getAdded()
                     ),
-                    'identicon' => $identicon->getImageDataUri('webp'),
+                    'identicon' => $userService->identicon(
+                        $user->getAddress(),
+                        48
+                    ),
                 ],
                 'locales' => explode('|', $this->getParameter('app.locales'))
             ]
@@ -185,18 +176,6 @@ class UserController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        // Generate identicon
-        $identicon = new \Jdenticon\Identicon();
-
-        $identicon->setValue($user->getAddress());
-        $identicon->setSize(48);
-        $identicon->setStyle(
-            [
-                'backgroundColor' => 'rgba(255, 255, 255, 0)',
-                'padding' => 0
-            ]
-        );
-
         // Render template
         return $this->render(
             'default/user/info.html.twig',
@@ -212,7 +191,10 @@ class UserController extends AbstractController
                     'added'     => $timeService->ago(
                         $user->getAdded()
                     ),
-                    'identicon' => $identicon->getImageDataUri('webp'),
+                    'identicon' => $userService->identicon(
+                        $user->getAddress(),
+                        48
+                    ),
                 ]
             ]
         );

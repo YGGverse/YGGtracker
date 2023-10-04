@@ -58,6 +58,31 @@ class UserService
         return $this->userRepository->findOneByIdField($id);
     }
 
+    public function getAllByAddedFieldDesc(): array
+    {
+        return $this->userRepository->findAllByAddedFieldDesc();
+    }
+
+    public function identicon(
+        mixed  $value,
+        int    $size = 16,
+        array  $style =
+        [
+            'backgroundColor' => 'rgba(255, 255, 255, 0)',
+            'padding' => 0
+        ],
+        string $format = 'webp'
+    ): string
+    {
+        $identicon = new \Jdenticon\Identicon();
+
+        $identicon->setValue($value);
+        $identicon->setSize($size);
+        $identicon->setStyle($style);
+
+        return $identicon->getImageDataUri($format);
+    }
+
     public function save(User $user) : void
     {
         $this->entityManager->persist($user);
