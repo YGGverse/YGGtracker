@@ -13,7 +13,7 @@
             <header>
                 <div class="container">
                     <div class="row margin-t-8-px text-center">
-                        <a class="logo" href="{{ path('dashboard_index') }}">
+                        <a class="logo" href="{{ path('dashboard_activity') }}">
                             <span>YGG</span>tracker
                         </a>
                         {% block header_search %}
@@ -36,9 +36,7 @@
                                     {route : app.request.get('_route')}
                                 )) }}
                             {% endblock %}
-                            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
-                                {% block main_content %}{% endblock %}
-                            </div>
+                            {% block main_content %}{% endblock %}
                         </div>
                     </div>
                 </div>
