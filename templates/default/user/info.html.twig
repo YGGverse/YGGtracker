@@ -2,7 +2,7 @@
 {% block title %}{{ 'User'|trans }} #{{ user.id }} - {{ name }}{% endblock %}
 {% block main_content %}
     <div class="text-center">
-        <img class="border-radius-50 border-default border-width-2-px" src="{{ user.identicon }}" alt="identicon" />
+        <img class="border-radius-50 border-default border-width-2-px" src="{{ user.identicon }}" alt="{{ 'identicon'|trans }}" />
     </div>
     <h2>{{ 'Profile'|trans }}</h2>
     <table class="width-100">
