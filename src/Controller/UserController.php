@@ -12,6 +12,62 @@ use App\Service\TimeService;
 
 class UserController extends AbstractController
 {
+    #[Route('/')]
+    public function root(
+        Request $request,
+        UserService $userService
+    ): Response
+    {
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        return $this->redirectToRoute(
+            'user_dashboard',
+            [
+                '_locale' => $user->getLocale()
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}',
+        name: 'user_dashboard'
+    )]
+    public function index(
+        Request $request,
+        UserService $userService,
+        TimeService $timeService
+    ): Response
+    {
+        $activities = [];
+        foreach ($userService->getAllByAddedFieldDesc() as $user)
+        {
+            $activities[] =
+            [
+                'user' =>
+                [
+                    'id'        => $user->getId(),
+                    'identicon' => $userService->identicon(
+                        $user->getAddress(),
+                        24
+                    )
+                ],
+                'type'  => 'join',
+                'added' => $timeService->ago(
+                    $user->getAdded()
+                )
+            ];
+        }
+
+        return $this->render(
+            'default/user/dashboard.html.twig',
+            [
+                'activities' => $activities
+            ]
+        );
+    }
+
     #[Route(
         '/{_locale}/profile',
         name: 'user_profile',
