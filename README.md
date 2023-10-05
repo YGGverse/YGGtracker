@@ -18,6 +18,10 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 * `php bin/console doctrine:schema:update --force`
 * `symfony server:start`
 
+#### Translation
+
+* [Crowdin](https://crowdin.com/project/yggtracker)
+
 #### Contribution
 
 Please make new branch for each PR
