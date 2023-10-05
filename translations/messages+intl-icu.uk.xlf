@@ -173,6 +173,78 @@
         <source>Save</source>
         <target>Save</target>
       </trans-unit>
+      <trans-unit id="zBHUFdk" resname="Access denied">
+        <source>Access denied</source>
+        <target>Access denied</target>
+      </trans-unit>
+      <trans-unit id="wAsU1pF" resname="Content language">
+        <source>Content language</source>
+        <target>Content language</target>
+      </trans-unit>
+      <trans-unit id="g0ch5an" resname="Page title text (%s-%s chars)">
+        <source>Page title text (%s-%s chars)</source>
+        <target>Page title text (%s-%s chars)</target>
+      </trans-unit>
+      <trans-unit id="c1stghx" resname="Page description text (%s-%s chars)">
+        <source>Page description text (%s-%s chars)</source>
+        <target>Page description text (%s-%s chars)</target>
+      </trans-unit>
+      <trans-unit id="rhnbyIA" resname="Select torrent files">
+        <source>Select torrent files</source>
+        <target>Select torrent files</target>
+      </trans-unit>
+      <trans-unit id="4Am0Y0K" resname="Apply sensitive filters for this publication">
+        <source>Apply sensitive filters for this publication</source>
+        <target>Apply sensitive filters for this publication</target>
+      </trans-unit>
+      <trans-unit id="t_ui8Ub" resname="Requested locale not supported">
+        <source>Requested locale not supported</source>
+        <target>Requested locale not supported</target>
+      </trans-unit>
+      <trans-unit id="D5.S25t" resname="Page title out of %s-%s chars">
+        <source>Page title out of %s-%s chars</source>
+        <target>Page title out of %s-%s chars</target>
+      </trans-unit>
+      <trans-unit id="ZrAXugC" resname="Page description out of %s-%s chars">
+        <source>Page description out of %s-%s chars</source>
+        <target>Page description out of %s-%s chars</target>
+      </trans-unit>
+      <trans-unit id="fYxwFh4" resname="Torrent file out of size limit">
+        <source>Torrent file out of size limit</source>
+        <target>Torrent file out of size limit</target>
+      </trans-unit>
+      <trans-unit id="dc5BXiF" resname="Torrents quantity out of %s-%s range">
+        <source>Torrents quantity out of %s-%s range</source>
+        <target>Torrents quantity out of %s-%s range</target>
+      </trans-unit>
+      <trans-unit id="fozSBW2" resname="Title">
+        <source>Title</source>
+        <target>Title</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="_Yc5JKi" resname="Torrent files">
+        <source>Torrent files</source>
+        <target>Torrent files</target>
+      </trans-unit>
+      <trans-unit id="LGTAMNS" resname="Sensitive">
+        <source>Sensitive</source>
+        <target>Sensitive</target>
+      </trans-unit>
+      <trans-unit id="BkdWM_0" resname="Last activity">
+        <source>Last activity</source>
+        <target>Last activity</target>
+      </trans-unit>
+      <trans-unit id="kONatGQ" resname="identicon">
+        <source>identicon</source>
+        <target>identicon</target>
+      </trans-unit>
+      <trans-unit id="a5Y8wcL" resname="joined">
+        <source>joined</source>
+        <target>joined</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
