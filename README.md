@@ -18,9 +18,9 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 * `php bin/console doctrine:schema:update --force`
 * `symfony server:start`
 
-#### Translation
+#### Localization
 
-* [Crowdin](https://crowdin.com/project/yggtracker)
+* Community translations by [Crowdin](https://crowdin.com/project/yggtracker)
 
 #### Contribution
 
