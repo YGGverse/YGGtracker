@@ -102,6 +102,7 @@ a.label-green:hover {
 .button-green {
   color: #fff;
   background-color: #65916d;
+  border: #65916d 1px solid;
 }
 
 .button-green:hover {

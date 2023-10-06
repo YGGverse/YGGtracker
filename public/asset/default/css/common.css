@@ -52,8 +52,8 @@ select,
 textarea {
   accent-color: #65916d;
   background: #5d627d;
+  border: #5d627d 1px solid;
   color: #ccc;
-  border: 0;
   border-radius: 3px;
   padding: 8px;
   font-size: 13px;
@@ -61,15 +61,22 @@ textarea {
 
 textarea:focus,
 input:focus {
-  border: none;
+  border: #65916d 1px solid;
   outline: none;
   color: #fff;
 }
 
-select option:active,
-select option:focus,
-select option:focus-within,
-select option:checked {
+select[multiple="multiple"] > option {
+  border-top: 1px #5d627d solid;
+  border-bottom: 1px #5d627d solid;
+}
+
+select[multiple="multiple"] > option:active,
+select[multiple="multiple"] > option:focus,
+select[multiple="multiple"] > option:focus-within,
+select[multiple="multiple"] > option:checked {
+  border-top: 1px #65916d solid;
+  border-bottom: 1px #65916d solid;
   background: linear-gradient(#65916d, #65916d);
   outline: none;
   color: #fff;
