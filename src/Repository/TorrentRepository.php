@@ -20,4 +20,14 @@ class TorrentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Torrent::class);
     }
+
+    public function findOneByIdField(int $id): ?Torrent
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

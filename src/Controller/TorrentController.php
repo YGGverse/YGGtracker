@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\UserService;
 use App\Service\TorrentService;
+use App\Service\TimeService;
 
 class TorrentController extends AbstractController
 {
@@ -28,8 +29,10 @@ class TorrentController extends AbstractController
     )]
     public function info(
         Request $request,
+        TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        TimeService $timeService
     ): Response
     {
         // Init user
@@ -37,8 +40,29 @@ class TorrentController extends AbstractController
             $request->getClientIp()
         );
 
+        if (!$torrent = $torrentService->getTorrent($request->get('id')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        /*
+        if (!$torrent = $torrentService->getTorrentLocales($request->get('id')))
+        {
+            throw $this->createNotFoundException();
+        }
+        */
+
         return $this->render('default/torrent/info.html.twig', [
-            'title' => 'test'
+            'torrent' =>
+            [
+                'id'      => $torrent->getId(),
+                'locales' => [], //$torrent->getLocales(),
+                'pages'   => []
+            ],
+            'file'    => $torrentService->decodeTorrentById(
+                $torrent->getId()
+            ),
+            'trackers' => explode('|', $this->getParameter('app.trackers')),
         ]);
     }
 

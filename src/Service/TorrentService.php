@@ -29,6 +29,19 @@ class TorrentService
         $this->entityManagerInterface = $entityManagerInterface;
     }
 
+    public function decodeTorrentById(int $id): array
+    {
+        $decoder = new \BitTorrent\Decoder();
+
+        return $decoder->decodeFile(
+            sprintf(
+                '%s/var/torrents/%s.torrent',
+                $this->kernelInterface->getProjectDir(),
+                implode('/', str_split($id))
+            )
+        );
+    }
+
     public function decodeTorrentByFilepath(string $filepath): array
     {
         $decoder = new \BitTorrent\Decoder();
@@ -68,6 +81,13 @@ class TorrentService
         }
 
         return '';
+    }
+
+    public function getTorrent(int $id): ?Torrent
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Torrent::class)
+                    ->findOneByIdField($id);
     }
 
     public function submit(

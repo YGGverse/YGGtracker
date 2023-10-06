@@ -99,6 +99,12 @@ a.label-green:hover {
   background-color: #65916d;
 }
 
+.button {
+  border: transparent 1px solid;
+  border-radius: 3px;
+  padding: 8px;
+}
+
 .button-green {
   color: #fff;
   background-color: #65916d;
@@ -206,8 +212,12 @@ a:visited.background-color-hover-night-light:hover {
   cursor: help;
 }
 
-.font-width-normal {
-  font-weight: normal;
+.font-weight-normal {
+  font-weight: normal
+}
+
+.font-weight-200 {
+  font-weight: 200
 }
 
 .font-size-10 {

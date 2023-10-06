@@ -1,2 +1,221 @@
 {% extends 'default/layout.html.twig' %}
-{% block title %}{{ title }} - {{ name }}{% endblock %}
+{% block title %}{{ 'Torrent'|trans }} #{{ torrent.id }} - {{ name }}{% endblock %}
+{% block main_content %}
+    <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
+        <div class="padding-b-16-px">
+            <h1>{{ 'Torrent'|trans }} #{{ torrent.id }}</h1>
+            <a class="float-right margin-l-8-px" href="#" title="{{ 'Bookmark'|trans }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                </svg>
+            </a>
+            {#
+            <a class="float-right margin-l-8-px" href="#" title="{{ 'Torrent'|trans }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
+                </svg>
+            </a>
+            <a class="float-right margin-l-8-px" href="#" title="{{ 'Magnet'|trans }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 1a7 7 0 0 0-7 7v3h4V8a3 3 0 0 1 6 0v3h4V8a7 7 0 0 0-7-7Zm7 11h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
+                </svg>
+            </a>
+            #}
+        </div>
+        <table class="width-100">
+            <tbody>
+                {% if file.info.name is defined %}
+                    <tr>
+                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Name'|trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px font-size-12" colspan="2">
+                            {{ file.info.name }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if file['creation date'] is defined %}
+                    <tr>
+                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Created'|trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px font-size-12" colspan="2">
+                            {{ file['creation date'] | format_date }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if file['created by'] is defined %}
+                    <tr>
+                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Generated'|trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px font-size-12" colspan="2">
+                            {{ file['created by'] }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if file.encoding is defined %}
+                    <tr>
+                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Encoding'|trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px font-size-12" colspan="2">
+                            {{ file.encoding }}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if file.comment is defined %}
+                    <tr>
+                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Comment'|trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px font-size-12" colspan="2">
+                            {{ file.comment }}
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                        {{ 'Files'|trans }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="padding-y-4-px font-size-12" colspan="2">
+                        <pre>/..</pre>
+                    </td>
+                </tr>
+                {% for info in file.info.files %}
+                    <tr>
+                        <td class="padding-y-4-px font-size-12">
+                            {% for path in info.path %}
+                                <pre>../{{ path }}</pre>
+                            {% endfor %}
+                        </td>
+                        <td class="padding-y-4-px font-size-12 text-right">
+                            <pre>{{  info.length | format_bytes }}</pre>
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                        {{ 'Trackers'|trans }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                {% for tracker in trackers %}
+                    <tr>
+                        <td class="padding-y-4-px font-size-12" colspan="2">
+                            {{ tracker }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td class="padding-y-4-px font-size-12">
+                        {{ file.announce }}
+                    </td>
+                    <td class="padding-y-4-px text-right">
+                        {% if file.announce not in trackers %}
+                            <span title="{{ 'Blocked'|trans }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+                                </svg>
+                            </svg>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% for announces in file['announce-list'] %}
+                    {% for announce in announces %}
+                        <tr>
+                            <td class="padding-y-4-px font-size-12">
+                                {{ announce }}
+                            </td>
+                            <td class="padding-y-4-px text-right">
+                                {% if announce not in trackers %}
+                                    <span title="{{ 'Blocked'|trans }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
+                                        </svg>
+                                    </svg>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                        {{ 'Locales'|trans }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                {% if torrent.locales %}
+                    <tr>
+                        <td class="text-right" colspan="2">
+                            <a class="button button-green" href="#">
+                                {{'Edit'|trans }}
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td class="text-right" colspan="2">
+                            <a class="button button-green" href="#">
+                                {{'Add'|trans }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
+                        {{ 'Pages'|trans }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+                {% if torrent.pages %}
+                    <tr>
+                        <td class="text-right" colspan="2">
+                            <a class="button button-green" href="#">
+                                {{'Edit'|trans }}
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td class="text-right" colspan="2">
+                            <a class="button button-green" href="#">
+                                {{'Add'|trans }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
