@@ -64,8 +64,9 @@ input:focus {
   color: #fff;
 }
 
-textarea {
-  min-height: 160px;
+textarea,
+select[multiple="multiple"] {
+  min-height: 260px;
 }
 
 /* @TODO improve focus out

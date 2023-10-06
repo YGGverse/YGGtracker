@@ -1,0 +1,80 @@
+{% extends 'default/layout.html.twig' %}
+{% block title %}{{'Submit torrent'|trans }} - {{ name }}{% endblock %}
+{% block main_content %}
+    <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
+        <div class="margin-b-24-px padding-b-16-px border-bottom-default">
+            <h1>{{'Submit torrent'|trans }}</h1>
+        </div>
+        <form name="submit" method="post" enctype="multipart/form-data" action="{{ path('torrent_submit') }}">
+            <div class="margin-y-16-px">
+                <label for="torrent">
+                    {{'Torrent file'|trans }}
+                </label>
+                <sub class="opacity-0 parent-hover-opacity-09" title="{{ form.torrent.attribute.placeholder }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg>
+                </sub>
+                {% for error in form.torrent.error %}
+                    <div class="text-color-red margin-y-8-px">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                <input class="width-100 margin-t-8-px" type="file" name="torrent" id="torrent" value="" accept=".torrent" />
+            </div>
+            <div class="margin-y-16-px">
+                <label for="locales">
+                    {{'Content language'|trans }}
+                </label>
+                <sub class="opacity-0 parent-hover-opacity-09" title="{{ form.locales.attribute.placeholder }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg>
+                </sub>
+                {% for error in form.locales.error %}
+                    <div class="text-color-red margin-y-8-px">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                <div class="padding-t-8-px">
+                    <select class="width-100 padding-x-0" name="locales[]" multiple="multiple">
+                        {% for locale in locales %}
+                            {% if locale in form.locales.attribute.value %}
+                                <option class="padding-x-8-px padding-y-8-px" value="{{ locale }}" selected="selected">
+                                    {{ locale|locale_name(locale)|u.title }}
+                                </option>
+                            {% else %}
+                                <option class="padding-x-8-px padding-y-8-px" value="{{ locale }}">
+                                    {{ locale|locale_name(locale)|u.title }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                        {#
+                        <option class="padding-x-8-px padding-y-8-px" value="other">
+                            {{'Other...'|trans }}
+                        </option>
+                        #}
+                    </select>
+                </div>
+            </div>
+            <div class="margin-y-16-px">
+                <input type="checkbox"
+                       name="sensitive"
+                       id="sensitive"
+                       value="true"
+                       {% if form.sensitive.attribute.value %}checked="checked"{% endif %} />
+                <label for="sensitive">
+                    {{'Sensitive'|trans }}
+                </label>
+                <sub class="opacity-0 parent-hover-opacity-09" title="{{ form.sensitive.attribute.placeholder }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                    </svg>
+                </sub>
+            </div>
+            <div class="text-right">
+                <input class="button-green" type="submit" value="{{'Submit'|trans }}" />
+            </div>
+        </form>
+    </div>
+{% endblock %}
