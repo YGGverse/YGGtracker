@@ -50,6 +50,7 @@ a:active h2 {
 input,
 select,
 textarea {
+  accent-color: #65916d;
   background: #5d627d;
   color: #ccc;
   border: 0;
@@ -60,20 +61,24 @@ textarea {
 
 textarea:focus,
 input:focus {
+  border: none;
+  outline: none;
+  color: #fff;
+}
+
+select option:active,
+select option:focus,
+select option:focus-within,
+select option:checked {
+  background: linear-gradient(#65916d, #65916d);
   outline: none;
   color: #fff;
 }
 
 textarea,
 select[multiple="multiple"] {
-  min-height: 260px;
+  min-height: 180px;
 }
-
-/* @TODO improve focus out
-textarea:focus {
-  min-height: 120px;
-}
-*/
 
 textarea::placeholder,
 input::placeholder {
