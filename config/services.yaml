@@ -8,6 +8,7 @@ parameters:
     app.name: '%env(APP_NAME)%'
     app.locale: '%env(APP_LOCALE)%'
     app.locales: '%env(APP_LOCALES)%'
+    app.trackers: '%env(APP_TRACKERS)%'
     app.page.title.length.min: '%env(APP_PAGE_TITLE_LENGTH_MIN)%'
     app.page.title.length.max: '%env(APP_PAGE_TITLE_LENGTH_MAX)%'
     app.page.description.length.min: '%env(APP_PAGE_DESCRIPTION_LENGTH_MIN)%'
