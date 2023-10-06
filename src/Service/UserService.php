@@ -58,11 +58,6 @@ class UserService
         return $this->userRepository->findOneByIdField($id);
     }
 
-    public function getAllByAddedFieldDesc(): array
-    {
-        return $this->userRepository->findAllByAddedFieldDesc();
-    }
-
     public function identicon(
         mixed  $value,
         int    $size = 16,

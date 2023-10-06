@@ -40,13 +40,4 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-
-    public function findAllByAddedFieldDesc(): array
-    {
-        return $this->createQueryBuilder('u')
-            ->orderBy('u.added', 'DESC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 }

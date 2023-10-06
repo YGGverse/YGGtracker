@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
+use App\Service\ActivityService;
 use App\Service\UserService;
 use App\Service\TimeService;
 
@@ -36,35 +37,48 @@ class UserController extends AbstractController
     )]
     public function index(
         Request $request,
+        ActivityService $activityService,
         UserService $userService,
         TimeService $timeService
     ): Response
     {
         // Init user session
-        $userService->init(
+        $user = $userService->init(
             $request->getClientIp()
         );
 
         // Build activity history
         $activities = [];
-        foreach ($userService->getAllByAddedFieldDesc() as $user)
+
+        /*
+        foreach ($activityService->findLast($user->isModerator()) as $activity)
         {
+            if (!$activity->getUserId())
+            {
+                continue;
+            }
+
+            $activityUser = $userService->get(
+                $activity->getUserId()
+            );
+
             $activities[] =
             [
                 'user' =>
                 [
-                    'id'        => $user->getId(),
+                    'id'        => $activityUser->getId(),
                     'identicon' => $userService->identicon(
-                        $user->getAddress(),
+                        $activityUser->getAddress(),
                         24
                     )
                 ],
                 'type'  => 'join',
                 'added' => $timeService->ago(
-                    $user->getAdded()
+                    $activity->getAdded()
                 )
             ];
         }
+        */
 
         return $this->render(
             'default/user/dashboard.html.twig',

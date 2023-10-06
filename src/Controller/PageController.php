@@ -11,19 +11,54 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\UserService;
 use App\Service\PageService;
+use App\Service\TorrentService;
 use App\Service\TimeService;
 
 class PageController extends AbstractController
 {
     #[Route(
-        '/{_locale}/page/submit',
-        name: 'page_submit'
+        '/{_locale}/page/{id}',
+        name: 'page_info',
+        requirements:
+        [
+            'id' => '\d+'
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function info(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        return $this->render('default/page/info.html.twig', [
+            'title' => 'test'
+        ]);
+    }
+
+    #[Route(
+        '/{_locale}/submit/page',
+        name: 'page_submit',
+        methods:
+        [
+            'GET',
+            'POST'
+        ]
     )]
     public function submit(
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
         PageService $pageService,
+        PageService $torrentService
     ): Response
     {
         // Init user
@@ -45,8 +80,11 @@ class PageController extends AbstractController
             'locale' =>
             [
                 'error'       => [],
-                'value'       => $request->get('_locale'),
-                'placeholder' => $translator->trans('Content language'),
+                'attribute' =>
+                [
+                    'value'       => $request->get('_locale'),
+                    'placeholder' => $translator->trans('Content language')
+                ]
             ],
             'title' =>
             [
@@ -57,7 +95,7 @@ class PageController extends AbstractController
                     'minlength'   => $this->getParameter('app.page.title.length.min'),
                     'maxlength'   => $this->getParameter('app.page.title.length.max'),
                     'placeholder' => sprintf(
-                        $translator->trans('Page title text (%s-%s chars)'),
+                        $translator->trans('Page title (%s-%s chars)'),
                         number_format($this->getParameter('app.page.title.length.min')),
                         number_format($this->getParameter('app.page.title.length.max'))
                     ),
@@ -72,7 +110,7 @@ class PageController extends AbstractController
                     'minlength'   => $this->getParameter('app.page.description.length.min'),
                     'maxlength'   => $this->getParameter('app.page.description.length.max'),
                     'placeholder' => sprintf(
-                        $translator->trans('Page description text (%s-%s chars)'),
+                        $translator->trans('Page description (%s-%s chars)'),
                         number_format($this->getParameter('app.page.description.length.min')),
                         number_format($this->getParameter('app.page.description.length.max'))
                     ),
@@ -83,7 +121,11 @@ class PageController extends AbstractController
                 'error'     => [],
                 'attribute' =>
                 [
-                    'placeholder' => $translator->trans('Select torrent files'),
+                    'placeholder' => sprintf(
+                        $translator->trans('Append %s-%s torrent files'),
+                        $this->getParameter('app.page.torrent.file.quantity.min'),
+                        $this->getParameter('app.page.torrent.file.quantity.max')
+                    )
                 ]
             ],
             'sensitive' =>
@@ -100,18 +142,10 @@ class PageController extends AbstractController
         // Process request
         if ($request->isMethod('post'))
         {
-            // Init new
-            $page = $pageService->new();
-
             /// Locale
             if (!in_array($request->get('locale'), explode('|', $this->getParameter('app.locales'))))
             {
                 $form['locale']['error'][] = $translator->trans('Requested locale not supported');
-            }
-
-            else
-            {
-                // $request->get('locale')
             }
 
             /// Title
@@ -125,11 +159,6 @@ class PageController extends AbstractController
                 );
             }
 
-            else
-            {
-                // $request->get('title')
-            }
-
             /// Description
             if (mb_strlen($request->get('description')) < $this->getParameter('app.page.description.length.min') ||
                 mb_strlen($request->get('description')) > $this->getParameter('app.page.description.length.max'))
@@ -141,13 +170,9 @@ class PageController extends AbstractController
                 );
             }
 
-            else
-            {
-                // $request->get('description')
-            }
-
             /// Torrents
             $total = 0;
+            $torrents = [];
 
             if ($files = $request->files->get('torrents'))
             {
@@ -157,42 +182,79 @@ class PageController extends AbstractController
                     $total++;
 
                     //// File size
-                    if (filesize($file->getPathName()) > $this->getParameter('app.page.torrent.size.max'))
+                    if (filesize($file->getPathName()) > $this->getParameter('app.torrent.size.max'))
                     {
                         $form['torrents']['error'][] = $translator->trans('Torrent file out of size limit');
+
+                        continue;
+                    }
+
+                    if (empty($torrentService->getTorrentFilenameByFilepath($file->getPathName())))
+                    {
+                        $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
+
+                        continue;
                     }
 
                     //// Content
-                    $decoder = new \BitTorrent\Decoder();
-                    $decodedFile = $decoder->decodeFile(
-                        $file->getPathName()
+                    $torrent = $torrentService->submit(
+                        $file->getPathName(),
+                        $user->getId(),
+                        time(),
+                        (array) $locales,
+                        (bool) $request->get('sensitive'),
+                        $user->isApproved()
                     );
 
-                    // var_dump($decodedFile['info']['name']);
+                    $torrents[] = $torrent->getId();
                 }
             }
 
-            if ($total < $this->getParameter('app.page.torrent.quantity.min') ||
-                $total > $this->getParameter('app.page.torrent.quantity.max'))
+            if ($total < $this->getParameter('app.page.torrent.file.quantity.min') ||
+                $total > $this->getParameter('app.page.torrent.file.quantity.max'))
             {
                 $form['torrents']['error'][] = sprintf(
                     $translator->trans('Torrents quantity out of %s-%s range'),
-                    number_format($this->getParameter('app.page.torrent.quantity.min')),
-                    number_format($this->getParameter('app.page.torrent.quantity.max'))
+                    number_format($this->getParameter('app.page.torrent.file.quantity.min')),
+                    number_format($this->getParameter('app.page.torrent.file.quantity.max'))
                 );
             }
 
 
-            if (empty($error))
+            if (empty($form['locale']['error']) &&
+                empty($form['title']['error']) &&
+                empty($form['description']['error']) &&
+                empty($form['torrents']['error'])
+            )
             {
-                // isset($request->get('sensitive'))
-                // $pageService->save($page);
+                $page = $pageService->submit(
+                    $user->getId(),
+                    time(),
+                    (string) $request->get('locale'),
+                    (string) $request->get('title'),
+                    (string) $request->get('description'),
+                    (array)  $torrents,
+                    (bool) $request->get('sensitive'),
+                    $user->isApproved()
+                );
+
+                // Redirect
+                return $this->redirectToRoute(
+                    'page_info',
+                    [
+                        '_locale' => $request->get('_locale'),
+                        'id'      => $page->getId()
+                    ]
+                );
             }
         }
 
-        return $this->render('default/page/submit.html.twig', [
-            'locales' => explode('|', $this->getParameter('app.locales')),
-            'form'    => $form,
-        ]);
+        return $this->render(
+            'default/page/submit.html.twig',
+            [
+                'locales' => explode('|', $this->getParameter('app.locales')),
+                'form'    => $form,
+            ]
+        );
     }
 }
