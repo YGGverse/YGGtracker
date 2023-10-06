@@ -10,18 +10,23 @@ use App\Repository\TorrentRepository;
 use App\Repository\TorrentLocalesRepository;
 use App\Repository\TorrentSensitiveRepository;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Filesystem\Filesystem;
+
 use Doctrine\ORM\EntityManagerInterface;
 
 class TorrentService
 {
-    private EntityManagerInterface $entityManager;
-    private ParameterBagInterface $parameterBagInterface;
+    private KernelInterface $kernelInterface;
+    private EntityManagerInterface $entityManagerInterface;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        KernelInterface $kernelInterface,
+        EntityManagerInterface $entityManagerInterface
     )
     {
-        $this->entityManager = $entityManager;
+        $this->kernelInterface = $kernelInterface;
+        $this->entityManagerInterface = $entityManagerInterface;
     }
 
     public function decodeTorrentByFilepath(string $filepath): array
@@ -79,6 +84,16 @@ class TorrentService
           $this->getTorrentKeywordsByFilepath($filepath)
         );
 
+        $filesystem = new Filesystem();
+        $filesystem->copy(
+            $filepath,
+            sprintf(
+                '%s/var/torrents/%s.torrent',
+                $this->kernelInterface->getProjectDir(),
+                implode('/', str_split($torrent->getId()))
+            )
+        );
+
         if (!empty($locales))
         {
             $this->saveTorrentLocales(
@@ -111,8 +126,8 @@ class TorrentService
         $torrent->setFilename($filepath);
         $torrent->setKeywords($keywords);
 
-        $this->entityManager->persist($torrent);
-        $this->entityManager->flush();
+        $this->entityManagerInterface->persist($torrent);
+        $this->entityManagerInterface->flush();
 
         return $torrent;
     }
@@ -133,8 +148,8 @@ class TorrentService
         $torrentLocales->setValue($value);
         $torrentLocales->setApproved($approved);
 
-        $this->entityManager->persist($torrentLocales);
-        $this->entityManager->flush();
+        $this->entityManagerInterface->persist($torrentLocales);
+        $this->entityManagerInterface->flush();
 
         return $torrentLocales;
     }
@@ -155,8 +170,8 @@ class TorrentService
         $torrentSensitive->setValue($value);
         $torrentSensitive->setApproved($approved);
 
-        $this->entityManager->persist($torrentSensitive);
-        $this->entityManager->flush();
+        $this->entityManagerInterface->persist($torrentSensitive);
+        $this->entityManagerInterface->flush();
 
         return $torrentSensitive;
     }
