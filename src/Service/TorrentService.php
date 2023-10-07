@@ -29,38 +29,16 @@ class TorrentService
         $this->entityManagerInterface = $entityManagerInterface;
     }
 
-    public function decodeTorrentById(int $id): array
+    public function getStoragePathById(int $id): string
     {
-        $decoder = new \BitTorrent\Decoder();
-
-        return $decoder->decodeFile(
-            sprintf(
-                '%s/var/torrents/%s.torrent',
-                $this->kernelInterface->getProjectDir(),
-                implode('/', str_split($id))
-            )
+        return sprintf(
+            '%s/var/torrents/%s.torrent',
+            $this->kernelInterface->getProjectDir(),
+            implode('/', str_split($id))
         );
     }
 
-    public function decodeTorrentByFilepath(string $filepath): array
-    {
-        $decoder = new \BitTorrent\Decoder();
-
-        return $decoder->decodeFile($filepath);
-    }
-
-    public function getTorrentFilenameByFilepath(string $filepath): string
-    {
-        $data = $this->decodeTorrentByFilepath($filepath);
-
-        if (!empty($data['info']['name']))
-        {
-            return $data['info']['name'];
-        }
-
-        return $data['info']['name'];
-    }
-
+    /*
     public function getTorrentKeywordsByFilepath(string $filepath): string
     {
         $data = $this->decodeTorrentByFilepath($filepath);
@@ -82,6 +60,7 @@ class TorrentService
 
         return '';
     }
+    */
 
     public function getTorrent(int $id): ?Torrent
     {
@@ -100,17 +79,15 @@ class TorrentService
     ): ?Torrent
     {
         $torrent = $this->saveTorrent(
-          $this->getTorrentFilenameByFilepath($filepath),
+          $this->getTorrentInfoNameByFilepath($filepath),
           $this->getTorrentKeywordsByFilepath($filepath)
         );
 
         $filesystem = new Filesystem();
         $filesystem->copy(
             $filepath,
-            sprintf(
-                '%s/var/torrents/%s.torrent',
-                $this->kernelInterface->getProjectDir(),
-                implode('/', str_split($torrent->getId()))
+            $this->getStoragePathById(
+                $torrent->getId()
             )
         );
 

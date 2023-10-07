@@ -4,58 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "42f94769f35af5500e3ae6ce20dcb64e",
+    "content-hash": "d46bb514c4109b10e7327ef9f913c11a",
     "packages": [
-        {
-            "name": "christeredvartsen/php-bittorrent",
-            "version": "v2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/christeredvartsen/php-bittorrent.git",
-                "reference": "1e4f17ef840cd56b10e9c507df0064048fc91778"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/christeredvartsen/php-bittorrent/zipball/1e4f17ef840cd56b10e9c507df0064048fc91778",
-                "reference": "1e4f17ef840cd56b10e9c507df0064048fc91778",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "phploc/phploc": "^5.0",
-                "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^8.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "BitTorrent\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Christer Edvartsen",
-                    "email": "cogo@starzinger.net"
-                }
-            ],
-            "description": "A set of components that can be used to interact with torrent files (read+write) and classes that can encode/decode to/from the BitTorrent format.",
-            "homepage": "https://github.com/christeredvartsen/php-bittorrent",
-            "keywords": [
-                "bittorrent",
-                "torrent"
-            ],
-            "support": {
-                "issues": "https://github.com/christeredvartsen/php-bittorrent/issues",
-                "source": "https://github.com/christeredvartsen/php-bittorrent"
-            },
-            "time": "2020-01-21T19:12:01+00:00"
-        },
         {
             "name": "doctrine/annotations",
             "version": "2.0.1",
@@ -2183,6 +2133,57 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.0"
             },
             "time": "2021-07-14T16:46:02+00:00"
+        },
+        {
+            "name": "rhilip/bencode",
+            "version": "v2.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Rhilip/Bencode.git",
+                "reference": "fd37d13bb745352d40879dbbfa6da85af91e49f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Rhilip/Bencode/zipball/fd37d13bb745352d40879dbbfa6da85af91e49f1",
+                "reference": "fd37d13bb745352d40879dbbfa6da85af91e49f1",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "suggest": {
+                "php-64bit": "Running 64 bit is recommended to prevent integer overflow"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Rhilip\\Bencode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rhilip",
+                    "email": "rhilipruan@gmail.com"
+                }
+            ],
+            "description": "A pure and simple PHP library for encoding and decoding Bencode data",
+            "keywords": [
+                "bencode",
+                "bittorrent",
+                "torrent"
+            ],
+            "support": {
+                "issues": "https://github.com/Rhilip/Bencode/issues",
+                "source": "https://github.com/Rhilip/Bencode/tree/v2.3.3"
+            },
+            "time": "2023-05-27T01:47:00+00:00"
         },
         {
             "name": "symfony/asset",

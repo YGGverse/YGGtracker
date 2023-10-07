@@ -101,6 +101,10 @@ input[type="submit"] {
   cursor: pointer;
 }
 
+ul {
+  list-style: none;
+}
+
 td {
   padding: 2px 0;
 }

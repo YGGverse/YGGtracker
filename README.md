@@ -48,6 +48,7 @@ git checkout -b my-pr-branch-name
 
 * [SVG icons](https://icons.getbootstrap.com)
 * [PHP Scrapper](https://github.com/medariox/scrapeer)
+* [PHP Bencode Library](https://github.com/Rhilip/Bencode)
 * [Identicons](https://github.com/dmester/jdenticon-php)
 
 #### Feedback

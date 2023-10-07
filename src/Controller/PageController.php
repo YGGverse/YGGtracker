@@ -189,7 +189,7 @@ class PageController extends AbstractController
                         continue;
                     }
 
-                    if (empty($torrentService->getTorrentFilenameByFilepath($file->getPathName())))
+                    if (empty($torrentService->getTorrentInfoNameByFilepath($file->getPathName())))
                     {
                         $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
 

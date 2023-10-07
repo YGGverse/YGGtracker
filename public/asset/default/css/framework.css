@@ -245,6 +245,10 @@ a:visited.background-color-hover-night-light:hover {
   padding: 4px;
 }
 
+.padding-l-4-px {
+  padding-left: 4px;
+}
+
 .padding-t-4-px {
   padding-top: 4px;
 }
@@ -271,6 +275,10 @@ a:visited.background-color-hover-night-light:hover {
 
 .padding-8-px {
   padding: 8px;
+}
+
+.padding-l-8-px {
+  padding-left: 8px;
 }
 
 .padding-t-8-px {

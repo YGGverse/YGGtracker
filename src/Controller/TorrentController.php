@@ -40,7 +40,23 @@ class TorrentController extends AbstractController
             $request->getClientIp()
         );
 
+        // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('id')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init file
+        try
+        {
+            $file = \Rhilip\Bencode\TorrentFile::load(
+                $torrentService->getStoragePathById(
+                    $torrent->getId()
+                )
+            );
+        }
+
+        catch (ParseException $e)
         {
             throw $this->createNotFoundException();
         }
@@ -51,17 +67,36 @@ class TorrentController extends AbstractController
             throw $this->createNotFoundException();
         }
         */
-
+//print_r($file->getFileTree());exit;
         return $this->render('default/torrent/info.html.twig', [
             'torrent' =>
             [
                 'id'      => $torrent->getId(),
+                'added'   => 0, // @TODO
                 'locales' => [], //$torrent->getLocales(),
                 'pages'   => []
             ],
-            'file'    => $torrentService->decodeTorrentById(
-                $torrent->getId()
-            ),
+            'file' =>
+            [
+                'name'     => $file->getName(),
+                'size'     => $file->getSize(),
+                'count'    => $file->getFileCount(),
+                'pieces'   => $file->getPieceLength(),
+                'created'  => $file->getCreationDate(),
+                'software' => $file->getCreatedBy(),
+                'protocol' => $file->getProtocol(),
+                'private'  => $file->isPrivate(),
+                'source'   => $file->getSource(),
+                'comment'  => $file->getComment(),
+                'tree'     => $file->getFileTree(),
+                'trackers' => $file->getAnnounceList(),
+                'hash' =>
+                [
+                    'v1' => $file->getInfoHashV1(false),
+                    'v2' => $file->getInfoHashV2(false)
+                ],
+                'magnet' => $file->getMagnetLink()
+            ],
             'trackers' => explode('|', $this->getParameter('app.trackers')),
         ]);
     }
@@ -158,7 +193,7 @@ class TorrentController extends AbstractController
                     $form['torrent']['error'][] = $translator->trans('Torrent file out of size limit');
                 }
 
-                if (empty($torrentService->getTorrentFilenameByFilepath($file->getPathName())))
+                if (empty($torrentService->getTorrentInfoNameByFilepath($file->getPathName())))
                 {
                     $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
                 }
