@@ -24,4 +24,34 @@ class Page
 
         return $this;
     }
+
+    #[ORM\Column]
+    private ?int $userId = null;
+
+    #[ORM\Column]
+    private ?int $added = null;
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): static
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getAdded(): ?int
+    {
+        return $this->added;
+    }
+
+    public function setAdded(int $added): static
+    {
+        $this->added = $added;
+
+        return $this;
+    }
 }
