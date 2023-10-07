@@ -188,15 +188,21 @@ class PageController extends AbstractController
                         continue;
                     }
 
-                    if (empty($torrentService->getTorrentInfoNameByFilepath($file->getPathName())))
+                    //// Validate torrent format
+                    try
                     {
-                        $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
+                        \Rhilip\Bencode\TorrentFile::load(
+                            $file->getPathName()
+                        );
+                    }
 
-                        continue;
+                    catch (ParseException $e)
+                    {
+                        $form['torrents']['error'][] = $translator->trans('Could not parse torrent file');
                     }
 
                     //// Content
-                    $torrent = $torrentService->submit(
+                    $torrent = $torrentService->add(
                         $file->getPathName(),
                         $user->getId(),
                         time(),
