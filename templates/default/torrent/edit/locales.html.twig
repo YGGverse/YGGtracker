@@ -63,7 +63,7 @@
             {% endif %}
             {{ 'by'|trans }}
             <a href="{{ path('user_info', { id : edition.user.id }) }}">
-                <img class="border-radius-50 border-color-green vertical-align-middle" src="{{ edition.user.identicon }}" alt="{{'identicon'|trans }}" />
+                <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ edition.user.identicon }}" alt="{{'identicon'|trans }}" />
             </a>
             <div class="float-right">
                 {% if edition.approved %}

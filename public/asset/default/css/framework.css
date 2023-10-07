@@ -152,7 +152,7 @@ a.label-green:hover {
   border-radius: 50%;
 }
 
-.border-pink-light {
+.border-color-pink-light {
   border: 1px #9b6895 solid;
 }
 
@@ -164,11 +164,11 @@ a.label-green:hover {
   border: 1px #65916d solid;
 }
 
-.border-bottom-pink {
+.border-color-pink {
   border-bottom: 1px #a44399 solid;
 }
 
-.border-default {
+.border-color-default {
   border: 1px #5d627d solid;
 }
 
