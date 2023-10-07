@@ -49,6 +49,13 @@ class UserService
 
         $this->save($user);
 
+        // Set initial user as moderator
+        if (1 === $user->getId())
+        {
+            $user->setModerator(true);
+            $this->save($user);
+        }
+
         // Return user data
         return $user;
     }
