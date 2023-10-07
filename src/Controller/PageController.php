@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\UserService;
 use App\Service\PageService;
 use App\Service\TorrentService;
-use App\Service\TimeService;
 
 class PageController extends AbstractController
 {

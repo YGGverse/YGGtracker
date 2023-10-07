@@ -28,7 +28,7 @@
                     </tr>
                     <tr>
                         <td>{{ 'Joined'|trans }}</td>
-                        <td>{{ user.added }}</td>
+                        <td>{{ user.added | format_ago }}</td>
                     </tr>
                     <tr>
                         <td class="padding-b-8-px border-bottom-default text-right" colspan="2">{{ 'Access'|trans }}</td>

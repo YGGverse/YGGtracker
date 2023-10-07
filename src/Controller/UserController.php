@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\ActivityService;
 use App\Service\UserService;
-use App\Service\TimeService;
 
 class UserController extends AbstractController
 {
@@ -38,8 +37,7 @@ class UserController extends AbstractController
     public function index(
         Request $request,
         ActivityService $activityService,
-        UserService $userService,
-        TimeService $timeService
+        UserService $userService
     ): Response
     {
         // Init user session
@@ -73,9 +71,7 @@ class UserController extends AbstractController
                     )
                 ],
                 'type'  => 'join',
-                'added' => $timeService->ago(
-                    $activity->getAdded()
-                )
+                'added' => $activity->getAdded()
             ];
         }
         */
@@ -100,8 +96,7 @@ class UserController extends AbstractController
     )]
     public function profile(
         Request $request,
-        UserService $userService,
-        TimeService $timeService
+        UserService $userService
     ): Response
     {
         // Init user
@@ -161,9 +156,7 @@ class UserController extends AbstractController
                     'status'    => $user->isStatus(),
                     'locale'    => $user->getLocale(),
                     'locales'   => $user->getLocales(),
-                    'added'     => $timeService->ago(
-                        $user->getAdded()
-                    ),
+                    'added'     => $user->getAdded(),
                     'identicon' => $userService->identicon(
                         $user->getAddress(),
                         48
@@ -187,8 +180,7 @@ class UserController extends AbstractController
     public function info(
         int $id,
         Request $request,
-        UserService $userService,
-        TimeService $timeService): Response
+        UserService $userService): Response
     {
         // Init user
         if (!$user = $userService->get($id))
@@ -208,9 +200,7 @@ class UserController extends AbstractController
                     'status'    => $user->isStatus(),
                     'locale'    => $user->getLocale(),
                     'locales'   => $user->getLocales(),
-                    'added'     => $timeService->ago(
-                        $user->getAdded()
-                    ),
+                    'added'     => $user->getAdded(),
                     'identicon' => $userService->identicon(
                         $user->getAddress(),
                         48
