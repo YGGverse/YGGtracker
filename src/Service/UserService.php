@@ -49,9 +49,10 @@ class UserService
 
         $this->save($user);
 
-        // Set initial user as moderator
+        // Set initial user as approved & moderator
         if (1 === $user->getId())
         {
+            $user->setApproved(true);
             $user->setModerator(true);
             $this->save($user);
         }
