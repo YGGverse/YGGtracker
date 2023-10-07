@@ -20,11 +20,13 @@
 {% endmacro %}
 {% from _self import recursive_file_tree %}
 {% extends 'default/layout.html.twig' %}
-{% block title %}{{ 'Torrent'|trans }} #{{ torrent.id }} - {{ name }}{% endblock %}
+{% block title %}{% if file.name %}{{ file.name }} - {% endif %}{{ 'Torrent'|trans }} #{{ torrent.id }} - {{ name }}{% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <div class="padding-b-16-px">
-            <h1>{{ 'Torrent'|trans }} #{{ torrent.id }}</h1>
+            <h1>
+                {{ 'Torrent'|trans }} #{{ torrent.id }}
+            </h1>
             <a class="float-right margin-l-8-px" href="#" title="{{ 'Bookmark'|trans }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
@@ -43,198 +45,178 @@
             </a>
             #}
         </div>
-        <table class="width-100">
-            <tbody>
-                {% if file.name %}
-                    <tr>
-                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Name'|trans }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="padding-t-16-px font-size-12" colspan="2">
-                            {{ file.name }}
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if file.created %}
-                    <tr>
-                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Created'|trans }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="padding-t-16-px font-size-12" colspan="2">
-                            {{ file.created | format_date }}
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if file.hash.v1 %}
-                    <tr>
-                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Info hash v1'|trans }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="padding-t-16-px font-size-12" colspan="2">
-                            {{ file.hash.v1 }}
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if file.hash.v2 %}
-                    <tr>
-                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Info hash v2'|trans }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="padding-t-16-px font-size-12" colspan="2">
-                            {{ file.hash.v2 }}
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if file['created by'] is defined %}
-                    <tr>
-                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Generated'|trans }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="padding-t-16-px font-size-12" colspan="2">
-                            {{ file['created by'] }}
-                        </td>
-                    </tr>
-                {% endif %}
-                {% if file.comment is defined %}
-                    <tr>
-                        <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Comment'|trans }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="padding-t-16-px font-size-12" colspan="2">
-                            {{ file.comment }}
-                        </td>
-                    </tr>
-                {% endif %}
-                <tr>
-                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                        {{ 'Files'|trans }}
-                    </td>
-                </tr>
-                {% for tree in file.tree %}
-                    <tr>
-                        <td class="padding-y-16-px" colspan="2">
-                            {{ recursive_file_tree(tree) }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                        {{ 'Trackers'|trans }}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                {% for tracker in trackers %}
-                    <tr>
-                        <td class="padding-y-4-px font-size-12" colspan="2">
+        <div class="padding-y-8-px border-bottom-default text-right">
+            {{ 'Common'|trans }}
+        </div>
+        <div class="padding-y-16-px">
+            <table class="width-100">
+                <tbody>
+                    {% if file.name %}
+                        <tr>
+                            <td>
+                                {{ 'Filename'|trans }}
+                            </td>
+                            <td>
+                                {{ file.name }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.created %}
+                        <tr>
+                            <td>
+                                {{ 'Created'|trans }}
+                            </td>
+                            <td>
+                                {{ file.created | format_date }}
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    {% if file.size %}
+                        <tr>
+                            <td>
+                                {{ 'Size'|trans }}
+                            </td>
+                            <td>
+                                {{ file.size | format_bytes }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.pieces %}
+                        <tr>
+                            <td>
+                                {{ 'Pieces'|trans }}
+                            </td>
+                            <td>
+                                {{ file.pieces | format_number }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.hash.v1 %}
+                        <tr>
+                            <td>
+                                {{ 'Info hash v1'|trans }}
+                            </td>
+                            <td>
+                                {{ file.hash.v1 }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.hash.v2 %}
+                        <tr>
+                            <td>
+                                {{ 'Info hash v2'|trans }}
+                            </td>
+                            <td>
+                                {{ file.hash.v2 }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.source %}
+                        <tr>
+                            <td>
+                                {{ 'Source'|trans }}
+                            </td>
+                            <td>
+                                {{ file.source }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.software %}
+                        <tr>
+                            <td>
+                                {{ 'Software'|trans }}
+                            </td>
+                            <td>
+                                {{ file.software }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    {% if file.comment %}
+                        <tr>
+                            <td>
+                                {{ 'Comment'|trans }}
+                            </td>
+                            <td>
+                                {{ file.comment }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="padding-y-8-px border-bottom-default text-right">
+            {{ 'Files'|trans }}
+        </div>
+        <div class="padding-y-16-px">
+            {% for tree in file.tree %}
+                {{ recursive_file_tree(tree) }}
+            {% endfor %}
+        </div>
+        <div class="padding-y-8-px border-bottom-default text-right">
+            {{ 'Trackers'|trans }}
+        </div>
+        <div class="padding-y-16-px">
+            {% for tracker in trackers %}
+                <div class="padding-y-4-px">
+                    {{ tracker }}
+                </div>
+            {% endfor %}
+            {% for announces in trackers %}
+                {% for tracker in announces %}
+                    <div class="padding-y-4-px">
+                        {% if tracker not in trackers %}
                             {{ tracker }}
-                        </td>
-                    </tr>
-                {% endfor %}
-                {#
-                <tr>
-                    <td class="padding-y-4-px font-size-12">
-                        {{ file.announce }}
-                    </td>
-                    <td class="padding-y-4-px text-right">
-                        {% if file.announce not in trackers %}
-                            <span title="{{ 'Blocked'|trans }}">
+                            <span class="float-right" title="{{ 'Blocked'|trans }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
                                 </svg>
-                            </svg>
+                            </span>
                         {% endif %}
-                    </td>
-                </tr>
-                #}
-                {% for announces in trackers %}
-                    {% for tracker in announces %}
-                        <tr>
-                            <td class="padding-y-4-px font-size-12">
-                                {{ tracker }}
-                            </td>
-                            <td class="padding-y-4-px text-right">
-                                {% if tracker not in trackers %}
-                                    <span title="{{ 'Blocked'|trans }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
-                                            <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
-                                        </svg>
-                                    </svg>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
+                    </div>
                 {% endfor %}
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                        {{ 'Locales'|trans }}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
+            {% endfor %}
+        </div>
+        <div class="padding-y-8-px text-right">
+            <a class="margin-r-4-px opacity-0 parent-hover-opacity-09" href="{{ path('torrent_edit_locales', { torrentId : torrent.id }) }}" title="{{'Edit'|trans }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                </svg>
+            </a>
+            {{ 'Locales'|trans }}
+            <div class="padding-b-8-px border-bottom-default"></div>
+            <div class="padding-y-16-px text-left">
                 {% if torrent.locales %}
-                    <tr>
-                        <td class="text-right" colspan="2">
-                            <a class="button button-green" href="#">
-                                {{'Edit'|trans }}
-                            </a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td class="text-right" colspan="2">
-                            <a class="button button-green" href="#">
-                                {{'Add'|trans }}
-                            </a>
-                        </td>
-                    </tr>
+                    <div class="padding-y-4-px">
+                        {% for i, locale in torrent.locales.value %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
+                    </div>
                 {% endif %}
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td class="padding-y-8-px border-bottom-default text-right" colspan="2">
-                        {{ 'Pages'|trans }}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                {% if torrent.pages %}
-                    <tr>
-                        <td class="text-right" colspan="2">
-                            <a class="button button-green" href="#">
-                                {{'Edit'|trans }}
-                            </a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td class="text-right" colspan="2">
-                            <a class="button button-green" href="#">
-                                {{'Add'|trans }}
-                            </a>
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
+            </div>
+        </div>
+        <div class="padding-y-8-px text-right">
+            <a class="margin-r-4-px opacity-0 parent-hover-opacity-09" href="{{ path('torrent_edit_locales', { torrentId : torrent.id }) }}" title="{{'Edit'|trans }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                </svg>
+            </a>
+            {{ 'Pages'|trans }}
+            <div class="padding-b-8-px border-bottom-default"></div>
+            <div class="padding-y-16-px text-left">
+                {% for page in torrent.pages %}
+                    <div>
+                        {{ page }}
+                    </div>
+                {% endfor %}
+                <form name="pages" method="post" action="{{ path('page_submit') }}">
+                    <input type="hidden" name="torrentId" value="{{ torrent.id }}" />
+                    <button type="submit" class="button-green">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                        </svg>
+                        {{'Add'|trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}

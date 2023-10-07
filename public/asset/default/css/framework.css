@@ -188,6 +188,10 @@ a.label-green:hover {
   background-color: #34384f;
 }
 
+.background-color-night-light {
+  background-color: #3d4159;
+}
+
 .background-color-green {
   background-color: #65916d;
 }
@@ -323,6 +327,11 @@ a:visited.background-color-hover-night-light:hover {
 
 .padding-24-px {
   padding: 24px;
+}
+
+.padding-x-24-px {
+  padding-left: 24px;
+  padding-right: 24px;
 }
 
 .margin-l-4-px {

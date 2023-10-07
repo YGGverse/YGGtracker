@@ -3,6 +3,18 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  outline: none;
+}
+
+:focus,
+:focus-within,
+:focus-visible,
+:active,
+:target,
+:hover {
+  opacity: 1;
+  transition: opacity .2s ease-in-out;
+
 }
 
 body {
@@ -20,11 +32,6 @@ a:active {
   opacity: .9;
 }
 
-a:hover {
-  opacity: 1;
-  transition: opacity .5s ease-in-out;
-}
-
 h1, h2, h3, h4, h5 {
   display: inline-block;
   font-weight: normal;
@@ -39,15 +46,8 @@ h2 {
   font-size: 16px;
 }
 
-a h2,
-a:visited h2,
-a:active h2 {
-  /* @TODO doubts
-  color: #a4d4ff;
-  */
-}
-
 input,
+button,
 select,
 textarea {
   accent-color: #65916d;
@@ -56,18 +56,19 @@ textarea {
   color: #ccc;
   border-radius: 3px;
   padding: 8px;
+  opacity: .96;
 }
 
 textarea:focus,
 input:focus {
   border: #65916d 1px solid;
-  outline: none;
   color: #fff;
 }
 
 select[multiple="multiple"] > option {
   border-top: 1px #5d627d solid;
   border-bottom: 1px #5d627d solid;
+  color: #fff;
 }
 
 select[multiple="multiple"] > option:active,
@@ -77,14 +78,29 @@ select[multiple="multiple"] > option:checked {
   border-top: 1px #65916d solid;
   border-bottom: 1px #65916d solid;
   background: linear-gradient(#65916d, #65916d);
-  outline: none;
-  color: #fff;
 }
+
+button,
+input[type="submit"] {
+  cursor: pointer;
+}
+
+/*
+button,
+input[type="submit"] {
+  cursor: pointer;
+  background: #65916d;
+  border-radius: 3px;
+  padding: 8px;
+  color: #fff
+}
+*/
 
 textarea,
 select[multiple="multiple"] {
   min-height: 180px;
 }
+
 
 textarea::placeholder,
 input::placeholder {
@@ -92,17 +108,9 @@ input::placeholder {
   opacity: 1;
 }
 
-input:hover,
+input[type="text"]:hover,
 textarea:hover {
   background: #636884;
-}
-
-input[type="submit"] {
-  cursor: pointer;
-}
-
-ul {
-  list-style: none;
 }
 
 td {
@@ -116,17 +124,4 @@ header a.logo {
 
 header a.logo > span {
   color: #96d9a1;
-}
-
-a.button,
-a.button:visited,
-a.button:active,
-a.button:hover,
-.button {
-  background: #5d627d;
-  color: #ccc;
-  border: 0;
-  border-radius: 3px;
-  padding: 6px 8px;
-  font-size: 13px;
 }

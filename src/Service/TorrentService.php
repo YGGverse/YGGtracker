@@ -69,7 +69,28 @@ class TorrentService
                     ->findOneByIdField($id);
     }
 
-    public function submit(
+    public function getTorrentLocales(int $id): ?TorrentLocales
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->getTorrentLocales($id);
+    }
+
+    public function findLastTorrentLocales(int $torrentId): ?TorrentLocales
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->findLastTorrentLocales($torrentId);
+    }
+
+    public function findTorrentLocales(int $torrentId): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->findTorrentLocales($torrentId);
+    }
+
+    public function add(
         string $filepath,
         int $userId,
         int $added,
@@ -78,7 +99,7 @@ class TorrentService
         bool $approved
     ): ?Torrent
     {
-        $torrent = $this->saveTorrent(
+        $torrent = $this->addTorrent(
           $this->getTorrentInfoNameByFilepath($filepath),
           $this->getTorrentKeywordsByFilepath($filepath)
         );
@@ -93,7 +114,7 @@ class TorrentService
 
         if (!empty($locales))
         {
-            $this->saveTorrentLocales(
+            $this->addTorrentLocales(
                 $torrent->getId(),
                 $userId,
                 $added,
@@ -102,7 +123,7 @@ class TorrentService
             );
         }
 
-        $this->saveTorrentSensitive(
+        $this->addTorrentSensitive(
             $torrent->getId(),
             $userId,
             $added,
@@ -113,7 +134,7 @@ class TorrentService
         return $torrent;
     }
 
-    public function saveTorrent(
+    public function addTorrent(
       string $filepath,
       string $keywords
     ): ?Torrent
@@ -129,7 +150,7 @@ class TorrentService
         return $torrent;
     }
 
-    public function saveTorrentLocales(
+    public function addTorrentLocales(
         int $torrentId,
         int $userId,
         int $added,
@@ -151,7 +172,7 @@ class TorrentService
         return $torrentLocales;
     }
 
-    public function saveTorrentSensitive(
+    public function addTorrentSensitive(
         int $torrentId,
         int $userId,
         int $added,

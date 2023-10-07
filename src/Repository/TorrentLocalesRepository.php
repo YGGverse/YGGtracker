@@ -20,4 +20,37 @@ class TorrentLocalesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TorrentLocales::class);
     }
+
+    public function getTorrentLocales(int $id): ?TorrentLocales
+    {
+        return $this->createQueryBuilder('tl')
+            ->where('tl.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findLastTorrentLocales(int $torrentId): ?TorrentLocales
+    {
+        return $this->createQueryBuilder('tl')
+            ->where('tl.torrentId = :torrentId')
+            ->setParameter('torrentId', $torrentId)
+            ->orderBy('tl.id', 'DESC') // same to tl.added
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findTorrentLocales(int $torrentId): array
+    {
+        return $this->createQueryBuilder('tl')
+            ->where('tl.torrentId = :torrentId')
+            ->setParameter('torrentId', $torrentId)
+            ->orderBy('tl.id', 'DESC') // same to tl.added
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
