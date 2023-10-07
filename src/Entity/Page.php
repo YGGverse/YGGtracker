@@ -31,6 +31,9 @@ class Page
     #[ORM\Column]
     private ?int $added = null;
 
+    #[ORM\Column]
+    private ?bool $approved = null;
+
     public function getUserId(): ?int
     {
         return $this->userId;
@@ -51,6 +54,18 @@ class Page
     public function setAdded(int $added): static
     {
         $this->added = $added;
+
+        return $this;
+    }
+
+    public function isApproved(): ?bool
+    {
+        return $this->approved;
+    }
+
+    public function setApproved(bool $approved): static
+    {
+        $this->approved = $approved;
 
         return $this;
     }

@@ -20,8 +20,8 @@ class Torrent
     #[ORM\Column]
     private ?int $added = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $filename = null;
+    #[ORM\Column]
+    private ?bool $approved = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $keywords = null;
@@ -71,18 +71,6 @@ class Torrent
         return $this;
     }
 
-    public function getFilename(): ?string
-    {
-        return $this->filename;
-    }
-
-    public function setFilename(string $filename): static
-    {
-        $this->filename = $filename;
-
-        return $this;
-    }
-
     public function getKeywords(): ?string
     {
         return $this->keywords;
@@ -91,6 +79,18 @@ class Torrent
     public function setKeywords(?string $keywords): static
     {
         $this->keywords = $keywords;
+
+        return $this;
+    }
+
+    public function isApproved(): ?bool
+    {
+        return $this->approved;
+    }
+
+    public function setApproved(bool $approved): static
+    {
+        $this->approved = $approved;
 
         return $this;
     }
