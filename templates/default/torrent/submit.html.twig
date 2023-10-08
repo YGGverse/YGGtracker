@@ -58,11 +58,7 @@
                 </div>
             </div>
             <div class="margin-y-16-px">
-                <input type="checkbox"
-                       name="sensitive"
-                       id="sensitive"
-                       value="true"
-                       {% if form.sensitive.attribute.value %}checked="checked"{% endif %} />
+                <input type="checkbox" name="sensitive" id="sensitive" value="true" {% if form.sensitive.attribute.value %}checked="checked"{% endif %} />
                 <label for="sensitive">
                     {{'Sensitive'|trans }}
                 </label>

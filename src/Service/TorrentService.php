@@ -141,7 +141,7 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentSensitive::class)
-                    ->getTorrentLocales($id);
+                    ->getTorrentSensitive($id);
     }
 
     public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
@@ -175,6 +175,22 @@ class TorrentService
         return $torrentLocales;
     }
 
+    public function toggleTorrentSensitiveApproved(
+        int $id
+    ): ?TorrentSensitive
+    {
+        $torrentSensitive = $this->getTorrentSensitive($id);
+
+        $torrentSensitive->setApproved(
+            !$torrentSensitive->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrentSensitive);
+        $this->entityManagerInterface->flush();
+
+        return $torrentSensitive;
+    }
+
     // Delete
     public function deleteTorrentLocales(
         int $id
@@ -186,6 +202,18 @@ class TorrentService
         $this->entityManagerInterface->flush();
 
         return $torrentLocales;
+    }
+
+    public function deleteTorrentSensitive(
+        int $id
+    ): ?TorrentSensitive
+    {
+        $torrentSensitive = $this->getTorrentSensitive($id);
+
+        $this->entityManagerInterface->remove($torrentSensitive);
+        $this->entityManagerInterface->flush();
+
+        return $torrentSensitive;
     }
 
     // Setters

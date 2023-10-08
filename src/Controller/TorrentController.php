@@ -14,6 +14,7 @@ use App\Service\TorrentService;
 
 class TorrentController extends AbstractController
 {
+    // Torrent
     #[Route(
         '/{_locale}/torrent/{torrentId}',
         name: 'torrent_info',
@@ -57,7 +58,7 @@ class TorrentController extends AbstractController
                 'id'        => $torrent->getId(),
                 'added'     => $torrent->getAdded(),
                 'locales'   => $torrentService->findLastTorrentLocales($torrent->getId()),
-                'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId()),
+                'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId())->isValue(),
                 'pages'     => []
             ],
             'file' =>
@@ -87,8 +88,147 @@ class TorrentController extends AbstractController
     }
 
     #[Route(
+        '/{_locale}/submit/torrent',
+        name: 'torrent_submit',
+        methods:
+        [
+            'GET',
+            'POST'
+        ]
+    )]
+    public function submit(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init form
+        $form =
+        [
+            'locales' =>
+            [
+                'error'       => [],
+                'attribute' =>
+                [
+                    'value'       => $request->get('locales') ? $request->get('locales') : [$request->get('_locale')],
+                    'placeholder' => $translator->trans('Content language')
+                ]
+            ],
+            'torrent' =>
+            [
+                'error'     => [],
+                'attribute' =>
+                [
+                    'value'       => null, // is local file, there is no values passed
+                    'placeholder' => $translator->trans('Select torrent file')
+                ]
+            ],
+            'sensitive' =>
+            [
+                'error'     => [],
+                'attribute' =>
+                [
+                    'value'       => $request->get('sensitive'),
+                    'placeholder' => $translator->trans('Apply sensitive filters to publication'),
+                ]
+            ]
+        ];
+
+        // Process request
+        if ($request->isMethod('post'))
+        {
+            /// Locales
+            $locales = [];
+            if ($request->get('locales'))
+            {
+                foreach ((array) $request->get('locales') as $locale)
+                {
+                    if (in_array($locale, explode('|', $this->getParameter('app.locales'))))
+                    {
+                        $locales[] = $locale;
+                    }
+                }
+            }
+
+            //// At least one valid locale required
+            if (!$locales)
+            {
+                $form['locales']['error'][] = $translator->trans('At least one locale required');
+            }
+
+            /// Torrent
+            if ($file = $request->files->get('torrent'))
+            {
+                //// Validate torrent file
+                if (filesize($file->getPathName()) > $this->getParameter('app.torrent.size.max'))
+                {
+                    $form['torrent']['error'][] = $translator->trans('Torrent file out of size limit');
+                }
+
+                //// Validate torrent format
+                if (!$torrentService->readTorrentFileByFilepath($file->getPathName()))
+                {
+                    $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
+                }
+            }
+
+            else
+            {
+                $form['torrent']['error'][] = $translator->trans('Torrent file required');
+            }
+
+            // Request is valid
+            if (empty($form['torrent']['error']) && empty($form['locales']['error']))
+            {
+                // Save data
+                $torrent = $torrentService->add(
+                    $file->getPathName(),
+                    $user->getId(),
+                    time(),
+                    (array) $locales,
+                    (bool) $request->get('sensitive'),
+                    $user->isApproved()
+                );
+
+                // Redirect to info page created
+                return $this->redirectToRoute(
+                    'torrent_info',
+                    [
+                        '_locale'   => $request->get('_locale'),
+                        'torrentId'  => $torrent->getId()
+                    ]
+                );
+            }
+        }
+
+        // Render form template
+        return $this->render(
+            'default/torrent/submit.html.twig',
+            [
+                'locales' => explode('|', $this->getParameter('app.locales')),
+                'form'    => $form,
+            ]
+        );
+    }
+
+    // Torrent locales
+    #[Route(
         '/{_locale}/torrent/{torrentId}/edit/locales/{torrentLocalesId}',
-        name: 'torrent_edit_locales',
+        name: 'torrent_locales_edit',
         requirements:
         [
             'torrentId'        => '\d+',
@@ -270,7 +410,7 @@ class TorrentController extends AbstractController
 
     #[Route(
         '/{_locale}/torrent/{torrentId}/approve/locales/{torrentLocalesId}',
-        name: 'torrent_approve_locales',
+        name: 'torrent_locales_approve',
         requirements:
         [
             'torrentId'        => '\d+',
@@ -321,7 +461,7 @@ class TorrentController extends AbstractController
 
         // Redirect to info page created
         return $this->redirectToRoute(
-            'torrent_edit_locales',
+            'torrent_locales_edit',
             [
                 '_locale'          => $request->get('_locale'),
                 'torrentId'        => $torrent->getId(),
@@ -332,7 +472,7 @@ class TorrentController extends AbstractController
 
     #[Route(
         '/{_locale}/torrent/{torrentId}/delete/locales/{torrentLocalesId}',
-        name: 'torrent_delete_locales',
+        name: 'torrent_locales_delete',
         requirements:
         [
             'torrentId'        => '\d+',
@@ -383,7 +523,7 @@ class TorrentController extends AbstractController
 
         // Redirect to info page created
         return $this->redirectToRoute(
-            'torrent_edit_locales',
+            'torrent_locales_edit',
             [
                 '_locale'          => $request->get('_locale'),
                 'torrentId'        => $torrent->getId(),
@@ -392,16 +532,26 @@ class TorrentController extends AbstractController
         );
     }
 
+    // Torrent sensitive
     #[Route(
-        '/{_locale}/submit/torrent',
-        name: 'torrent_submit',
+        '/{_locale}/torrent/{torrentId}/edit/sensitive/{torrentSensitiveId}',
+        name: 'torrent_sensitive_edit',
+        requirements:
+        [
+            'torrentId'        => '\d+',
+            'torrentSensitiveId' => '\d+',
+        ],
+        defaults:
+        [
+            'torrentSensitiveId' => null,
+        ],
         methods:
         [
             'GET',
             'POST'
         ]
     )]
-    public function submit(
+    public function editSensitive(
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
@@ -421,34 +571,81 @@ class TorrentController extends AbstractController
             );
         }
 
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init sensitive value
+        if ($request->get('torrentSensitiveId'))
+        {
+            if ($torrentSensitive = $torrentService->getTorrentSensitive($request->get('torrentSensitiveId')))
+            {
+                $sensitive =
+                [
+                    'id'    => $torrentSensitive->getId(),
+                    'value' => $torrentSensitive->isValue(),
+                ];
+            }
+
+            else
+            {
+                throw $this->createNotFoundException();
+            }
+        }
+        else
+        {
+            if ($torrentSensitive = $torrentService->findLastTorrentSensitive($request->get('torrentId')))
+            {
+                $sensitive =
+                [
+                    'id'    => $torrentSensitive->getId(),
+                    'value' => $torrentSensitive->isValue(),
+                ];            }
+
+            else
+            {
+                $sensitive =
+                [
+                    'id'    => null,
+                    'value' => false,
+                ];
+            }
+        }
+
+        // Init edition history
+        $editions = [];
+        foreach ($torrentService->findTorrentSensitive($torrent->getId()) as $torrentSensitive)
+        {
+            $editions[] =
+            [
+                'id'       => $torrentSensitive->getId(),
+                'added'    => $torrentSensitive->getAdded(),
+                'approved' => $torrentSensitive->isApproved(),
+                'active'   => $torrentSensitive->getId() == $sensitive['id'],
+                'user'     =>
+                [
+                    'id' => $torrentSensitive->getUserId(),
+                    'identicon' => $userService->identicon(
+                        $userService->get(
+                            $torrentSensitive->getUserId()
+                        )->getAddress()
+                    ),
+                ]
+            ];
+        }
+
         // Init form
         $form =
         [
-            'locales' =>
-            [
-                'error'       => [],
-                'attribute' =>
-                [
-                    'value'       => $request->get('locales') ? $request->get('locales') : [$request->get('_locale')],
-                    'placeholder' => $translator->trans('Content language')
-                ]
-            ],
-            'torrent' =>
-            [
-                'error'     => [],
-                'attribute' =>
-                [
-                    'value'       => null, // is local file, there is no values passed
-                    'placeholder' => $translator->trans('Select torrent file')
-                ]
-            ],
             'sensitive' =>
             [
                 'error'     => [],
                 'attribute' =>
                 [
-                    'value'       => $request->get('sensitive'),
-                    'placeholder' => $translator->trans('Apply sensitive filters for this publication'),
+                    'value'       => $sensitive['value'],
+                    'placeholder' => $translator->trans('Apply sensitive filters to publication')
                 ]
             ]
         ];
@@ -456,76 +653,161 @@ class TorrentController extends AbstractController
         // Process request
         if ($request->isMethod('post'))
         {
-            /// Locales
-            $locales = [];
-            if ($request->get('locales'))
-            {
-                foreach ((array) $request->get('locales') as $locale)
-                {
-                    if (in_array($locale, explode('|', $this->getParameter('app.locales'))))
-                    {
-                        $locales[] = $locale;
-                    }
-                }
-            }
+            // Save data
+            $torrentService->addTorrentSensitive(
+                $torrent->getId(),
+                $user->getId(),
+                time(),
+                $request->get('sensitive') === 'true',
+                $user->isApproved()
+            );
 
-            //// At least one valid locale required
-            if (!$locales)
-            {
-                $form['locales']['error'][] = $translator->trans('At least one locale required');
-            }
-
-            /// Torrent
-            if ($file = $request->files->get('torrent'))
-            {
-                //// Validate torrent file
-                if (filesize($file->getPathName()) > $this->getParameter('app.torrent.size.max'))
-                {
-                    $form['torrent']['error'][] = $translator->trans('Torrent file out of size limit');
-                }
-
-                //// Validate torrent format
-                if (!$torrentService->readTorrentFileByFilepath($file->getPathName()))
-                {
-                    $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
-                }
-            }
-
-            else
-            {
-                $form['torrent']['error'][] = $translator->trans('Torrent file required');
-            }
-
-            // Request is valid
-            if (empty($form['torrent']['error']) && empty($form['locales']['error']))
-            {
-                // Save data
-                $torrent = $torrentService->add(
-                    $file->getPathName(),
-                    $user->getId(),
-                    time(),
-                    (array) $locales,
-                    (bool) $request->get('sensitive'),
-                    $user->isApproved()
-                );
-
-                // Redirect to info page created
-                return $this->redirectToRoute(
-                    'torrent_info',
-                    [
-                        '_locale'   => $request->get('_locale'),
-                        'torrentId'  => $torrent->getId()
-                    ]
-                );
-            }
+            // Redirect to info page created
+            return $this->redirectToRoute(
+                'torrent_info',
+                [
+                    '_locale'   => $request->get('_locale'),
+                    'torrentId' => $torrent->getId()
+                ]
+            );
         }
 
         // Render form template
         return $this->render(
-            'default/torrent/submit.html.twig',
+            'default/torrent/edit/sensitive.html.twig',
             [
-                'locales' => explode('|', $this->getParameter('app.locales')),
-                'form'    => $form,
+                'torrentId' => $torrent->getId(),
+                'editions'  => $editions,
+                'form'      => $form,
+                'session' =>
+                [
+                    'moderator' => $user->isModerator(),
+                    'owner'     => $user->getId() === $torrentSensitive->getUserId(),
+                ]
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/approve/sensitive/{torrentSensitiveId}',
+        name: 'torrent_sensitive_approve',
+        requirements:
+        [
+            'torrentId'          => '\d+',
+            'torrentSensitiveId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function approveSensitive(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent sensitive
+        if (!$torrentSensitive = $torrentService->getTorrentSensitive($request->get('torrentSensitiveId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Update approved
+        $torrentService->toggleTorrentSensitiveApproved(
+            $torrentSensitive->getId()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'torrent_sensitive_edit',
+            [
+                '_locale'            => $request->get('_locale'),
+                'torrentId'          => $torrent->getId(),
+                'torrentSensitiveId' => $torrentSensitive->getId(),
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/delete/sensitive/{torrentSensitiveId}',
+        name: 'torrent_sensitive_delete',
+        requirements:
+        [
+            'torrentId'          => '\d+',
+            'torrentSensitiveId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function deleteSensitive(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent sensitive
+        if (!$torrentSensitive = $torrentService->getTorrentSensitive($request->get('torrentSensitiveId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!($user->isModerator() || $user->getId() === $torrentSensitive->getUserId()))
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Update approved
+        $torrentService->deleteTorrentSensitive(
+            $torrentSensitive->getId()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'torrent_sensitive_edit',
+            [
+                '_locale'            => $request->get('_locale'),
+                'torrentId'          => $torrent->getId(),
+                'torrentSensitiveId' => $torrentSensitive->getId(),
             ]
         );
     }

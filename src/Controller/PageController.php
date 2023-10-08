@@ -133,7 +133,7 @@ class PageController extends AbstractController
                 'attribute' =>
                 [
                     'value'       => $request->get('sensitive'),
-                    'placeholder' => $translator->trans('Apply sensitive filters for this publication'),
+                    'placeholder' => $translator->trans('Apply sensitive filters to publication'),
                 ]
             ]
         ];
