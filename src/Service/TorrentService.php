@@ -5,10 +5,12 @@ namespace App\Service;
 use App\Entity\Torrent;
 use App\Entity\TorrentLocales;
 use App\Entity\TorrentSensitive;
+use App\Entity\TorrentBookmark;
 
 use App\Repository\TorrentRepository;
 use App\Repository\TorrentLocalesRepository;
 use App\Repository\TorrentSensitiveRepository;
+use App\Repository\TorrentBookmarkRepository;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -158,6 +160,19 @@ class TorrentService
                     ->findTorrentSensitive($torrentId);
     }
 
+    /// Bookmark
+    public function findUserLastTorrentBookmarkValue(int $torrentId, int $userId): bool
+    {
+        if ($torrentBookmark = $this->entityManagerInterface
+                                    ->getRepository(TorrentBookmark::class)
+                                    ->findUserLastTorrentBookmark($torrentId, $userId))
+        {
+            return $torrentBookmark->isValue();
+        }
+
+        return false;
+    }
+
     // Update
     public function toggleTorrentLocalesApproved(
         int $id
@@ -202,6 +217,31 @@ class TorrentService
         $this->entityManagerInterface->flush();
 
         return $torrentLocales;
+    }
+
+    public function toggleTorrentBookmark(
+        int $torrentId,
+        int $userId,
+        int $added
+    ): ?TorrentBookmark
+    {
+        $torrentBookmark = new TorrentBookmark();
+
+        $torrentBookmark->setTorrentId($torrentId);
+        $torrentBookmark->setUserId($userId);
+        $torrentBookmark->setAdded($added);
+
+        $torrentBookmark->setValue(
+            !$this->findUserLastTorrentBookmarkValue(
+                $torrentId,
+                $userId
+            )
+        );
+
+        $this->entityManagerInterface->persist($torrentBookmark);
+        $this->entityManagerInterface->flush();
+
+        return $torrentBookmark;
     }
 
     public function deleteTorrentSensitive(

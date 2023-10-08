@@ -59,6 +59,14 @@ class TorrentController extends AbstractController
                 'added'     => $torrent->getAdded(),
                 'locales'   => $torrentService->findLastTorrentLocales($torrent->getId()),
                 'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId())->isValue(),
+                'bookmark'  =>
+                [
+                    'active' => $torrentService->findUserLastTorrentBookmarkValue(
+                        $torrent->getId(),
+                        $user->getId()
+                    ),
+                    'total'  => 0,
+                ],
                 'pages'     => []
             ],
             'file' =>
@@ -225,6 +233,62 @@ class TorrentController extends AbstractController
         );
     }
 
+    // Torrent bookmark
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/bookmark/toggle',
+        name: 'torrent_bookmark_toggle',
+        requirements:
+        [
+            'torrentId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function toggleBookmark(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update
+        $torrentService->toggleTorrentBookmark(
+            $torrent->getId(),
+            $user->getId(),
+            time()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'torrent_info',
+            [
+                '_locale'   => $request->get('_locale'),
+                'torrentId' => $torrent->getId()
+            ]
+        );
+    }
+
     // Torrent locales
     #[Route(
         '/{_locale}/torrent/{torrentId}/edit/locales/{torrentLocalesId}',
@@ -271,16 +335,21 @@ class TorrentController extends AbstractController
         }
 
         // Init torrent locales
-        $torrentLocalesValue = [];
+        $torrentLocalesCurrent = [
+            'userId' => null,
+            'value'  => []
+        ];
 
         // Get from edition version requested
         if ($request->get('torrentLocalesId'))
         {
             if ($torrentLocales = $torrentService->getTorrentLocales($request->get('torrentLocalesId')))
             {
+                $torrentLocalesCurrent['userId'] = $torrentLocales->getUserId();
+
                 foreach ($torrentLocales->getValue() as $value)
                 {
-                    $torrentLocalesValue[] = $value;
+                    $torrentLocalesCurrent['value'][] = $value;
                 }
             }
 
@@ -295,9 +364,11 @@ class TorrentController extends AbstractController
         {
             if ($torrentLocales = $torrentService->findLastTorrentLocales($torrent->getId()))
             {
+                $torrentLocalesCurrent['userId'] = $torrentLocales->getUserId();
+
                 foreach ($torrentLocales->getValue() as $value)
                 {
-                    $torrentLocalesValue[] = $value;
+                    $torrentLocalesCurrent['value'][] = $value;
                 }
 
                 // Update active locale
@@ -306,26 +377,26 @@ class TorrentController extends AbstractController
 
             else
             {
-                $torrentLocalesValue[] = $request->get('_locale');
+                $torrentLocalesCurrent['value'][] = $request->get('_locale');
             }
         }
 
         // Init edition history
         $editions = [];
-        foreach ($torrentService->findTorrentLocales($torrent->getId()) as $torrentLocales)
+        foreach ($torrentService->findTorrentLocales($torrent->getId()) as $torrentLocalesEdition)
         {
             $editions[] =
             [
-                'id'       => $torrentLocales->getId(),
-                'added'    => $torrentLocales->getAdded(),
-                'approved' => $torrentLocales->isApproved(),
-                'active'   => $torrentLocales->getId() == $request->get('torrentLocalesId'),
+                'id'       => $torrentLocalesEdition->getId(),
+                'added'    => $torrentLocalesEdition->getAdded(),
+                'approved' => $torrentLocalesEdition->isApproved(),
+                'active'   => $torrentLocalesEdition->getId() == $request->get('torrentLocalesId'),
                 'user'     =>
                 [
-                    'id' => $torrentLocales->getUserId(),
+                    'id' => $torrentLocalesEdition->getUserId(),
                     'identicon' => $userService->identicon(
                         $userService->get(
-                            $torrentLocales->getUserId()
+                            $torrentLocalesEdition->getUserId()
                         )->getAddress()
                     ),
                 ]
@@ -340,7 +411,7 @@ class TorrentController extends AbstractController
                 'error'     => [],
                 'attribute' =>
                 [
-                    'value'       => $request->get('locales') ? $request->get('locales') : $torrentLocalesValue,
+                    'value'       => $request->get('locales') ? $request->get('locales') : $torrentLocalesCurrent['value'],
                     'placeholder' => $translator->trans('Content language')
                 ]
             ]
@@ -402,7 +473,7 @@ class TorrentController extends AbstractController
                 'session' =>
                 [
                     'moderator' => $user->isModerator(),
-                    'owner'     => $user->getId() === $torrentLocales->getUserId(),
+                    'owner'     => $torrentLocalesCurrent['userId'] === $user->getId(),
                 ]
             ]
         );
@@ -582,10 +653,11 @@ class TorrentController extends AbstractController
         {
             if ($torrentSensitive = $torrentService->getTorrentSensitive($request->get('torrentSensitiveId')))
             {
-                $sensitive =
+                $torrentSensitiveCurrent =
                 [
-                    'id'    => $torrentSensitive->getId(),
-                    'value' => $torrentSensitive->isValue(),
+                    'id'     => $torrentSensitive->getId(),
+                    'userId' => $torrentSensitive->getUserId(),
+                    'value'  => $torrentSensitive->isValue(),
                 ];
             }
 
@@ -598,38 +670,41 @@ class TorrentController extends AbstractController
         {
             if ($torrentSensitive = $torrentService->findLastTorrentSensitive($request->get('torrentId')))
             {
-                $sensitive =
+                $torrentSensitiveCurrent =
                 [
-                    'id'    => $torrentSensitive->getId(),
-                    'value' => $torrentSensitive->isValue(),
-                ];            }
+                    'id'     => $torrentSensitive->getId(),
+                    'userId' => $torrentSensitive->getUserId(),
+                    'value'  => $torrentSensitive->isValue(),
+                ];
+            }
 
             else
             {
-                $sensitive =
+                $torrentSensitiveCurrent =
                 [
-                    'id'    => null,
-                    'value' => false,
+                    'id'     => null,
+                    'userId' => null,
+                    'value'  => false,
                 ];
             }
         }
 
         // Init edition history
         $editions = [];
-        foreach ($torrentService->findTorrentSensitive($torrent->getId()) as $torrentSensitive)
+        foreach ($torrentService->findTorrentSensitive($torrent->getId()) as $torrentSensitiveEdition)
         {
             $editions[] =
             [
-                'id'       => $torrentSensitive->getId(),
-                'added'    => $torrentSensitive->getAdded(),
-                'approved' => $torrentSensitive->isApproved(),
-                'active'   => $torrentSensitive->getId() == $sensitive['id'],
+                'id'       => $torrentSensitiveEdition->getId(),
+                'added'    => $torrentSensitiveEdition->getAdded(),
+                'approved' => $torrentSensitiveEdition->isApproved(),
+                'active'   => $torrentSensitiveEdition->getId() == $torrentSensitiveCurrent['id'],
                 'user'     =>
                 [
-                    'id' => $torrentSensitive->getUserId(),
+                    'id' => $torrentSensitiveEdition->getUserId(),
                     'identicon' => $userService->identicon(
                         $userService->get(
-                            $torrentSensitive->getUserId()
+                            $torrentSensitiveEdition->getUserId()
                         )->getAddress()
                     ),
                 ]
@@ -644,7 +719,7 @@ class TorrentController extends AbstractController
                 'error'     => [],
                 'attribute' =>
                 [
-                    'value'       => $sensitive['value'],
+                    'value'       => $torrentSensitiveCurrent['value'],
                     'placeholder' => $translator->trans('Apply sensitive filters to publication')
                 ]
             ]
@@ -682,7 +757,7 @@ class TorrentController extends AbstractController
                 'session' =>
                 [
                     'moderator' => $user->isModerator(),
-                    'owner'     => $user->getId() === $torrentSensitive->getUserId(),
+                    'owner'     => $torrentSensitiveCurrent['userId'] === $user->getId(),
                 ]
             ]
         );
