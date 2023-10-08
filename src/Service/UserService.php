@@ -63,7 +63,7 @@ class UserService
 
     public function get(int $id): ?User
     {
-        return $this->userRepository->findOneByIdField($id);
+        return $this->userRepository->getUser($id);
     }
 
     public function identicon(
