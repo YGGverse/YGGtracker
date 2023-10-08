@@ -49,7 +49,7 @@ class TorrentService
 
     public function readTorrentFileByTorrentId(
         int $id
-    ): \Rhilip\Bencode\TorrentFile
+    ): ?\Rhilip\Bencode\TorrentFile
     {
         return $this->readTorrentFileByFilepath(
             $this->getStorageFilepathById($id)
