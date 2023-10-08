@@ -32,14 +32,22 @@ class TorrentService
     // Tools
     public function readTorrentFileByFilepath(
         string $filepath
-    ): \Rhilip\Bencode\TorrentFile
+    ): ?\Rhilip\Bencode\TorrentFile
     {
-        return \Rhilip\Bencode\TorrentFile::load(
-            $filepath
-        );
+        try
+        {
+            return \Rhilip\Bencode\TorrentFile::load(
+                $filepath
+            );
+        }
+
+        catch (\Rhilip\Bencode\ParseException $error)
+        {
+            return null;
+        }
     }
 
-    public function readTorrentFileById(
+    public function readTorrentFileByTorrentId(
         int $id
     ): \Rhilip\Bencode\TorrentFile
     {

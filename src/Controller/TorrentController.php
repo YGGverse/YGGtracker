@@ -45,7 +45,7 @@ class TorrentController extends AbstractController
         }
 
         // Read file
-        if (!$file = $torrentService->readTorrentFileById($torrent->getId()))
+        if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
         {
             throw $this->createNotFoundException();
         }
