@@ -215,8 +215,18 @@
             {{ 'Files'|trans }}
         </div>
         <div class="padding-y-16-px">
-            {% for tree in file.tree %}
-                {{ recursive_file_tree(tree) }}
+            {% for key, value in file.tree %}
+                {% if value is iterable %}
+                    {{ recursive_file_tree(value) }}
+                {% else %}
+                    <div class="padding-y-4-px cursor-default">
+                        {{ key }}
+                        <div class="float-right">
+                            {{ value | format_bytes }}
+                        </div>
+                    </div>
+                {% endif %}
+
             {% endfor %}
         </div>
         <div class="padding-y-8-px border-bottom-default text-right">
