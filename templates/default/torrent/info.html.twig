@@ -178,6 +178,16 @@
                         </tr>
                     {% endif %}
                     <tr>
+                        <td>
+                            {{ 'Publisher'|trans }}
+                        </td>
+                        <td>
+                            <a href="{{ path('user_info', { id : torrent.user.id }) }}">
+                                <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ torrent.user.identicon }}" alt="{{'identicon'|trans }}" />
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2">
                             <div class="padding-y-8-px border-bottom-default text-right">
                                  {{ 'Scrape'|trans }}

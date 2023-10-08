@@ -57,6 +57,15 @@ class TorrentController extends AbstractController
             [
                 'id'        => $torrent->getId(),
                 'added'     => $torrent->getAdded(),
+                'user'     =>
+                [
+                    'id' => $torrent->getUserId(),
+                    'identicon' => $userService->identicon(
+                        $userService->get(
+                            $torrent->getUserId()
+                        )->getAddress()
+                    ),
+                ],
                 'scrape'    =>
                 [
                     'seeders'   => (int) $torrent->getSeeders(),
