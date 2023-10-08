@@ -57,6 +57,12 @@ class TorrentController extends AbstractController
             [
                 'id'        => $torrent->getId(),
                 'added'     => $torrent->getAdded(),
+                'scrape'    =>
+                [
+                    'seeders'   => (int) $torrent->getSeeders(),
+                    'peers'     => (int) $torrent->getPeers(),
+                    'leechers'  => (int) $torrent->getLeechers(),
+                ],
                 'locales'   => $torrentService->findLastTorrentLocales($torrent->getId()),
                 'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId())->isValue(),
                 'download'  =>

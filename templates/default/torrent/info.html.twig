@@ -177,6 +177,37 @@
                             </td>
                         </tr>
                     {% endif %}
+                    <tr>
+                        <td colspan="2">
+                            <div class="padding-y-8-px border-bottom-default text-right">
+                                 {{ 'Scrape'|trans }}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px">
+                            {{ 'Seeders'|trans }}
+                        </td>
+                        <td class="padding-t-16-px">
+                            {{ torrent.scrape.seeders }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ 'Peers'|trans }}
+                        </td>
+                        <td>
+                            {{ torrent.scrape.peers }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ 'Leechers'|trans }}
+                        </td>
+                        <td>
+                            {{ torrent.scrape.leechers }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
