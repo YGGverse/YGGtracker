@@ -20,4 +20,37 @@ class TorrentSensitiveRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TorrentSensitive::class);
     }
+
+    public function getTorrentSensitive(int $id): ?TorrentSensitive
+    {
+        return $this->createQueryBuilder('ts')
+            ->where('ts.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
+    {
+        return $this->createQueryBuilder('ts')
+            ->where('ts.torrentId = :torrentId')
+            ->setParameter('torrentId', $torrentId)
+            ->orderBy('ts.id', 'DESC') // same to ts.added
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function findTorrentSensitive(int $torrentId): array
+    {
+        return $this->createQueryBuilder('ts')
+            ->where('ts.torrentId = :torrentId')
+            ->setParameter('torrentId', $torrentId)
+            ->orderBy('ts.id', 'DESC') // same to ts.added
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
