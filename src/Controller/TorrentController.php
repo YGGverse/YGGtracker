@@ -44,35 +44,21 @@ class TorrentController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        // Init file
-        try
-        {
-            $file = \Rhilip\Bencode\TorrentFile::load(
-                $torrentService->getStoragePathById(
-                    $torrent->getId()
-                )
-            );
-        }
-
-        catch (ParseException $e)
+        // Read file
+        if (!$file = $torrentService->readTorrentFileById($torrent->getId()))
         {
             throw $this->createNotFoundException();
         }
 
-        /*
-        if (!$torrent = $torrentService->getTorrentLocales($request->get('torrentId')))
-        {
-            throw $this->createNotFoundException();
-        }
-        */
-
+        // Render template
         return $this->render('default/torrent/info.html.twig', [
             'torrent' =>
             [
-                'id'      => $torrent->getId(),
-                'added'   => 0, // @TODO
-                'locales' => $torrentService->findLastTorrentLocales($torrent->getId()),
-                'pages'   => []
+                'id'        => $torrent->getId(),
+                'added'     => $torrent->getAdded(),
+                'locales'   => $torrentService->findLastTorrentLocales($torrent->getId()),
+                'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId()),
+                'pages'     => []
             ],
             'file' =>
             [
@@ -93,7 +79,8 @@ class TorrentController extends AbstractController
                     'v1' => $file->getInfoHashV1(false),
                     'v2' => $file->getInfoHashV2(false)
                 ],
-                'magnet' => $file->getMagnetLink()
+                // @TODO use download action to filter announcement URL
+                // 'magnet' => $file->getMagnetLink()
             ],
             'trackers' => explode('|', $this->getParameter('app.trackers')),
         ]);
@@ -369,7 +356,8 @@ class TorrentController extends AbstractController
                     $form['torrent']['error'][] = $translator->trans('Torrent file out of size limit');
                 }
 
-                if (empty($torrentService->getTorrentInfoNameByFilepath($file->getPathName())))
+                //// Validate torrent format
+                if (!$torrentService->readTorrentFileByFilepath($file->getPathName()))
                 {
                     $form['torrent']['error'][] = $translator->trans('Could not parse torrent file');
                 }

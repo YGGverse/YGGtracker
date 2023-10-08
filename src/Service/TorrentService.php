@@ -29,7 +29,67 @@ class TorrentService
         $this->entityManagerInterface = $entityManagerInterface;
     }
 
-    public function getStoragePathById(int $id): string
+    // Tools
+    public function readTorrentFileByFilepath(
+        string $filepath
+    ): \Rhilip\Bencode\TorrentFile
+    {
+        return \Rhilip\Bencode\TorrentFile::load(
+            $filepath
+        );
+    }
+
+    public function readTorrentFileById(
+        int $id
+    ): \Rhilip\Bencode\TorrentFile
+    {
+        return $this->readTorrentFileByFilepath(
+            $this->getStorageFilepathById($id)
+        );
+    }
+
+    public function generateTorrentKeywordsByTorrentFilepath(
+        string $filepath,
+        int $minLength = 3
+    ): string
+    {
+        $keywords = [];
+
+        foreach ($this->readTorrentFileByFilepath($filepath)->getFileList() as $file)
+        {
+            $words = explode(
+                ' ',
+                preg_replace(
+                    '/[\s]+/',
+                    ' ',
+                    preg_replace(
+                        '/[\W]+/',
+                        ' ',
+                        $file['path']
+                    )
+                )
+            );
+
+            foreach ($words as $key => $value)
+            {
+                if (mb_strlen($value) < $minLength)
+                {
+                    unset($words[$key]);
+                }
+            }
+
+            $keywords = array_merge($keywords, $words);
+        }
+
+        return mb_strtolower(
+            implode(
+                ',',
+                array_unique($keywords)
+            )
+        );
+    }
+
+    public function getStorageFilepathById(int $id): string
     {
         return sprintf(
             '%s/var/torrents/%s.torrent',
@@ -38,30 +98,7 @@ class TorrentService
         );
     }
 
-    /*
-    public function getTorrentKeywordsByFilepath(string $filepath): string
-    {
-        $data = $this->decodeTorrentByFilepath($filepath);
-
-        if (!empty($data['info']['name']))
-        {
-            return mb_strtolower(
-                preg_replace(
-                    '/[\s]+/',
-                    ' ',
-                    preg_replace(
-                        '/[\W]+/',
-                        ' ',
-                        $data['info']['name']
-                    )
-                )
-            );
-        }
-
-        return '';
-    }
-    */
-
+    // Getters
     public function getTorrent(int $id): ?Torrent
     {
         return $this->entityManagerInterface
@@ -69,6 +106,7 @@ class TorrentService
                     ->findOneByIdField($id);
     }
 
+    /// Locales
     public function getTorrentLocales(int $id): ?TorrentLocales
     {
         return $this->entityManagerInterface
@@ -90,6 +128,29 @@ class TorrentService
                     ->findTorrentLocales($torrentId);
     }
 
+    /// Sensitive
+    public function getTorrentSensitive(int $id): ?TorrentSensitive
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->getTorrentLocales($id);
+    }
+
+    public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->findLastTorrentSensitive($torrentId);
+    }
+
+    public function findTorrentSensitive(int $torrentId): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->findTorrentSensitive($torrentId);
+    }
+
+    // Setters
     public function add(
         string $filepath,
         int $userId,
@@ -100,14 +161,18 @@ class TorrentService
     ): ?Torrent
     {
         $torrent = $this->addTorrent(
-          $this->getTorrentInfoNameByFilepath($filepath),
-          $this->getTorrentKeywordsByFilepath($filepath)
+            $userId,
+            $added,
+            $this->generateTorrentKeywordsByTorrentFilepath(
+                $filepath
+            ),
+            $approved
         );
 
         $filesystem = new Filesystem();
         $filesystem->copy(
             $filepath,
-            $this->getStoragePathById(
+            $this->getStorageFilepathById(
                 $torrent->getId()
             )
         );
@@ -135,14 +200,18 @@ class TorrentService
     }
 
     public function addTorrent(
-      string $filepath,
-      string $keywords
+        int $userId,
+        int $added,
+        string $keywords,
+        bool $approved
     ): ?Torrent
     {
         $torrent = new Torrent();
 
-        $torrent->setFilename($filepath);
+        $torrent->setUserId($userId);
+        $torrent->setAdded($added);
         $torrent->setKeywords($keywords);
+        $torrent->setApproved($approved);
 
         $this->entityManagerInterface->persist($torrent);
         $this->entityManagerInterface->flush();
