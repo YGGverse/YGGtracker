@@ -256,10 +256,14 @@ class TorrentController extends AbstractController
             'default/torrent/edit/locales.html.twig',
             [
                 'torrentId' => $torrent->getId(),
-                'moderator' => $user->isModerator(),
                 'locales'   => explode('|', $this->getParameter('app.locales')),
                 'editions'  => $editions,
                 'form'      => $form,
+                'session' =>
+                [
+                    'moderator' => $user->isModerator(),
+                    'owner'     => $user->getId() === $torrentLocales->getUserId(),
+                ]
             ]
         );
     }
@@ -289,15 +293,6 @@ class TorrentController extends AbstractController
             $request->getClientIp()
         );
 
-        // Check permissions
-        if (!$user->isModerator())
-        {
-            // @TODO
-            throw new \Exception(
-                $translator->trans('Access denied')
-            );
-        }
-
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
         {
@@ -308,6 +303,15 @@ class TorrentController extends AbstractController
         if (!$torrentLocales = $torrentService->getTorrentLocales($request->get('torrentLocalesId')))
         {
             throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
         }
 
         // Update approved
@@ -351,15 +355,6 @@ class TorrentController extends AbstractController
             $request->getClientIp()
         );
 
-        // Check permissions
-        if (!$user->isModerator())
-        {
-            // @TODO
-            throw new \Exception(
-                $translator->trans('Access denied')
-            );
-        }
-
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
         {
@@ -370,6 +365,15 @@ class TorrentController extends AbstractController
         if (!$torrentLocales = $torrentService->getTorrentLocales($request->get('torrentLocalesId')))
         {
             throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!($user->isModerator() || $user->getId() === $torrentLocales->getUserId()))
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
         }
 
         // Update approved
