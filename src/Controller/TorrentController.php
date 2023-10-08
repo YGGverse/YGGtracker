@@ -59,15 +59,38 @@ class TorrentController extends AbstractController
                 'added'     => $torrent->getAdded(),
                 'locales'   => $torrentService->findLastTorrentLocales($torrent->getId()),
                 'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId())->isValue(),
+                'download'  =>
+                [
+                    'file' =>
+                    [
+                        'exist' => (bool) $torrentService->findTorrentDownloadFile(
+                            $torrent->getId(),
+                            $user->getId()
+                        ),
+                        'total' => $torrentService->findTorrentDownloadFilesTotalByTorrentId(
+                            $torrent->getId()
+                        )
+                    ],
+                    'magnet' =>
+                    [
+                        'exist' => (bool) $torrentService->findTorrentDownloadMagnet(
+                            $torrent->getId(),
+                            $user->getId()
+                        ),
+                        'total' => $torrentService->findTorrentDownloadMagnetsTotalByTorrentId(
+                            $torrent->getId()
+                        )
+                    ]
+                ],
                 'bookmark'  =>
                 [
-                    'active' => (bool) $torrentService->findTorrentBookmark(
+                    'exist' => (bool) $torrentService->findTorrentBookmark(
                         $torrent->getId(),
                         $user->getId()
                     ),
-                    'total'  => $torrentService->findTorrentBookmarksTotalByTorrentId(
+                    'total' => $torrentService->findTorrentBookmarksTotalByTorrentId(
                         $torrent->getId()
-                    ),
+                    )
                 ],
                 'pages'     => []
             ],
@@ -231,62 +254,6 @@ class TorrentController extends AbstractController
             [
                 'locales' => explode('|', $this->getParameter('app.locales')),
                 'form'    => $form,
-            ]
-        );
-    }
-
-    // Torrent bookmark
-    #[Route(
-        '/{_locale}/torrent/{torrentId}/bookmark/toggle',
-        name: 'torrent_bookmark_toggle',
-        requirements:
-        [
-            'torrentId' => '\d+',
-        ],
-        methods:
-        [
-            'GET'
-        ]
-    )]
-    public function toggleBookmark(
-        Request $request,
-        TranslatorInterface $translator,
-        UserService $userService,
-        TorrentService $torrentService
-    ): Response
-    {
-        // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
-
-        if (!$user->isStatus())
-        {
-            // @TODO
-            throw new \Exception(
-                $translator->trans('Access denied')
-            );
-        }
-
-        // Init torrent
-        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
-        {
-            throw $this->createNotFoundException();
-        }
-
-        // Update
-        $torrentService->toggleTorrentBookmark(
-            $torrent->getId(),
-            $user->getId(),
-            time()
-        );
-
-        // Redirect to info page created
-        return $this->redirectToRoute(
-            'torrent_info',
-            [
-                '_locale'   => $request->get('_locale'),
-                'torrentId' => $torrent->getId()
             ]
         );
     }
@@ -886,6 +853,223 @@ class TorrentController extends AbstractController
                 'torrentId'          => $torrent->getId(),
                 'torrentSensitiveId' => $torrentSensitive->getId(),
             ]
+        );
+    }
+
+    // Torrent bookmark
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/bookmark/toggle',
+        name: 'torrent_bookmark_toggle',
+        requirements:
+        [
+            'torrentId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function toggleBookmark(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update
+        $torrentService->toggleTorrentBookmark(
+            $torrent->getId(),
+            $user->getId(),
+            time()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'torrent_info',
+            [
+                '_locale'   => $request->get('_locale'),
+                'torrentId' => $torrent->getId()
+            ]
+        );
+    }
+
+    // Torrent download file
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/download/file',
+        name: 'torrent_download_file',
+        requirements:
+        [
+            'torrentId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function downloadFile(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('File not found')
+            );
+        }
+
+        // Register download
+        $torrentService->registerTorrentDownloadFile(
+            $torrent->getId(),
+            $user->getId(),
+            time()
+        );
+
+        // Filter trackers
+        $file->setAnnounceList(
+            [
+                explode('|', $this->getParameter('app.trackers'))
+            ]
+        );
+
+        $data = $file->dumpToString();
+
+        // Set headers
+        $response = new Response();
+
+        $response->headers->set(
+            'Content-type',
+            'application/x-bittorrent'
+        );
+
+        $response->headers->set(
+            'Content-length',
+            strlen($data)
+        );
+
+        $response->headers->set(
+            'Content-Disposition',
+            sprintf(
+                'attachment; filename="%s.%s.%s.torrent";',
+                $this->getParameter('app.name'),
+                $torrent->getId(),
+                mb_strtolower(
+                    $file->getName()
+                )
+            )
+        );
+
+        $response->sendHeaders();
+
+        // Return file content
+        return $response->setContent($data);
+    }
+
+    // Torrent download magnet
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/download/magnet',
+        name: 'torrent_download_magnet',
+        requirements:
+        [
+            'torrentId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function getMagnet(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('File not found')
+            );
+        }
+
+        // Register download
+        $torrentService->registerTorrentDownloadMagnet(
+            $torrent->getId(),
+            $user->getId(),
+            time()
+        );
+
+        // Filter trackers
+        $file->setAnnounceList(
+            [
+                explode('|', $this->getParameter('app.trackers'))
+            ]
+        );
+
+        // Return magnet link
+        return $this->redirect(
+            $file->getMagnetLink()
         );
     }
 }

@@ -6,11 +6,15 @@ use App\Entity\Torrent;
 use App\Entity\TorrentLocales;
 use App\Entity\TorrentSensitive;
 use App\Entity\TorrentBookmark;
+use App\Entity\TorrentDownloadFile;
+use App\Entity\TorrentDownloadMagnet;
 
 use App\Repository\TorrentRepository;
 use App\Repository\TorrentLocalesRepository;
 use App\Repository\TorrentSensitiveRepository;
 use App\Repository\TorrentBookmarkRepository;
+use App\Repository\TorrentDownloadFileRepository;
+use App\Repository\TorrentDownloadMagnetRepository;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -108,160 +112,6 @@ class TorrentService
         );
     }
 
-    // Getters
-    public function getTorrent(int $id): ?Torrent
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(Torrent::class)
-                    ->findOneByIdField($id);
-    }
-
-    /// Locales
-    public function getTorrentLocales(int $id): ?TorrentLocales
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentLocales::class)
-                    ->getTorrentLocales($id);
-    }
-
-    public function findLastTorrentLocales(int $torrentId): ?TorrentLocales
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentLocales::class)
-                    ->findLastTorrentLocales($torrentId);
-    }
-
-    public function findTorrentLocales(int $torrentId): array
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentLocales::class)
-                    ->findTorrentLocales($torrentId);
-    }
-
-    /// Sensitive
-    public function getTorrentSensitive(int $id): ?TorrentSensitive
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentSensitive::class)
-                    ->getTorrentSensitive($id);
-    }
-
-    public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentSensitive::class)
-                    ->findLastTorrentSensitive($torrentId);
-    }
-
-    public function findTorrentSensitive(int $torrentId): array
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentSensitive::class)
-                    ->findTorrentSensitive($torrentId);
-    }
-
-    /// Bookmark
-    public function findTorrentBookmark(
-        int $torrentId,
-        int $userId
-    ): ?TorrentBookmark
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentBookmark::class)
-                    ->findTorrentBookmark($torrentId, $userId);
-    }
-
-    public function findTorrentBookmarksTotalByTorrentId(int $torrentId): int
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentBookmark::class)
-                    ->findTorrentBookmarksTotalByTorrentId($torrentId);
-    }
-
-    // Update
-    public function toggleTorrentLocalesApproved(
-        int $id
-    ): ?TorrentLocales
-    {
-        $torrentLocales = $this->getTorrentLocales($id);
-
-        $torrentLocales->setApproved(
-            !$torrentLocales->isApproved() // toggle current value
-        );
-
-        $this->entityManagerInterface->persist($torrentLocales);
-        $this->entityManagerInterface->flush();
-
-        return $torrentLocales;
-    }
-
-    public function toggleTorrentSensitiveApproved(
-        int $id
-    ): ?TorrentSensitive
-    {
-        $torrentSensitive = $this->getTorrentSensitive($id);
-
-        $torrentSensitive->setApproved(
-            !$torrentSensitive->isApproved() // toggle current value
-        );
-
-        $this->entityManagerInterface->persist($torrentSensitive);
-        $this->entityManagerInterface->flush();
-
-        return $torrentSensitive;
-    }
-
-    // Delete
-    public function deleteTorrentLocales(
-        int $id
-    ): ?TorrentLocales
-    {
-        $torrentLocales = $this->getTorrentLocales($id);
-
-        $this->entityManagerInterface->remove($torrentLocales);
-        $this->entityManagerInterface->flush();
-
-        return $torrentLocales;
-    }
-
-    public function toggleTorrentBookmark(
-        int $torrentId,
-        int $userId,
-        int $added
-    ): void
-    {
-        if ($torrentBookmark = $this->findTorrentBookmark($torrentId, $userId))
-        {
-            $this->entityManagerInterface->remove($torrentBookmark);
-            $this->entityManagerInterface->flush();
-        }
-
-        else
-        {
-            $torrentBookmark = new TorrentBookmark();
-
-            $torrentBookmark->setTorrentId($torrentId);
-            $torrentBookmark->setUserId($userId);
-            $torrentBookmark->setAdded($added);
-
-            $this->entityManagerInterface->persist($torrentBookmark);
-            $this->entityManagerInterface->flush();
-        }
-    }
-
-    public function deleteTorrentSensitive(
-        int $id
-    ): ?TorrentSensitive
-    {
-        $torrentSensitive = $this->getTorrentSensitive($id);
-
-        $this->entityManagerInterface->remove($torrentSensitive);
-        $this->entityManagerInterface->flush();
-
-        return $torrentSensitive;
-    }
-
-    // Setters
     public function add(
         string $filepath,
         int $userId,
@@ -310,6 +160,14 @@ class TorrentService
         return $torrent;
     }
 
+    // Torrent
+    public function getTorrent(int $id): ?Torrent
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Torrent::class)
+                    ->findOneByIdField($id);
+    }
+
     public function addTorrent(
         int $userId,
         int $added,
@@ -328,6 +186,56 @@ class TorrentService
         $this->entityManagerInterface->flush();
 
         return $torrent;
+    }
+
+    // Torrent locale
+    public function getTorrentLocales(int $id): ?TorrentLocales
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->getTorrentLocales($id);
+    }
+
+    public function findLastTorrentLocales(int $torrentId): ?TorrentLocales
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->findLastTorrentLocales($torrentId);
+    }
+
+    public function findTorrentLocales(int $torrentId): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->findTorrentLocales($torrentId);
+    }
+
+    public function toggleTorrentLocalesApproved(
+        int $id
+    ): ?TorrentLocales
+    {
+        $torrentLocales = $this->getTorrentLocales($id);
+
+        $torrentLocales->setApproved(
+            !$torrentLocales->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrentLocales);
+        $this->entityManagerInterface->flush();
+
+        return $torrentLocales;
+    }
+
+    public function deleteTorrentLocales(
+        int $id
+    ): ?TorrentLocales
+    {
+        $torrentLocales = $this->getTorrentLocales($id);
+
+        $this->entityManagerInterface->remove($torrentLocales);
+        $this->entityManagerInterface->flush();
+
+        return $torrentLocales;
     }
 
     public function addTorrentLocales(
@@ -352,6 +260,56 @@ class TorrentService
         return $torrentLocales;
     }
 
+    // Torrent sensitive
+    public function getTorrentSensitive(int $id): ?TorrentSensitive
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->getTorrentSensitive($id);
+    }
+
+    public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->findLastTorrentSensitive($torrentId);
+    }
+
+    public function findTorrentSensitive(int $torrentId): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->findTorrentSensitive($torrentId);
+    }
+
+    public function toggleTorrentSensitiveApproved(
+        int $id
+    ): ?TorrentSensitive
+    {
+        $torrentSensitive = $this->getTorrentSensitive($id);
+
+        $torrentSensitive->setApproved(
+            !$torrentSensitive->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrentSensitive);
+        $this->entityManagerInterface->flush();
+
+        return $torrentSensitive;
+    }
+
+    public function deleteTorrentSensitive(
+        int $id
+    ): ?TorrentSensitive
+    {
+        $torrentSensitive = $this->getTorrentSensitive($id);
+
+        $this->entityManagerInterface->remove($torrentSensitive);
+        $this->entityManagerInterface->flush();
+
+        return $torrentSensitive;
+    }
+
     public function addTorrentSensitive(
         int $torrentId,
         int $userId,
@@ -372,5 +330,122 @@ class TorrentService
         $this->entityManagerInterface->flush();
 
         return $torrentSensitive;
+    }
+
+    // Torrent bookmark
+    public function findTorrentBookmark(
+        int $torrentId,
+        int $userId
+    ): ?TorrentBookmark
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentBookmark::class)
+                    ->findTorrentBookmark($torrentId, $userId);
+    }
+
+    public function findTorrentBookmarksTotalByTorrentId(int $torrentId): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentBookmark::class)
+                    ->findTorrentBookmarksTotalByTorrentId($torrentId);
+    }
+
+    public function toggleTorrentBookmark(
+        int $torrentId,
+        int $userId,
+        int $added
+    ): void
+    {
+        if ($torrentBookmark = $this->findTorrentBookmark($torrentId, $userId))
+        {
+            $this->entityManagerInterface->remove($torrentBookmark);
+            $this->entityManagerInterface->flush();
+        }
+
+        else
+        {
+            $torrentBookmark = new TorrentBookmark();
+
+            $torrentBookmark->setTorrentId($torrentId);
+            $torrentBookmark->setUserId($userId);
+            $torrentBookmark->setAdded($added);
+
+            $this->entityManagerInterface->persist($torrentBookmark);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
+    // Torrent download file
+    public function findTorrentDownloadFile(
+        int $torrentId,
+        int $userId
+    ): ?TorrentDownloadFile
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentDownloadFile::class)
+                    ->findTorrentDownloadFile($torrentId, $userId);
+    }
+
+    public function findTorrentDownloadFilesTotalByTorrentId(int $torrentId): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentDownloadFile::class)
+                    ->findTorrentDownloadFilesTotalByTorrentId($torrentId);
+    }
+
+    public function registerTorrentDownloadFile(
+        int $torrentId,
+        int $userId,
+        int $added
+    ): void
+    {
+        if (!$this->findTorrentDownloadFile($torrentId, $userId))
+        {
+            $torrentDownloadFile = new TorrentDownloadFile();
+
+            $torrentDownloadFile->setTorrentId($torrentId);
+            $torrentDownloadFile->setUserId($userId);
+            $torrentDownloadFile->setAdded($added);
+
+            $this->entityManagerInterface->persist($torrentDownloadFile);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
+    // Torrent download magnet
+    public function findTorrentDownloadMagnet(
+        int $torrentId,
+        int $userId
+    ): ?TorrentDownloadMagnet
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentDownloadMagnet::class)
+                    ->findTorrentDownloadMagnet($torrentId, $userId);
+    }
+
+    public function findTorrentDownloadMagnetsTotalByTorrentId(int $torrentId): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentDownloadMagnet::class)
+                    ->findTorrentDownloadMagnetsTotalByTorrentId($torrentId);
+    }
+
+    public function registerTorrentDownloadMagnet(
+        int $torrentId,
+        int $userId,
+        int $added
+    ): void
+    {
+        if (!$this->findTorrentDownloadMagnet($torrentId, $userId))
+        {
+            $torrentDownloadMagnet = new TorrentDownloadMagnet();
+
+            $torrentDownloadMagnet->setTorrentId($torrentId);
+            $torrentDownloadMagnet->setUserId($userId);
+            $torrentDownloadMagnet->setAdded($added);
+
+            $this->entityManagerInterface->persist($torrentDownloadMagnet);
+            $this->entityManagerInterface->flush();
+        }
     }
 }
