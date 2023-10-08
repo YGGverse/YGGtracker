@@ -161,16 +161,21 @@ class TorrentService
     }
 
     /// Bookmark
-    public function findUserLastTorrentBookmarkValue(int $torrentId, int $userId): bool
+    public function findTorrentBookmark(
+        int $torrentId,
+        int $userId
+    ): ?TorrentBookmark
     {
-        if ($torrentBookmark = $this->entityManagerInterface
-                                    ->getRepository(TorrentBookmark::class)
-                                    ->findUserLastTorrentBookmark($torrentId, $userId))
-        {
-            return $torrentBookmark->isValue();
-        }
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentBookmark::class)
+                    ->findTorrentBookmark($torrentId, $userId);
+    }
 
-        return false;
+    public function findTorrentBookmarksTotalByTorrentId(int $torrentId): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentBookmark::class)
+                    ->findTorrentBookmarksTotalByTorrentId($torrentId);
     }
 
     // Update
@@ -223,25 +228,25 @@ class TorrentService
         int $torrentId,
         int $userId,
         int $added
-    ): ?TorrentBookmark
+    ): void
     {
-        $torrentBookmark = new TorrentBookmark();
+        if ($torrentBookmark = $this->findTorrentBookmark($torrentId, $userId))
+        {
+            $this->entityManagerInterface->remove($torrentBookmark);
+            $this->entityManagerInterface->flush();
+        }
 
-        $torrentBookmark->setTorrentId($torrentId);
-        $torrentBookmark->setUserId($userId);
-        $torrentBookmark->setAdded($added);
+        else
+        {
+            $torrentBookmark = new TorrentBookmark();
 
-        $torrentBookmark->setValue(
-            !$this->findUserLastTorrentBookmarkValue(
-                $torrentId,
-                $userId
-            )
-        );
+            $torrentBookmark->setTorrentId($torrentId);
+            $torrentBookmark->setUserId($userId);
+            $torrentBookmark->setAdded($added);
 
-        $this->entityManagerInterface->persist($torrentBookmark);
-        $this->entityManagerInterface->flush();
-
-        return $torrentBookmark;
+            $this->entityManagerInterface->persist($torrentBookmark);
+            $this->entityManagerInterface->flush();
+        }
     }
 
     public function deleteTorrentSensitive(

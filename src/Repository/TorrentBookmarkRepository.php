@@ -21,7 +21,7 @@ class TorrentBookmarkRepository extends ServiceEntityRepository
         parent::__construct($registry, TorrentBookmark::class);
     }
 
-    public function findUserLastTorrentBookmark(
+    public function findTorrentBookmark(
         int $torrentId,
         int $userId
     ): ?TorrentBookmark
@@ -35,6 +35,19 @@ class TorrentBookmarkRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
+        ;
+    }
+
+    public function findTorrentBookmarksTotalByTorrentId(
+        int $torrentId
+    ): int
+    {
+        return $this->createQueryBuilder('tb')
+            ->select('count(tb.id)')
+            ->where('tb.torrentId = :torrentId')
+            ->setParameter('torrentId', $torrentId)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
     }
 }

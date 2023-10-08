@@ -22,9 +22,6 @@ class TorrentBookmark
     #[ORM\Column]
     private ?int $added = null;
 
-    #[ORM\Column]
-    private ?bool $value = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -62,18 +59,6 @@ class TorrentBookmark
     public function setAdded(int $added): static
     {
         $this->added = $added;
-
-        return $this;
-    }
-
-    public function isValue(): ?bool
-    {
-        return $this->value;
-    }
-
-    public function setValue(bool $value): static
-    {
-        $this->value = $value;
 
         return $this;
     }

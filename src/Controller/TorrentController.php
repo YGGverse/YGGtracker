@@ -61,11 +61,13 @@ class TorrentController extends AbstractController
                 'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId())->isValue(),
                 'bookmark'  =>
                 [
-                    'active' => $torrentService->findUserLastTorrentBookmarkValue(
+                    'active' => (bool) $torrentService->findTorrentBookmark(
                         $torrent->getId(),
                         $user->getId()
                     ),
-                    'total'  => 0,
+                    'total'  => $torrentService->findTorrentBookmarksTotalByTorrentId(
+                        $torrent->getId()
+                    ),
                 ],
                 'pages'     => []
             ],
