@@ -20,7 +20,7 @@
 {% endmacro %}
 {% from _self import recursive_file_tree %}
 {% extends 'default/layout.html.twig' %}
-{% block title %}{% if file.name %}{{ file.name }} - {% endif %}{{ 'Torrent'|trans }} #{{ torrent.id }} - {{ name }}{% endblock %}
+{% block title %}{{ 'Torrent' | trans }} #{{ torrent.id }} - {{ 'Info' | trans }} - {{ name }}{% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <div class="padding-b-16-px">
