@@ -24,11 +24,11 @@
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <div class="padding-b-16-px">
-            <h1>
+            <h1 class="display-block text-center margin-b-16-px">
                 {{ 'Torrent'|trans }} #{{ torrent.id }}
             </h1>
-            <div class="float-right ">
-                <a class="margin-x-4-px" href="{{ path('torrent_download_magnet', {torrentId : torrent.id}) }}" title="{{ 'Open magnet link' | trans }}">
+            <div class="text-center">
+                <a class="margin-l-8-px margin-r-4-px" href="{{ path('torrent_download_magnet', {torrentId : torrent.id}) }}" title="{{ 'Open magnet link' | trans }}">
                     {% if torrent.download.magnet.exist %}
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M15 12h-4v3h4v-3ZM5 12H1v3h4v-3ZM0 8a8 8 0 1 1 16 0v8h-6V8a2 2 0 1 0-4 0v8H0V8Z"/>
@@ -42,7 +42,7 @@
                 <sup class="cursor-default" title="{{ 'Total' | trans }}">
                     {{ torrent.download.magnet.total }}
                 </sup>
-                <a class="margin-x-4-px" href="{{ path('torrent_download_file', {torrentId : torrent.id}) }}" title="{{ 'Download torrent file' | trans }}">
+                <a class="margin-l-8-px margin-r-4-px" href="{{ path('torrent_download_file', {torrentId : torrent.id}) }}" title="{{ 'Download torrent file' | trans }}">
                     {% if torrent.download.file.exist %}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
@@ -56,7 +56,7 @@
                 <sup class="cursor-default" title="{{ 'Total' | trans }}">
                     {{ torrent.download.file.total }}
                 </sup>
-                <a class="margin-x-4-px" href="{{ path('torrent_bookmark_toggle', {torrentId : torrent.id}) }}" title="{{ 'Bookmark' | trans }}">
+                <a class="margin-l-8-px margin-r-4-px" href="{{ path('torrent_bookmark_toggle', {torrentId : torrent.id}) }}" title="{{ 'Bookmark' | trans }}">
                     {% if torrent.bookmark.exist %}
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
