@@ -165,7 +165,7 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
-                    ->findOneByIdField($id);
+                    ->getTorrent($id);
     }
 
     public function addTorrent(
@@ -196,18 +196,18 @@ class TorrentService
                     ->getTorrentLocales($id);
     }
 
-    public function findLastTorrentLocales(int $torrentId): ?TorrentLocales
+    public function findLastTorrentLocalesByTorrentId(int $torrentId): ?TorrentLocales
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentLocales::class)
-                    ->findLastTorrentLocales($torrentId);
+                    ->findLastTorrentLocalesByTorrentId($torrentId);
     }
 
-    public function findTorrentLocales(int $torrentId): array
+    public function findTorrentLocalesByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentLocales::class)
-                    ->findTorrentLocales($torrentId);
+                    ->findTorrentLocalesByTorrentId($torrentId);
     }
 
     public function toggleTorrentLocalesApproved(
@@ -268,18 +268,18 @@ class TorrentService
                     ->getTorrentSensitive($id);
     }
 
-    public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
+    public function findLastTorrentSensitiveByTorrentId(int $torrentId): ?TorrentSensitive
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentSensitive::class)
-                    ->findLastTorrentSensitive($torrentId);
+                    ->findLastTorrentSensitiveByTorrentId($torrentId);
     }
 
-    public function findTorrentSensitive(int $torrentId): array
+    public function findTorrentSensitiveByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentSensitive::class)
-                    ->findTorrentSensitive($torrentId);
+                    ->findTorrentSensitiveByTorrentId($torrentId);
     }
 
     public function toggleTorrentSensitiveApproved(

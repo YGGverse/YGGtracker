@@ -31,7 +31,7 @@ class TorrentSensitiveRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findLastTorrentSensitive(int $torrentId): ?TorrentSensitive
+    public function findLastTorrentSensitiveByTorrentId(int $torrentId): ?TorrentSensitive
     {
         return $this->createQueryBuilder('ts')
             ->where('ts.torrentId = :torrentId')
@@ -43,7 +43,7 @@ class TorrentSensitiveRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTorrentSensitive(int $torrentId): array
+    public function findTorrentSensitiveByTorrentId(int $torrentId): array
     {
         return $this->createQueryBuilder('ts')
             ->where('ts.torrentId = :torrentId')

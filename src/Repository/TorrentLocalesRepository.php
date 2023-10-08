@@ -31,7 +31,7 @@ class TorrentLocalesRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findLastTorrentLocales(int $torrentId): ?TorrentLocales
+    public function findLastTorrentLocalesByTorrentId(int $torrentId): ?TorrentLocales
     {
         return $this->createQueryBuilder('tl')
             ->where('tl.torrentId = :torrentId')
@@ -43,7 +43,7 @@ class TorrentLocalesRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTorrentLocales(int $torrentId): array
+    public function findTorrentLocalesByTorrentId(int $torrentId): array
     {
         return $this->createQueryBuilder('tl')
             ->where('tl.torrentId = :torrentId')
