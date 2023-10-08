@@ -104,7 +104,6 @@ class TorrentController extends AbstractController
             'POST'
         ]
     )]
-
     public function editLocales(
         Request $request,
         TranslatorInterface $translator,
@@ -256,10 +255,135 @@ class TorrentController extends AbstractController
         return $this->render(
             'default/torrent/edit/locales.html.twig',
             [
+                'torrentId' => $torrent->getId(),
+                'moderator' => $user->isModerator(),
+                'locales'   => explode('|', $this->getParameter('app.locales')),
+                'editions'  => $editions,
+                'form'      => $form,
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/approve/locales/{torrentLocalesId}',
+        name: 'torrent_approve_locales',
+        requirements:
+        [
+            'torrentId'        => '\d+',
+            'torrentLocalesId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function approveLocales(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent locales
+        if (!$torrentLocales = $torrentService->getTorrentLocales($request->get('torrentLocalesId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update approved
+        $torrentService->toggleTorrentLocalesApproved(
+            $torrentLocales->getId()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'torrent_edit_locales',
+            [
+                '_locale'          => $request->get('_locale'),
                 'torrentId'        => $torrent->getId(),
-                'locales'          => explode('|', $this->getParameter('app.locales')),
-                'editions'         => $editions,
-                'form'             => $form,
+                'torrentLocalesId' => $torrentLocales->getId(),
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/delete/locales/{torrentLocalesId}',
+        name: 'torrent_delete_locales',
+        requirements:
+        [
+            'torrentId'        => '\d+',
+            'torrentLocalesId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function deleteLocales(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent locales
+        if (!$torrentLocales = $torrentService->getTorrentLocales($request->get('torrentLocalesId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update approved
+        $torrentService->deleteTorrentLocales(
+            $torrentLocales->getId()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'torrent_edit_locales',
+            [
+                '_locale'          => $request->get('_locale'),
+                'torrentId'        => $torrent->getId(),
+                'torrentLocalesId' => $torrentLocales->getId(),
             ]
         );
     }

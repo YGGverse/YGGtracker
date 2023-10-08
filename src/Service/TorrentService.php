@@ -158,6 +158,36 @@ class TorrentService
                     ->findTorrentSensitive($torrentId);
     }
 
+    // Update
+    public function toggleTorrentLocalesApproved(
+        int $id
+    ): ?TorrentLocales
+    {
+        $torrentLocales = $this->getTorrentLocales($id);
+
+        $torrentLocales->setApproved(
+            !$torrentLocales->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrentLocales);
+        $this->entityManagerInterface->flush();
+
+        return $torrentLocales;
+    }
+
+    // Delete
+    public function deleteTorrentLocales(
+        int $id
+    ): ?TorrentLocales
+    {
+        $torrentLocales = $this->getTorrentLocales($id);
+
+        $this->entityManagerInterface->remove($torrentLocales);
+        $this->entityManagerInterface->flush();
+
+        return $torrentLocales;
+    }
+
     // Setters
     public function add(
         string $filepath,
