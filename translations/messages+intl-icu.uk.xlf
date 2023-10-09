@@ -221,6 +221,230 @@
         <source>Save</source>
         <target>Зберегти</target>
       </trans-unit>
+      <trans-unit id="NSECGi6" resname="File not found">
+        <source>File not found</source>
+        <target>File not found</target>
+      </trans-unit>
+      <trans-unit id="azmAWfE" resname="Page title (%s-%s chars)">
+        <source>Page title (%s-%s chars)</source>
+        <target>Page title (%s-%s chars)</target>
+      </trans-unit>
+      <trans-unit id="EHk_smN" resname="Page description (%s-%s chars)">
+        <source>Page description (%s-%s chars)</source>
+        <target>Page description (%s-%s chars)</target>
+      </trans-unit>
+      <trans-unit id="YSDwyOP" resname="Append %s-%s torrent files">
+        <source>Append %s-%s torrent files</source>
+        <target>Append %s-%s torrent files</target>
+      </trans-unit>
+      <trans-unit id="JuRnwol" resname="Apply sensitive filters to publication">
+        <source>Apply sensitive filters to publication</source>
+        <target>Apply sensitive filters to publication</target>
+      </trans-unit>
+      <trans-unit id="OMHLqqs" resname="Could not parse torrent file">
+        <source>Could not parse torrent file</source>
+        <target>Could not parse torrent file</target>
+      </trans-unit>
+      <trans-unit id="1HcJ6eW" resname="Select torrent file">
+        <source>Select torrent file</source>
+        <target>Select torrent file</target>
+      </trans-unit>
+      <trans-unit id="_ji6HWn" resname="At least one locale required">
+        <source>At least one locale required</source>
+        <target>At least one locale required</target>
+      </trans-unit>
+      <trans-unit id="6rhNefb" resname="Torrent file required">
+        <source>Torrent file required</source>
+        <target>Torrent file required</target>
+      </trans-unit>
+      <trans-unit id="335w5QI" resname="B">
+        <source>B</source>
+        <target>B</target>
+      </trans-unit>
+      <trans-unit id="pNfcu5." resname="Kb">
+        <source>Kb</source>
+        <target>Kb</target>
+      </trans-unit>
+      <trans-unit id="mhI2lhb" resname="Mb">
+        <source>Mb</source>
+        <target>Mb</target>
+      </trans-unit>
+      <trans-unit id="e0K0oQ5" resname="Gb">
+        <source>Gb</source>
+        <target>Gb</target>
+      </trans-unit>
+      <trans-unit id="wI8AiyL" resname="Tb">
+        <source>Tb</source>
+        <target>Tb</target>
+      </trans-unit>
+      <trans-unit id="cfWnmQc" resname="Pb">
+        <source>Pb</source>
+        <target>Pb</target>
+      </trans-unit>
+      <trans-unit id="0YVBcLX" resname="Eb">
+        <source>Eb</source>
+        <target>Eb</target>
+      </trans-unit>
+      <trans-unit id="IISijB3" resname="Zb">
+        <source>Zb</source>
+        <target>Zb</target>
+      </trans-unit>
+      <trans-unit id="xh_ZAt3" resname="Yb">
+        <source>Yb</source>
+        <target>Yb</target>
+      </trans-unit>
+      <trans-unit id="ZTfB0U1" resname="Submit torrent">
+        <source>Submit torrent</source>
+        <target>Submit torrent</target>
+      </trans-unit>
+      <trans-unit id="TqPF88y" resname="Torrent file">
+        <source>Torrent file</source>
+        <target>Torrent file</target>
+      </trans-unit>
+      <trans-unit id="2ZuDCA5" resname="Edit locales">
+        <source>Edit locales</source>
+        <target>Edit locales</target>
+      </trans-unit>
+      <trans-unit id="OBSQFyT" resname="Torrent">
+        <source>Torrent</source>
+        <target>Torrent</target>
+      </trans-unit>
+      <trans-unit id="kE0Fugk" resname="Edit locales for torrent">
+        <source>Edit locales for torrent</source>
+        <target>Edit locales for torrent</target>
+      </trans-unit>
+      <trans-unit id="I3TZF5S" resname="cancel">
+        <source>cancel</source>
+        <target>cancel</target>
+      </trans-unit>
+      <trans-unit id="p_LSbo0" resname="by">
+        <source>by</source>
+        <target>by</target>
+      </trans-unit>
+      <trans-unit id="4tClSWj" resname="Delete">
+        <source>Delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="GFXm4Yt" resname="Disapprove">
+        <source>Disapprove</source>
+        <target>Disapprove</target>
+      </trans-unit>
+      <trans-unit id="YAesvjC" resname="Approve">
+        <source>Approve</source>
+        <target>Approve</target>
+      </trans-unit>
+      <trans-unit id="R138zpi" resname="Waiting for approve">
+        <source>Waiting for approve</source>
+        <target>Waiting for approve</target>
+      </trans-unit>
+      <trans-unit id="C7WLmR6" resname="Edit sensitive">
+        <source>Edit sensitive</source>
+        <target>Edit sensitive</target>
+      </trans-unit>
+      <trans-unit id="rzkdzo_" resname="Edit sensitive status for torrent">
+        <source>Edit sensitive status for torrent</source>
+        <target>Edit sensitive status for torrent</target>
+      </trans-unit>
+      <trans-unit id="E_vs9Gs" resname="Open magnet link">
+        <source>Open magnet link</source>
+        <target>Open magnet link</target>
+      </trans-unit>
+      <trans-unit id="ybPDgkf" resname="Total">
+        <source>Total</source>
+        <target>Total</target>
+      </trans-unit>
+      <trans-unit id="5Y_6cg2" resname="Download torrent file">
+        <source>Download torrent file</source>
+        <target>Download torrent file</target>
+      </trans-unit>
+      <trans-unit id="G6xAB4g" resname="Bookmark">
+        <source>Bookmark</source>
+        <target>Bookmark</target>
+      </trans-unit>
+      <trans-unit id="lxuXQjW" resname="Filename">
+        <source>Filename</source>
+        <target>Filename</target>
+      </trans-unit>
+      <trans-unit id="1wueJLy" resname="Created">
+        <source>Created</source>
+        <target>Created</target>
+      </trans-unit>
+      <trans-unit id="GvhRkHM" resname="Size">
+        <source>Size</source>
+        <target>Size</target>
+      </trans-unit>
+      <trans-unit id="3QXQ4kf" resname="Pieces">
+        <source>Pieces</source>
+        <target>Pieces</target>
+      </trans-unit>
+      <trans-unit id="T3Un3Wo" resname="Info hash v1">
+        <source>Info hash v1</source>
+        <target>Info hash v1</target>
+      </trans-unit>
+      <trans-unit id="k77N_dn" resname="Info hash v2">
+        <source>Info hash v2</source>
+        <target>Info hash v2</target>
+      </trans-unit>
+      <trans-unit id="DlcMpvq" resname="Source">
+        <source>Source</source>
+        <target>Source</target>
+      </trans-unit>
+      <trans-unit id="mzKJo4W" resname="Software">
+        <source>Software</source>
+        <target>Software</target>
+      </trans-unit>
+      <trans-unit id="RPXj__x" resname="Comment">
+        <source>Comment</source>
+        <target>Comment</target>
+      </trans-unit>
+      <trans-unit id="ITeFRYk" resname="Publisher">
+        <source>Publisher</source>
+        <target>Publisher</target>
+      </trans-unit>
+      <trans-unit id="mvYF.Ky" resname="Scrape">
+        <source>Scrape</source>
+        <target>Scrape</target>
+      </trans-unit>
+      <trans-unit id="QKvXHnR" resname="Seeders">
+        <source>Seeders</source>
+        <target>Seeders</target>
+      </trans-unit>
+      <trans-unit id="ZLdpvK_" resname="Peers">
+        <source>Peers</source>
+        <target>Peers</target>
+      </trans-unit>
+      <trans-unit id="mR8Ug6L" resname="Leechers">
+        <source>Leechers</source>
+        <target>Leechers</target>
+      </trans-unit>
+      <trans-unit id="q8fpiSg" resname="Files">
+        <source>Files</source>
+        <target>Files</target>
+      </trans-unit>
+      <trans-unit id="Bud8ddd" resname="Trackers">
+        <source>Trackers</source>
+        <target>Trackers</target>
+      </trans-unit>
+      <trans-unit id="GPKglH_" resname="Blocked">
+        <source>Blocked</source>
+        <target>Blocked</target>
+      </trans-unit>
+      <trans-unit id="RkxP.QG" resname="Edit">
+        <source>Edit</source>
+        <target>Edit</target>
+      </trans-unit>
+      <trans-unit id="g7KFKj7" resname="Locales">
+        <source>Locales</source>
+        <target>Locales</target>
+      </trans-unit>
+      <trans-unit id="kEbaFq6" resname="Pages">
+        <source>Pages</source>
+        <target>Pages</target>
+      </trans-unit>
+      <trans-unit id="n9coxmy" resname="Add">
+        <source>Add</source>
+        <target>Add</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
