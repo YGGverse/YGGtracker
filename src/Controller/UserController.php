@@ -487,7 +487,7 @@ class UserController extends AbstractController
         );
     }
 
-    public function module(string $route = ''): Response
+    public function module(?string $route): Response
     {
         return $this->render(
             'default/user/module.html.twig',
