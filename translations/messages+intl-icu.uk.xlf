@@ -357,9 +357,9 @@
         <source>Download torrent file</source>
         <target>Download torrent file</target>
       </trans-unit>
-      <trans-unit id="G6xAB4g" resname="Bookmark">
-        <source>Bookmark</source>
-        <target>Bookmark</target>
+      <trans-unit id="G6xAB4g" resname="Star">
+        <source>Star</source>
+        <target>Star</target>
       </trans-unit>
       <trans-unit id="lxuXQjW" resname="Filename">
         <source>Filename</source>

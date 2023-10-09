@@ -126,13 +126,13 @@ class TorrentController extends AbstractController
                         )
                     ]
                 ],
-                'bookmark'  =>
+                'star'  =>
                 [
-                    'exist' => (bool) $torrentService->findTorrentBookmark(
+                    'exist' => (bool) $torrentService->findTorrentStar(
                         $torrent->getId(),
                         $user->getId()
                     ),
-                    'total' => $torrentService->findTorrentBookmarksTotalByTorrentId(
+                    'total' => $torrentService->findTorrentStarsTotalByTorrentId(
                         $torrent->getId()
                     )
                 ],
@@ -901,10 +901,10 @@ class TorrentController extends AbstractController
         );
     }
 
-    // Torrent bookmark
+    // Torrent star
     #[Route(
-        '/{_locale}/torrent/{torrentId}/bookmark/toggle',
-        name: 'torrent_bookmark_toggle',
+        '/{_locale}/torrent/{torrentId}/star/toggle',
+        name: 'torrent_star_toggle',
         requirements:
         [
             'torrentId' => '\d+',
@@ -914,7 +914,7 @@ class TorrentController extends AbstractController
             'GET'
         ]
     )]
-    public function toggleBookmark(
+    public function toggleStar(
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
@@ -941,7 +941,7 @@ class TorrentController extends AbstractController
         }
 
         // Update
-        $torrentService->toggleTorrentBookmark(
+        $torrentService->toggleTorrentStar(
             $torrent->getId(),
             $user->getId(),
             time()

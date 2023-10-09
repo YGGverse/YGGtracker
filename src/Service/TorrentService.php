@@ -5,14 +5,14 @@ namespace App\Service;
 use App\Entity\Torrent;
 use App\Entity\TorrentLocales;
 use App\Entity\TorrentSensitive;
-use App\Entity\TorrentBookmark;
+use App\Entity\TorrentStar;
 use App\Entity\TorrentDownloadFile;
 use App\Entity\TorrentDownloadMagnet;
 
 use App\Repository\TorrentRepository;
 use App\Repository\TorrentLocalesRepository;
 use App\Repository\TorrentSensitiveRepository;
-use App\Repository\TorrentBookmarkRepository;
+use App\Repository\TorrentStarRepository;
 use App\Repository\TorrentDownloadFileRepository;
 use App\Repository\TorrentDownloadMagnetRepository;
 
@@ -424,45 +424,45 @@ class TorrentService
         return $torrentSensitive;
     }
 
-    // Torrent bookmark
-    public function findTorrentBookmark(
+    // Torrent star
+    public function findTorrentStar(
         int $torrentId,
         int $userId
-    ): ?TorrentBookmark
+    ): ?TorrentStar
     {
         return $this->entityManagerInterface
-                    ->getRepository(TorrentBookmark::class)
-                    ->findTorrentBookmark($torrentId, $userId);
+                    ->getRepository(TorrentStar::class)
+                    ->findTorrentStar($torrentId, $userId);
     }
 
-    public function findTorrentBookmarksTotalByTorrentId(int $torrentId): int
+    public function findTorrentStarsTotalByTorrentId(int $torrentId): int
     {
         return $this->entityManagerInterface
-                    ->getRepository(TorrentBookmark::class)
-                    ->findTorrentBookmarksTotalByTorrentId($torrentId);
+                    ->getRepository(TorrentStar::class)
+                    ->findTorrentStarsTotalByTorrentId($torrentId);
     }
 
-    public function toggleTorrentBookmark(
+    public function toggleTorrentStar(
         int $torrentId,
         int $userId,
         int $added
     ): void
     {
-        if ($torrentBookmark = $this->findTorrentBookmark($torrentId, $userId))
+        if ($torrentStar = $this->findTorrentStar($torrentId, $userId))
         {
-            $this->entityManagerInterface->remove($torrentBookmark);
+            $this->entityManagerInterface->remove($torrentStar);
             $this->entityManagerInterface->flush();
         }
 
         else
         {
-            $torrentBookmark = new TorrentBookmark();
+            $torrentStar = new TorrentStar();
 
-            $torrentBookmark->setTorrentId($torrentId);
-            $torrentBookmark->setUserId($userId);
-            $torrentBookmark->setAdded($added);
+            $torrentStar->setTorrentId($torrentId);
+            $torrentStar->setUserId($userId);
+            $torrentStar->setAdded($added);
 
-            $this->entityManagerInterface->persist($torrentBookmark);
+            $this->entityManagerInterface->persist($torrentStar);
             $this->entityManagerInterface->flush();
         }
     }

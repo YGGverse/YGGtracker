@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\TorrentBookmarkRepository;
+use App\Repository\TorrentStarRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TorrentBookmarkRepository::class)]
-class TorrentBookmark
+#[ORM\Entity(repositoryClass: TorrentStarRepository::class)]
+class TorrentStar
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

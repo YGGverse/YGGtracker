@@ -2,29 +2,29 @@
 
 namespace App\Repository;
 
-use App\Entity\TorrentBookmark;
+use App\Entity\TorrentStar;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TorrentBookmark>
+ * @extends ServiceEntityRepository<TorrentStar>
  *
- * @method TorrentBookmark|null find($id, $lockMode = null, $lockVersion = null)
- * @method TorrentBookmark|null findOneBy(array $criteria, array $orderBy = null)
- * @method TorrentBookmark[]    findAll()
- * @method TorrentBookmark[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TorrentStar|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TorrentStar|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TorrentStar[]    findAll()
+ * @method TorrentStar[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TorrentBookmarkRepository extends ServiceEntityRepository
+class TorrentStarRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TorrentBookmark::class);
+        parent::__construct($registry, TorrentStar::class);
     }
 
-    public function findTorrentBookmark(
+    public function findTorrentStar(
         int $torrentId,
         int $userId
-    ): ?TorrentBookmark
+    ): ?TorrentStar
     {
         return $this->createQueryBuilder('tb')
             ->where('tb.torrentId = :torrentId')
@@ -38,7 +38,7 @@ class TorrentBookmarkRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findTorrentBookmarksTotalByTorrentId(
+    public function findTorrentStarsTotalByTorrentId(
         int $torrentId
     ): int
     {
