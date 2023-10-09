@@ -67,6 +67,11 @@ class TorrentService
                 $hashes[] = $hash;
             }
 
+            // Init default values
+            $seeders  = 0;
+            $peers    = 0;
+            $leechers = 0;
+
             // Get scrape
             if ($hashes && $trackers)
             {
@@ -77,29 +82,35 @@ class TorrentService
                     {
                         if (isset($result['seeders']))
                         {
-                            $torrent->setSeeders(
-                                (int) $result['seeders']
-                            );
+                            $seeders = $seeders + (int) $result['seeders'];
                         }
 
                         if (isset($result['completed']))
                         {
-                            $torrent->setPeers(
-                                (int) $result['completed']
-                            );
+                            $peers = $peers + (int) $result['completed'];
                         }
 
                         if (isset($result['leechers']))
                         {
-                            $torrent->setLeechers(
-                                (int) $result['leechers']
-                            );
+                            $leechers = $leechers + (int) $result['leechers'];
                         }
                     }
                 }
             }
 
-            // Update time scraped
+            // Update torrent scrape
+            $torrent->setSeeders(
+                $seeders
+            );
+
+            $torrent->setPeers(
+                $peers
+            );
+
+            $torrent->setLeechers(
+                $leechers
+            );
+
             $torrent->setScraped(
                 time()
             );
