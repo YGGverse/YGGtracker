@@ -5,11 +5,13 @@
         <div class="margin-b-16-px text-center">
             <img class="border-radius-50 border-color-default border-width-2-px" src="{{ user.identicon }}" alt="{{ 'identicon'|trans }}" />
         </div>
+        {# @TODO username feature
         <div class="margin-b-16-px">
             <h1 class="display-block text-center margin-b-16-px">
                 {{ 'User'|trans }} #{{ user.id }}
             </h1>
         </div>
+        #}
         <div class="text-center">
             <a class="margin-l-8-px margin-r-4-px" href="{{ path('user_star_toggle', {userId : user.id}) }}" title="{{ 'Bookmark' | trans }}">
                 {% if user.star.exist %}
