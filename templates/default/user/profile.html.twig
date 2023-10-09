@@ -112,11 +112,11 @@
                                 {% for theme in themes %}
                                     {% if theme == user.theme %}
                                         <option value="{{ theme }}" selected="selected">
-                                            {{ theme }}
+                                            {{ theme | u.title }}
                                         </option>
                                     {% else %}
                                         <option value="{{ theme }}">
-                                            {{ theme }}
+                                            {{ theme | u.title }}
                                         </option>
                                     {% endif %}
                                 {% endfor %}
