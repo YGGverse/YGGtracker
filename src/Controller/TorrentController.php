@@ -1091,7 +1091,7 @@ class TorrentController extends AbstractController
 
     // Tools
     #[Route(
-        '/crontab/scrape',
+        '/crontab/torrent/scrape',
         methods:
         [
             'GET'
