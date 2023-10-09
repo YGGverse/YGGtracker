@@ -55,7 +55,7 @@ class TorrentController extends AbstractController
         $contributors = [];
 
         $contributors[$torrent->getUserId()] = $userService->identicon(
-            $userService->get(
+            $userService->getUser(
                 $torrent->getUserId()
             )->getAddress()
         );
@@ -63,7 +63,7 @@ class TorrentController extends AbstractController
         if ($torrentLocales = $torrentService->findLastTorrentLocalesByTorrentId($torrent->getId()))
         {
             $contributors[$torrentLocales->getUserId()] = $userService->identicon(
-                $userService->get(
+                $userService->getUser(
                     $torrentLocales->getUserId()
                 )->getAddress()
             );
@@ -72,7 +72,7 @@ class TorrentController extends AbstractController
         if ($torrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentId($torrent->getId()))
         {
             $contributors[$torrentSensitive->getUserId()] = $userService->identicon(
-                $userService->get(
+                $userService->getUser(
                     $torrentSensitive->getUserId()
                 )->getAddress()
             );
@@ -89,7 +89,7 @@ class TorrentController extends AbstractController
                 [
                     'id' => $torrent->getUserId(),
                     'identicon' => $userService->identicon(
-                        $userService->get(
+                        $userService->getUser(
                             $torrent->getUserId()
                         )->getAddress()
                     ),
@@ -409,7 +409,7 @@ class TorrentController extends AbstractController
                 [
                     'id' => $torrentLocalesEdition->getUserId(),
                     'identicon' => $userService->identicon(
-                        $userService->get(
+                        $userService->getUser(
                             $torrentLocalesEdition->getUserId()
                         )->getAddress()
                     ),
@@ -717,7 +717,7 @@ class TorrentController extends AbstractController
                 [
                     'id' => $torrentSensitiveEdition->getUserId(),
                     'identicon' => $userService->identicon(
-                        $userService->get(
+                        $userService->getUser(
                             $torrentSensitiveEdition->getUserId()
                         )->getAddress()
                     ),
