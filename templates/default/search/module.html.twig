@@ -1,8 +1,16 @@
 <form class="margin-t-8-px" name="search" method="get" action="{{ path('search_index') }}">
-    <input class="min-width-200-px" type="text" name="query" value="{{ query }}" placeholder="{{ 'Keyword, file, extension, hash...' | trans }}" />
+    <input class="min-width-200-px" type="text" name="query" value="{{ query }}" placeholder="{{ 'Keyword, file, hash...' | trans }}" />
     <select name="type">
-        <option value="torrents">{{ 'Torrents' |trans }}</option>
-        <option value="pages">{{ 'Pages' |trans }}</option>
+        {% if type == 'torrent' %}
+            <option value="torrent" selected="selected">{{ 'Torrents' | trans }}</option>
+        {% else %}
+            <option value="torrent">{{ 'Torrents' | trans }}</option>
+        {% endif %}
+        {% if type == 'page' %}
+            <option value="page" selected="selected">{{ 'Pages' | trans }}</option>
+        {% else %}
+            <option value="page">{{ 'Pages' | trans }}</option>
+        {% endif %}
     </select>
-    <input type="submit" value="{{ 'Search' |trans }}" />
+    <input type="submit" value="{{ 'Search' | trans }}" />
 </form>
