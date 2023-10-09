@@ -20,6 +20,9 @@ class Torrent
     #[ORM\Column]
     private ?int $added = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $scraped = null;
+
     #[ORM\Column]
     private ?bool $approved = null;
 
@@ -67,6 +70,18 @@ class Torrent
     public function setAdded(int $added): static
     {
         $this->added = $added;
+
+        return $this;
+    }
+
+    public function getScraped(): ?int
+    {
+        return $this->scraped;
+    }
+
+    public function setScraped(int $scraped): static
+    {
+        $this->scraped = $scraped;
 
         return $this;
     }

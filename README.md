@@ -47,7 +47,7 @@ git checkout -b my-pr-branch-name
 #### Components
 
 * [SVG icons](https://icons.getbootstrap.com)
-* [Scrapper](https://github.com/medariox/scrapeer)
+* [Scrapper](https://github.com/medariox/scrapeer) / [Composer Edition](https://github.com/YGGverse/scrapeer)
 * [Bencode Library](https://github.com/Rhilip/Bencode)
 * [Identicons](https://github.com/dmester/jdenticon-php)
 

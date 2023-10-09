@@ -30,4 +30,14 @@ class TorrentRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function getTorrentScrapeQueue(): ?Torrent
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.scraped', 'ASC') // same to ts.added
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

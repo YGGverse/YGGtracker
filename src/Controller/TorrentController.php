@@ -72,8 +72,8 @@ class TorrentController extends AbstractController
                     'peers'     => (int) $torrent->getPeers(),
                     'leechers'  => (int) $torrent->getLeechers(),
                 ],
-                'locales'   => $torrentService->findLastTorrentLocales($torrent->getId()),
-                'sensitive' => $torrentService->findLastTorrentSensitive($torrent->getId())->isValue(),
+                'locales'   => $torrentService->findLastTorrentLocalesByTorrentId($torrent->getId()),
+                'sensitive' => $torrentService->findLastTorrentSensitiveByTorrentId($torrent->getId())->isValue(),
                 'download'  =>
                 [
                     'file' =>
@@ -346,7 +346,7 @@ class TorrentController extends AbstractController
         // Otherwise, get latest available
         else
         {
-            if ($torrentLocales = $torrentService->findLastTorrentLocales($torrent->getId()))
+            if ($torrentLocales = $torrentService->findLastTorrentLocalesByTorrentId($torrent->getId()))
             {
                 $torrentLocalesCurrent['userId'] = $torrentLocales->getUserId();
 
@@ -367,7 +367,7 @@ class TorrentController extends AbstractController
 
         // Init edition history
         $editions = [];
-        foreach ($torrentService->findTorrentLocales($torrent->getId()) as $torrentLocalesEdition)
+        foreach ($torrentService->findTorrentLocalesByTorrentId($torrent->getId()) as $torrentLocalesEdition)
         {
             $editions[] =
             [
@@ -652,7 +652,7 @@ class TorrentController extends AbstractController
         }
         else
         {
-            if ($torrentSensitive = $torrentService->findLastTorrentSensitive($request->get('torrentId')))
+            if ($torrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentId($request->get('torrentId')))
             {
                 $torrentSensitiveCurrent =
                 [
@@ -675,7 +675,7 @@ class TorrentController extends AbstractController
 
         // Init edition history
         $editions = [];
-        foreach ($torrentService->findTorrentSensitive($torrent->getId()) as $torrentSensitiveEdition)
+        foreach ($torrentService->findTorrentSensitiveByTorrentId($torrent->getId()) as $torrentSensitiveEdition)
         {
             $editions[] =
             [
@@ -1087,5 +1087,27 @@ class TorrentController extends AbstractController
         return $this->redirect(
             $file->getMagnetLink()
         );
+    }
+
+    // Tools
+    #[Route(
+        '/crontab/scrape',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function scrape(
+        Request $request,
+        TranslatorInterface $translator,
+        TorrentService $torrentService,
+    ): Response
+    {
+        $torrentService->scrapeTorrentQueue(
+            explode('|', $this->getParameter('app.trackers'))
+        );
+
+        // Render response
+        return new Response(); // @TODO
     }
 }

@@ -47,7 +47,8 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/intl-extra": "^3.7",
         "twig/string-extra": "^3.7",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "yggverse/scrapeer": "^0.5.4"
     },
     "config": {
         "allow-plugins": {

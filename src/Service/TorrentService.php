@@ -36,6 +36,80 @@ class TorrentService
     }
 
     // Tools
+    public function scrapeTorrentQueue(
+        array $trackers = []
+    ): void
+    {
+        // Init Scraper
+        $scraper = new \Yggverse\Scrapeer\Scraper();
+
+        if ($torrent = $this->getTorrentScrapeQueue())
+        {
+            // Get file
+            if (!$file = $this->readTorrentFileByTorrentId($torrent->getId()))
+            {
+                // @TODO
+                throw new \Exception(
+                    $translator->trans('File not found')
+                );
+            }
+
+            // Get info hashes
+            $hashes = [];
+
+            if ($hash = $file->getInfoHashV1(false))
+            {
+                $hashes[] = $hash;
+            }
+
+            if ($hash = $file->getInfoHashV2(false))
+            {
+                $hashes[] = $hash;
+            }
+
+            // Get scrape
+            if ($hashes && $trackers)
+            {
+                // Update scrape info
+                if ($results = $scraper->scrape($hashes, $trackers, null, 1))
+                {
+                    foreach ($results as $result)
+                    {
+                        if (isset($result['seeders']))
+                        {
+                            $torrent->setSeeders(
+                                (int) $result['seeders']
+                            );
+                        }
+
+                        if (isset($result['completed']))
+                        {
+                            $torrent->setPeers(
+                                (int) $result['completed']
+                            );
+                        }
+
+                        if (isset($result['leechers']))
+                        {
+                            $torrent->setLeechers(
+                                (int) $result['leechers']
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Update time scraped
+            $torrent->setScraped(
+                time()
+            );
+
+            // Save results to DB
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
     public function readTorrentFileByFilepath(
         string $filepath
     ): ?\Rhilip\Bencode\TorrentFile
@@ -186,6 +260,13 @@ class TorrentService
         $this->entityManagerInterface->flush();
 
         return $torrent;
+    }
+
+    public function getTorrentScrapeQueue(): ?Torrent
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Torrent::class)
+                    ->getTorrentScrapeQueue();
     }
 
     // Torrent locale
