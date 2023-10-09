@@ -134,6 +134,14 @@ class UserController extends AbstractController
                 );
             }
 
+            // Update theme
+            if (in_array($request->get('theme'), explode('|', $this->getParameter('app.themes'))))
+            {
+                $user->setTheme(
+                    $request->get('theme')
+                );
+            }
+
             // Save changes to DB
             $userService->save($user);
 
@@ -158,13 +166,15 @@ class UserController extends AbstractController
                     'status'    => $user->isStatus(),
                     'locale'    => $user->getLocale(),
                     'locales'   => $user->getLocales(),
+                    'theme'     => $user->getTheme(),
                     'added'     => $user->getAdded(),
                     'identicon' => $userService->identicon(
                         $user->getAddress(),
                         48
                     ),
                 ],
-                'locales' => explode('|', $this->getParameter('app.locales'))
+                'locales' => explode('|', $this->getParameter('app.locales')),
+                'themes'  => explode('|', $this->getParameter('app.themes'))
             ]
         );
     }

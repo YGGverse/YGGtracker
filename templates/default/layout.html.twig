@@ -4,8 +4,8 @@
         <meta charset="UTF-8" />
         <title>{% block title %}{{ name }}{% endblock %}</title>
         {% block stylesheets %}
-            <link href="{{ asset('asset/default/css/framework.css') }}?{{ version }}" rel="stylesheet" />
-            <link href="{{ asset('asset/default/css/common.css') }}?{{ version }}" rel="stylesheet" />
+            <link href="{{ asset('asset/' ~ theme ~ '/css/framework.css') }}?{{ version }}" rel="stylesheet" />
+            <link href="{{ asset('asset/' ~ theme ~ '/css/common.css') }}?{{ version }}" rel="stylesheet" />
         {% endblock %}
     </head>
     <body>

@@ -47,6 +47,9 @@ class UserService
         $user->setLocales(
             explode('|', $this->parameterBagInterface->get('app.locales'))
         );
+        $user->setTheme(
+            $this->parameterBagInterface->get('app.theme')
+        );
 
         $this->save($user);
 

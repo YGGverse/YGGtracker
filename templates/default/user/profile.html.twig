@@ -101,6 +101,24 @@
                             {% endfor %}
                         </td>
                     </tr>
+                    <tr>
+                        <td class="padding-t-16-px">{{ 'Theme'|trans }}</td>
+                        <td class="padding-t-16-px">
+                            <select name="theme">
+                                {% for theme in themes %}
+                                    {% if theme == user.theme %}
+                                        <option value="{{ theme }}" selected="selected">
+                                            {{ theme }}
+                                        </option>
+                                    {% else %}
+                                        <option value="{{ theme }}">
+                                            {{ theme }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="text-right">

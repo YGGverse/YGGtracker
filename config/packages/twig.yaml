@@ -3,6 +3,7 @@ twig:
     globals:
         version: '%app.version%'
         name: '%app.name%'
+        theme: '%app.theme%'
 
 when@test:
     twig:
