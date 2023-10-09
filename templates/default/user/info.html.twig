@@ -80,9 +80,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>{{ 'Content filter'|trans }}</td>
-                    <td>
+                    <td class="width-20">{{ 'Content'|trans }}</td>
+                    <td class="width-80">
                         {% for i, locale in user.locales %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
+                        {#
+                        {% for locale in user.locales %}
+                            <div class="padding-y-4-px">
+                                {{ locale|locale_name(locale)|u.title }}
+                            </div>
+                        {% endfor %}
+                        #}
                     </td>
                 </tr>
                 <tr>
@@ -90,7 +97,7 @@
                     <td>{{ user.theme }}</td>
                 </tr>
                 <tr>
-                    <td>{{ 'Sensitive filter'|trans }}</td>
+                    <td>{{ 'Sensitive'|trans }}</td>
                     <td>
                     {% if user.sensitive %}
                         {{ 'yes'|trans }}
