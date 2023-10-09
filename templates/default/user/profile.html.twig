@@ -4,7 +4,9 @@
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <form name="profile" action="{{ path('user_profile') }}" method="post">
             <div class="text-center">
-                <img class="border-radius-50 border-color-default border-width-2-px" src="{{ user.identicon }}" alt="{{ 'identicon'|trans }}" />
+                <a href="{{ path('user_info', { userId : user.id }) }}">
+                    <img class="border-radius-50 border-color-default border-width-2-px" src="{{ user.identicon }}" alt="{{ 'identicon'|trans }}" />
+                </a>
             </div>
             <h2>{{ 'Profile'|trans }}</h2>
             <table class="width-100">
