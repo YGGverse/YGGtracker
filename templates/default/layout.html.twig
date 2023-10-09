@@ -18,7 +18,11 @@
                         </a>
                         {% block header_search %}
                             {{ render(controller(
-                                'App\\Controller\\SearchController::module'
+                                'App\\Controller\\SearchController::module',
+                                {
+                                    query : app.request.get('query'),
+                                    type  : app.request.get('type')
+                                }
                             )) }}
                         {% endblock %}
                     </div>
@@ -33,7 +37,7 @@
                             {% block main_profile %}
                                 {{ render(controller(
                                     'App\\Controller\\UserController::module',
-                                    {route : app.request.get('_route')}
+                                    { route : app.request.get('_route') }
                                 )) }}
                             {% endblock %}
                             {% block main_content %}{% endblock %}
