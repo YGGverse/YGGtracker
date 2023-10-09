@@ -51,13 +51,41 @@ class TorrentController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Get contributors
+        $contributors = [];
+
+        $contributors[$torrent->getUserId()] = $userService->identicon(
+            $userService->get(
+                $torrent->getUserId()
+            )->getAddress()
+        );
+
+        if ($torrentLocales = $torrentService->findLastTorrentLocalesByTorrentId($torrent->getId()))
+        {
+            $contributors[$torrentLocales->getUserId()] = $userService->identicon(
+                $userService->get(
+                    $torrentLocales->getUserId()
+                )->getAddress()
+            );
+        }
+
+        if ($torrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentId($torrent->getId()))
+        {
+            $contributors[$torrentSensitive->getUserId()] = $userService->identicon(
+                $userService->get(
+                    $torrentSensitive->getUserId()
+                )->getAddress()
+            );
+        }
+
         // Render template
         return $this->render('default/torrent/info.html.twig', [
             'torrent' =>
             [
                 'id'        => $torrent->getId(),
                 'added'     => $torrent->getAdded(),
-                'user'     =>
+                /*
+                'user'      =>
                 [
                     'id' => $torrent->getUserId(),
                     'identicon' => $userService->identicon(
@@ -66,6 +94,7 @@ class TorrentController extends AbstractController
                         )->getAddress()
                     ),
                 ],
+                */
                 'scrape'    =>
                 [
                     'seeders'   => (int) $torrent->getSeeders(),
@@ -107,7 +136,8 @@ class TorrentController extends AbstractController
                         $torrent->getId()
                     )
                 ],
-                'pages'     => []
+                'pages'        => [],
+                'contributors' => $contributors
             ],
             'file' =>
             [
