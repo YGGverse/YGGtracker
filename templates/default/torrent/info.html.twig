@@ -183,7 +183,7 @@
                         </td>
                         <td>
                             {% for id, identicon in torrent.contributors %}
-                                <a href="{{ path('user_info', { id : id }) }}">
+                                <a href="{{ path('user_info', { userId : id }) }}">
                                     <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ identicon }}" alt="{{'identicon'|trans }}" />
                                 </a>
                             {% endfor %}

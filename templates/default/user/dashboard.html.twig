@@ -5,7 +5,7 @@
         <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night">
             <div class="row">
                 <div class="column width-80">
-                    <a href="{{ path('user_info', {'id': activity.user.id}) }}">
+                    <a href="{{ path('user_info', { userId : activity.user.id }) }}">
                         <img class="vertical-align-middle border-radius-50 border-color-default border-width-2-px margin-r-8-px"
                             src="{{ activity.user.identicon }}"
                             alt="{{ 'identicon'|trans }}" />

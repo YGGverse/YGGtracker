@@ -38,7 +38,7 @@
                 </a>
             {% endif %}
             {{ 'by'|trans }}
-            <a href="{{ path('user_info', { id : edition.user.id }) }}">
+            <a href="{{ path('user_info', { userId : edition.user.id }) }}">
                 <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ edition.user.identicon }}" alt="{{'identicon'|trans }}" />
             </a>
             <div class="float-right">
