@@ -280,6 +280,27 @@ class TorrentService
                     ->getTorrentScrapeQueue();
     }
 
+    public function setTorrentsApprovedByUserId(
+        int $userId,
+        bool $value
+    ): void
+    {
+        foreach ($this->entityManagerInterface
+                      ->getRepository(Torrent::class)
+                      ->findBy(
+                        [
+                            'userId' => $userId
+                        ]) as $torrent)
+        {
+            $torrent->setApproved(
+                $value
+            );
+
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
     // Torrent locale
     public function getTorrentLocales(int $id): ?TorrentLocales
     {
@@ -352,6 +373,27 @@ class TorrentService
         return $torrentLocales;
     }
 
+    public function setTorrentLocalesApprovedByUserId(
+        int $userId,
+        bool $value
+    ): void
+    {
+        foreach ($this->entityManagerInterface
+                      ->getRepository(TorrentLocales::class)
+                      ->findBy(
+                        [
+                            'userId' => $userId
+                        ]) as $torrentLocales)
+        {
+            $torrentLocales->setApproved(
+                $value
+            );
+
+            $this->entityManagerInterface->persist($torrentLocales);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
     // Torrent sensitive
     public function getTorrentSensitive(int $id): ?TorrentSensitive
     {
@@ -422,6 +464,27 @@ class TorrentService
         $this->entityManagerInterface->flush();
 
         return $torrentSensitive;
+    }
+
+    public function setTorrentSensitivesApprovedByUserId(
+        int $userId,
+        bool $value
+    ): void
+    {
+        foreach ($this->entityManagerInterface
+                      ->getRepository(TorrentSensitive::class)
+                      ->findBy(
+                        [
+                            'userId' => $userId
+                        ]) as $torrentSensitive)
+        {
+            $torrentSensitive->setApproved(
+                $value
+            );
+
+            $this->entityManagerInterface->persist($torrentSensitive);
+            $this->entityManagerInterface->flush();
+        }
     }
 
     // Torrent star

@@ -162,4 +162,49 @@ class UserService
             $this->entityManagerInterface->flush();
         }
     }
+
+    public function toggleUserModerator(
+        int $userId
+    ): void
+    {
+        if ($user = $this->getUser($userId))
+        {
+            $user->setModerator(
+                !$user->isModerator()
+            );
+
+            $this->entityManagerInterface->persist($user);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
+    public function toggleUserStatus(
+        int $userId
+    ): void
+    {
+        if ($user = $this->getUser($userId))
+        {
+            $user->setStatus(
+                !$user->isStatus()
+            );
+
+            $this->entityManagerInterface->persist($user);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
+    public function toggleUserApproved(
+        int $userId
+    ): void
+    {
+        if ($user = $this->getUser($userId))
+        {
+            $user->setApproved(
+                !$user->isApproved()
+            );
+
+            $this->entityManagerInterface->persist($user);
+            $this->entityManagerInterface->flush();
+        }
+    }
 }

@@ -140,6 +140,10 @@ a.label-green:hover {
   top: 2px;
 }
 
+.line-height-20-px {
+  line-height: 20px;
+}
+
 .line-height-26-px {
   line-height: 26px;
 }

@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\ActivityService;
 use App\Service\UserService;
+use App\Service\PageService;
+use App\Service\TorrentService;
 
 class UserController extends AbstractController
 {
@@ -295,6 +297,183 @@ class UserController extends AbstractController
             $user->getId(),
             $userTarget->getId(),
             time()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'user_info',
+            [
+                '_locale' => $request->get('_locale'),
+                'userId'  => $userTarget->getId()
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/user/{userId}/moderator/toggle',
+        name: 'user_moderator_toggle',
+        requirements:
+        [
+            'userId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function toggleModerator(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init target user
+        if (!$userTarget = $userService->getUser($request->get('userId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update
+        $userService->toggleUserModerator(
+            $userTarget->getId()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'user_info',
+            [
+                '_locale' => $request->get('_locale'),
+                'userId'  => $userTarget->getId()
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/user/{userId}/status/toggle',
+        name: 'user_status_toggle',
+        requirements:
+        [
+            'userId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function toggleStatus(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init target user
+        if (!$userTarget = $userService->getUser($request->get('userId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update
+        $userService->toggleUserStatus(
+            $userTarget->getId()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'user_info',
+            [
+                '_locale' => $request->get('_locale'),
+                'userId'  => $userTarget->getId()
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/user/{userId}/approved/toggle',
+        name: 'user_approved_toggle',
+        requirements:
+        [
+            'userId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function toggleApproved(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        PageService $pageService,
+        TorrentService $torrentService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init target user
+        if (!$userTarget = $userService->getUser($request->get('userId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Auto-approve all related content on user approve
+        if (!$userTarget->isApproved())
+        {
+            $torrentService->setTorrentsApprovedByUserId(
+                $userTarget->getId(),
+                true
+            );
+
+            $torrentService->setTorrentLocalesApprovedByUserId(
+                $userTarget->getId(),
+                true
+            );
+
+            $torrentService->setTorrentSensitivesApprovedByUserId(
+                $userTarget->getId(),
+                true
+            );
+        }
+
+        // Update user approved
+        $userService->toggleUserApproved(
+            $userTarget->getId()
         );
 
         // Redirect to info page created
