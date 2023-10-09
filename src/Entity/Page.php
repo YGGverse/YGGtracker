@@ -13,6 +13,15 @@ class Page
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column]
+    private ?int $userId = null;
+
+    #[ORM\Column]
+    private ?int $added = null;
+
+    #[ORM\Column]
+    private ?bool $approved = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -24,15 +33,6 @@ class Page
 
         return $this;
     }
-
-    #[ORM\Column]
-    private ?int $userId = null;
-
-    #[ORM\Column]
-    private ?int $added = null;
-
-    #[ORM\Column]
-    private ?bool $approved = null;
 
     public function getUserId(): ?int
     {
