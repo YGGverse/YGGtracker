@@ -120,11 +120,7 @@ class PageController extends AbstractController
                 'error'     => [],
                 'attribute' =>
                 [
-                    'placeholder' => sprintf(
-                        $translator->trans('Append %s-%s torrent files'),
-                        $this->getParameter('app.page.torrent.file.quantity.min'),
-                        $this->getParameter('app.page.torrent.file.quantity.max')
-                    )
+                    'placeholder' => $translator->trans('Select torrent file')
                 ]
             ],
             'sensitive' =>
@@ -170,35 +166,30 @@ class PageController extends AbstractController
             }
 
             /// Torrents
-            $total = 0;
             $torrents = [];
 
             if ($files = $request->files->get('torrents'))
             {
                 foreach ($files as $file)
                 {
-                    //// Quantity
-                    $total++;
-
-                    //// File size
-                    if (filesize($file->getPathName()) > $this->getParameter('app.torrent.size.max'))
+                    /// Torrent
+                    if ($file = $request->files->get('torrent'))
                     {
-                        $form['torrents']['error'][] = $translator->trans('Torrent file out of size limit');
+                        //// Validate torrent file
+                        if (filesize($file->getPathName()) > $this->getParameter('app.torrent.size.max'))
+                        {
+                            $form['torrents']['error'][] = $translator->trans('Torrent file out of size limit');
 
-                        continue;
-                    }
+                            continue;
+                        }
 
-                    //// Validate torrent format
-                    try
-                    {
-                        \Rhilip\Bencode\TorrentFile::load(
-                            $file->getPathName()
-                        );
-                    }
+                        //// Validate torrent format
+                        if (!$torrentService->readTorrentFileByFilepath($file->getPathName()))
+                        {
+                            $form['torrents']['error'][] = $translator->trans('Could not parse torrent file');
 
-                    catch (ParseException $e)
-                    {
-                        $form['torrents']['error'][] = $translator->trans('Could not parse torrent file');
+                            continue;
+                        }
                     }
 
                     //// Content
@@ -206,7 +197,7 @@ class PageController extends AbstractController
                         $file->getPathName(),
                         $user->getId(),
                         time(),
-                        (array) $locales,
+                        [$request->get('locale')],
                         (bool) $request->get('sensitive'),
                         $user->isApproved()
                     );
@@ -214,17 +205,6 @@ class PageController extends AbstractController
                     $torrents[] = $torrent->getId();
                 }
             }
-
-            if ($total < $this->getParameter('app.page.torrent.file.quantity.min') ||
-                $total > $this->getParameter('app.page.torrent.file.quantity.max'))
-            {
-                $form['torrents']['error'][] = sprintf(
-                    $translator->trans('Torrents quantity out of %s-%s range'),
-                    number_format($this->getParameter('app.page.torrent.file.quantity.min')),
-                    number_format($this->getParameter('app.page.torrent.file.quantity.max'))
-                );
-            }
-
 
             if (empty($form['locale']['error']) &&
                 empty($form['title']['error']) &&

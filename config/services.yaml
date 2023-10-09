@@ -16,8 +16,6 @@ parameters:
     app.page.title.length.max: '%env(APP_PAGE_TITLE_LENGTH_MAX)%'
     app.page.description.length.min: '%env(APP_PAGE_DESCRIPTION_LENGTH_MIN)%'
     app.page.description.length.max: '%env(APP_PAGE_DESCRIPTION_LENGTH_MAX)%'
-    app.page.torrent.file.quantity.min: '%env(APP_PAGE_TORRENT_FILE_QUANTITY_MIN)%'
-    app.page.torrent.file.quantity.max: '%env(APP_PAGE_TORRENT_FILE_QUANTITY_MAX)%'
     app.torrent.size.max: '%env(APP_TORRENT_FILE_SIZE_MAX)%'
 
 services:
