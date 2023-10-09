@@ -20,24 +20,4 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
-
-    public function getUser(int $id): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->where('u.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
-    public function findOneByAddressField(string $address): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->where('u.address = :address')
-            ->setParameter('address', $address)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
 }

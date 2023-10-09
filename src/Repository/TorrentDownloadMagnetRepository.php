@@ -21,23 +21,6 @@ class TorrentDownloadMagnetRepository extends ServiceEntityRepository
         parent::__construct($registry, TorrentDownloadMagnet::class);
     }
 
-    public function findTorrentDownloadMagnet(
-        int $torrentId,
-        int $userId
-    ): ?TorrentDownloadMagnet
-    {
-        return $this->createQueryBuilder('tdm')
-            ->where('tdm.torrentId = :torrentId')
-            ->andWhere('tdm.userId = :userId')
-            ->setParameter('torrentId', $torrentId)
-            ->setParameter('userId', $userId)
-            ->orderBy('tdm.id', 'DESC') // same to ts.added
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
     public function findTorrentDownloadMagnetsTotalByTorrentId(
         int $torrentId
     ): int

@@ -21,30 +21,13 @@ class TorrentStarRepository extends ServiceEntityRepository
         parent::__construct($registry, TorrentStar::class);
     }
 
-    public function findTorrentStar(
-        int $torrentId,
-        int $userId
-    ): ?TorrentStar
-    {
-        return $this->createQueryBuilder('tb')
-            ->where('tb.torrentId = :torrentId')
-            ->andWhere('tb.userId = :userId')
-            ->setParameter('torrentId', $torrentId)
-            ->setParameter('userId', $userId)
-            ->orderBy('tb.id', 'DESC') // same to ts.added
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
     public function findTorrentStarsTotalByTorrentId(
         int $torrentId
     ): int
     {
-        return $this->createQueryBuilder('tb')
-            ->select('count(tb.id)')
-            ->where('tb.torrentId = :torrentId')
+        return $this->createQueryBuilder('ts')
+            ->select('count(ts.id)')
+            ->where('ts.torrentId = :torrentId')
             ->setParameter('torrentId', $torrentId)
             ->getQuery()
             ->getSingleScalarResult()

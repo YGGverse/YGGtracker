@@ -250,7 +250,7 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
-                    ->getTorrent($id);
+                    ->find($id);
     }
 
     public function addTorrent(
@@ -277,7 +277,12 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
-                    ->getTorrentScrapeQueue();
+                    ->findOneBy(
+                        [],
+                        [
+                            'scraped' => 'ASC'
+                        ]
+                    );
     }
 
     public function setTorrentsApprovedByUserId(
@@ -302,32 +307,44 @@ class TorrentService
     }
 
     // Torrent locale
-    public function getTorrentLocales(int $id): ?TorrentLocales
+    public function getTorrentLocales(
+        int $torrentLocaleId
+    ): ?TorrentLocales
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentLocales::class)
-                    ->getTorrentLocales($id);
+                    ->find($torrentLocaleId);
     }
 
-    public function findLastTorrentLocalesByTorrentId(int $torrentId): ?TorrentLocales
+    public function findLastTorrentLocalesByTorrentId(
+        int $torrentId
+    ): ?TorrentLocales
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentLocales::class)
-                    ->findLastTorrentLocalesByTorrentId($torrentId);
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId
+                        ]
+                    );
     }
 
     public function findTorrentLocalesByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentLocales::class)
-                    ->findTorrentLocalesByTorrentId($torrentId);
+                    ->findBy(
+                        [
+                            'torrentId' => $torrentId
+                        ]
+                    );
     }
 
     public function toggleTorrentLocalesApproved(
-        int $id
+        int $torrentLocalesId
     ): ?TorrentLocales
     {
-        $torrentLocales = $this->getTorrentLocales($id);
+        $torrentLocales = $this->getTorrentLocales($torrentLocalesId);
 
         $torrentLocales->setApproved(
             !$torrentLocales->isApproved() // toggle current value
@@ -340,10 +357,10 @@ class TorrentService
     }
 
     public function deleteTorrentLocales(
-        int $id
+        int $torrentLocalesId
     ): ?TorrentLocales
     {
-        $torrentLocales = $this->getTorrentLocales($id);
+        $torrentLocales = $this->getTorrentLocales($torrentLocalesId);
 
         $this->entityManagerInterface->remove($torrentLocales);
         $this->entityManagerInterface->flush();
@@ -395,32 +412,52 @@ class TorrentService
     }
 
     // Torrent sensitive
-    public function getTorrentSensitive(int $id): ?TorrentSensitive
+    public function getTorrentSensitive(
+        int $torrentSensitiveId
+    ): ?TorrentSensitive
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentSensitive::class)
-                    ->getTorrentSensitive($id);
+                    ->find(
+                        $torrentSensitiveId
+                    );
     }
 
     public function findLastTorrentSensitiveByTorrentId(int $torrentId): ?TorrentSensitive
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentSensitive::class)
-                    ->findLastTorrentSensitiveByTorrentId($torrentId);
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
     }
 
     public function findTorrentSensitiveByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentSensitive::class)
-                    ->findTorrentSensitiveByTorrentId($torrentId);
+                    ->findBy(
+                        [
+                            'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
     }
 
     public function toggleTorrentSensitiveApproved(
-        int $id
+        int $torrentSensitiveId
     ): ?TorrentSensitive
     {
-        $torrentSensitive = $this->getTorrentSensitive($id);
+        $torrentSensitive = $this->find(
+            $torrentSensitiveId
+        );
 
         $torrentSensitive->setApproved(
             !$torrentSensitive->isApproved() // toggle current value
@@ -433,10 +470,12 @@ class TorrentService
     }
 
     public function deleteTorrentSensitive(
-        int $id
+        int $torrentSensitiveId
     ): ?TorrentSensitive
     {
-        $torrentSensitive = $this->getTorrentSensitive($id);
+        $torrentSensitive = $this->getTorrentSensitive(
+            $torrentSensitiveId
+        );
 
         $this->entityManagerInterface->remove($torrentSensitive);
         $this->entityManagerInterface->flush();
@@ -495,7 +534,12 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentStar::class)
-                    ->findTorrentStar($torrentId, $userId);
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId,
+                            'userId'    => $userId,
+                        ]
+                    );
     }
 
     public function findTorrentStarsTotalByTorrentId(int $torrentId): int
@@ -538,7 +582,12 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentDownloadFile::class)
-                    ->findTorrentDownloadFile($torrentId, $userId);
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId,
+                            'userId'    => $userId
+                        ]
+                    );
     }
 
     public function findTorrentDownloadFilesTotalByTorrentId(int $torrentId): int
@@ -575,7 +624,12 @@ class TorrentService
     {
         return $this->entityManagerInterface
                     ->getRepository(TorrentDownloadMagnet::class)
-                    ->findTorrentDownloadMagnet($torrentId, $userId);
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId,
+                            'userId'    => $userId
+                        ]
+                    );
     }
 
     public function findTorrentDownloadMagnetsTotalByTorrentId(int $torrentId): int

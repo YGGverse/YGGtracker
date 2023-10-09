@@ -21,23 +21,6 @@ class TorrentDownloadFileRepository extends ServiceEntityRepository
         parent::__construct($registry, TorrentDownloadFile::class);
     }
 
-    public function findTorrentDownloadFile(
-        int $torrentId,
-        int $userId
-    ): ?TorrentDownloadFile
-    {
-        return $this->createQueryBuilder('tdf')
-            ->where('tdf.torrentId = :torrentId')
-            ->andWhere('tdf.userId = :userId')
-            ->setParameter('torrentId', $torrentId)
-            ->setParameter('userId', $userId)
-            ->orderBy('tdf.id', 'DESC') // same to ts.added
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
     public function findTorrentDownloadFilesTotalByTorrentId(
         int $torrentId
     ): int

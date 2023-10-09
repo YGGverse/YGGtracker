@@ -28,7 +28,11 @@ class UserService
         // Return existing user
         if ($result = $this->entityManagerInterface
                            ->getRepository(User::class)
-                           ->findOneByAddressField($address))
+                           ->findOneBy(
+                                [
+                                    'address' => $address
+                                ]
+                           ))
         {
             return $result;
         }
@@ -91,7 +95,7 @@ class UserService
     {
         return $this->entityManagerInterface
                     ->getRepository(User::class)
-                    ->getUser($userId);
+                    ->find($userId);
     }
 
     public function identicon(
@@ -128,7 +132,12 @@ class UserService
     {
         return $this->entityManagerInterface
                     ->getRepository(UserStar::class)
-                    ->findUserStar($userId, $userIdTarget);
+                    ->findOneBy(
+                        [
+                            'userId'       => $userId,
+                            'userIdTarget' => $userIdTarget
+                        ]
+                    );
     }
 
     public function findUserStarsTotalByUserIdTarget(int $torrentId): int

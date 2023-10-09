@@ -21,22 +21,6 @@ class UserStarRepository extends ServiceEntityRepository
         parent::__construct($registry, UserStar::class);
     }
 
-    public function findUserStar(
-        int $userId,
-        int $userIdTarget
-    ): ?UserStar
-    {
-        return $this->createQueryBuilder('us')
-            ->where('us.userId = :userId')
-            ->andWhere('us.userIdTarget = :userIdTarget')
-            ->setParameter('userId', $userId)
-            ->setParameter('userIdTarget', $userIdTarget)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
     public function findUserStarsTotalByUserIdTarget(
         int $userIdTarget
     ): int

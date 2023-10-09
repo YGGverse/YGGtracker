@@ -20,24 +20,4 @@ class TorrentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Torrent::class);
     }
-
-    public function getTorrent(int $id): ?Torrent
-    {
-        return $this->createQueryBuilder('t')
-            ->where('t.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-
-    public function getTorrentScrapeQueue(): ?Torrent
-    {
-        return $this->createQueryBuilder('t')
-            ->orderBy('t.scraped', 'ASC') // same to ts.added
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
 }
