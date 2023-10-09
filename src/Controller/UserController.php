@@ -240,7 +240,8 @@ class UserController extends AbstractController
                         $userTarget->getAddress(),
                         48
                     ),
-                    'star'  =>
+                    'owner'     => $user->getId() === $userTarget->getId(),
+                    'star'      =>
                     [
                         'exist' => (bool) $userService->findUserStar(
                             $user->getId(),
