@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +58,7 @@ class UserController extends AbstractController
                 continue;
             }
 
-            $activityUser = $userService->get(
+            $activityUser = $userService->getUser(
                 $activity->getUserId()
             );
 
@@ -168,7 +170,7 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}/user/{id}',
+        '/{_locale}/user/{userId}',
         name: 'user_info',
         defaults: [
             '_locale' => '%app.locale%'
@@ -178,12 +180,25 @@ class UserController extends AbstractController
         ],
     )]
     public function info(
-        int $id,
         Request $request,
+        TranslatorInterface $translator,
         UserService $userService): Response
     {
         // Init user
-        if (!$user = $userService->get($id))
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init target user
+        if (!$userTarget = $userService->getUser($request->get('userId')))
         {
             throw $this->createNotFoundException();
         }
@@ -193,19 +208,83 @@ class UserController extends AbstractController
             'default/user/info.html.twig',
             [
                 'user' => [
-                    'id'        => $user->getId(),
-                    'address'   => $request->getClientIp() == $user->getAddress() ? $user->getAddress() : false,
-                    'moderator' => $user->isModerator(),
-                    'approved'  => $user->isApproved(),
-                    'status'    => $user->isStatus(),
-                    'locale'    => $user->getLocale(),
-                    'locales'   => $user->getLocales(),
-                    'added'     => $user->getAdded(),
+                    'id'        => $userTarget->getId(),
+                    'address'   => $request->getClientIp() == $userTarget->getAddress() ? $userTarget->getAddress() : false,
+                    'moderator' => $userTarget->isModerator(),
+                    'approved'  => $userTarget->isApproved(),
+                    'status'    => $userTarget->isStatus(),
+                    'locale'    => $userTarget->getLocale(),
+                    'locales'   => $userTarget->getLocales(),
+                    'added'     => $userTarget->getAdded(),
                     'identicon' => $userService->identicon(
-                        $user->getAddress(),
+                        $userTarget->getAddress(),
                         48
                     ),
+                    'star'  =>
+                    [
+                        'exist' => (bool) $userService->findUserStar(
+                            $user->getId(),
+                            $userTarget->getId()
+                        ),
+                        'total' => $userService->findUserStarsTotalByUserIdTarget(
+                            $userTarget->getId()
+                        )
+                    ],
                 ]
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/user/star/toggle/{userId}',
+        name: 'user_star_toggle',
+        requirements:
+        [
+            'userId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function toggleStar(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService
+    ): Response
+    {
+        // Init user
+        $user = $userService->init(
+            $request->getClientIp()
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init target user
+        if (!$userTarget = $userService->getUser($request->get('userId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Update
+        $userService->toggleUserStar(
+            $user->getId(),
+            $userTarget->getId(),
+            time()
+        );
+
+        // Redirect to info page created
+        return $this->redirectToRoute(
+            'user_info',
+            [
+                '_locale' => $request->get('_locale'),
+                'userId'  => $userTarget->getId()
             ]
         );
     }

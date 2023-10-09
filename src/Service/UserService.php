@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Entity\UserStar;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -10,24 +11,24 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class UserService
 {
-    private EntityManagerInterface $entityManager;
-    private UserRepository $userRepository;
+    private EntityManagerInterface $entityManagerInterface;
     private ParameterBagInterface $parameterBagInterface;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        EntityManagerInterface $entityManagerInterface,
         ParameterBagInterface $parameterBagInterface
     )
     {
-        $this->entityManager = $entityManager;
-        $this->userRepository = $entityManager->getRepository(User::class);
+        $this->entityManagerInterface = $entityManagerInterface;
         $this->parameterBagInterface = $parameterBagInterface;
     }
 
     public function init(string $address): User
     {
         // Return existing user
-        if ($result = $this->userRepository->findOneByAddressField($address))
+        if ($result = $this->entityManagerInterface
+                           ->getRepository(User::class)
+                           ->findOneByAddressField($address))
         {
             return $result;
         }
@@ -61,9 +62,11 @@ class UserService
         return $user;
     }
 
-    public function get(int $id): ?User
+    public function getUser(int $userId): ?User
     {
-        return $this->userRepository->getUser($id);
+        return $this->entityManagerInterface
+                    ->getRepository(User::class)
+                    ->getUser($userId);
     }
 
     public function identicon(
@@ -86,9 +89,52 @@ class UserService
         return $identicon->getImageDataUri($format);
     }
 
-    public function save(User $user) : void
+    public function save(User $user) : void // @TODO delete
     {
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->entityManagerInterface->persist($user);
+        $this->entityManagerInterface->flush();
+    }
+
+    // User star
+    public function findUserStar(
+        int $userId,
+        int $userIdTarget
+    ): ?UserStar
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(UserStar::class)
+                    ->findUserStar($userId, $userIdTarget);
+    }
+
+    public function findUserStarsTotalByUserIdTarget(int $torrentId): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(UserStar::class)
+                    ->findUserStarsTotalByUserIdTarget($torrentId);
+    }
+
+    public function toggleUserStar(
+        int $userId,
+        int $userIdTarget,
+        int $added
+    ): void
+    {
+        if ($userStar = $this->findUserStar($userId, $userIdTarget))
+        {
+            $this->entityManagerInterface->remove($userStar);
+            $this->entityManagerInterface->flush();
+        }
+
+        else
+        {
+            $userStar = new UserStar();
+
+            $userStar->setUserId($userId);
+            $userStar->setUserIdTarget($userIdTarget);
+            $userStar->setAdded($added);
+
+            $this->entityManagerInterface->persist($userStar);
+            $this->entityManagerInterface->flush();
+        }
     }
 }
