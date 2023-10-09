@@ -36,19 +36,40 @@ class UserService
         // Create new user
         $user = new User();
 
-        $user->setAddress($address);
-        $user->setAdded(time());
-        $user->setApproved(false);
-        $user->setModerator(false);
-        $user->setStatus(true);
+        $user->setAddress(
+            $address
+        );
+
+        $user->setAdded(
+            time()
+        );
+
+        $user->setApproved(
+            false
+        );
+
+        $user->setModerator(
+            false
+        );
+
+        $user->setStatus(
+            true
+        );
+
         $user->setLocale(
             $this->parameterBagInterface->get('app.locale')
         );
+
         $user->setLocales(
             explode('|', $this->parameterBagInterface->get('app.locales'))
         );
+
         $user->setTheme(
             $this->parameterBagInterface->get('app.theme')
+        );
+
+        $user->setSensitive(
+            $this->parameterBagInterface->get('app.sensitive')
         );
 
         $this->save($user);
@@ -58,6 +79,7 @@ class UserService
         {
             $user->setApproved(true);
             $user->setModerator(true);
+            $user->setSensitive(false);
             $this->save($user);
         }
 

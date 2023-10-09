@@ -85,6 +85,20 @@
                         {% for i, locale in user.locales %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
                     </td>
                 </tr>
+                <tr>
+                    <td>{{ 'Theme'|trans }}</td>
+                    <td>{{ user.theme }}</td>
+                </tr>
+                <tr>
+                    <td>{{ 'Sensitive filter'|trans }}</td>
+                    <td>
+                    {% if user.sensitive %}
+                        {{ 'yes'|trans }}
+                    {% else %}
+                        {{ 'no'|trans }}
+                    {% endif %}
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

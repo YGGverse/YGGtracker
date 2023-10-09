@@ -142,6 +142,11 @@ class UserController extends AbstractController
                 );
             }
 
+            // Update sensitive
+            $user->setSensitive(
+                $request->get('sensitive') === 'true'
+            );
+
             // Save changes to DB
             $userService->save($user);
 
@@ -164,6 +169,7 @@ class UserController extends AbstractController
                     'moderator' => $user->isModerator(),
                     'approved'  => $user->isApproved(),
                     'status'    => $user->isStatus(),
+                    'sensitive' => $user->isSensitive(),
                     'locale'    => $user->getLocale(),
                     'locales'   => $user->getLocales(),
                     'theme'     => $user->getTheme(),
@@ -223,8 +229,10 @@ class UserController extends AbstractController
                     'moderator' => $userTarget->isModerator(),
                     'approved'  => $userTarget->isApproved(),
                     'status'    => $userTarget->isStatus(),
+                    'sensitive' => $userTarget->isSensitive(),
                     'locale'    => $userTarget->getLocale(),
                     'locales'   => $userTarget->getLocales(),
+                    'theme'     => $userTarget->getTheme(),
                     'added'     => $userTarget->getAdded(),
                     'identicon' => $userService->identicon(
                         $userTarget->getAddress(),

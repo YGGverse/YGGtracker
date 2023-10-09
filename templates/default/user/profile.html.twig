@@ -85,7 +85,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>{{ 'Content filter'|trans }}</td>
+                        <td>
+                            {{ 'Content language' | trans }}
+                        </td>
                         <td>
                             {% for locale in locales %}
                                 <div class="padding-y-4-px">
@@ -102,7 +104,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="padding-t-16-px">{{ 'Theme'|trans }}</td>
+                        <td class="padding-t-16-px">
+                            {{ 'Theme' | trans }}
+                        </td>
                         <td class="padding-t-16-px">
                             <select name="theme">
                                 {% for theme in themes %}
@@ -119,10 +123,24 @@
                             </select>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="padding-y-8-px">
+                            {{ 'Sensitive filter'|trans }}
+                        </td>
+                        <td>
+                            <div class="padding-y-8-px">
+                                {% if user.sensitive %}
+                                    <input name="sensitive" type="checkbox" value="true" checked="checked" />
+                                {% else %}
+                                    <input name="sensitive" type="checkbox" value="true" />
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="text-right">
-                <input class="button-green" type="submit" value="{{'Save'|trans }}" />
+                <input class="button-green" type="submit" value="{{ 'Save' | trans }}" />
             </div>
         </form>
     </div>

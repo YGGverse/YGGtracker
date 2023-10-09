@@ -38,6 +38,9 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $theme = null;
 
+    #[ORM\Column]
+    private ?bool $sensitive = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -142,6 +145,18 @@ class User
     public function setTheme(string $theme): static
     {
         $this->theme = $theme;
+
+        return $this;
+    }
+
+    public function isSensitive(): ?bool
+    {
+        return $this->sensitive;
+    }
+
+    public function setSensitive(bool $sensitive): static
+    {
+        $this->sensitive = $sensitive;
 
         return $this;
     }

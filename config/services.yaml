@@ -10,6 +10,7 @@ parameters:
     app.locales: '%env(APP_LOCALES)%'
     app.theme: '%env(APP_THEME)%'
     app.themes: '%env(APP_THEMES)%'
+    app.sensitive: '%env(APP_SENSITIVE)%'
     app.trackers: '%env(APP_TRACKERS)%'
     app.page.title.length.min: '%env(APP_PAGE_TITLE_LENGTH_MIN)%'
     app.page.title.length.max: '%env(APP_PAGE_TITLE_LENGTH_MAX)%'
