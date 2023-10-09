@@ -1,9 +1,9 @@
 {% extends 'default/layout.html.twig' %}
-{% block title %}{{'Submit'|trans }} - {{ name }}{% endblock %}
+{% block title %}{{'Submit page'|trans }} - {{ name }}{% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <div class="margin-b-24-px padding-b-16-px border-bottom-default">
-            <h1>{{'Submit'|trans }}</h1>
+            <h1>{{'Submit page'|trans }}</h1>
         </div>
         <form name="submit" method="post" enctype="multipart/form-data" action="{{ path('page_submit') }}">
             <div class="margin-b-16-px">
@@ -78,7 +78,7 @@
             </div>
             <div class="margin-y-16-px">
                 <label for="torrents">
-                    {{'Torrent files'|trans }}
+                    {{ 'Torrent files' | trans }} ({{ 'optional' | trans }})
                 </label>
                 <sub class="opacity-0 parent-hover-opacity-09" title="{{ form.torrents.attribute.placeholder }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
