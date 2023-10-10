@@ -257,6 +257,12 @@ class TorrentController extends AbstractController
                     $form['torrent']['error'][] = $translator->trans('Torrent file out of size limit');
                 }
 
+                //// Check for duplicates
+                if ($torrentService->findTorrentByMd5File(md5_file($file->getPathName())))
+                {
+                    $form['torrent']['error'][] = $translator->trans('Torrent file already exists');
+                }
+
                 //// Validate torrent format
                 if (!$torrentService->readTorrentFileByFilepath($file->getPathName()))
                 {

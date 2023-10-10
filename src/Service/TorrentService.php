@@ -209,6 +209,7 @@ class TorrentService
         $torrent = $this->addTorrent(
             $userId,
             $added,
+            md5_file($filepath),
             $this->generateTorrentKeywordsByTorrentFilepath(
                 $filepath
             ),
@@ -256,6 +257,7 @@ class TorrentService
     public function addTorrent(
         int $userId,
         int $added,
+        string $md5file,
         string $keywords,
         bool $approved
     ): ?Torrent
@@ -264,6 +266,7 @@ class TorrentService
 
         $torrent->setUserId($userId);
         $torrent->setAdded($added);
+        $torrent->setMd5File($md5file);
         $torrent->setKeywords($keywords);
         $torrent->setApproved($approved);
 
@@ -291,6 +294,17 @@ class TorrentService
                     ->getRepository(Torrent::class)
                     ->searchByKeywords(
                         explode(' ', $query)
+                    );
+    }
+
+    public function findTorrentByMd5File(string $md5file) : ?Torrent
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Torrent::class)
+                    ->findOneBy(
+                        [
+                            'md5file' => $md5file
+                        ]
                     );
     }
 

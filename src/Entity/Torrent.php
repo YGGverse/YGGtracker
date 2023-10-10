@@ -28,6 +28,9 @@ class Torrent
     #[ORM\Column]
     private ?bool $approved = null;
 
+    #[ORM\Column(length: 32)]
+    private ?string $md5file = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $keywords = null;
 
@@ -84,6 +87,18 @@ class Torrent
     public function setScraped(int $scraped): static
     {
         $this->scraped = $scraped;
+
+        return $this;
+    }
+
+    public function getMd5file(): ?string
+    {
+        return $this->md5file;
+    }
+
+    public function setMd5file(string $md5file): static
+    {
+        $this->md5file = $md5file;
 
         return $this;
     }
