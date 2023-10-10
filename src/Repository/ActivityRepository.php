@@ -20,28 +20,4 @@ class ActivityRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Activity::class);
     }
-
-    public function findLast(int $start = 0, int $limit = 10): array
-    {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.id', 'DESC') // same to a.added
-            ->setFirstResult($start)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function findLastByApprovedField(bool $approved, int $start = 0, int $limit = 10): array
-    {
-        return $this->createQueryBuilder('a')
-            ->orderBy('a.id', 'DESC') // same to a.added
-            ->where('a.approved = :approved')
-            ->setParameter('approved', $approved)
-            ->setFirstResult($start)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 }

@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\UserService;
 use App\Service\TorrentService;
+use App\Service\ActivityService;
 
 class TorrentController extends AbstractController
 {
@@ -332,7 +333,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -463,12 +465,20 @@ class TorrentController extends AbstractController
             if (empty($form['locales']['error']))
             {
                 // Save data
-                $torrentService->addTorrentLocales(
+                $torrentLocales = $torrentService->addTorrentLocales(
                     $torrent->getId(),
                     $user->getId(),
                     time(),
                     $locales,
                     $user->isApproved()
+                );
+
+                // Register activity event
+                $activityService->addEventTorrentLocalesAdd(
+                    $user->getId(),
+                    $torrent->getId(),
+                    time(),
+                    $torrentLocales->getId()
                 );
 
                 // Redirect to info article created
@@ -516,7 +526,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService,
     ): Response
     {
         // Init user
@@ -542,6 +553,27 @@ class TorrentController extends AbstractController
             // @TODO
             throw new \Exception(
                 $translator->trans('Access denied')
+            );
+        }
+
+        // Register activity event
+        if (!$torrentLocales->isApproved())
+        {
+            $activityService->addEventTorrentLocalesApproveAdd(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentLocales->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventTorrentLocalesApproveDelete(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentLocales->getId()
             );
         }
 
@@ -578,7 +610,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -606,6 +639,14 @@ class TorrentController extends AbstractController
                 $translator->trans('Access denied')
             );
         }
+
+        // Add activity event
+        $activityService->addEventTorrentLocalesDelete(
+            $user->getId(),
+            $torrent->getId(),
+            time(),
+            $torrentLocales->getId()
+        );
 
         // Update approved
         $torrentService->deleteTorrentLocales(
@@ -646,7 +687,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -749,12 +791,20 @@ class TorrentController extends AbstractController
         if ($request->isMethod('post'))
         {
             // Save data
-            $torrentService->addTorrentSensitive(
+            $torrentSensitive = $torrentService->addTorrentSensitive(
                 $torrent->getId(),
                 $user->getId(),
                 time(),
                 $request->get('sensitive') === 'true',
                 $user->isApproved()
+            );
+
+            // Add activity event
+            $activityService->addEventTorrentSensitiveAdd(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentSensitive->getId()
             );
 
             // Redirect to info article created
@@ -800,7 +850,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -826,6 +877,27 @@ class TorrentController extends AbstractController
             // @TODO
             throw new \Exception(
                 $translator->trans('Access denied')
+            );
+        }
+
+        // Add activity event
+        if (!$torrentSensitive->isApproved())
+        {
+            $activityService->addEventTorrentSensitiveApproveAdd(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentSensitive->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventTorrentSensitiveApproveDelete(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentSensitive->getId()
             );
         }
 
@@ -862,7 +934,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -890,6 +963,14 @@ class TorrentController extends AbstractController
                 $translator->trans('Access denied')
             );
         }
+
+        // Add activity event
+        $activityService->addEventTorrentSensitiveDelete(
+            $user->getId(),
+            $torrent->getId(),
+            time(),
+            $torrentSensitive->getId()
+        );
 
         // Update approved
         $torrentService->deleteTorrentSensitive(

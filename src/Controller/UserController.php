@@ -44,46 +44,10 @@ class UserController extends AbstractController
         UserService $userService
     ): Response
     {
-        // Init user session
-        $user = $userService->init(
-            $request->getClientIp()
-        );
-
-        // Build activity history
-        $activities = [];
-
-        /*
-        foreach ($activityService->findLast($user->isModerator()) as $activity)
-        {
-            if (!$activity->getUserId())
-            {
-                continue;
-            }
-
-            $activityUser = $userService->getUser(
-                $activity->getUserId()
-            );
-
-            $activities[] =
-            [
-                'user' =>
-                [
-                    'id'        => $activityUser->getId(),
-                    'identicon' => $userService->identicon(
-                        $activityUser->getAddress(),
-                        24
-                    )
-                ],
-                'type'  => 'join',
-                'added' => $activity->getAdded()
-            ];
-        }
-        */
-
         return $this->render(
             'default/user/dashboard.html.twig',
             [
-                'activities' => $activities
+                'activities' => $activityService->findLastActivities()
             ]
         );
     }
@@ -271,7 +235,8 @@ class UserController extends AbstractController
     public function toggleStar(
         Request $request,
         TranslatorInterface $translator,
-        UserService $userService
+        UserService $userService,
+        ActivityService $activityService,
     ): Response
     {
         // Init user
@@ -294,11 +259,30 @@ class UserController extends AbstractController
         }
 
         // Update
-        $userService->toggleUserStar(
+        $value = $userService->toggleUserStar(
             $user->getId(),
             $userTarget->getId(),
             time()
         );
+
+        // Add activity event
+        if ($value)
+        {
+            $activityService->addEventUserStarAdd(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventUserStarDelete(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
 
         // Redirect to info article created
         return $this->redirectToRoute(

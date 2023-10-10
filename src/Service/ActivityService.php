@@ -6,49 +6,416 @@ use App\Entity\Activity;
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-
 class ActivityService
 {
-    private EntityManagerInterface $entityManager;
-    private ActivityRepository $activityRepository;
-    private ParameterBagInterface $parameterBagInterface;
+    private EntityManagerInterface $entityManagerInterface;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ParameterBagInterface $parameterBagInterface
+        EntityManagerInterface $entityManagerInterface
     )
     {
-        $this->entityManager = $entityManager;
-        $this->activityRepository = $entityManager->getRepository(Activity::class);
-        $this->parameterBagInterface = $parameterBagInterface;
+        $this->entityManagerInterface = $entityManagerInterface;
     }
 
-    public function addEvent(int $userId, string $event, array $data): ?Activity
+    public function findLastActivities(): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findBy(
+                        [],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
+    // User
+    public function addEventUserJoin(
+        int $userId,
+        int $added
+    ): ?Activity
     {
         $activity = new Activity();
 
-        $activity->setEvent($event);
-        $activity->setUserId($userId);
-        $activity->setApproved($approved);
-        $activity->setAdded(time());
+        $activity->setEvent(
+            Activity::EVENT_USER_ADD
+        );
 
-        $this->entityManager->persist($activity);
-        $this->entityManager->flush();
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
 
         return $activity;
     }
 
-    public function findLast(bool $moderator): ?array
+    public function addEventUserStarAdd(
+        int $userId,
+        int $added,
+        int $userIdTarget
+    ): ?Activity
     {
-        if ($moderator)
-        {
-            return $this->activityRepository->findLast();
-        }
+        $activity = new Activity();
 
-        else
-        {
-            return $this->activityRepository->findLastByApprovedField(true);
-        }
+        $activity->setEvent(
+            Activity::EVENT_USER_STAR_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventUserStarDelete(
+        int $userId,
+        int $added,
+        int $userIdTarget
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_STAR_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    // Torrent
+
+    /// Torrent locales
+    public function addEventTorrentLocalesAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentLocalesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_LOCALES_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentLocalesId' => $torrentLocalesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentLocalesDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentLocalesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_LOCALES_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentLocalesId' => $torrentLocalesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentLocalesApproveAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentLocalesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_LOCALES_APPROVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentLocalesId' => $torrentLocalesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentLocalesApproveDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentLocalesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_LOCALES_APPROVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentLocalesId' => $torrentLocalesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    /// Torrent sensitive
+    public function addEventTorrentSensitiveAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentSensitiveId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_SENSITIVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentSensitiveId' => $torrentSensitiveId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentSensitiveDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentSensitiveId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_SENSITIVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentSensitiveId' => $torrentSensitiveId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentSensitiveApproveAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentSensitiveId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_SENSITIVE_APPROVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentSensitiveId' => $torrentSensitiveId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentSensitiveApproveDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentSensitiveId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_SENSITIVE_APPROVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentSensitiveId' => $torrentSensitiveId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
     }
 }

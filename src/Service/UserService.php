@@ -84,6 +84,7 @@ class UserService
             $user->setApproved(true);
             $user->setModerator(true);
             $user->setSensitive(false);
+
             $this->save($user);
         }
 
@@ -151,12 +152,14 @@ class UserService
         int $userId,
         int $userIdTarget,
         int $added
-    ): void
+    ): bool
     {
         if ($userStar = $this->findUserStar($userId, $userIdTarget))
         {
             $this->entityManagerInterface->remove($userStar);
             $this->entityManagerInterface->flush();
+
+            return false;
         }
 
         else
@@ -169,6 +172,8 @@ class UserService
 
             $this->entityManagerInterface->persist($userStar);
             $this->entityManagerInterface->flush();
+
+            return true;
         }
     }
 

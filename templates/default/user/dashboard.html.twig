@@ -1,23 +1,12 @@
 {% extends 'default/layout.html.twig' %}
-{% block title %}{{ 'Last activity'|trans }} - {{ name }}{% endblock %}
+{% block title %}{{ 'Activity' | trans }} - {{ name }}{% endblock %}
 {% block main_content %}
     {% for activity in activities %}
         <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night">
-            <div class="row">
-                <div class="column width-80">
-                    <a href="{{ path('user_info', { userId : activity.user.id }) }}">
-                        <img class="vertical-align-middle border-radius-50 border-color-default border-width-2-px margin-r-8-px"
-                            src="{{ activity.user.identicon }}"
-                            alt="{{ 'identicon'|trans }}" />
-                    </a>
-                    {% if activity.type == 'join' %}
-                        {{ 'joined'|trans }} {{ name }}
-                    {% endif %}
-                </div>
-                <div class="column width-20 text-right padding-y-4-px">
-                    {{ activity.added }}
-                </div>
-            </div>
+            {{ render(controller(
+                'App\\Controller\\ActivityController::template',
+                { activity : activity }
+            )) }}
         </div>
     {% endfor %}
 {% endblock %}
