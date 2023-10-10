@@ -6,7 +6,9 @@ use App\Repository\TorrentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+// @TODO #[ORM\Index(columns: ['keywords'], name: 'keywords_idx', flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: TorrentRepository::class)]
+
 class Torrent
 {
     #[ORM\Id]

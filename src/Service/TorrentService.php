@@ -246,11 +246,11 @@ class TorrentService
     }
 
     // Torrent
-    public function getTorrent(int $id): ?Torrent
+    public function getTorrent(int $torrentId): ?Torrent
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
-                    ->find($id);
+                    ->find($torrentId);
     }
 
     public function addTorrent(
@@ -282,6 +282,15 @@ class TorrentService
                         [
                             'scraped' => 'ASC'
                         ]
+                    );
+    }
+
+    public function searchTorrents(string $query) : array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Torrent::class)
+                    ->searchByKeywords(
+                        explode(' ', $query)
                     );
     }
 

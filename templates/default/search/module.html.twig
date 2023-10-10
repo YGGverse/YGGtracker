@@ -12,5 +12,5 @@
             <option value="page">{{ 'Pages' | trans }}</option>
         {% endif %}
     </select>
-    <input type="submit" value="{{ 'Search' | trans }}" />
+    <input {% if query %}class="button-green"{% endif %} type="submit" value="{{ 'Search' | trans }}" />
 </form>

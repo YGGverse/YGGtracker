@@ -20,4 +20,21 @@ class TorrentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Torrent::class);
     }
+
+    public function searchByKeywords(
+        array $keywords
+    ): ?array
+    {
+        $query = $this->createQueryBuilder('t');
+
+        foreach ($keywords as $keyword)
+        {
+            $query->orWhere('t.keywords LIKE :query')
+                  ->setParameter('query', "%{$keyword}%");
+        }
+
+        return $query->orderBy('t.id', 'ASC') // same as t.added
+                     ->getQuery()
+                     ->getResult();
+    }
 }
