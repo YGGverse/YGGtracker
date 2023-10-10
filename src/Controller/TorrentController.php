@@ -1088,7 +1088,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -1119,10 +1120,17 @@ class TorrentController extends AbstractController
         }
 
         // Register download
-        $torrentService->registerTorrentDownloadFile(
+        $torrentService->addTorrentDownloadFile(
             $torrent->getId(),
             $user->getId(),
             time()
+        );
+
+        // Register download event
+        $activityService->addEventTorrentDownloadFileAdd(
+            $user->getId(),
+            time(),
+            $torrent->getId()
         );
 
         // Filter trackers
@@ -1183,7 +1191,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -1214,10 +1223,17 @@ class TorrentController extends AbstractController
         }
 
         // Register download
-        $torrentService->registerTorrentDownloadMagnet(
+        $torrentService->addTorrentDownloadMagnet(
             $torrent->getId(),
             $user->getId(),
             time()
+        );
+
+        // Register download event
+        $activityService->addEventTorrentDownloadMagnetAdd(
+            $user->getId(),
+            time(),
+            $torrent->getId()
         );
 
         // Filter trackers

@@ -151,6 +151,67 @@ class ActivityService
         return $activity;
     }
 
+    /// Torrent Download
+    public function addEventTorrentDownloadFileAdd(
+        int $userId,
+        int $added,
+        int $torrentId
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentDownloadMagnetAdd(
+        int $userId,
+        int $added,
+        int $torrentId
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
     /// Torrent star
     public function addEventTorrentStarAdd(
         int $userId,

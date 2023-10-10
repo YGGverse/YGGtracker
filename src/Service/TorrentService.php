@@ -630,7 +630,7 @@ class TorrentService
                     ->findTorrentDownloadFilesTotalByTorrentId($torrentId);
     }
 
-    public function registerTorrentDownloadFile(
+    public function addTorrentDownloadFile(
         int $torrentId,
         int $userId,
         int $added
@@ -672,7 +672,7 @@ class TorrentService
                     ->findTorrentDownloadMagnetsTotalByTorrentId($torrentId);
     }
 
-    public function registerTorrentDownloadMagnet(
+    public function addTorrentDownloadMagnet(
         int $torrentId,
         int $userId,
         int $added

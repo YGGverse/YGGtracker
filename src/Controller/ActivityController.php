@@ -330,6 +330,61 @@ class ActivityController extends AbstractController
 
             break;
 
+            // Torrent Download
+            case $activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD:
+
+                return $this->render(
+                    'default/activity/event/torrent/download/file/add.html.twig',
+                    [
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'   => $activity->getTorrentId(),
+                            'name' => $torrentService->readTorrentFileByTorrentId(
+                                $activity->getTorrentId()
+                            )->getName()
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD:
+
+                return $this->render(
+                    'default/activity/event/torrent/download/magnet/add.html.twig',
+                    [
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'   => $activity->getTorrentId(),
+                            'name' => $torrentService->readTorrentFileByTorrentId(
+                                $activity->getTorrentId()
+                            )->getName()
+                        ]
+                    ]
+                );
+
+            break;
+
             /// Torrent Locales
             case $activity::EVENT_TORRENT_LOCALES_ADD:
 
