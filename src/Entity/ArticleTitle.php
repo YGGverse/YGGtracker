@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\PageSensitiveRepository;
+use App\Repository\ArticleTitleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PageSensitiveRepository::class)]
-class PageSensitive
+#[ORM\Entity(repositoryClass: ArticleTitleRepository::class)]
+class ArticleTitle
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,7 +15,7 @@ class PageSensitive
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $pageId = null;
+    private ?int $articleId = null;
 
     #[ORM\Column]
     private ?int $userId = null;
@@ -26,8 +26,8 @@ class PageSensitive
     #[ORM\Column(length: 255)]
     private ?string $locale = null;
 
-    #[ORM\Column]
-    private ?bool $value = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $value = null;
 
     #[ORM\Column]
     private ?bool $approved = null;
@@ -44,14 +44,14 @@ class PageSensitive
         return $this;
     }
 
-    public function getPageId(): ?int
+    public function getArticleId(): ?int
     {
-        return $this->pageId;
+        return $this->articleId;
     }
 
-    public function setPageId(int $pageId): static
+    public function setArticleId(int $articleId): static
     {
-        $this->pageId = $pageId;
+        $this->articleId = $articleId;
 
         return $this;
     }
@@ -92,12 +92,12 @@ class PageSensitive
         return $this;
     }
 
-    public function isValue(): ?bool
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(bool $value): static
+    public function setValue(string $value): static
     {
         $this->value = $value;
 

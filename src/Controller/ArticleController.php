@@ -10,14 +10,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\UserService;
-use App\Service\PageService;
+use App\Service\ArticleService;
 use App\Service\TorrentService;
 
-class PageController extends AbstractController
+class ArticleController extends AbstractController
 {
     #[Route(
-        '/{_locale}/page/{id}',
-        name: 'page_info',
+        '/{_locale}/article/{id}',
+        name: 'article_info',
         requirements:
         [
             'id' => '\d+'
@@ -38,14 +38,14 @@ class PageController extends AbstractController
             $request->getClientIp()
         );
 
-        return $this->render('default/page/info.html.twig', [
+        return $this->render('default/article/info.html.twig', [
             'title' => 'test'
         ]);
     }
 
     #[Route(
-        '/{_locale}/submit/page',
-        name: 'page_submit',
+        '/{_locale}/submit/article',
+        name: 'article_submit',
         methods:
         [
             'GET',
@@ -56,8 +56,8 @@ class PageController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        PageService $pageService,
-        PageService $torrentService
+        ArticleService $articleService,
+        ArticleService $torrentService
     ): Response
     {
         // Init user
@@ -91,12 +91,12 @@ class PageController extends AbstractController
                 'attribute' =>
                 [
                     'value'       => $request->get('title'),
-                    'minlength'   => $this->getParameter('app.page.title.length.min'),
-                    'maxlength'   => $this->getParameter('app.page.title.length.max'),
+                    'minlength'   => $this->getParameter('app.article.title.length.min'),
+                    'maxlength'   => $this->getParameter('app.article.title.length.max'),
                     'placeholder' => sprintf(
-                        $translator->trans('Page title (%s-%s chars)'),
-                        number_format($this->getParameter('app.page.title.length.min')),
-                        number_format($this->getParameter('app.page.title.length.max'))
+                        $translator->trans('Article title (%s-%s chars)'),
+                        number_format($this->getParameter('app.article.title.length.min')),
+                        number_format($this->getParameter('app.article.title.length.max'))
                     ),
                 ]
             ],
@@ -106,12 +106,12 @@ class PageController extends AbstractController
                 'attribute' =>
                 [
                     'value'       => $request->get('description'),
-                    'minlength'   => $this->getParameter('app.page.description.length.min'),
-                    'maxlength'   => $this->getParameter('app.page.description.length.max'),
+                    'minlength'   => $this->getParameter('app.article.description.length.min'),
+                    'maxlength'   => $this->getParameter('app.article.description.length.max'),
                     'placeholder' => sprintf(
-                        $translator->trans('Page description (%s-%s chars)'),
-                        number_format($this->getParameter('app.page.description.length.min')),
-                        number_format($this->getParameter('app.page.description.length.max'))
+                        $translator->trans('Article description (%s-%s chars)'),
+                        number_format($this->getParameter('app.article.description.length.min')),
+                        number_format($this->getParameter('app.article.description.length.max'))
                     ),
                 ]
             ],
@@ -144,24 +144,24 @@ class PageController extends AbstractController
             }
 
             /// Title
-            if (mb_strlen($request->get('title')) < $this->getParameter('app.page.title.length.min') ||
-                mb_strlen($request->get('title')) > $this->getParameter('app.page.title.length.max'))
+            if (mb_strlen($request->get('title')) < $this->getParameter('app.article.title.length.min') ||
+                mb_strlen($request->get('title')) > $this->getParameter('app.article.title.length.max'))
             {
                 $form['title']['error'][] = sprintf(
-                    $translator->trans('Page title out of %s-%s chars'),
-                    number_format($this->getParameter('app.page.title.length.min')),
-                    number_format($this->getParameter('app.page.title.length.max'))
+                    $translator->trans('Article title out of %s-%s chars'),
+                    number_format($this->getParameter('app.article.title.length.min')),
+                    number_format($this->getParameter('app.article.title.length.max'))
                 );
             }
 
             /// Description
-            if (mb_strlen($request->get('description')) < $this->getParameter('app.page.description.length.min') ||
-                mb_strlen($request->get('description')) > $this->getParameter('app.page.description.length.max'))
+            if (mb_strlen($request->get('description')) < $this->getParameter('app.article.description.length.min') ||
+                mb_strlen($request->get('description')) > $this->getParameter('app.article.description.length.max'))
             {
                 $form['description']['error'][] = sprintf(
-                    $translator->trans('Page description out of %s-%s chars'),
-                    number_format($this->getParameter('app.page.description.length.min')),
-                    number_format($this->getParameter('app.page.description.length.max'))
+                    $translator->trans('Article description out of %s-%s chars'),
+                    number_format($this->getParameter('app.article.description.length.min')),
+                    number_format($this->getParameter('app.article.description.length.max'))
                 );
             }
 
@@ -212,7 +212,7 @@ class PageController extends AbstractController
                 empty($form['torrents']['error'])
             )
             {
-                $page = $pageService->submit(
+                $article = $articleService->submit(
                     $user->getId(),
                     time(),
                     (string) $request->get('locale'),
@@ -225,17 +225,17 @@ class PageController extends AbstractController
 
                 // Redirect
                 return $this->redirectToRoute(
-                    'page_info',
+                    'article_info',
                     [
                         '_locale' => $request->get('_locale'),
-                        'id'      => $page->getId()
+                        'id'      => $article->getId()
                     ]
                 );
             }
         }
 
         return $this->render(
-            'default/page/submit.html.twig',
+            'default/article/submit.html.twig',
             [
                 'locales' => explode('|', $this->getParameter('app.locales')),
                 'form'    => $form,

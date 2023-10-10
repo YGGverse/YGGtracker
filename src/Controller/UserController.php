@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\ActivityService;
 use App\Service\UserService;
-use App\Service\PageService;
+use App\Service\ArticleService;
 use App\Service\TorrentService;
 
 class UserController extends AbstractController
@@ -300,7 +300,7 @@ class UserController extends AbstractController
             time()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'user_info',
             [
@@ -352,7 +352,7 @@ class UserController extends AbstractController
             $userTarget->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'user_info',
             [
@@ -404,7 +404,7 @@ class UserController extends AbstractController
             $userTarget->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'user_info',
             [
@@ -430,7 +430,7 @@ class UserController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        PageService $pageService,
+        ArticleService $articleService,
         TorrentService $torrentService
     ): Response
     {
@@ -477,7 +477,7 @@ class UserController extends AbstractController
             $userTarget->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'user_info',
             [

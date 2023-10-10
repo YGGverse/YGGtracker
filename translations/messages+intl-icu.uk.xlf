@@ -69,13 +69,13 @@
         <source>Content language</source>
         <target>Мова контенту</target>
       </trans-unit>
-      <trans-unit id="g0ch5an" resname="Page title text (%s-%s chars)">
-        <source>Page title text (%s-%s chars)</source>
-        <target>Page title text (%s-%s chars)</target>
+      <trans-unit id="g0ch5an" resname="Article title text (%s-%s chars)">
+        <source>Article title text (%s-%s chars)</source>
+        <target>Article title text (%s-%s chars)</target>
       </trans-unit>
-      <trans-unit id="c1stghx" resname="Page description text (%s-%s chars)">
-        <source>Page description text (%s-%s chars)</source>
-        <target>Page description text (%s-%s chars)</target>
+      <trans-unit id="c1stghx" resname="Article description text (%s-%s chars)">
+        <source>Article description text (%s-%s chars)</source>
+        <target>Article description text (%s-%s chars)</target>
       </trans-unit>
       <trans-unit id="rhnbyIA" resname="Select torrent files">
         <source>Select torrent files</source>
@@ -89,13 +89,13 @@
         <source>Requested locale not supported</source>
         <target>Requested locale not supported</target>
       </trans-unit>
-      <trans-unit id="D5.S25t" resname="Page title out of %s-%s chars">
-        <source>Page title out of %s-%s chars</source>
-        <target>Page title out of %s-%s chars</target>
+      <trans-unit id="D5.S25t" resname="Article title out of %s-%s chars">
+        <source>Article title out of %s-%s chars</source>
+        <target>Article title out of %s-%s chars</target>
       </trans-unit>
-      <trans-unit id="ZrAXugC" resname="Page description out of %s-%s chars">
-        <source>Page description out of %s-%s chars</source>
-        <target>Page description out of %s-%s chars</target>
+      <trans-unit id="ZrAXugC" resname="Article description out of %s-%s chars">
+        <source>Article description out of %s-%s chars</source>
+        <target>Article description out of %s-%s chars</target>
       </trans-unit>
       <trans-unit id="fYxwFh4" resname="Torrent file out of size limit">
         <source>Torrent file out of size limit</source>
@@ -225,13 +225,13 @@
         <source>File not found</source>
         <target>File not found</target>
       </trans-unit>
-      <trans-unit id="azmAWfE" resname="Page title (%s-%s chars)">
-        <source>Page title (%s-%s chars)</source>
-        <target>Page title (%s-%s chars)</target>
+      <trans-unit id="azmAWfE" resname="Article title (%s-%s chars)">
+        <source>Article title (%s-%s chars)</source>
+        <target>Article title (%s-%s chars)</target>
       </trans-unit>
-      <trans-unit id="EHk_smN" resname="Page description (%s-%s chars)">
-        <source>Page description (%s-%s chars)</source>
-        <target>Page description (%s-%s chars)</target>
+      <trans-unit id="EHk_smN" resname="Article description (%s-%s chars)">
+        <source>Article description (%s-%s chars)</source>
+        <target>Article description (%s-%s chars)</target>
       </trans-unit>
       <trans-unit id="YSDwyOP" resname="Append %s-%s torrent files">
         <source>Append %s-%s torrent files</source>
@@ -437,9 +437,9 @@
         <source>Locales</source>
         <target>Locales</target>
       </trans-unit>
-      <trans-unit id="kEbaFq6" resname="Pages">
-        <source>Pages</source>
-        <target>Pages</target>
+      <trans-unit id="kEbaFq6" resname="Articles">
+        <source>Articles</source>
+        <target>Articles</target>
       </trans-unit>
       <trans-unit id="n9coxmy" resname="Add">
         <source>Add</source>

@@ -23,7 +23,7 @@ class Activity
     private ?int $userId = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $pageId = null;
+    private ?int $articleId = null;
 
     public function getId(): ?int
     {
@@ -80,14 +80,14 @@ class Activity
         return $this;
     }
 
-    public function getPageId(): ?int
+    public function getArticleId(): ?int
     {
-        return $this->pageId;
+        return $this->articleId;
     }
 
-    public function setPageId(?int $pageId): static
+    public function setArticleId(?int $articleId): static
     {
-        $this->pageId = $pageId;
+        $this->articleId = $articleId;
 
         return $this;
     }

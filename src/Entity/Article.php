@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\PageTorrentsRepository;
-use Doctrine\DBAL\Types\Types;
+use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PageTorrentsRepository::class)]
-class PageTorrents
+#[ORM\Entity(repositoryClass: ArticleRepository::class)]
+class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,13 +14,7 @@ class PageTorrents
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $pageId = null;
-
-    #[ORM\Column]
     private ?int $userId = null;
-
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $torrentsId = [];
 
     #[ORM\Column]
     private ?int $added = null;
@@ -41,18 +34,6 @@ class PageTorrents
         return $this;
     }
 
-    public function getPageId(): ?int
-    {
-        return $this->pageId;
-    }
-
-    public function setPageId(int $pageId): static
-    {
-        $this->pageId = $pageId;
-
-        return $this;
-    }
-
     public function getUserId(): ?int
     {
         return $this->userId;
@@ -61,18 +42,6 @@ class PageTorrents
     public function setUserId(int $userId): static
     {
         $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getTorrentsId(): array
-    {
-        return $this->torrentsId;
-    }
-
-    public function setTorrentsId(array $torrentsId): static
-    {
-        $this->torrentsId = $torrentsId;
 
         return $this;
     }

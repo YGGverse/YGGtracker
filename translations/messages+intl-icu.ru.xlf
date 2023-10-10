@@ -69,13 +69,13 @@
         <source>Content language</source>
         <target>Content language</target>
       </trans-unit>
-      <trans-unit id="g0ch5an" resname="Page title text (%s-%s chars)">
-        <source>Page title text (%s-%s chars)</source>
-        <target>Page title text (%s-%s chars)</target>
+      <trans-unit id="g0ch5an" resname="Article title text (%s-%s chars)">
+        <source>Article title text (%s-%s chars)</source>
+        <target>Article title text (%s-%s chars)</target>
       </trans-unit>
-      <trans-unit id="c1stghx" resname="Page description text (%s-%s chars)">
-        <source>Page description text (%s-%s chars)</source>
-        <target>Page description text (%s-%s chars)</target>
+      <trans-unit id="c1stghx" resname="Article description text (%s-%s chars)">
+        <source>Article description text (%s-%s chars)</source>
+        <target>Article description text (%s-%s chars)</target>
       </trans-unit>
       <trans-unit id="rhnbyIA" resname="Select torrent files">
         <source>Select torrent files</source>
@@ -89,13 +89,13 @@
         <source>Requested locale not supported</source>
         <target>Requested locale not supported</target>
       </trans-unit>
-      <trans-unit id="D5.S25t" resname="Page title out of %s-%s chars">
-        <source>Page title out of %s-%s chars</source>
-        <target>Page title out of %s-%s chars</target>
+      <trans-unit id="D5.S25t" resname="Article title out of %s-%s chars">
+        <source>Article title out of %s-%s chars</source>
+        <target>Article title out of %s-%s chars</target>
       </trans-unit>
-      <trans-unit id="ZrAXugC" resname="Page description out of %s-%s chars">
-        <source>Page description out of %s-%s chars</source>
-        <target>Page description out of %s-%s chars</target>
+      <trans-unit id="ZrAXugC" resname="Article description out of %s-%s chars">
+        <source>Article description out of %s-%s chars</source>
+        <target>Article description out of %s-%s chars</target>
       </trans-unit>
       <trans-unit id="fYxwFh4" resname="Torrent file out of size limit">
         <source>Torrent file out of size limit</source>

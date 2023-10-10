@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\PageTitleRepository;
+use App\Repository\ArticleTorrentsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PageTitleRepository::class)]
-class PageTitle
+#[ORM\Entity(repositoryClass: ArticleTorrentsRepository::class)]
+class ArticleTorrents
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,19 +15,16 @@ class PageTitle
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $pageId = null;
+    private ?int $articleId = null;
 
     #[ORM\Column]
     private ?int $userId = null;
 
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $torrentsId = [];
+
     #[ORM\Column]
     private ?int $added = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $locale = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $value = null;
 
     #[ORM\Column]
     private ?bool $approved = null;
@@ -44,14 +41,14 @@ class PageTitle
         return $this;
     }
 
-    public function getPageId(): ?int
+    public function getArticleId(): ?int
     {
-        return $this->pageId;
+        return $this->articleId;
     }
 
-    public function setPageId(int $pageId): static
+    public function setArticleId(int $articleId): static
     {
-        $this->pageId = $pageId;
+        $this->articleId = $articleId;
 
         return $this;
     }
@@ -68,6 +65,18 @@ class PageTitle
         return $this;
     }
 
+    public function getTorrentsId(): array
+    {
+        return $this->torrentsId;
+    }
+
+    public function setTorrentsId(array $torrentsId): static
+    {
+        $this->torrentsId = $torrentsId;
+
+        return $this;
+    }
+
     public function getAdded(): ?int
     {
         return $this->added;
@@ -76,30 +85,6 @@ class PageTitle
     public function setAdded(int $added): static
     {
         $this->added = $added;
-
-        return $this;
-    }
-
-    public function getLocale(): ?string
-    {
-        return $this->locale;
-    }
-
-    public function setLocale(string $locale): static
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    public function getValue(): ?string
-    {
-        return $this->value;
-    }
-
-    public function setValue(string $value): static
-    {
-        $this->value = $value;
 
         return $this;
     }

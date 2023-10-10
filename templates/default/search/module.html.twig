@@ -6,10 +6,10 @@
         {% else %}
             <option value="torrent">{{ 'Torrents' | trans }}</option>
         {% endif %}
-        {% if type == 'page' %}
-            <option value="page" selected="selected">{{ 'Pages' | trans }}</option>
+        {% if type == 'article' %}
+            <option value="article" selected="selected">{{ 'Articles' | trans }}</option>
         {% else %}
-            <option value="page">{{ 'Pages' | trans }}</option>
+            <option value="article">{{ 'Articles' | trans }}</option>
         {% endif %}
     </select>
     <input {% if query %}class="button-green"{% endif %} type="submit" value="{{ 'Search' | trans }}" />

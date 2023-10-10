@@ -136,7 +136,7 @@ class TorrentController extends AbstractController
                         $torrent->getId()
                     )
                 ],
-                'pages'        => [],
+                'articles'        => [],
                 'contributors' => $contributors
             ],
             'file' =>
@@ -282,7 +282,7 @@ class TorrentController extends AbstractController
                     $user->isApproved()
                 );
 
-                // Redirect to info page created
+                // Redirect to info article created
                 return $this->redirectToRoute(
                     'torrent_info',
                     [
@@ -465,7 +465,7 @@ class TorrentController extends AbstractController
                     $user->isApproved()
                 );
 
-                // Redirect to info page created
+                // Redirect to info article created
                 return $this->redirectToRoute(
                     'torrent_info',
                     [
@@ -544,7 +544,7 @@ class TorrentController extends AbstractController
             $torrentLocales->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'torrent_locales_edit',
             [
@@ -606,7 +606,7 @@ class TorrentController extends AbstractController
             $torrentLocales->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'torrent_locales_edit',
             [
@@ -751,7 +751,7 @@ class TorrentController extends AbstractController
                 $user->isApproved()
             );
 
-            // Redirect to info page created
+            // Redirect to info article created
             return $this->redirectToRoute(
                 'torrent_info',
                 [
@@ -828,7 +828,7 @@ class TorrentController extends AbstractController
             $torrentSensitive->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'torrent_sensitive_edit',
             [
@@ -890,7 +890,7 @@ class TorrentController extends AbstractController
             $torrentSensitive->getId()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'torrent_sensitive_edit',
             [
@@ -947,7 +947,7 @@ class TorrentController extends AbstractController
             time()
         );
 
-        // Redirect to info page created
+        // Redirect to info article created
         return $this->redirectToRoute(
             'torrent_info',
             [

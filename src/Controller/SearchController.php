@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\UserService;
-use App\Service\PageService;
+use App\Service\ArticleService;
 use App\Service\TorrentService;
 
 class SearchController extends AbstractController
@@ -25,7 +25,7 @@ class SearchController extends AbstractController
     public function index(
         Request $request,
         UserService $userService,
-        PageService $pageService,
+        ArticleService $articleService,
         TorrentService $torrentService
     ): Response
     {
@@ -34,11 +34,11 @@ class SearchController extends AbstractController
             $request->getClientIp()
         );
 
-        $page = $request->query->get('page') ? (int) $request->query->get('page') : 1;
+        $article = $request->query->get('article') ? (int) $request->query->get('article') : 1;
 
         switch ($request->query->get('type'))
         {
-            case 'page':
+            case 'article':
 
             break;
             case 'torrent':

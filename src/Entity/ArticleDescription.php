@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\PageRepository;
+use App\Repository\ArticleDescriptionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PageRepository::class)]
-class Page
+#[ORM\Entity(repositoryClass: ArticleDescriptionRepository::class)]
+class ArticleDescription
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,10 +15,19 @@ class Page
     private ?int $id = null;
 
     #[ORM\Column]
+    private ?int $articleId = null;
+
+    #[ORM\Column]
     private ?int $userId = null;
 
     #[ORM\Column]
     private ?int $added = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $locale = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $value = null;
 
     #[ORM\Column]
     private ?bool $approved = null;
@@ -30,6 +40,18 @@ class Page
     public function setId(string $id): static
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getArticleId(): ?int
+    {
+        return $this->articleId;
+    }
+
+    public function setArticleId(int $articleId): static
+    {
+        $this->articleId = $articleId;
 
         return $this;
     }
@@ -54,6 +76,30 @@ class Page
     public function setAdded(int $added): static
     {
         $this->added = $added;
+
+        return $this;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(string $locale): static
+    {
+        $this->locale = $locale;
+
+        return $this;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): static
+    {
+        $this->value = $value;
 
         return $this;
     }

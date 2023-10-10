@@ -1,11 +1,11 @@
 {% extends 'default/layout.html.twig' %}
-{% block title %}{{'Submit page'|trans }} - {{ name }}{% endblock %}
+{% block title %}{{'Submit article'|trans }} - {{ name }}{% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <div class="margin-b-24-px padding-b-16-px border-bottom-default">
-            <h1>{{'Submit page'|trans }}</h1>
+            <h1>{{'Submit article'|trans }}</h1>
         </div>
-        <form name="submit" method="post" enctype="multipart/form-data" action="{{ path('page_submit') }}">
+        <form name="submit" method="post" enctype="multipart/form-data" action="{{ path('article_submit') }}">
             <div class="margin-b-16-px">
                 <label for="locale">
                     {{'Content language'|trans }}
