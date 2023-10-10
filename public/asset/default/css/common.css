@@ -59,6 +59,14 @@ textarea {
   opacity: .96;
 }
 
+/*
+main input,
+main button,
+main select,
+main textarea {
+  padding: 8px;
+}
+*/
 textarea:focus,
 input:focus {
   border: #65916d 1px solid;
@@ -85,22 +93,10 @@ input[type="submit"] {
   cursor: pointer;
 }
 
-/*
-button,
-input[type="submit"] {
-  cursor: pointer;
-  background: #65916d;
-  border-radius: 3px;
-  padding: 8px;
-  color: #fff
-}
-*/
-
 textarea,
 select[multiple="multiple"] {
   min-height: 180px;
 }
-
 
 textarea::placeholder,
 input::placeholder {
@@ -119,7 +115,7 @@ td {
 
 header a.logo {
   color: #ccc;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 header a.logo > span {

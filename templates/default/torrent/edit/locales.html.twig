@@ -27,11 +27,11 @@
                     <select class="width-100 padding-x-0" name="locales[]" multiple="multiple">
                         {% for locale in locales %}
                             {% if locale in form.locales.attribute.value %}
-                                <option class="padding-x-8-px padding-y-8-px" value="{{ locale }}" selected="selected">
+                                <option class="padding-x-8-px padding-y-6-px" value="{{ locale }}" selected="selected">
                                     {{ locale|locale_name(locale)|u.title }}
                                 </option>
                             {% else %}
-                                <option class="padding-x-8-px padding-y-8-px" value="{{ locale }}">
+                                <option class="padding-x-8-px padding-y-6-px" value="{{ locale }}">
                                     {{ locale|locale_name(locale)|u.title }}
                                 </option>
                             {% endif %}

@@ -1,4 +1,4 @@
-<form class="margin-t-16-px" name="search" method="get" action="{{ path('search_index') }}">
+<form class="margin-t-16-px margin-b-8-px" name="search" method="get" action="{{ path('search_index') }}">
     <input class="min-width-200-px" type="text" name="query" value="{{ query }}" placeholder="{{ 'Keyword, file, hash...' | trans }}" />
     <select name="type">
         {% if type == 'torrent' %}
