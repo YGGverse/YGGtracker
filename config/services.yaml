@@ -12,10 +12,10 @@ parameters:
     app.themes: '%env(APP_THEMES)%'
     app.sensitive: '%env(APP_SENSITIVE)%'
     app.trackers: '%env(APP_TRACKERS)%'
-    app.article.title.length.min: '%env(APP_PAGE_TITLE_LENGTH_MIN)%'
-    app.article.title.length.max: '%env(APP_PAGE_TITLE_LENGTH_MAX)%'
-    app.article.description.length.min: '%env(APP_PAGE_DESCRIPTION_LENGTH_MIN)%'
-    app.article.description.length.max: '%env(APP_PAGE_DESCRIPTION_LENGTH_MAX)%'
+    app.article.title.length.min: '%env(APP_ARTICLE_TITLE_LENGTH_MIN)%'
+    app.article.title.length.max: '%env(APP_ARTICLE_TITLE_LENGTH_MAX)%'
+    app.article.description.length.min: '%env(APP_ARTICLE_DESCRIPTION_LENGTH_MIN)%'
+    app.article.description.length.max: '%env(APP_ARTICLE_DESCRIPTION_LENGTH_MAX)%'
     app.torrent.size.max: '%env(APP_TORRENT_FILE_SIZE_MAX)%'
 
 services:
