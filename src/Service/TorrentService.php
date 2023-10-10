@@ -348,6 +348,9 @@ class TorrentService
                     ->findOneBy(
                         [
                             'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
                         ]
                     );
     }
@@ -358,7 +361,10 @@ class TorrentService
                     ->getRepository(TorrentLocales::class)
                     ->findBy(
                         [
-                            'torrentId' => $torrentId
+                            'torrentId' => $torrentId,
+                        ],
+                        [
+                            'id' => 'DESC'
                         ]
                     );
     }
