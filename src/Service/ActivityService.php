@@ -30,7 +30,7 @@ class ActivityService
     }
 
     // User
-    public function addEventUserJoin(
+    public function addEventUserAdd(
         int $userId,
         int $added
     ): ?Activity
@@ -121,6 +121,35 @@ class ActivityService
     }
 
     // Torrent
+    public function addEventTorrentAdd(
+        int $userId,
+        int $added,
+        int $torrentId
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
 
     /// Torrent star
     public function addEventTorrentStarAdd(

@@ -179,7 +179,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -287,6 +288,12 @@ class TorrentController extends AbstractController
                     (array) $locales,
                     (bool) $request->get('sensitive'),
                     $user->isApproved()
+                );
+
+                $activityService->addEventTorrentAdd(
+                    $user->getId(),
+                    time(),
+                    $torrent->getId()
                 );
 
                 // Redirect to info article created
