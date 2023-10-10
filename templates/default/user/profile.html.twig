@@ -29,7 +29,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>{{ 'Joined'|trans }}</td>
+                        <td>{{ 'Joined' | trans }}</td>
                         <td>{{ user.added | format_ago }}</td>
                     </tr>
                     <tr>
@@ -39,9 +39,9 @@
                         <td class="padding-t-16-px">{{ 'Status'|trans }}</td>
                         <td class="padding-t-16-px">
                         {% if user.status %}
-                            {{ 'active'|trans }}
+                            {{ 'Aactive' | trans }}
                         {% else %}
-                            {{ 'disabled'|trans }}
+                            {{ 'Disabled' | trans }}
                         {% endif %}
                         </td>
                     </tr>
@@ -49,25 +49,25 @@
                         <td>{{ 'Approved'|trans }}</td>
                         <td>
                         {% if user.approved %}
-                            {{ 'yes'|trans }}
+                            {{ 'Yes' | trans }}
                         {% else %}
-                            {{ 'no'|trans }}
+                            {{ 'No' | trans }}
                         {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <td>{{ 'Moderator'|trans }}</td>
+                        <td>{{ 'Moderator' | trans }}</td>
                         <td>
                         {% if user.moderator %}
-                            {{ 'yes'|trans }}
+                            {{ 'Yes' | trans }}
                         {% else %}
-                            {{ 'no'|trans }}
+                            {{ 'No' | trans }}
                         {% endif %}
                         </td>
                     </tr>
                     <tr>
                         <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Settings' |trans }}
+                            {{ 'Settings' | trans }}
                         </td>
                     </tr>
                     <tr>
