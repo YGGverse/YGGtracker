@@ -484,9 +484,9 @@ class TorrentService
         int $torrentSensitiveId
     ): ?TorrentSensitive
     {
-        $torrentSensitive = $this->find(
-            $torrentSensitiveId
-        );
+        $torrentSensitive = $this->entityManagerInterface
+                                 ->getRepository(TorrentSensitive::class)
+                                 ->find($torrentSensitiveId);
 
         $torrentSensitive->setApproved(
             !$torrentSensitive->isApproved() // toggle current value
