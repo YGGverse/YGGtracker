@@ -1005,7 +1005,8 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -1028,11 +1029,30 @@ class TorrentController extends AbstractController
         }
 
         // Update
-        $torrentService->toggleTorrentStar(
+        $value = $torrentService->toggleTorrentStar(
             $torrent->getId(),
             $user->getId(),
             time()
         );
+
+        // Register activity event
+        if ($value)
+        {
+            $activityService->addEventTorrentStarAdd(
+                $user->getId(),
+                time(),
+                $torrent->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventTorrentStarDelete(
+                $user->getId(),
+                time(),
+                $torrent->getId()
+            );
+        }
 
         // Redirect to info article created
         return $this->redirectToRoute(

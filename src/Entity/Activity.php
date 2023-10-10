@@ -47,9 +47,12 @@ class Activity
     public const EVENT_TORRENT_SENSITIVE_APPROVE_ADD    = 20210;
     public const EVENT_TORRENT_SENSITIVE_APPROVE_DELETE = 20211;
 
-    public const EVENT_TORRENT_DOWNLOAD_FILE_ADD        = 20300;
+    public const EVENT_TORRENT_STAR_ADD                 = 20300;
+    public const EVENT_TORRENT_STAR_DELETE              = 20310;
 
-    public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 20400;
+    public const EVENT_TORRENT_DOWNLOAD_FILE_ADD        = 20400;
+
+    public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 20500;
 
     /// Article
     public const EVENT_ARTICLE_ADD                      = 30000;

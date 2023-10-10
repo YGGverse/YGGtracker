@@ -1,0 +1,12 @@
+<a href="{{ path('user_info', { userId : user.id }) }}">
+    <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
+</a>
+<span class="margin-x-4-px">
+{{ 'add star to torrent' | trans }}
+</span>
+<a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+    {{ torrent.name }}
+</a>
+<div class="float-right">
+    {{ added | format_ago }}
+</div>

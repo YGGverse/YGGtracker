@@ -582,12 +582,14 @@ class TorrentService
         int $torrentId,
         int $userId,
         int $added
-    ): void
+    ): bool
     {
         if ($torrentStar = $this->findTorrentStar($torrentId, $userId))
         {
             $this->entityManagerInterface->remove($torrentStar);
             $this->entityManagerInterface->flush();
+
+            return false;
         }
 
         else
@@ -600,6 +602,8 @@ class TorrentService
 
             $this->entityManagerInterface->persist($torrentStar);
             $this->entityManagerInterface->flush();
+
+            return true;
         }
     }
 

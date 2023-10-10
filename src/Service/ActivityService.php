@@ -55,6 +55,7 @@ class ActivityService
         return $activity;
     }
 
+    /// User star
     public function addEventUserStarAdd(
         int $userId,
         int $added,
@@ -64,7 +65,7 @@ class ActivityService
         $activity = new Activity();
 
         $activity->setEvent(
-            Activity::EVENT_USER_STAR_DELETE
+            Activity::EVENT_USER_STAR_ADD
         );
 
         $activity->setUserId(
@@ -120,6 +121,67 @@ class ActivityService
     }
 
     // Torrent
+
+    /// Torrent star
+    public function addEventTorrentStarAdd(
+        int $userId,
+        int $added,
+        int $torrentId
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_STAR_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentStarDelete(
+        int $userId,
+        int $added,
+        int $torrentId
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_STAR_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
 
     /// Torrent locales
     public function addEventTorrentLocalesAdd(

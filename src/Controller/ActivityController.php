@@ -596,6 +596,61 @@ class ActivityController extends AbstractController
 
             break;
 
+            /// Torrent star
+            case $activity::EVENT_TORRENT_STAR_ADD:
+
+                return $this->render(
+                    'default/activity/event/torrent/star/add.html.twig',
+                    [
+                        'added' => $activity->getAdded(),
+                        'user'  =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'   => $activity->getTorrentId(),
+                            'name' => $torrentService->readTorrentFileByTorrentId(
+                                $activity->getTorrentId()
+                            )->getName()
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_STAR_DELETE:
+
+                return $this->render(
+                    'default/activity/event/torrent/star/delete.html.twig',
+                    [
+                        'added' => $activity->getAdded(),
+                        'user'  =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'   => $activity->getTorrentId(),
+                            'name' => $torrentService->readTorrentFileByTorrentId(
+                                $activity->getTorrentId()
+                            )->getName()
+                        ]
+                    ]
+                );
+
+            break;
+
             // Page
 
             default:
