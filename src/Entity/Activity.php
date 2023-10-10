@@ -20,42 +20,42 @@ class Activity
     // Event codes
 
     /// User
-    public const EVENT_USER_ADD                         = 10000;
+    public const EVENT_USER_ADD                         = 1000;
 
-    public const EVENT_USER_APPROVE_ADD                 = 10200;
-    public const EVENT_USER_APPROVE_DELETE              = 10210;
+    public const EVENT_USER_APPROVE_ADD                 = 1200;
+    public const EVENT_USER_APPROVE_DELETE              = 1201;
 
-    public const EVENT_USER_MODERATOR_ADD               = 10300;
-    public const EVENT_USER_MODERATOR_DELETE            = 10310;
+    public const EVENT_USER_MODERATOR_ADD               = 1300;
+    public const EVENT_USER_MODERATOR_DELETE            = 1301;
 
-    public const EVENT_USER_STATUS_ADD                  = 10400;
-    public const EVENT_USER_STATUS_DELETE               = 10410;
+    public const EVENT_USER_STATUS_ADD                  = 1400;
+    public const EVENT_USER_STATUS_DELETE               = 1401;
 
-    public const EVENT_USER_STAR_ADD                    = 10500;
-    public const EVENT_USER_STAR_DELETE                 = 10510;
+    public const EVENT_USER_STAR_ADD                    = 1500;
+    public const EVENT_USER_STAR_DELETE                 = 1501;
 
     /// Torrent
-    public const EVENT_TORRENT_ADD                      = 20000;
+    public const EVENT_TORRENT_ADD                      = 2000;
 
-    public const EVENT_TORRENT_LOCALES_ADD              = 20100;
-    public const EVENT_TORRENT_LOCALES_DELETE           = 20101;
-    public const EVENT_TORRENT_LOCALES_APPROVE_ADD      = 20110;
-    public const EVENT_TORRENT_LOCALES_APPROVE_DELETE   = 20111;
+    public const EVENT_TORRENT_LOCALES_ADD              = 2100;
+    public const EVENT_TORRENT_LOCALES_DELETE           = 2101;
+    public const EVENT_TORRENT_LOCALES_APPROVE_ADD      = 2110;
+    public const EVENT_TORRENT_LOCALES_APPROVE_DELETE   = 2111;
 
-    public const EVENT_TORRENT_SENSITIVE_ADD            = 20200;
-    public const EVENT_TORRENT_SENSITIVE_DELETE         = 20201;
-    public const EVENT_TORRENT_SENSITIVE_APPROVE_ADD    = 20210;
-    public const EVENT_TORRENT_SENSITIVE_APPROVE_DELETE = 20211;
+    public const EVENT_TORRENT_SENSITIVE_ADD            = 2200;
+    public const EVENT_TORRENT_SENSITIVE_DELETE         = 2201;
+    public const EVENT_TORRENT_SENSITIVE_APPROVE_ADD    = 2210;
+    public const EVENT_TORRENT_SENSITIVE_APPROVE_DELETE = 2211;
 
-    public const EVENT_TORRENT_STAR_ADD                 = 20300;
-    public const EVENT_TORRENT_STAR_DELETE              = 20310;
+    public const EVENT_TORRENT_STAR_ADD                 = 2300;
+    public const EVENT_TORRENT_STAR_DELETE              = 2301;
 
-    public const EVENT_TORRENT_DOWNLOAD_FILE_ADD        = 20400;
+    public const EVENT_TORRENT_DOWNLOAD_FILE_ADD        = 2400;
 
-    public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 20500;
+    public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 2500;
 
     /// Article
-    public const EVENT_ARTICLE_ADD                      = 30000;
+    public const EVENT_ARTICLE_ADD                      = 3000;
     // ...
 
     #[ORM\Column]
