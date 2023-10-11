@@ -1,9 +1,14 @@
-<a href="{{ path('user_info', { userId : user.id }) }}">
-    <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
-</a>
-<span class="margin-x-4-px">
-    {{ 'joined' | trans }} {{ name }}
-</span>
-<div class="float-right">
-    {{ added | format_ago }}
+
+<div class="row">
+    <div class="column width-80">
+        <a href="{{ path('user_info', { userId : user.id }) }}">
+            <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
+        </a>
+        <span class="margin-x-4-px">
+            {{ 'joined' | trans }} {{ name }}
+        </span>
+    </div>
+    <div class="column width-20 text-right">
+        {{ added | format_ago }}
+    </div>
 </div>
