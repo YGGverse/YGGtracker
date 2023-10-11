@@ -309,7 +309,8 @@ class UserController extends AbstractController
     public function toggleModerator(
         Request $request,
         TranslatorInterface $translator,
-        UserService $userService
+        UserService $userService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -331,10 +332,29 @@ class UserController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        // Update
-        $userService->toggleUserModerator(
+        // Update user moderator
+        $value = $userService->toggleUserModerator(
             $userTarget->getId()
-        );
+        )->isModerator();
+
+        // Add activity event
+        if ($value)
+        {
+            $activityService->addEventUserModeratorAdd(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventUserModeratorDelete(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
 
         // Redirect to info article created
         return $this->redirectToRoute(
@@ -361,7 +381,8 @@ class UserController extends AbstractController
     public function toggleStatus(
         Request $request,
         TranslatorInterface $translator,
-        UserService $userService
+        UserService $userService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -383,10 +404,29 @@ class UserController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        // Update
-        $userService->toggleUserStatus(
+        // Update user status
+        $value = $userService->toggleUserStatus(
             $userTarget->getId()
-        );
+        )->isStatus();
+
+        // Add activity event
+        if ($value)
+        {
+            $activityService->addEventUserStatusAdd(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventUserStatusDelete(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
 
         // Redirect to info article created
         return $this->redirectToRoute(
@@ -415,7 +455,8 @@ class UserController extends AbstractController
         TranslatorInterface $translator,
         UserService $userService,
         ArticleService $articleService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
@@ -454,12 +495,33 @@ class UserController extends AbstractController
                 $userTarget->getId(),
                 true
             );
+
+            // @TODO make event for each item
         }
 
         // Update user approved
-        $userService->toggleUserApproved(
+        $value = $userService->toggleUserApproved(
             $userTarget->getId()
-        );
+        )->isApproved();
+
+        // Add activity event
+        if ($value)
+        {
+            $activityService->addEventUserApproveAdd(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventUserApproveDelete(
+                $user->getId(),
+                time(),
+                $userTarget->getId()
+            );
+        }
 
         // Redirect to info article created
         return $this->redirectToRoute(

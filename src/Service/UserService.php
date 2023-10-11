@@ -179,7 +179,7 @@ class UserService
 
     public function toggleUserModerator(
         int $userId
-    ): void
+    ): ?User
     {
         if ($user = $this->getUser($userId))
         {
@@ -190,11 +190,13 @@ class UserService
             $this->entityManagerInterface->persist($user);
             $this->entityManagerInterface->flush();
         }
+
+        return $user;
     }
 
     public function toggleUserStatus(
         int $userId
-    ): void
+    ): ?User
     {
         if ($user = $this->getUser($userId))
         {
@@ -205,11 +207,13 @@ class UserService
             $this->entityManagerInterface->persist($user);
             $this->entityManagerInterface->flush();
         }
+
+        return $user;
     }
 
     public function toggleUserApproved(
         int $userId
-    ): void
+    ): ?User
     {
         if ($user = $this->getUser($userId))
         {
@@ -220,5 +224,7 @@ class UserService
             $this->entityManagerInterface->persist($user);
             $this->entityManagerInterface->flush();
         }
+
+        return $user;
     }
 }

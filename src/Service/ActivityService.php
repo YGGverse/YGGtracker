@@ -55,6 +55,201 @@ class ActivityService
         return $activity;
     }
 
+    /// User approved
+    public function addEventUserApproveAdd(
+        int $userId,
+        int $added,
+        int $userIdTarget,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_APPROVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventUserApproveDelete(
+        int $userId,
+        int $added,
+        int $userIdTarget,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_APPROVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    /// User status
+    public function addEventUserStatusAdd(
+        int $userId,
+        int $added,
+        int $userIdTarget,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_STATUS_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventUserStatusDelete(
+        int $userId,
+        int $added,
+        int $userIdTarget,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_STATUS_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    /// User moderator
+    public function addEventUserModeratorAdd(
+        int $userId,
+        int $added,
+        int $userIdTarget,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_MODERATOR_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventUserModeratorDelete(
+        int $userId,
+        int $added,
+        int $userIdTarget,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_USER_MODERATOR_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'userId' => $userIdTarget
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
     /// User star
     public function addEventUserStarAdd(
         int $userId,

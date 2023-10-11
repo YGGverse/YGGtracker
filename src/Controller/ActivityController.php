@@ -706,7 +706,7 @@ class ActivityController extends AbstractController
 
             break;
 
-            // Page
+            // @TODO Page
 
             default:
 
