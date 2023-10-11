@@ -30,13 +30,27 @@ class ArticleController extends AbstractController
     public function info(
         Request $request,
         TranslatorInterface $translator,
-        UserService $userService
+        UserService $userService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         return $this->render('default/article/info.html.twig', [
             'title' => 'test'
@@ -57,13 +71,27 @@ class ArticleController extends AbstractController
         TranslatorInterface $translator,
         UserService $userService,
         ArticleService $articleService,
-        ArticleService $torrentService
+        ArticleService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {

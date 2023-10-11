@@ -33,12 +33,26 @@ class TorrentController extends AbstractController
         TranslatorInterface $translator,
         UserService $userService,
         TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
@@ -184,9 +198,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -345,9 +372,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -534,13 +574,26 @@ class TorrentController extends AbstractController
         TranslatorInterface $translator,
         UserService $userService,
         TorrentService $torrentService,
-        ActivityService $activityService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
@@ -622,9 +675,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
@@ -699,9 +765,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -862,9 +941,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
@@ -946,9 +1038,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
@@ -1017,9 +1122,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -1093,9 +1211,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -1196,9 +1327,22 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {

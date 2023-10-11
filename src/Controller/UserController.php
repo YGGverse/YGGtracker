@@ -19,12 +19,27 @@ class UserController extends AbstractController
     #[Route('/')]
     public function root(
         Request $request,
-        UserService $userService
+        UserService $userService,
+        ActivityService $activityService
     ): Response
     {
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        // Init user
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         return $this->redirectToRoute(
             'user_dashboard',
@@ -64,13 +79,27 @@ class UserController extends AbstractController
     )]
     public function profile(
         Request $request,
-        UserService $userService
+        UserService $userService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         // Process post request
         if ($request->isMethod('post'))
@@ -164,12 +193,27 @@ class UserController extends AbstractController
     public function info(
         Request $request,
         TranslatorInterface $translator,
-        UserService $userService): Response
+        UserService $userService,
+        ActivityService $activityService
+    ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -236,13 +280,26 @@ class UserController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        ActivityService $activityService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isStatus())
         {
@@ -314,9 +371,22 @@ class UserController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isModerator())
         {
@@ -386,9 +456,22 @@ class UserController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isModerator())
         {
@@ -460,9 +543,22 @@ class UserController extends AbstractController
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         if (!$user->isModerator())
         {

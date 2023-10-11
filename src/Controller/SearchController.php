@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\UserService;
 use App\Service\ArticleService;
 use App\Service\TorrentService;
+use App\Service\ActivityService;
 
 class SearchController extends AbstractController
 {
@@ -26,13 +27,27 @@ class SearchController extends AbstractController
         Request $request,
         UserService $userService,
         ArticleService $articleService,
-        TorrentService $torrentService
+        TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init user
-        $user = $userService->init(
-            $request->getClientIp()
-        );
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
 
         $article = $request->query->get('article') ? (int) $request->query->get('article') : 1;
 

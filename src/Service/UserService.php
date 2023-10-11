@@ -23,20 +23,18 @@ class UserService
         $this->parameterBagInterface = $parameterBagInterface;
     }
 
-    public function init(string $address): User
+    public function addUser(
+        string $address,
+        string $added,
+        string $locale,
+        array  $locales,
+        string $theme,
+        bool   $sensitive = true,
+        bool   $approved  = false,
+        bool   $moderator = false,
+        bool   $status    = true
+    ): ?User
     {
-        // Return existing user
-        if ($result = $this->entityManagerInterface
-                           ->getRepository(User::class)
-                           ->findOneBy(
-                                [
-                                    'address' => $address
-                                ]
-                           ))
-        {
-            return $result;
-        }
-
         // Create new user
         $user = new User();
 
@@ -45,38 +43,39 @@ class UserService
         );
 
         $user->setAdded(
-            time()
+            $added
         );
 
         $user->setApproved(
-            false
+            $approved
         );
 
         $user->setModerator(
-            false
+            $moderator
         );
 
         $user->setStatus(
-            true
+            $status
         );
 
         $user->setLocale(
-            $this->parameterBagInterface->get('app.locale')
+            $locale
         );
 
         $user->setLocales(
-            explode('|', $this->parameterBagInterface->get('app.locales'))
+            $locales
         );
 
         $user->setTheme(
-            $this->parameterBagInterface->get('app.theme')
+            $theme
         );
 
         $user->setSensitive(
-            $this->parameterBagInterface->get('app.sensitive')
+            $sensitive
         );
 
-        $this->save($user);
+        $this->entityManagerInterface->persist($user);
+        $this->entityManagerInterface->flush();
 
         // Set initial user as approved & moderator
         if (1 === $user->getId())
@@ -85,7 +84,8 @@ class UserService
             $user->setModerator(true);
             $user->setSensitive(false);
 
-            $this->save($user);
+            $this->entityManagerInterface->persist($user);
+            $this->entityManagerInterface->flush();
         }
 
         // Return user data
@@ -97,6 +97,17 @@ class UserService
         return $this->entityManagerInterface
                     ->getRepository(User::class)
                     ->find($userId);
+    }
+
+    public function findUserByAddress(string $address): ?User
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(User::class)
+                    ->findOneBy(
+                        [
+                            'address' => $address
+                        ]
+                    );
     }
 
     public function identicon(
