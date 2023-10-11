@@ -361,7 +361,9 @@ class ActivityService
     }
 
     public function findLastActivities(
-        array $whitelist
+        array $whitelist,
+        int   $limit  = 10,
+        int   $offset = 0
     ): array
     {
         return $this->entityManagerInterface
@@ -372,13 +374,17 @@ class ActivityService
                         ],
                         [
                             'id' => 'DESC'
-                        ]
+                        ],
+                        $limit,
+                        $offset
                     );
     }
 
     public function findLastActivitiesByUserId(
         int   $userId,
-        array $whitelist
+        array $whitelist,
+        int   $limit  = 10,
+        int   $offset = 0
     ): array
     {
         return $this->entityManagerInterface
@@ -386,11 +392,105 @@ class ActivityService
                     ->findBy(
                         [
                             'userId' => $userId,
-                            'event'  => $whitelist
+                            'event'  => $whitelist,
                         ],
                         [
                             'id' => 'DESC'
-                        ]
+                        ],
+                        $limit,
+                        $offset
+                    );
+    }
+
+    public function findLastActivitiesByTorrentId(
+        int   $torrentId,
+        array $whitelist,
+        int   $limit  = 10,
+        int   $offset = 0
+    ): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findBy(
+                        [
+                            'torrentId' => $torrentId,
+                            'event'     => $whitelist,
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ],
+                        $limit,
+                        $offset
+                    );
+    }
+
+    public function findLastActivitiesByArticleId(
+        int   $articleId,
+        array $whitelist,
+        int   $limit  = 10,
+        int   $offset = 0
+    ): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findBy(
+                        [
+                            'articleId' => $articleId,
+                            'event'     => $whitelist,
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ],
+                        $limit,
+                        $offset
+                    );
+    }
+
+    public function findActivitiesTotal(
+        array $whitelist
+    ): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findActivitiesTotal($whitelist);
+    }
+
+    public function findActivitiesTotalByUserId(
+        int $userId,
+        array $whitelist
+    ): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findActivitiesTotalByUserId(
+                        $userId,
+                        $whitelist
+                    );
+    }
+
+    public function findActivitiesTotalByTorrentId(
+        int $torrentId,
+        array $whitelist
+    ): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findActivitiesTotalByTorrentId(
+                        $torrentId,
+                        $whitelist
+                    );
+    }
+
+    public function findActivitiesTotalByArticleId(
+        int $articleId,
+        array $whitelist
+    ): int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Activity::class)
+                    ->findActivitiesTotalByArticleId(
+                        $articleId,
+                        $whitelist
                     );
     }
 

@@ -39,10 +39,23 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}',
-        name: 'user_dashboard'
+        '/{_locale}/{page}',
+        name: 'user_dashboard',
+        requirements:
+        [
+            'page' => '\d+',
+        ],
+        defaults:
+        [
+            'page' => 1,
+        ],
+        methods:
+        [
+            'GET'
+        ]
     )]
     public function index(
+        int $page,
         Request $request,
         UserService $userService,
         ActivityService $activityService
@@ -54,12 +67,24 @@ class UserController extends AbstractController
             $activityService
         );
 
+        $total = $activityService->findActivitiesTotal(
+            $user->getEvents()
+        );
+
         return $this->render(
             'default/user/dashboard.html.twig',
             [
                 'activities' => $activityService->findLastActivities(
-                    $user->getEvents()
-                )
+                    $user->getEvents(),
+                    $this->getParameter('app.pagination'),
+                    ($page - 1) * $this->getParameter('app.pagination')
+                ),
+                'pagination' =>
+                [
+                    'page'  => $page,
+                    'pages' => ceil($total / $this->getParameter('app.pagination')),
+                    'total' => $total
+                ]
             ]
         );
     }
@@ -181,18 +206,22 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}/profile/{userId}',
+        '/{_locale}/profile/{userId}/{page}',
         name: 'user_info',
         defaults: [
             '_locale' => '%app.locale%',
-            'userId'  => null
+            'userId'  => 0,
+            'page'    => 1,
         ],
         requirements: [
             '_locale' => '%app.locales%',
-            'userId' => '\d+',
+            'userId'  => '\d+',
+            'page'    => '\d+',
         ],
     )]
     public function info(
+        int $userId,
+        int $page,
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
@@ -216,11 +245,17 @@ class UserController extends AbstractController
 
         // Init target user
         if (!$userTarget = $userService->getUser(
-            $request->get('userId') ? $request->get('userId') : $user->getId()
+            $userId ? $userId : $user->getId()
         ))
         {
             throw $this->createNotFoundException();
         }
+
+        // Get total activities
+        $total = $activityService->findActivitiesTotalByUserId(
+            $userTarget->getId(),
+            $user->getEvents()
+        );
 
         // Render template
         return $this->render(
@@ -260,6 +295,18 @@ class UserController extends AbstractController
                     )
                 ],
                 'events'     => $activityService->getEventsTree(),
+                'activities' => $activityService->findLastActivitiesByUserId(
+                    $userTarget->getId(),
+                    $user->getEvents(),
+                    $this->getParameter('app.pagination'),
+                    ($page - 1) * $this->getParameter('app.pagination')
+                ),
+                'pagination' =>
+                [
+                    'page'  => $page,
+                    'pages' => ceil($total / $this->getParameter('app.pagination')),
+                    'total' => $total
+                ]
             ]
         );
     }

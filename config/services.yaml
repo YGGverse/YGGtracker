@@ -6,6 +6,7 @@
 parameters:
     app.version: '%env(APP_VERSION)%'
     app.name: '%env(APP_NAME)%'
+    app.pagination: '%env(APP_PAGINATION)%'
     app.trackers: '%env(APP_TRACKERS)%'
     app.locales: '%env(APP_LOCALES)%'
     app.themes: '%env(APP_THEMES)%'

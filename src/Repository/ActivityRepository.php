@@ -20,4 +20,65 @@ class ActivityRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Activity::class);
     }
+
+    public function findActivitiesTotal(
+        array $whitelist
+    ): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->where('a.event IN (:event)')
+            ->setParameter(':event', $whitelist)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function findActivitiesTotalByUserId(
+        int $userId,
+        array $whitelist
+    ): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->where('a.userId = :userId')
+            ->andWhere('a.event IN (:event)')
+            ->setParameter(':userId', $userId)
+            ->setParameter(':event', $whitelist)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function findActivitiesTotalByTorrentId(
+        int $torrentId,
+        array $whitelist
+    ): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->where('a.torrentId = :torrentId')
+            ->andWhere('a.event IN (:event)')
+            ->setParameter(':torrentId', $torrentId)
+            ->setParameter(':event', $whitelist)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function findActivitiesTotalByArticleId(
+        int $articleId,
+        array $whitelist
+    ): int
+    {
+        return $this->createQueryBuilder('a')
+            ->select('count(a.id)')
+            ->where('a.articleId = :articleId')
+            ->andWhere('a.event IN (:event)')
+            ->setParameter(':articleId', $articleId)
+            ->setParameter(':event', $whitelist)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
 }

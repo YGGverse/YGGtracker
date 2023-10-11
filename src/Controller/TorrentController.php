@@ -17,11 +17,16 @@ class TorrentController extends AbstractController
 {
     // Torrent
     #[Route(
-        '/{_locale}/torrent/{torrentId}',
+        '/{_locale}/torrent/{torrentId}/{page}',
         name: 'torrent_info',
         requirements:
         [
-            'torrentId' => '\d+'
+            'torrentId' => '\d+',
+            'page'      => '\d+',
+        ],
+        defaults:
+        [
+            'page' => 1,
         ],
         methods:
         [
@@ -29,6 +34,7 @@ class TorrentController extends AbstractController
         ]
     )]
     public function info(
+        int $page,
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
@@ -81,6 +87,12 @@ class TorrentController extends AbstractController
                 )->getAddress()
             );
         }
+
+        // Get total activities
+        $total = $activityService->findActivitiesTotalByTorrentId(
+            $torrent->getId(),
+            $user->getEvents()
+        );
 
         // Render template
         return $this->render('default/torrent/info.html.twig', [
@@ -166,6 +178,18 @@ class TorrentController extends AbstractController
                 // 'magnet' => $file->getMagnetLink()
             ],
             'trackers' => explode('|', $this->getParameter('app.trackers')),
+            'activities' => $activityService->findLastActivitiesByTorrentId(
+                $torrent->getId(),
+                $user->getEvents(),
+                $this->getParameter('app.pagination'),
+                ($page - 1) * $this->getParameter('app.pagination')
+            ),
+            'pagination' =>
+            [
+                'page'  => $page,
+                'pages' => ceil($total / $this->getParameter('app.pagination')),
+                'total' => $total
+            ]
         ]);
     }
 

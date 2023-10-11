@@ -103,13 +103,25 @@ a.label-green:hover {
   background-color: #65916d;
 }
 
-.button {
-  border: transparent 1px solid;
+.button,
+a.button,
+a.button:active,
+a.button:visited,
+a.button:hover {
+  background: #5d627d;
+  border: #5d627d 1px solid;
+  color: #ccc;
+  padding: 6px 8px;
   border-radius: 3px;
-  padding: 8px;
+  opacity: .96;
+  display: inline-block;
 }
 
-.button-green {
+.button-green,
+a.button-green,
+a.button-green:active,
+a.button-green:visited,
+a.button-green:hover {
   color: #fff;
   background-color: #65916d;
   border: #65916d 1px solid;
