@@ -32,22 +32,11 @@ class SearchController extends AbstractController
     ): Response
     {
         // Init user
-        if (!$user = $userService->findUserByAddress($request->getClientIp()))
-        {
-            $user = $userService->addUser(
-                $request->getClientIp(),
-                time(),
-                $this->getParameter('app.locale'),
-                explode('|', $this->getParameter('app.locales')),
-                $this->getParameter('app.theme')
-            );
-
-            // Add user join event
-            $activityService->addEventUserAdd(
-                $user->getId(),
-                time()
-            );
-        }
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
 
         $article = $request->query->get('article') ? (int) $request->query->get('article') : 1;
 
@@ -159,5 +148,32 @@ class SearchController extends AbstractController
             'query' => $query,
             'type'  => $type,
         ]);
+    }
+
+    private function initUser(
+        Request $request,
+        UserService $userService,
+        ActivityService $activityService
+    ): ?\App\Entity\User
+    {
+        // Init user
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $this->getParameter('app.theme')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
+
+        return $user;
     }
 }
