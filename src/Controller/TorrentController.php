@@ -17,16 +17,11 @@ class TorrentController extends AbstractController
 {
     // Torrent
     #[Route(
-        '/{_locale}/torrent/{torrentId}/{page}',
+        '/{_locale}/torrent/{torrentId}',
         name: 'torrent_info',
         requirements:
         [
             'torrentId' => '\d+',
-            'page'      => '\d+',
-        ],
-        defaults:
-        [
-            'page' => 1,
         ],
         methods:
         [
@@ -34,7 +29,6 @@ class TorrentController extends AbstractController
         ]
     )]
     public function info(
-        int $page,
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
@@ -93,6 +87,9 @@ class TorrentController extends AbstractController
             $torrent->getId(),
             $user->getEvents()
         );
+
+        // Init page
+        $page = $request->get('page') ? (int) $request->get('page') : 1;
 
         // Render template
         return $this->render('default/torrent/info.html.twig', [

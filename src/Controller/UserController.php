@@ -39,23 +39,14 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}/{page}',
+        '/{_locale}',
         name: 'user_dashboard',
-        requirements:
-        [
-            'page' => '\d+',
-        ],
-        defaults:
-        [
-            'page' => 1,
-        ],
         methods:
         [
             'GET'
         ]
     )]
     public function index(
-        int $page,
         Request $request,
         UserService $userService,
         ActivityService $activityService
@@ -70,6 +61,8 @@ class UserController extends AbstractController
         $total = $activityService->findActivitiesTotal(
             $user->getEvents()
         );
+
+        $page = $request->get('page') ? (int) $request->get('page') : 1;
 
         return $this->render(
             'default/user/dashboard.html.twig',
@@ -206,22 +199,18 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}/profile/{userId}/{page}',
+        '/{_locale}/profile/{userId}',
         name: 'user_info',
         defaults: [
             '_locale' => '%app.locale%',
             'userId'  => 0,
-            'page'    => 1,
         ],
         requirements: [
             '_locale' => '%app.locales%',
             'userId'  => '\d+',
-            'page'    => '\d+',
         ],
     )]
     public function info(
-        int $userId,
-        int $page,
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
@@ -245,7 +234,7 @@ class UserController extends AbstractController
 
         // Init target user
         if (!$userTarget = $userService->getUser(
-            $userId ? $userId : $user->getId()
+            $request->get('userId') ? $request->get('userId') : $user->getId()
         ))
         {
             throw $this->createNotFoundException();
@@ -256,6 +245,9 @@ class UserController extends AbstractController
             $userTarget->getId(),
             $user->getEvents()
         );
+
+        // Init page
+        $page = $request->get('page') ? (int) $request->get('page') : 1;
 
         // Render template
         return $this->render(
