@@ -5,16 +5,359 @@ namespace App\Service;
 use App\Entity\Activity;
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActivityService
 {
     private EntityManagerInterface $entityManagerInterface;
+    private TranslatorInterface $translatorInterface;
 
     public function __construct(
-        EntityManagerInterface $entityManagerInterface
+        EntityManagerInterface $entityManagerInterface,
+        TranslatorInterface $translatorInterface
     )
     {
         $this->entityManagerInterface = $entityManagerInterface;
+        $this->translatorInterface    = $translatorInterface;
+    }
+
+    public function getEventCodes(): array
+    {
+        return
+        [
+            // User
+            Activity::EVENT_USER_ADD,
+
+            Activity::EVENT_USER_APPROVE_ADD,
+            Activity::EVENT_USER_APPROVE_DELETE,
+
+            Activity::EVENT_USER_MODERATOR_ADD,
+            Activity::EVENT_USER_MODERATOR_DELETE,
+
+            Activity::EVENT_USER_STATUS_ADD,
+            Activity::EVENT_USER_STATUS_DELETE,
+
+            Activity::EVENT_USER_STAR_ADD,
+            Activity::EVENT_USER_STAR_DELETE,
+
+            // Torrents
+            Activity::EVENT_TORRENT_ADD,
+
+            Activity::EVENT_TORRENT_LOCALES_ADD,
+            Activity::EVENT_TORRENT_LOCALES_DELETE,
+            Activity::EVENT_TORRENT_LOCALES_APPROVE_ADD,
+            Activity::EVENT_TORRENT_LOCALES_APPROVE_DELETE,
+
+            Activity::EVENT_TORRENT_SENSITIVE_ADD,
+            Activity::EVENT_TORRENT_SENSITIVE_DELETE,
+            Activity::EVENT_TORRENT_SENSITIVE_APPROVE_ADD,
+            Activity::EVENT_TORRENT_SENSITIVE_APPROVE_DELETE,
+
+            Activity::EVENT_TORRENT_STAR_ADD,
+            Activity::EVENT_TORRENT_STAR_DELETE,
+
+            Activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD,
+            Activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD,
+
+            // Articles
+            Activity::EVENT_ARTICLE_ADD,
+        ];
+    }
+
+    public function getEventsTree(): array
+    {
+        $events = [];
+
+        foreach ($this->getEventCodes() as $code)
+        {
+            switch ($code)
+            {
+                // User
+                case Activity::EVENT_USER_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Users')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Joined')
+                    ] = $code;
+
+                break;
+
+                /// User approve
+                case Activity::EVENT_USER_APPROVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Users')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Approved')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_USER_APPROVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Users')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disapproved')
+                    ] = $code;
+                break;
+
+                /// User status
+                case Activity::EVENT_USER_STATUS_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('User statuses')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Enabled')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_USER_STATUS_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('User statuses')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disabled')
+                    ] = $code;
+                break;
+
+                /// User moderator
+                case Activity::EVENT_USER_MODERATOR_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('User moderators')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_USER_MODERATOR_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('User moderators')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Removed')
+                    ] = $code;
+                break;
+
+                /// User star
+                case Activity::EVENT_USER_STAR_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('User stars')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_USER_STAR_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('User stars')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Removed')
+                    ] = $code;
+                break;
+
+                // Torrent
+                case Activity::EVENT_TORRENT_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrents')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                /// Torrent locales
+                case Activity::EVENT_TORRENT_LOCALES_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent locales')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_LOCALES_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent locales')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Deleted')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_LOCALES_APPROVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent locales')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Approved')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_LOCALES_APPROVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent locales')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disapproved')
+                    ] = $code;
+
+                break;
+
+                /// Torrent sensitive
+                case Activity::EVENT_TORRENT_SENSITIVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent sensitive')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_SENSITIVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent sensitive')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Deleted')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_SENSITIVE_APPROVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent sensitive')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Approved')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_SENSITIVE_APPROVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent sensitive')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disapproved')
+                    ] = $code;
+
+                break;
+
+                /// Torrent stars
+                case Activity::EVENT_TORRENT_STAR_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent stars')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_STAR_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent stars')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Removed')
+                    ] = $code;
+
+                break;
+
+                /// Torrent downloads
+                case Activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent downloads')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Files')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent downloads')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Magnet links')
+                    ] = $code;
+
+                break;
+
+                // Article
+                case Activity::EVENT_TORRENT_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Articles')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+            }
+        }
+
+        return $events;
     }
 
     public function findLastActivities(): array

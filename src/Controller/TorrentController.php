@@ -1155,11 +1155,14 @@ class TorrentController extends AbstractController
         );
 
         // Filter trackers
-        $file->setAnnounceList(
-            [
-                explode('|', $this->getParameter('app.trackers'))
-            ]
-        );
+        if ($user->isYggdrasil())
+        {
+            $file->setAnnounceList(
+                [
+                    explode('|', $this->getParameter('app.trackers'))
+                ]
+            );
+        }
 
         $data = $file->dumpToString();
 
@@ -1260,11 +1263,14 @@ class TorrentController extends AbstractController
         );
 
         // Filter trackers
-        $file->setAnnounceList(
-            [
-                explode('|', $this->getParameter('app.trackers'))
-            ]
-        );
+        if ($user->isYggdrasil())
+        {
+            $file->setAnnounceList(
+                [
+                    explode('|', $this->getParameter('app.trackers'))
+                ]
+            );
+        }
 
         // Return magnet link
         return $this->redirect(
@@ -1308,7 +1314,11 @@ class TorrentController extends AbstractController
                 time(),
                 $this->getParameter('app.locale'),
                 explode('|', $this->getParameter('app.locales')),
-                $this->getParameter('app.theme')
+                $activityService->getEventCodes(),
+                $this->getParameter('app.theme'),
+                $this->getParameter('app.sensitive'),
+                $this->getParameter('app.yggdrasil'),
+                $this->getParameter('app.approved')
             );
 
             // Add user join event

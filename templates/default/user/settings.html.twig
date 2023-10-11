@@ -1,0 +1,140 @@
+{% extends 'default/layout.html.twig' %}
+{% block title %}{{ 'Settings' | trans }} - {{ name }}{% endblock %}
+{% block main_content %}
+    <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
+        <form name="profile" action="{{ path('user_settings') }}" method="post">
+            <h1>{{ 'Settings' | trans }} </h1>
+            <table class="width-100">
+                <tbody>
+                    <tr>
+                        <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Interface' | trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px">
+                            {{ 'Theme' | trans }}
+                        </td>
+                        <td class="padding-t-16-px">
+                            <select name="theme">
+                                {% for theme in themes %}
+                                    {% if theme == user.theme %}
+                                        <option value="{{ theme }}" selected="selected">
+                                            {{ theme | u.title }}
+                                        </option>
+                                    {% else %}
+                                        <option value="{{ theme }}">
+                                            {{ theme | u.title }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px">{{ 'Language' | trans }}</td>
+                        <td class="padding-t-16-px">
+                            <select name="locale">
+                                {% for locale in locales %}
+                                    {% if locale == user.locale %}
+                                        <option value="{{ locale }}" selected="selected">
+                                            {{ locale|locale_name(locale)|u.title }}
+                                        </option>
+                                    {% else %}
+                                        <option value="{{ locale }}">
+                                            {{ locale|locale_name(locale)|u.title }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Search' | trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-16-px">
+                            {{ 'Languages' | trans }}
+                        </td>
+                        <td class="padding-t-16-px">
+                            {% for locale in locales %}
+                                <div class="padding-y-4-px">
+                                    {% if locale in user.locales %}
+                                        <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" checked="checked" />
+                                    {% else %}
+                                        <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" />
+                                    {% endif %}
+                                    <label for="{{ locale }}">
+                                        {{ locale|locale_name(locale)|u.title }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-t-8-px">
+                            {{ 'Sensitive' | trans }}
+                        </td>
+                        <td>
+                            <div class="padding-t-8-px">
+                                {% if user.sensitive %}
+                                    <input name="sensitive" type="checkbox" value="true" checked="checked" />
+                                {% else %}
+                                    <input name="sensitive" type="checkbox" value="true" />
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Events' | trans }}
+                        </td>
+                    </tr>
+                    {% for group, event in events %}
+                        <tr>
+                            <td class="padding-t-16-px">
+                                {{ group }}
+                            </td>
+                            <td class="padding-t-16-px">
+                                {% for key, value in event %}
+                                    <span class="margin-r-8-px">
+                                        {% if value in user.events %}
+                                            <input name="events[]" id="event-{{ value }}" type="checkbox" value="{{ value }}" checked="checked" />
+                                        {% else %}
+                                            <input name="events[]" id="event-{{ value }}" type="checkbox" value="{{ value }}" />
+                                        {% endif %}
+                                        <label for="event-{{ value }}">
+                                            {{ key }}
+                                        </label>
+                                    </span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
+                            {{ 'Downloads' | trans }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-y-16-px">
+                            {{ 'Yggdrasil filter' | trans }}
+                        </td>
+                        <td class="padding-y-16-px">
+                            {% if user.yggdrasil %}
+                                <input name="yggdrasil" type="checkbox" value="true" checked="checked" />
+                            {% else %}
+                                <input name="yggdrasil" type="checkbox" value="true" />
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-right">
+                <input class="button-green" type="submit" value="{{ 'Save' | trans }}" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

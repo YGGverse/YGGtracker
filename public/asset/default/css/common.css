@@ -111,6 +111,7 @@ textarea:hover {
 
 td {
   padding: 2px 0;
+  vertical-align: top;
 }
 
 header a.logo {

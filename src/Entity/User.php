@@ -35,11 +35,17 @@ class User
     #[ORM\Column(type: Types::ARRAY)]
     private array $locales = [];
 
+    #[ORM\Column(type: Types::ARRAY)]
+    private array $events = [];
+
     #[ORM\Column(length: 255)]
     private ?string $theme = null;
 
     #[ORM\Column]
     private ?bool $sensitive = null;
+
+    #[ORM\Column]
+    private ?bool $yggdrasil = null;
 
     public function getId(): ?int
     {
@@ -137,6 +143,18 @@ class User
         return $this;
     }
 
+    public function getEvents(): array
+    {
+        return $this->events;
+    }
+
+    public function setEvents(array $events): static
+    {
+        $this->events = $events;
+
+        return $this;
+    }
+
     public function getTheme(): ?string
     {
         return $this->theme;
@@ -157,6 +175,18 @@ class User
     public function setSensitive(bool $sensitive): static
     {
         $this->sensitive = $sensitive;
+
+        return $this;
+    }
+
+    public function isYggdrasil(): ?bool
+    {
+        return $this->yggdrasil;
+    }
+
+    public function setYggdrasil(bool $yggdrasil): static
+    {
+        $this->yggdrasil = $yggdrasil;
 
         return $this;
     }

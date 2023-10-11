@@ -28,8 +28,10 @@ class UserService
         string $added,
         string $locale,
         array  $locales,
+        array  $events,
         string $theme,
         bool   $sensitive = true,
+        bool   $yggdrasil = true,
         bool   $approved  = false,
         bool   $moderator = false,
         bool   $status    = true
@@ -70,8 +72,16 @@ class UserService
             $theme
         );
 
+        $user->setEvents(
+            $events
+        );
+
         $user->setSensitive(
             $sensitive
+        );
+
+        $user->setYggdrasil(
+            $yggdrasil
         );
 
         $this->entityManagerInterface->persist($user);

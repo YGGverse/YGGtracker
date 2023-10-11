@@ -63,8 +63,8 @@ class UserController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}/profile',
-        name: 'user_profile',
+        '/{_locale}/settings',
+        name: 'user_settings',
         defaults: [
             '_locale' => '%app.locale%'
         ],
@@ -72,7 +72,7 @@ class UserController extends AbstractController
             '_locale' => '%app.locales%',
         ],
     )]
-    public function profile(
+    public function settings(
         Request $request,
         UserService $userService,
         ActivityService $activityService
@@ -121,9 +121,28 @@ class UserController extends AbstractController
                 );
             }
 
+            // Update events
+            $events = [];
+            foreach ((array) $request->get('events') as $event)
+            {
+                if (in_array($event, $activityService->getEventCodes()))
+                {
+                    $events[] = $event;
+                }
+            }
+
+            $user->setEvents(
+                $events
+            );
+
             // Update sensitive
             $user->setSensitive(
                 $request->get('sensitive') === 'true'
+            );
+
+            // Update yggdrasil
+            $user->setYggdrasil(
+                $request->get('yggdrasil') === 'true'
             );
 
             // Save changes to DB
@@ -131,7 +150,7 @@ class UserController extends AbstractController
 
             // Redirect user to new locale
             return $this->redirectToRoute(
-                'user_profile',
+                'user_settings',
                 [
                     '_locale' => $user->getLocale()
                 ]
@@ -140,38 +159,35 @@ class UserController extends AbstractController
 
         // Render template
         return $this->render(
-            'default/user/profile.html.twig',
+            'default/user/settings.html.twig',
             [
                 'user' => [
                     'id'        => $user->getId(),
-                    'address'   => $request->getClientIp() == $user->getAddress() ? $user->getAddress() : false,
-                    'moderator' => $user->isModerator(),
-                    'approved'  => $user->isApproved(),
-                    'status'    => $user->isStatus(),
                     'sensitive' => $user->isSensitive(),
+                    'yggdrasil' => $user->isYggdrasil(),
                     'locale'    => $user->getLocale(),
                     'locales'   => $user->getLocales(),
+                    'events'    => $user->getEvents(),
                     'theme'     => $user->getTheme(),
-                    'added'     => $user->getAdded(),
-                    'identicon' => $userService->identicon(
-                        $user->getAddress(),
-                        48
-                    ),
+                    'added'     => $user->getAdded()
                 ],
                 'locales' => explode('|', $this->getParameter('app.locales')),
-                'themes'  => explode('|', $this->getParameter('app.themes'))
+                'themes'  => explode('|', $this->getParameter('app.themes')),
+                'events'  => $activityService->getEventsTree()
             ]
         );
     }
 
     #[Route(
-        '/{_locale}/user/{userId}',
+        '/{_locale}/profile/{userId}',
         name: 'user_info',
         defaults: [
-            '_locale' => '%app.locale%'
+            '_locale' => '%app.locale%',
+            'userId'  => null
         ],
         requirements: [
             '_locale' => '%app.locales%',
+            'userId' => '\d+',
         ],
     )]
     public function info(
@@ -197,7 +213,9 @@ class UserController extends AbstractController
         }
 
         // Init target user
-        if (!$userTarget = $userService->getUser($request->get('userId')))
+        if (!$userTarget = $userService->getUser(
+            $request->get('userId') ? $request->get('userId') : $user->getId()
+        ))
         {
             throw $this->createNotFoundException();
         }
@@ -208,13 +226,15 @@ class UserController extends AbstractController
             [
                 'user' => [
                     'id'        => $userTarget->getId(),
-                    'address'   => $request->getClientIp() == $userTarget->getAddress() ? $userTarget->getAddress() : false,
+                    'address'   => $userTarget->getId() === $user->getId() ? $userTarget->getAddress() : false,
                     'moderator' => $userTarget->isModerator(),
                     'approved'  => $userTarget->isApproved(),
                     'status'    => $userTarget->isStatus(),
                     'sensitive' => $userTarget->isSensitive(),
+                    'yggdrasil' => $userTarget->isYggdrasil(),
                     'locale'    => $userTarget->getLocale(),
                     'locales'   => $userTarget->getLocales(),
+                    'events'    => $userTarget->getEvents(),
                     'theme'     => $userTarget->getTheme(),
                     'added'     => $userTarget->getAdded(),
                     'identicon' => $userService->identicon(
@@ -232,7 +252,8 @@ class UserController extends AbstractController
                             $userTarget->getId()
                         )
                     ],
-                ]
+                ],
+                'events'  => $activityService->getEventsTree()
             ]
         );
     }
@@ -587,7 +608,11 @@ class UserController extends AbstractController
                 time(),
                 $this->getParameter('app.locale'),
                 explode('|', $this->getParameter('app.locales')),
-                $this->getParameter('app.theme')
+                $activityService->getEventCodes(),
+                $this->getParameter('app.theme'),
+                $this->getParameter('app.sensitive'),
+                $this->getParameter('app.yggdrasil'),
+                $this->getParameter('app.approved')
             );
 
             // Add user join event
