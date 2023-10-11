@@ -325,7 +325,7 @@ class TorrentController extends AbstractController
                     $torrent->getId()
                 );
 
-                // Redirect to info article created
+                // Redirect to info page
                 return $this->redirectToRoute(
                     'torrent_info',
                     [
@@ -519,7 +519,7 @@ class TorrentController extends AbstractController
                     $torrentLocales->getId()
                 );
 
-                // Redirect to info article created
+                // Redirect to info page
                 return $this->redirectToRoute(
                     'torrent_info',
                     [
@@ -622,7 +622,7 @@ class TorrentController extends AbstractController
             $torrentLocales->getId()
         );
 
-        // Redirect to info article created
+        // Redirect back to form
         return $this->redirectToRoute(
             'torrent_locales_edit',
             [
@@ -695,7 +695,7 @@ class TorrentController extends AbstractController
             $torrentLocales->getId()
         );
 
-        // Redirect to info article created
+        // Redirect back to form
         return $this->redirectToRoute(
             'torrent_locales_edit',
             [
