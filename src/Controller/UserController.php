@@ -57,7 +57,9 @@ class UserController extends AbstractController
         return $this->render(
             'default/user/dashboard.html.twig',
             [
-                'activities' => $activityService->findLastActivities()
+                'activities' => $activityService->findLastEvents(
+                    $user->getEvents()
+                )
             ]
         );
     }

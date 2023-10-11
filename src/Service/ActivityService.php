@@ -360,12 +360,16 @@ class ActivityService
         return $events;
     }
 
-    public function findLastActivities(): array
+    public function findLastEvents(
+        array $whitelist
+    ): array
     {
         return $this->entityManagerInterface
                     ->getRepository(Activity::class)
                     ->findBy(
-                        [],
+                        [
+                            'event' => $whitelist
+                        ],
                         [
                             'id' => 'DESC'
                         ]
