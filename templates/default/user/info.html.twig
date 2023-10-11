@@ -218,4 +218,20 @@
             </tbody>
         </table>
     </div>
+    {% if user.activities %}
+        <div class="padding-x-24-px padding-y-8-px margin-y-16-px">
+            <h2>{{ 'Last activity' | trans }}</h2>
+            <sup>
+                <a href="#">RSS</a>
+            </sup>
+        </div>
+        {% for activity in user.activities %}
+            <div class="padding-x-24-px padding-y-16-px margin-y-8-px border-radius-3-px background-color-night">
+                {{ render(controller(
+                    'App\\Controller\\ActivityController::event',
+                    { activity : activity }
+                )) }}
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

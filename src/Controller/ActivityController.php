@@ -15,7 +15,7 @@ use App\Service\TorrentService;
 
 class ActivityController extends AbstractController
 {
-    public function template(
+    public function event(
         $activity,
         ActivityService $activityService,
         UserService $userService,

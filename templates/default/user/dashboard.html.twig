@@ -4,7 +4,7 @@
     {% for activity in activities %}
         <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night">
             {{ render(controller(
-                'App\\Controller\\ActivityController::template',
+                'App\\Controller\\ActivityController::event',
                 { activity : activity }
             )) }}
         </div>
