@@ -43,6 +43,9 @@ class ActivityService
             // Torrents
             Activity::EVENT_TORRENT_ADD,
 
+            Activity::EVENT_TORRENT_APPROVE_ADD,
+            Activity::EVENT_TORRENT_APPROVE_DELETE,
+
             Activity::EVENT_TORRENT_LOCALES_ADD,
             Activity::EVENT_TORRENT_LOCALES_DELETE,
             Activity::EVENT_TORRENT_LOCALES_APPROVE_ADD,
@@ -187,6 +190,30 @@ class ActivityService
                     ]
                     [
                         $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_APPROVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrents')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Approved')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_APPROVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrents')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disapproved')
                     ] = $code;
 
                 break;
@@ -752,6 +779,66 @@ class ActivityService
 
         $activity->setTorrentId(
             $torrentId
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentApproveAdd(
+        int $userId,
+        int $torrentId,
+        int $added
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_APPROVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentApproveDelete(
+        int $userId,
+        int $torrentId,
+        int $added
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_APPROVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
         );
 
         $this->entityManagerInterface->persist($activity);

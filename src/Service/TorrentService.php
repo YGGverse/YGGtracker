@@ -298,6 +298,30 @@ class TorrentService
         return $torrent;
     }
 
+    public function toggleTorrentApproved(
+        int $torrentId
+    ): ?Torrent
+    {
+        $torrent = $this->getTorrent($torrentId);
+
+        $torrent->setApproved(
+            !$torrent->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrent);
+        $this->entityManagerInterface->flush();
+
+        $this->updateTorrentLocales(
+            $torrent->getId()
+        );
+
+        $this->updateTorrentSensitive(
+            $torrent->getId()
+        );
+
+        return $torrent;
+    }
+
     public function getTorrentScrapeQueue(): ?Torrent
     {
         return $this->entityManagerInterface

@@ -37,22 +37,25 @@ class Activity
     /// Torrent
     public const EVENT_TORRENT_ADD                      = 2000;
 
-    public const EVENT_TORRENT_LOCALES_ADD              = 2100;
-    public const EVENT_TORRENT_LOCALES_DELETE           = 2101;
-    public const EVENT_TORRENT_LOCALES_APPROVE_ADD      = 2110;
-    public const EVENT_TORRENT_LOCALES_APPROVE_DELETE   = 2111;
+    public const EVENT_TORRENT_APPROVE_ADD              = 1100;
+    public const EVENT_TORRENT_APPROVE_DELETE           = 1101;
 
-    public const EVENT_TORRENT_SENSITIVE_ADD            = 2200;
-    public const EVENT_TORRENT_SENSITIVE_DELETE         = 2201;
-    public const EVENT_TORRENT_SENSITIVE_APPROVE_ADD    = 2210;
-    public const EVENT_TORRENT_SENSITIVE_APPROVE_DELETE = 2211;
+    public const EVENT_TORRENT_LOCALES_ADD              = 2200;
+    public const EVENT_TORRENT_LOCALES_DELETE           = 2201;
+    public const EVENT_TORRENT_LOCALES_APPROVE_ADD      = 2210;
+    public const EVENT_TORRENT_LOCALES_APPROVE_DELETE   = 2211;
 
-    public const EVENT_TORRENT_STAR_ADD                 = 2300;
-    public const EVENT_TORRENT_STAR_DELETE              = 2301;
+    public const EVENT_TORRENT_SENSITIVE_ADD            = 2300;
+    public const EVENT_TORRENT_SENSITIVE_DELETE         = 2301;
+    public const EVENT_TORRENT_SENSITIVE_APPROVE_ADD    = 2310;
+    public const EVENT_TORRENT_SENSITIVE_APPROVE_DELETE = 2311;
 
-    public const EVENT_TORRENT_DOWNLOAD_FILE_ADD        = 2400;
+    public const EVENT_TORRENT_STAR_ADD                 = 2400;
+    public const EVENT_TORRENT_STAR_DELETE              = 2401;
 
-    public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 2500;
+    public const EVENT_TORRENT_DOWNLOAD_FILE_ADD        = 2500;
+
+    public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 2600;
 
     // ...
 

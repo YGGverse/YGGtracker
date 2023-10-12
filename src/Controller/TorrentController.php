@@ -76,7 +76,13 @@ class TorrentController extends AbstractController
         $page = $request->get('page') ? (int) $request->get('page') : 1;
 
         // Render template
-        return $this->render('default/torrent/info.html.twig', [
+        return $this->render('default/torrent/info.html.twig',
+        [
+            'user' =>
+            [
+                'id'        => $user->getId(),
+                'moderator' => $user->isModerator()
+            ],
             'torrent' =>
             [
                 'id'        => $torrent->getId(),
@@ -90,6 +96,7 @@ class TorrentController extends AbstractController
                 ],
                 'locales'   => $torrent->getLocales(),
                 'sensitive' => $torrent->isSensitive(),
+                'approved'  => $torrent->isApproved(),
                 'download'  =>
                 [
                     'file' =>
@@ -560,6 +567,82 @@ class TorrentController extends AbstractController
             [
                 'locales' => explode('|', $this->getParameter('app.locales')),
                 'form'    => $form,
+            ]
+        );
+    }
+
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/approve/toggle',
+        name: 'torrent_approve_toggle',
+        requirements:
+        [
+            'torrentId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function approve(
+        Request $request,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Register activity event
+        if (!$torrent->isApproved())
+        {
+            $activityService->addEventTorrentApproveAdd(
+                $user->getId(),
+                $torrent->getId(),
+                time()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventTorrentApproveDelete(
+                $user->getId(),
+                $torrent->getId(),
+                time()
+            );
+        }
+
+        // Update approved
+        $torrentService->toggleTorrentApproved(
+            $torrent->getId()
+        );
+
+        // Redirect back to form
+        return $this->redirectToRoute(
+            'torrent_info',
+            [
+                '_locale'   => $request->get('_locale'),
+                'torrentId' => $torrent->getId()
             ]
         );
     }
