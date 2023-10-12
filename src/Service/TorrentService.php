@@ -568,6 +568,10 @@ class TorrentService
 
             $this->entityManagerInterface->persist($torrentLocales);
             $this->entityManagerInterface->flush();
+
+            $this->updateTorrentLocales(
+                $torrentLocales->getTorrentId(),
+            );
         }
     }
 
@@ -695,6 +699,10 @@ class TorrentService
 
             $this->entityManagerInterface->persist($torrentSensitive);
             $this->entityManagerInterface->flush();
+
+            $this->updateTorrentSensitive(
+                $torrentSensitive->getTorrentId(),
+            );
         }
     }
 
