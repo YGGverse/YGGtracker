@@ -355,6 +355,24 @@ class TorrentService
                     );
     }
 
+    public function findLastTorrentLocalesByTorrentIdApproved(
+        int  $torrentId,
+        bool $approved = true
+    ): ?TorrentLocales
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentLocales::class)
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId,
+                            'approved'  => $approved
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
     public function findTorrentLocalesByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
@@ -459,6 +477,24 @@ class TorrentService
                     ->findOneBy(
                         [
                             'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
+    public function findLastTorrentSensitiveByTorrentIdApproved(
+        int $torrentId,
+        bool $approved = true
+    ): ?TorrentSensitive
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentSensitive::class)
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId,
+                            'approved'  => $approved,
                         ],
                         [
                             'id' => 'DESC'

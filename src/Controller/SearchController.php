@@ -45,15 +45,38 @@ class SearchController extends AbstractController
             case 'article':
 
             break;
+
             case 'torrent':
 
                 $torrents = [];
                 foreach ($torrentService->searchTorrents($request->query->get('query')) as $torrent)
                 {
+                    // Apply locales filter
+                    if ($lastTorrentLocales = $torrentService->findLastTorrentLocalesByTorrentIdApproved($torrent->getId()))
+                    {
+                        if (!count(
+                            array_intersect(
+                                $lastTorrentLocales->getValue(),
+                                $user->getLocales()
+                            )
+                        )) {
+                            continue;
+                        }
+                    }
+
+                    // Apply sensitive filters
+                    if ($lastTorrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentIdApproved($torrent->getId()))
+                    {
+                        if ($user->isSensitive() && $lastTorrentSensitive->isValue())
+                        {
+                            continue;
+                        }
+                    }
+
                     // Read file
                     if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
                     {
-                        continue; // @TODO
+                        continue; // @TODO exception
                     }
 
                     // Generate keywords
@@ -134,7 +157,9 @@ class SearchController extends AbstractController
                 ]);
 
             break;
+
             default:
+
                 throw $this->createNotFoundException();
         }
     }
