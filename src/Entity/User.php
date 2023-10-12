@@ -32,10 +32,10 @@ class User
     #[ORM\Column(length: 2)]
     private ?string $locale = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
     private array $locales = [];
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
     private array $events = [];
 
     #[ORM\Column(length: 255)]

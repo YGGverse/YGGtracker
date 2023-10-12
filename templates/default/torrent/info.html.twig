@@ -292,7 +292,7 @@
             <div class="padding-t-16-px text-left">
                 {% if torrent.locales %}
                     <div class="padding-y-4-px">
-                        {% for i, locale in torrent.locales.value %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
+                        {% for i, locale in torrent.locales %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
                     </div>
                 {% endif %}
             </div>

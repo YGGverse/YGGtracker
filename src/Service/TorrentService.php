@@ -150,7 +150,7 @@ class TorrentService
     public function generateTorrentKeywordsByTorrentFilepath(
         string $filepath,
         int $minLength = 3
-    ): string
+    ): array
     {
         $keywords = [];
 
@@ -175,17 +175,17 @@ class TorrentService
                 {
                     unset($words[$key]);
                 }
+
+                else
+                {
+                    $words[$key] = mb_strtolower($value);
+                }
             }
 
             $keywords = array_merge($keywords, $words);
         }
 
-        return mb_strtolower(
-            implode(
-                ',',
-                array_unique($keywords)
-            )
-        );
+        return array_unique($keywords);
     }
 
     public function getStorageFilepathById(int $id): string
@@ -195,6 +195,25 @@ class TorrentService
             $this->kernelInterface->getProjectDir(),
             implode('/', str_split($id))
         );
+    }
+
+    public function getTorrentContributors(Torrent $torrent): array
+    {
+        $contributors = [];
+
+        foreach ($this->findTorrentLocalesByTorrentId($torrent->getUserId()) as $torrentLocale)
+        {
+            $contributors[] = $torrentLocale->getUserId();
+        }
+
+        foreach ($this->findTorrentSensitiveByTorrentId($torrent->getUserId()) as $torrentSensitive)
+        {
+            $contributors[] = $torrentSensitive->getUserId();
+        }
+
+        $contributors[] = $torrent->getUserId();
+
+        return array_unique($contributors);
     }
 
     public function add(
@@ -213,6 +232,8 @@ class TorrentService
             $this->generateTorrentKeywordsByTorrentFilepath(
                 $filepath
             ),
+            $locales,
+            $sensitive,
             $approved
         );
 
@@ -224,16 +245,13 @@ class TorrentService
             )
         );
 
-        if (!empty($locales))
-        {
-            $this->addTorrentLocales(
-                $torrent->getId(),
-                $userId,
-                $added,
-                $locales,
-                $approved
-            );
-        }
+        $this->addTorrentLocales(
+            $torrent->getId(),
+            $userId,
+            $added,
+            $locales,
+            $approved
+        );
 
         $this->addTorrentSensitive(
             $torrent->getId(),
@@ -258,7 +276,9 @@ class TorrentService
         int $userId,
         int $added,
         string $md5file,
-        string $keywords,
+        array $keywords,
+        array $locales,
+        bool $sensitive,
         bool $approved
     ): ?Torrent
     {
@@ -268,6 +288,8 @@ class TorrentService
         $torrent->setAdded($added);
         $torrent->setMd5File($md5file);
         $torrent->setKeywords($keywords);
+        $torrent->setLocales($locales);
+        $torrent->setSensitive($sensitive);
         $torrent->setApproved($approved);
 
         $this->entityManagerInterface->persist($torrent);
@@ -288,12 +310,41 @@ class TorrentService
                     );
     }
 
-    public function searchTorrents(string $query) : array
+    public function findTorrents(
+        array $keywords,
+        array $locales,
+        ?bool $sensitive,
+        ?bool $approved,
+        int $limit,
+        int $offset
+    ) : array
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
-                    ->searchByKeywords(
-                        explode(' ', $query)
+                    ->findTorrents(
+                        $keywords,
+                        $locales,
+                        $sensitive,
+                        $approved,
+                        $limit,
+                        $offset
+                    );
+    }
+
+    public function findTorrentsTotal(
+        array $keywords,
+        array $locales,
+        ?bool $sensitive,
+        ?bool $approved
+    ) : int
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(Torrent::class)
+                    ->findTorrentsTotal(
+                        $keywords,
+                        $locales,
+                        $sensitive,
+                        $approved
                     );
     }
 
@@ -306,6 +357,74 @@ class TorrentService
                             'md5file' => $md5file
                         ]
                     );
+    }
+
+    public function updateTorrentSensitive(
+        int $torrentId,
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            if ($torrentSensitive = $this->entityManagerInterface
+                                         ->getRepository(TorrentSensitive::class)
+                                         ->findOneBy(
+                                             [
+                                                 'torrentId' => $torrentId,
+                                                 'approved'  => true,
+                                             ],
+                                             [
+                                                 'id' => 'DESC'
+                                             ]
+            ))
+            {
+                $torrent->setSensitive(
+                    $torrentSensitive->isValue()
+                );
+
+                $this->entityManagerInterface->persist($torrent);
+                $this->entityManagerInterface->flush();
+            }
+        }
+    }
+
+    public function updateTorrentLocales(
+        int $torrentId
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            if ($torrentLocales = $this->entityManagerInterface
+                                       ->getRepository(TorrentLocales::class)
+                                       ->findOneBy(
+                                        [
+                                            'torrentId' => $torrentId,
+                                            'approved'  => true,
+                                        ],
+                                        [
+                                            'id' => 'DESC'
+                                        ]
+            ))
+            {
+                $torrent->setLocales($torrentLocales->getValue());
+
+                $this->entityManagerInterface->persist($torrent);
+                $this->entityManagerInterface->flush();
+            }
+        }
+    }
+
+    public function setTorrentApprovedByTorrentId(
+        int  $torrentId,
+        bool $value
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            $torrent->setApproved($value);
+
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
+        }
     }
 
     public function setTorrentsApprovedByUserId(
@@ -355,24 +474,6 @@ class TorrentService
                     );
     }
 
-    public function findLastTorrentLocalesByTorrentIdApproved(
-        int  $torrentId,
-        bool $approved = true
-    ): ?TorrentLocales
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentLocales::class)
-                    ->findOneBy(
-                        [
-                            'torrentId' => $torrentId,
-                            'approved'  => $approved
-                        ],
-                        [
-                            'id' => 'DESC'
-                        ]
-                    );
-    }
-
     public function findTorrentLocalesByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
@@ -400,6 +501,10 @@ class TorrentService
         $this->entityManagerInterface->persist($torrentLocales);
         $this->entityManagerInterface->flush();
 
+        $this->updateTorrentLocales(
+            $torrentLocales->getTorrentId()
+        );
+
         return $torrentLocales;
     }
 
@@ -411,6 +516,10 @@ class TorrentService
 
         $this->entityManagerInterface->remove($torrentLocales);
         $this->entityManagerInterface->flush();
+
+        $this->updateTorrentLocales(
+            $torrentLocales->getTorrentId()
+        );
 
         return $torrentLocales;
     }
@@ -433,6 +542,10 @@ class TorrentService
 
         $this->entityManagerInterface->persist($torrentLocales);
         $this->entityManagerInterface->flush();
+
+        $this->updateTorrentLocales(
+            $torrentId
+        );
 
         return $torrentLocales;
     }
@@ -484,24 +597,6 @@ class TorrentService
                     );
     }
 
-    public function findLastTorrentSensitiveByTorrentIdApproved(
-        int $torrentId,
-        bool $approved = true
-    ): ?TorrentSensitive
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(TorrentSensitive::class)
-                    ->findOneBy(
-                        [
-                            'torrentId' => $torrentId,
-                            'approved'  => $approved,
-                        ],
-                        [
-                            'id' => 'DESC'
-                        ]
-                    );
-    }
-
     public function findTorrentSensitiveByTorrentId(int $torrentId): array
     {
         return $this->entityManagerInterface
@@ -531,6 +626,10 @@ class TorrentService
         $this->entityManagerInterface->persist($torrentSensitive);
         $this->entityManagerInterface->flush();
 
+        $this->updateTorrentSensitive(
+            $torrentSensitive->getTorrentId()
+        );
+
         return $torrentSensitive;
     }
 
@@ -544,6 +643,10 @@ class TorrentService
 
         $this->entityManagerInterface->remove($torrentSensitive);
         $this->entityManagerInterface->flush();
+
+        $this->updateTorrentSensitive(
+            $torrentSensitive->getTorrentId()
+        );
 
         return $torrentSensitive;
     }
@@ -566,6 +669,10 @@ class TorrentService
 
         $this->entityManagerInterface->persist($torrentSensitive);
         $this->entityManagerInterface->flush();
+
+        $this->updateTorrentSensitive(
+            $torrentId
+        );
 
         return $torrentSensitive;
     }

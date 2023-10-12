@@ -21,20 +21,94 @@ class TorrentRepository extends ServiceEntityRepository
         parent::__construct($registry, Torrent::class);
     }
 
-    public function searchByKeywords(
-        array $keywords
-    ): ?array
+    public function findTorrentsTotal(
+        array $keywords,
+        array $locales,
+        ?bool $sensitive = null,
+        ?bool $approved = null,
+        int $limit  = 0,
+        int $offset = 10
+    ): int
+    {
+        return $this->getTorrentsQueryByFilter(
+            $keywords,
+            $locales,
+            $sensitive,
+            $approved,
+        )->select('count(t.id)')
+         ->getQuery()
+         ->getSingleScalarResult();
+    }
+
+    public function findTorrents(
+        array $keywords,
+        array $locales,
+        ?bool $sensitive = null,
+        ?bool $approved = null,
+        int $limit  = 0,
+        int $offset = 10
+    ): array
+    {
+        return $this->getTorrentsQueryByFilter(
+            $keywords,
+            $locales,
+            $sensitive,
+            $approved,
+        )->setMaxResults($limit)
+                     ->setFirstResult($offset)
+                     ->orderBy('t.id', 'DESC') // same as t.added
+                     ->getQuery()
+                     ->getResult();
+    }
+
+    private function getTorrentsQueryByFilter(
+        array $keywords,
+        array $locales,
+        ?bool $sensitive = null,
+        ?bool $approved = null,
+    ): \Doctrine\ORM\QueryBuilder
     {
         $query = $this->createQueryBuilder('t');
 
-        foreach ($keywords as $keyword)
+        if ($keywords) // @TODO ANY or DTS
         {
-            $query->orWhere('t.keywords LIKE :query')
-                  ->setParameter('query', "%{$keyword}%");
+            $orX = $query->expr()->orX();
+
+            foreach ($keywords as $i => $keyword)
+            {
+                $orX->add("t.keywords LIKE :keyword{$i}");
+                $query->setParameter(":keyword{$i}", "%{$keyword}%");
+            }
+
+            $query->andWhere($orX);
         }
 
-        return $query->orderBy('t.id', 'ASC') // same as t.added
-                     ->getQuery()
-                     ->getResult();
+        if ($locales) // @TODO ANY or DTS
+        {
+            $orX = $query->expr()->orX();
+
+            foreach ($locales as $i => $locale)
+            {
+                $orX->add("t.locales LIKE :locale{$i}");
+
+                $query->setParameter(":locale{$i}", "%{$locale}%");
+            }
+
+            $query->andWhere($orX);
+        }
+
+        if (is_bool($sensitive))
+        {
+            $query->andWhere('t.sensitive = :sensitive')
+                  ->setParameter('sensitive', $sensitive);
+        }
+
+        if (is_bool($approved))
+        {
+            $query->andWhere('t.approved = :approved')
+                  ->setParameter('approved', $approved);
+        }
+
+        return $query;
     }
 }

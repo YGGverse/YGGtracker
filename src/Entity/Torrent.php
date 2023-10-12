@@ -6,7 +6,6 @@ use App\Repository\TorrentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-// @TODO #[ORM\Index(columns: ['keywords'], name: 'keywords_idx', flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: TorrentRepository::class)]
 
 class Torrent
@@ -25,14 +24,20 @@ class Torrent
     #[ORM\Column(nullable: true)]
     private ?int $scraped = null;
 
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    private array $locales = [];
+
+    #[ORM\Column]
+    private ?bool $sensitive = null;
+
     #[ORM\Column]
     private ?bool $approved = null;
 
     #[ORM\Column(length: 32)]
     private ?string $md5file = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $keywords = null;
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    private ?array $keywords = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $seeders = null;
@@ -103,14 +108,38 @@ class Torrent
         return $this;
     }
 
-    public function getKeywords(): ?string
+    public function getKeywords(): ?array
     {
         return $this->keywords;
     }
 
-    public function setKeywords(?string $keywords): static
+    public function setKeywords(?array $keywords): static
     {
         $this->keywords = $keywords;
+
+        return $this;
+    }
+
+    public function getLocales(): array
+    {
+        return $this->locales;
+    }
+
+    public function setLocales(array $locales): static
+    {
+        $this->locales = $locales;
+
+        return $this;
+    }
+
+    public function isSensitive(): ?bool
+    {
+        return $this->sensitive;
+    }
+
+    public function setSensitive(bool $sensitive): static
+    {
+        $this->sensitive = $sensitive;
 
         return $this;
     }

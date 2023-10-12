@@ -57,27 +57,11 @@ class TorrentController extends AbstractController
 
         // Get contributors
         $contributors = [];
-
-        $contributors[$torrent->getUserId()] = $userService->identicon(
-            $userService->getUser(
-                $torrent->getUserId()
-            )->getAddress()
-        );
-
-        if ($torrentLocales = $torrentService->findLastTorrentLocalesByTorrentId($torrent->getId()))
+        foreach ($torrentService->getTorrentContributors($torrent) as $userId)
         {
-            $contributors[$torrentLocales->getUserId()] = $userService->identicon(
+            $contributors[$userId] = $userService->identicon(
                 $userService->getUser(
-                    $torrentLocales->getUserId()
-                )->getAddress()
-            );
-        }
-
-        if ($torrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentId($torrent->getId()))
-        {
-            $contributors[$torrentSensitive->getUserId()] = $userService->identicon(
-                $userService->getUser(
-                    $torrentSensitive->getUserId()
+                    $userId
                 )->getAddress()
             );
         }
@@ -98,25 +82,14 @@ class TorrentController extends AbstractController
                 'id'        => $torrent->getId(),
                 'md5file'   => $torrent->getMd5File(),
                 'added'     => $torrent->getAdded(),
-                /*
-                'user'      =>
-                [
-                    'id' => $torrent->getUserId(),
-                    'identicon' => $userService->identicon(
-                        $userService->getUser(
-                            $torrent->getUserId()
-                        )->getAddress()
-                    ),
-                ],
-                */
                 'scrape'    =>
                 [
                     'seeders'   => (int) $torrent->getSeeders(),
                     'peers'     => (int) $torrent->getPeers(),
                     'leechers'  => (int) $torrent->getLeechers(),
                 ],
-                'locales'   => $torrentService->findLastTorrentLocalesByTorrentId($torrent->getId()),
-                'sensitive' => $torrentService->findLastTorrentSensitiveByTorrentId($torrent->getId())->isValue(),
+                'locales'   => $torrent->getLocales(),
+                'sensitive' => $torrent->isSensitive(),
                 'download'  =>
                 [
                     'file' =>
@@ -172,8 +145,6 @@ class TorrentController extends AbstractController
                     'v1' => $file->getInfoHashV1(false),
                     'v2' => $file->getInfoHashV2(false)
                 ],
-                // @TODO use download action to filter announcement URL
-                // 'magnet' => $file->getMagnetLink()
             ],
             'trackers' => explode('|', $this->getParameter('app.trackers')),
             'activities' => $activityService->findLastActivitiesByTorrentId(
@@ -192,7 +163,263 @@ class TorrentController extends AbstractController
     }
 
     #[Route(
-        '/{_locale}/submit/torrent',
+        '/{_locale}/search',
+        name: 'torrent_search',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function search(
+        Request $request,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init request
+        $query = $request->get('query') ? explode(' ', $request->get('query')) : [];
+        $page  = $request->get('page') ? (int) $request->get('page') : 1;
+
+        // Get total torrents
+        $total = $torrentService->findTorrentsTotal(
+            $query,
+            $user->getLocales(),
+            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            $user->isModerator() ? null : true, // show approved content only for regular users
+        );
+
+        $torrents = [];
+        foreach ($torrentService->findTorrents(
+            $query,
+            $user->getLocales(),
+            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            $user->isModerator() ? null : true, // show approved content only for regular users
+            $this->getParameter('app.pagination'),
+            ($page - 1) * $this->getParameter('app.pagination')
+        ) as $torrent)
+        {
+            // Read file
+            if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+            {
+                throw $this->createNotFoundException(); // @TODO exception
+            }
+
+            // Generate keywords
+            $keywords = [];
+            foreach ($torrent->getKeywords() as $keyword)
+            {
+                if (in_array($keyword, $query))
+                {
+                    $keywords[] = urlencode($keyword);
+                }
+            }
+
+            $torrents[] =
+            [
+                'id'     => $torrent->getId(),
+                'added'  => $torrent->getAdded(),
+                'file'   =>
+                [
+                    'name' => $file->getName(),
+                    'size' => $file->getSize(),
+                ],
+                'scrape' =>
+                [
+                    'seeders'   => (int) $torrent->getSeeders(),
+                    'peers'     => (int) $torrent->getPeers(),
+                    'leechers'  => (int) $torrent->getLeechers(),
+                ],
+                'user' =>
+                [
+                    'id'        => $torrent->getUserId(),
+                    'identicon' => $userService->identicon(
+                        $userService->getUser(
+                            $torrent->getUserId()
+                        )->getAddress()
+                    )
+                ],
+                'keywords' => $keywords,
+                'download'  =>
+                [
+                    'file' =>
+                    [
+                        'exist' => (bool) $torrentService->findTorrentDownloadFile(
+                            $torrent->getId(),
+                            $user->getId()
+                        ),
+                        'total' => $torrentService->findTorrentDownloadFilesTotalByTorrentId(
+                            $torrent->getId()
+                        )
+                    ],
+                    'magnet' =>
+                    [
+                        'exist' => (bool) $torrentService->findTorrentDownloadMagnet(
+                            $torrent->getId(),
+                            $user->getId()
+                        ),
+                        'total' => $torrentService->findTorrentDownloadMagnetsTotalByTorrentId(
+                            $torrent->getId()
+                        )
+                    ]
+                ],
+                'star'  =>
+                [
+                    'exist' => (bool) $torrentService->findTorrentStar(
+                        $torrent->getId(),
+                        $user->getId()
+                    ),
+                    'total' => $torrentService->findTorrentStarsTotalByTorrentId(
+                        $torrent->getId()
+                    )
+                ],
+            ];
+        }
+
+        return $this->render('default/torrent/list.html.twig', [
+            'query'    => $request->query->get('query'),
+            'torrents' => $torrents
+        ]);
+    }
+
+    #[Route(
+        '/{_locale}',
+        name: 'torrent_recent',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function recent(
+        Request $request,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init page
+        $page = $request->get('page') ? (int) $request->get('page') : 1;
+
+        // Get total torrents
+        $total = $torrentService->findTorrentsTotal(
+            [],
+            $user->getLocales(),
+            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            $user->isModerator() ? null : true, // show approved content only for regular users
+        );
+
+        // Create torrents list
+        $torrents = [];
+        foreach ($torrentService->findTorrents(
+            [],
+            $user->getLocales(),
+            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            $user->isModerator() ? null : true, // show approved content only for regular users
+            $this->getParameter('app.pagination'),
+            ($page - 1) * $this->getParameter('app.pagination')
+        ) as $torrent)
+        {
+            // Read file
+            if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+            {
+                throw $this->createNotFoundException(); // @TODO exception
+            }
+
+            // Generate keywords
+            $keywords = [];
+            $query = explode(' ', mb_strtolower($request->query->get('query')));
+            foreach ($torrent->getKeywords() as $keyword)
+            {
+                if (in_array($keyword, $query))
+                {
+                    $keywords[] = urlencode($keyword);
+                }
+            }
+
+            $torrents[] =
+            [
+                'id'     => $torrent->getId(),
+                'added'  => $torrent->getAdded(),
+                'file'   =>
+                [
+                    'name' => $file->getName(),
+                    'size' => $file->getSize(),
+                ],
+                'scrape' =>
+                [
+                    'seeders'   => (int) $torrent->getSeeders(),
+                    'peers'     => (int) $torrent->getPeers(),
+                    'leechers'  => (int) $torrent->getLeechers(),
+                ],
+                'user' =>
+                [
+                    'id'        => $torrent->getUserId(),
+                    'identicon' => $userService->identicon(
+                        $userService->getUser(
+                            $torrent->getUserId()
+                        )->getAddress()
+                    )
+                ],
+                'keywords' => $keywords,
+                'download'  =>
+                [
+                    'file' =>
+                    [
+                        'exist' => (bool) $torrentService->findTorrentDownloadFile(
+                            $torrent->getId(),
+                            $user->getId()
+                        ),
+                        'total' => $torrentService->findTorrentDownloadFilesTotalByTorrentId(
+                            $torrent->getId()
+                        )
+                    ],
+                    'magnet' =>
+                    [
+                        'exist' => (bool) $torrentService->findTorrentDownloadMagnet(
+                            $torrent->getId(),
+                            $user->getId()
+                        ),
+                        'total' => $torrentService->findTorrentDownloadMagnetsTotalByTorrentId(
+                            $torrent->getId()
+                        )
+                    ]
+                ],
+                'star'  =>
+                [
+                    'exist' => (bool) $torrentService->findTorrentStar(
+                        $torrent->getId(),
+                        $user->getId()
+                    ),
+                    'total' => $torrentService->findTorrentStarsTotalByTorrentId(
+                        $torrent->getId()
+                    )
+                ],
+            ];
+        }
+
+        return $this->render('default/torrent/list.html.twig', [
+            'query'    => $request->query->get('query'),
+            'torrents' => $torrents
+        ]);
+    }
+
+    // Forms
+    #[Route(
+        '/{_locale}/submit',
         name: 'torrent_submit',
         methods:
         [
@@ -310,6 +537,7 @@ class TorrentController extends AbstractController
                     $user->isApproved()
                 );
 
+                // Add activity event
                 $activityService->addEventTorrentAdd(
                     $user->getId(),
                     time(),
@@ -765,7 +993,7 @@ class TorrentController extends AbstractController
         }
         else
         {
-            if ($torrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentId($request->get('torrentId')))
+            if ($torrentSensitive = $torrentService->findLastTorrentSensitiveByTorrentId($torrent->getId()))
             {
                 $torrentSensitiveCurrent =
                 [

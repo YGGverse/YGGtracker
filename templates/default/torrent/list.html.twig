@@ -1,5 +1,5 @@
 {% extends 'default/layout.html.twig' %}
-{% block title %}{% if query %}{{ query }}{% else %}{{ 'New' | trans }}{% endif %} - {{ 'Torrents' | trans }} - {{ name }}{% endblock %}
+{% block title %}{% if query %}{{ query }}{% else %}{{ 'Recent' | trans }}{% endif %} - {{ 'Torrents' | trans }} - {{ name }}{% endblock %}
 {% block main_content %}
     {% if torrents %}
         {% for torrent in torrents %}
@@ -21,7 +21,7 @@
                 {% if torrent.keywords %}
                     <div class="margin-b-16-px">
                         {% for keyword in torrent.keywords %}
-                            <a href="{{ path('search_index', { query : keyword, type : 'torrent' }) }}">
+                            <a href="{{ path('torrent_search', { query : keyword }) }}">
                                 #{{ keyword }}
                             </a>
                         {% endfor %}

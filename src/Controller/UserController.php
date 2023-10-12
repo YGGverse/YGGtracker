@@ -31,53 +31,9 @@ class UserController extends AbstractController
         );
 
         return $this->redirectToRoute(
-            'user_dashboard',
+            'torrent_recent',
             [
                 '_locale' => $user->getLocale()
-            ]
-        );
-    }
-
-    #[Route(
-        '/{_locale}',
-        name: 'user_dashboard',
-        methods:
-        [
-            'GET'
-        ]
-    )]
-    public function index(
-        Request $request,
-        UserService $userService,
-        ActivityService $activityService
-    ): Response
-    {
-        $user = $this->initUser(
-            $request,
-            $userService,
-            $activityService
-        );
-
-        $total = $activityService->findActivitiesTotal(
-            $user->getEvents()
-        );
-
-        $page = $request->get('page') ? (int) $request->get('page') : 1;
-
-        return $this->render(
-            'default/user/dashboard.html.twig',
-            [
-                'activities' => $activityService->findLastActivities( // @TODO locale/sensitive filters
-                    $user->getEvents(),
-                    $this->getParameter('app.pagination'),
-                    ($page - 1) * $this->getParameter('app.pagination')
-                ),
-                'pagination' =>
-                [
-                    'page'  => $page,
-                    'pages' => ceil($total / $this->getParameter('app.pagination')),
-                    'total' => $total
-                ]
             ]
         );
     }

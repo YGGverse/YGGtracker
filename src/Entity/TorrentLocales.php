@@ -23,7 +23,7 @@ class TorrentLocales
     #[ORM\Column]
     private ?int $added = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
     private array $value = [];
 
     #[ORM\Column]

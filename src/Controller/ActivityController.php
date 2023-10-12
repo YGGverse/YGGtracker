@@ -15,6 +15,50 @@ use App\Service\TorrentService;
 
 class ActivityController extends AbstractController
 {
+    #[Route(
+        '/{_locale}/activity',
+        name: 'activity_all',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function all(
+        Request $request,
+        UserService $userService,
+        ActivityService $activityService
+    ): Response
+    {
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        $total = $activityService->findActivitiesTotal(
+            $user->getEvents()
+        );
+
+        $page = $request->get('page') ? (int) $request->get('page') : 1;
+
+        return $this->render(
+            'default/activity/list.html.twig',
+            [
+                'activities' => $activityService->findLastActivities( // @TODO locale/sensitive filters
+                    $user->getEvents(),
+                    $this->getParameter('app.pagination'),
+                    ($page - 1) * $this->getParameter('app.pagination')
+                ),
+                'pagination' =>
+                [
+                    'page'  => $page,
+                    'pages' => ceil($total / $this->getParameter('app.pagination')),
+                    'total' => $total
+                ]
+            ]
+        );
+    }
+
     public function event(
         $activity,
         ActivityService $activityService,
@@ -726,5 +770,36 @@ class ActivityController extends AbstractController
                     ]
                 );
         }
+    }
+
+    private function initUser(
+        Request $request,
+        UserService $userService,
+        ActivityService $activityService
+    ): ?\App\Entity\User
+    {
+        // Init user
+        if (!$user = $userService->findUserByAddress($request->getClientIp()))
+        {
+            $user = $userService->addUser(
+                $request->getClientIp(),
+                time(),
+                $this->getParameter('app.locale'),
+                explode('|', $this->getParameter('app.locales')),
+                $activityService->getEventCodes(),
+                $this->getParameter('app.theme'),
+                $this->getParameter('app.sensitive'),
+                $this->getParameter('app.yggdrasil'),
+                $this->getParameter('app.approved')
+            );
+
+            // Add user join event
+            $activityService->addEventUserAdd(
+                $user->getId(),
+                time()
+            );
+        }
+
+        return $user;
     }
 }
