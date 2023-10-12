@@ -54,15 +54,10 @@ class Activity
 
     public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 2500;
 
-    /// Article
-    public const EVENT_ARTICLE_ADD                      = 3000;
     // ...
 
     #[ORM\Column]
     private ?int $userId = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $articleId = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $torrentId = null;
@@ -105,18 +100,6 @@ class Activity
     public function setUserId(?int $userId): static
     {
         $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getArticleId(): ?int
-    {
-        return $this->articleId;
-    }
-
-    public function setArticleId(int $articleId): static
-    {
-        $this->articleId = $articleId;
 
         return $this;
     }

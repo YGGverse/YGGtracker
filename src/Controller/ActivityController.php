@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\ActivityService;
 use App\Service\UserService;
-use App\Service\ArticleService;
 use App\Service\TorrentService;
 
 class ActivityController extends AbstractController
@@ -63,7 +62,6 @@ class ActivityController extends AbstractController
         $activity,
         ActivityService $activityService,
         UserService $userService,
-        ArticleService $articleService,
         TorrentService $torrentService,
     ): Response
     {

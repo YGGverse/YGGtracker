@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 use App\Service\ActivityService;
 use App\Service\UserService;
-use App\Service\ArticleService;
 use App\Service\TorrentService;
 
 class UserController extends AbstractController
@@ -325,7 +324,7 @@ class UserController extends AbstractController
             );
         }
 
-        // Redirect to info article created
+        // Redirect
         return $this->redirectToRoute(
             'user_info',
             [
@@ -399,7 +398,7 @@ class UserController extends AbstractController
             );
         }
 
-        // Redirect to info article created
+        // Redirect
         return $this->redirectToRoute(
             'user_info',
             [
@@ -473,7 +472,7 @@ class UserController extends AbstractController
             );
         }
 
-        // Redirect to info article created
+        // Redirect
         return $this->redirectToRoute(
             'user_info',
             [
@@ -499,7 +498,6 @@ class UserController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         UserService $userService,
-        ArticleService $articleService,
         TorrentService $torrentService,
         ActivityService $activityService
     ): Response
@@ -570,7 +568,7 @@ class UserController extends AbstractController
             );
         }
 
-        // Redirect to info article created
+        // Redirect
         return $this->redirectToRoute(
             'user_info',
             [

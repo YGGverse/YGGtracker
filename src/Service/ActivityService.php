@@ -58,9 +58,6 @@ class ActivityService
 
             Activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD,
             Activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD,
-
-            // Articles
-            Activity::EVENT_ARTICLE_ADD,
         ];
     }
 
@@ -341,19 +338,6 @@ class ActivityService
                     ] = $code;
 
                 break;
-
-                // Article
-                case Activity::EVENT_TORRENT_ADD:
-
-                    $events
-                    [
-                        $this->translatorInterface->trans('Articles')
-                    ]
-                    [
-                        $this->translatorInterface->trans('Added')
-                    ] = $code;
-
-                break;
             }
         }
 
@@ -424,28 +408,6 @@ class ActivityService
                     );
     }
 
-    public function findLastActivitiesByArticleId(
-        int   $articleId,
-        array $whitelist,
-        int   $limit  = 10,
-        int   $offset = 0
-    ): array
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(Activity::class)
-                    ->findBy(
-                        [
-                            'articleId' => $articleId,
-                            'event'     => $whitelist,
-                        ],
-                        [
-                            'id' => 'DESC'
-                        ],
-                        $limit,
-                        $offset
-                    );
-    }
-
     public function findActivitiesTotal(
         array $whitelist
     ): int
@@ -477,19 +439,6 @@ class ActivityService
                     ->getRepository(Activity::class)
                     ->findActivitiesTotalByTorrentId(
                         $torrentId,
-                        $whitelist
-                    );
-    }
-
-    public function findActivitiesTotalByArticleId(
-        int $articleId,
-        array $whitelist
-    ): int
-    {
-        return $this->entityManagerInterface
-                    ->getRepository(Activity::class)
-                    ->findActivitiesTotalByArticleId(
-                        $articleId,
                         $whitelist
                     );
     }

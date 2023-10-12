@@ -65,20 +65,4 @@ class ActivityRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
         ;
     }
-
-    public function findActivitiesTotalByArticleId(
-        int $articleId,
-        array $whitelist
-    ): int
-    {
-        return $this->createQueryBuilder('a')
-            ->select('count(a.id)')
-            ->where('a.articleId = :articleId')
-            ->andWhere('a.event IN (:event)')
-            ->setParameter(':articleId', $articleId)
-            ->setParameter(':event', $whitelist)
-            ->getQuery()
-            ->getSingleScalarResult()
-        ;
-    }
 }
