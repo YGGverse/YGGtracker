@@ -84,7 +84,7 @@
         <div class="padding-y-8-px border-bottom-default text-right">
             {{ 'Common'|trans }}
         </div>
-        <div class="padding-y-16-px">
+        <div class="padding-t-16-px">
             <table class="width-100">
                 <tbody>
                     <tr>
@@ -260,7 +260,7 @@
         <div class="padding-y-8-px border-bottom-default text-right">
             {{ 'Trackers'|trans }}
         </div>
-        <div class="padding-y-16-px">
+        <div class="padding-t-16-px">
             {% for tracker in trackers %}
                 <div class="padding-y-4-px">
                     {{ tracker }}
@@ -289,7 +289,7 @@
             </a>
             {{ 'Locales' | trans }}
             <div class="padding-b-8-px border-bottom-default"></div>
-            <div class="padding-y-16-px text-left">
+            <div class="padding-t-16-px text-left">
                 {% if torrent.locales %}
                     <div class="padding-y-4-px">
                         {% for i, locale in torrent.locales.value %}{% if i > 0 %},{% endif %} {{ locale|locale_name(locale)|u.title }}{% endfor %}
