@@ -20,12 +20,13 @@
 {% endmacro %}
 {% from _self import recursive_file_tree %}
 {% extends 'default/layout.html.twig' %}
-{% block title %}{{ 'Torrent' | trans }} #{{ torrent.id }}{% if pagination.page > 1 %} - {{ 'Page' | trans }} {{ pagination.page }}{% endif %} - {{ name }}{% endblock %}
+{% block title %}{{ file.name }} - {{ 'Torrent' | trans }} #{{ torrent.id }}{% if pagination.page > 1 %} - {{ 'Page' | trans }} {{ pagination.page }}{% endif %} - {{ name }}{% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <div class="padding-b-16-px">
             <h1 class="display-block text-center margin-b-16-px">
-                {{ 'Torrent'|trans }} #{{ torrent.id }}
+                {{ file.name }}
+                {#{{ 'Torrent' | trans }} #{{ torrent.id }}#}
             </h1>
             <div class="text-center">
                 <a class="margin-l-8-px margin-r-4-px" href="{{ path('torrent_download_magnet', {torrentId : torrent.id}) }}" title="{{ 'Open magnet link' | trans }}">
@@ -86,16 +87,50 @@
         <div class="padding-y-16-px">
             <table class="width-100">
                 <tbody>
-                    {% if file.name %}
+                    <tr>
+                        <td>
+                            {{ 'ID'|trans }}
+                        </td>
+                        <td>
+                            #{{ torrent.id }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ 'MD5'|trans }}
+                        </td>
+                        <td>
+                            {{ torrent.md5file }}
+                        </td>
+                    </tr>
+                    {% if file.hash.v1 %}
                         <tr>
                             <td>
-                                {{ 'Filename'|trans }}
+                                {{ 'Info hash v1'|trans }}
                             </td>
                             <td>
-                                {{ file.name }}
+                                {{ file.hash.v1 }}
                             </td>
                         </tr>
                     {% endif %}
+                    {% if file.hash.v2 %}
+                        <tr>
+                            <td>
+                                {{ 'Info hash v2'|trans }}
+                            </td>
+                            <td>
+                                {{ file.hash.v2 }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td>
+                            {{ 'Filename'|trans }}
+                        </td>
+                        <td>
+                            {{ file.name }}
+                        </td>
+                    </tr>
                     {% if file.created %}
                         <tr>
                             <td>
@@ -124,26 +159,6 @@
                             </td>
                             <td>
                                 {{ file.pieces | format_number }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if file.hash.v1 %}
-                        <tr>
-                            <td>
-                                {{ 'Info hash v1'|trans }}
-                            </td>
-                            <td>
-                                {{ file.hash.v1 }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                    {% if file.hash.v2 %}
-                        <tr>
-                            <td>
-                                {{ 'Info hash v2'|trans }}
-                            </td>
-                            <td>
-                                {{ file.hash.v2 }}
                             </td>
                         </tr>
                     {% endif %}

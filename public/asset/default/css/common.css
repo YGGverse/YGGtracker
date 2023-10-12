@@ -59,6 +59,10 @@ textarea {
   opacity: .96;
 }
 
+input[type="file"] {
+  padding: 4px 8px;
+}
+
 /*
 main input,
 main button,

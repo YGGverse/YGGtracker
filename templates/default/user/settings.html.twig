@@ -51,7 +51,7 @@
                     </tr>
                     <tr>
                         <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Search' | trans }}
+                            {{ 'Filters' | trans }}
                         </td>
                     </tr>
                     <tr>
@@ -92,12 +92,15 @@
                             {{ 'Events' | trans }}
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                    </tr>
                     {% for group, event in events %}
                         <tr>
-                            <td class="padding-t-16-px">
+                            <td class="padding-t-8-px">
                                 {{ group }}
                             </td>
-                            <td class="padding-t-16-px">
+                            <td class="padding-t-8-px">
                                 {% for key, value in event %}
                                     <span class="margin-r-8-px">
                                         {% if value in user.events %}

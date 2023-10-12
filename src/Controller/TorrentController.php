@@ -96,6 +96,7 @@ class TorrentController extends AbstractController
             'torrent' =>
             [
                 'id'        => $torrent->getId(),
+                'md5file'   => $torrent->getMd5File(),
                 'added'     => $torrent->getAdded(),
                 /*
                 'user'      =>
@@ -227,29 +228,22 @@ class TorrentController extends AbstractController
         [
             'locales' =>
             [
-                'error'       => [],
+                'error' => [],
                 'attribute' =>
                 [
-                    'value'       => $request->get('locales') ? $request->get('locales') : [$request->get('_locale')],
-                    'placeholder' => $translator->trans('Content language')
+                    'value' => $request->get('locales') ? $request->get('locales') : [$request->get('_locale')],
                 ]
             ],
             'torrent' =>
             [
-                'error'     => [],
-                'attribute' =>
-                [
-                    'value'       => null, // is local file, there is no values passed
-                    'placeholder' => $translator->trans('Select torrent file')
-                ]
+                'error' => [],
             ],
             'sensitive' =>
             [
                 'error'     => [],
                 'attribute' =>
                 [
-                    'value'       => $request->get('sensitive'),
-                    'placeholder' => $translator->trans('Apply sensitive filters to publication'),
+                    'value' => $request->get('sensitive'),
                 ]
             ]
         ];
