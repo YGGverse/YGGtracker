@@ -48,6 +48,8 @@ class SearchController extends AbstractController
 
             case 'torrent':
 
+                $total = 0; // @TODO pagination
+
                 $torrents = [];
                 foreach ($torrentService->searchTorrents($request->query->get('query')) as $torrent)
                 {
@@ -60,6 +62,7 @@ class SearchController extends AbstractController
                                 $user->getLocales()
                             )
                         )) {
+                            $total--;
                             continue;
                         }
                     }
@@ -69,6 +72,7 @@ class SearchController extends AbstractController
                     {
                         if ($user->isSensitive() && $lastTorrentSensitive->isValue())
                         {
+                            $total--;
                             continue;
                         }
                     }
@@ -76,6 +80,7 @@ class SearchController extends AbstractController
                     // Read file
                     if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
                     {
+                        $total--;
                         continue; // @TODO exception
                     }
 
