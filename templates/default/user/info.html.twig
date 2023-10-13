@@ -218,16 +218,18 @@
             </tbody>
         </table>
     </div>
+    <a name="activity"></a>
+    <div class="padding-x-24-px padding-t-16-px padding-b-8-px text-center">
+        <h2>{{ 'Recent activity' | trans }}</h2>
+        <sub>
+            <a class="text-color-night margin-x-4-px" href="{{ path('rss_activity_user', { userId : user.id }) }}" title="RSS">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm1.5 2.5c5.523 0 10 4.477 10 10a1 1 0 1 1-2 0 8 8 0 0 0-8-8 1 1 0 0 1 0-2zm0 4a6 6 0 0 1 6 6 1 1 0 1 1-2 0 4 4 0 0 0-4-4 1 1 0 0 1 0-2zm.5 7a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                </svg>
+            </a>
+        </sub>
+    </div>
     {% if user.activities %}
-        <a name="activity"></a>
-        {#
-        <div class="padding-x-24-px padding-y-8-px margin-y-16-px">
-            <h2>{{ 'Last activity' | trans }}</h2>
-            <sup>
-                <a href="#">RSS</a>
-            </sup>
-        </div>
-        #}
         {% for activity in user.activities %}
             <div class="padding-x-24-px padding-y-16-px margin-y-8-px border-radius-3-px background-color-night">
                 {{ render(controller(

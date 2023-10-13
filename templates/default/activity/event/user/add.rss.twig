@@ -1,0 +1,7 @@
+<item>
+    <title>{{ 'User' | trans }} #{{ user.id }} {{ 'have joined' | trans }} {{ name }}</title>
+    <author>#{{ user.id }}</author>
+    <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
+    <guid>{{ url('user_info', { userId : user.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('user_info', { userId : user.id }) }}#activity</link>
+</item>

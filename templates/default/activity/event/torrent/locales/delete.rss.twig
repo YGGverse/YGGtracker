@@ -1,0 +1,24 @@
+<item>
+    <title>
+        {{ 'User' | trans }}
+        #{{ user.id }}
+        {{ 'have deleted locales edition' | trans }}
+        #{{ torrent.locales.id }}
+        {{ 'for torrent' | trans }}
+        {% if session.user.moderator or session.user.owner %}
+            {{ torrent.name }}
+        {% else %}
+            {% if torrent.approved == false %}
+                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+            {% elseif torrent.sensitive == true %}
+                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% else %}
+                {{ torrent.name }}
+            {% endif %}
+        {% endif %}
+    </title>
+    <author>#{{ user.id }}</author>
+    <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
+    <guid>{{ url('torrent_locales_edit', { torrentId : torrent.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('torrent_locales_edit', { torrentId : torrent.id }) }}#activity</link>
+</item>

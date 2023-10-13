@@ -1,13 +1,13 @@
 <div class="row">
     <div class="column width-80">
-        <a href="{{ path('user_info', { userId : by.user.id }) }}">
-            <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ by.user.identicon }}" alt="{{ 'identicon' | trans }}" />
-        </a>
-        <span class="margin-l-4-px">
-            {{ 'enable user' | trans }}
-        </span>
         <a href="{{ path('user_info', { userId : user.id }) }}">
             <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
+        </a>
+        <span class="margin-x-4-px">
+            {{ 'have enabled' | trans }}
+        </span>
+        <a href="{{ path('user_info', { userId : to.user.id }) }}">
+            <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ to.user.identicon }}" alt="{{ 'identicon' | trans }}" />
         </a>
     </div>
     <div class="column width-20 text-right">

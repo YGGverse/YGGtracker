@@ -242,16 +242,12 @@ class UserController extends AbstractController
                     ],
                     'activities' => $activityService->findLastActivitiesByUserId(
                         $userTarget->getId(),
-                        $userTarget->getEvents()
+                        $userTarget->getEvents(),
+                        $this->getParameter('app.pagination'),
+                        ($page - 1) * $this->getParameter('app.pagination')
                     )
                 ],
                 'events'     => $activityService->getEventsTree(),
-                'activities' => $activityService->findLastActivitiesByUserId(
-                    $userTarget->getId(),
-                    $user->getEvents(),
-                    $this->getParameter('app.pagination'),
-                    ($page - 1) * $this->getParameter('app.pagination')
-                ),
                 'pagination' =>
                 [
                     'page'  => $page,

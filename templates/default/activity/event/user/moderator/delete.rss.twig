@@ -1,0 +1,12 @@
+<item>
+    <title>
+        {{ 'User' | trans }}
+        #{{ user.id }}
+        {{ 'have removed moderator permissions from user' | trans }}
+        #{{ to.user.id }}
+    </title>
+    <author>#{{ to.user.id }}</author>
+    <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
+    <guid>{{ url('user_info', { userId : to.user.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('user_info', { userId : to.user.id }) }}#activity</link>
+</item>

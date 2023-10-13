@@ -46,7 +46,7 @@ class ActivityController extends AbstractController
                 'session'    => [
                     'user' => $user
                 ],
-                'activities' => $activityService->findLastActivities( // @TODO locale/sensitive filters
+                'activities' => $activityService->findLastActivities(
                     $user->getEvents(),
                     $this->getParameter('app.pagination'),
                     ($page - 1) * $this->getParameter('app.pagination')
@@ -61,22 +61,202 @@ class ActivityController extends AbstractController
         );
     }
 
+    #[Route(
+        '/{_locale}/rss/activity',
+        name: 'rss_activity',
+        defaults: [
+            '_locale' => '%app.locale%'
+        ],
+        requirements: [
+            '_locale' => '%app.locales%'
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function rssAll(
+        Request $request,
+        UserService $userService,
+        ActivityService $activityService
+    ): Response
+    {
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        $total = $activityService->findActivitiesTotal(
+            $user->getEvents()
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $this->render(
+            'default/activity/list.rss.twig',
+            [
+                'session'    => [
+                    'user' => $user
+                ],
+                'activities' => $activityService->findLastActivities(
+                    $user->getEvents()
+                )
+            ],
+            $response
+        );
+    }
+
+    #[Route(
+        '/{_locale}/rss/activity/user/{userId}',
+        name: 'rss_activity_user',
+        defaults: [
+            '_locale' => '%app.locale%',
+            'userId'  => 0
+        ],
+        requirements: [
+            '_locale' => '%app.locales%',
+            'userId'  => '\d+'
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function rssUser(
+        Request $request,
+        UserService $userService,
+        ActivityService $activityService
+    ): Response
+    {
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init target user
+        if (!$userTarget = $userService->getUser(
+            $request->get('userId') ? $request->get('userId') : $user->getId()
+        ))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        $total = $activityService->findActivitiesTotalByUserId(
+            $userTarget->getId(),
+            $user->getEvents()
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $this->render(
+            'default/activity/list.rss.twig',
+            [
+                'session'    => [
+                    'user' => $user
+                ],
+                'activities' => $activityService->findLastActivitiesByUserId(
+                    $userTarget->getId(),
+                    $userTarget->getEvents()
+                )
+            ],
+            $response
+        );
+    }
+
+    #[Route(
+        '/{_locale}/rss/activity/torrent/{torrentId}',
+        name: 'rss_activity_torrent',
+        defaults: [
+            '_locale' => '%app.locale%',
+        ],
+        requirements: [
+            '_locale' => '%app.locales%',
+            'torrentId'  => '\d+'
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function rssTorrent(
+        Request $request,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Get total activities
+        $total = $activityService->findActivitiesTotalByTorrentId(
+            $torrent->getId(),
+            $user->getEvents()
+        );
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $this->render(
+            'default/activity/list.rss.twig',
+            [
+                'session'    => [
+                    'user' => $user
+                ],
+                'activities' => $activityService->findLastActivitiesByTorrentId(
+                    $torrent->getId(),
+                    $user->getEvents()
+                )
+            ],
+            $response
+        );
+    }
+
     public function event(
         \App\Entity\User $user,
         \App\Entity\Activity $activity,
         ActivityService $activityService,
         UserService $userService,
         TorrentService $torrentService,
+        ?string $format = null,
     ): Response
     {
+        switch ($format)
+        {
+            case 'rss':
+
+                $extension = '.rss.twig';
+
+            break;
+
+            default:
+
+                $extension = '.html.twig';
+        }
+
         switch ($activity->getEvent())
         {
             // User
             case $activity::EVENT_USER_ADD:
 
                 return $this->render(
-                    'default/activity/event/user/add.html.twig',
+                    'default/activity/event/user/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -95,8 +275,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_APPROVE_ADD:
 
                 return $this->render(
-                    'default/activity/event/user/approve/add.html.twig',
+                    'default/activity/event/user/approve/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -107,7 +288,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -127,8 +308,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_APPROVE_DELETE:
 
                 return $this->render(
-                    'default/activity/event/user/approve/delete.html.twig',
+                    'default/activity/event/user/approve/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -139,7 +321,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -159,8 +341,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_MODERATOR_ADD:
 
                 return $this->render(
-                    'default/activity/event/user/moderator/add.html.twig',
+                    'default/activity/event/user/moderator/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -171,7 +354,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -191,8 +374,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_MODERATOR_DELETE:
 
                 return $this->render(
-                    'default/activity/event/user/moderator/delete.html.twig',
+                    'default/activity/event/user/moderator/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -203,7 +387,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -223,8 +407,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_STATUS_ADD:
 
                 return $this->render(
-                    'default/activity/event/user/status/add.html.twig',
+                    'default/activity/event/user/status/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -235,7 +420,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -255,8 +440,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_STATUS_DELETE:
 
                 return $this->render(
-                    'default/activity/event/user/status/delete.html.twig',
+                    'default/activity/event/user/status/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -267,7 +453,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -287,8 +473,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_STAR_ADD:
 
                 return $this->render(
-                    'default/activity/event/user/star/add.html.twig',
+                    'default/activity/event/user/star/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user'  =>
                         [
@@ -299,7 +486,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -319,8 +506,9 @@ class ActivityController extends AbstractController
             case $activity::EVENT_USER_STAR_DELETE:
 
                 return $this->render(
-                    'default/activity/event/user/star/delete.html.twig',
+                    'default/activity/event/user/star/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -331,7 +519,7 @@ class ActivityController extends AbstractController
                                 )->getAddress()
                             )
                         ],
-                        'by' =>
+                        'to' =>
                         [
                             'user' =>
                             [
@@ -358,8 +546,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/add.html.twig',
+                    'default/activity/event/torrent/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -403,8 +592,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/approve/add.html.twig',
+                    'default/activity/event/torrent/approve/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -448,8 +638,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/approve/delete.html.twig',
+                    'default/activity/event/torrent/approve/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -494,8 +685,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/download/file/add.html.twig',
+                    'default/activity/event/torrent/download/file/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -539,8 +731,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/download/magnet/add.html.twig',
+                    'default/activity/event/torrent/download/magnet/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -585,8 +778,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/locales/add.html.twig',
+                    'default/activity/event/torrent/locales/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -636,8 +830,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/locales/delete.html.twig',
+                    'default/activity/event/torrent/locales/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -687,8 +882,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/locales/approve/add.html.twig',
+                    'default/activity/event/torrent/locales/approve/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -738,8 +934,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/locales/approve/delete.html.twig',
+                    'default/activity/event/torrent/locales/approve/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -790,8 +987,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/sensitive/add.html.twig',
+                    'default/activity/event/torrent/sensitive/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -841,8 +1039,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/sensitive/delete.html.twig',
+                    'default/activity/event/torrent/sensitive/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -892,8 +1091,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/sensitive/approve/add.html.twig',
+                    'default/activity/event/torrent/sensitive/approve/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -943,8 +1143,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/sensitive/approve/delete.html.twig',
+                    'default/activity/event/torrent/sensitive/approve/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [
@@ -995,8 +1196,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/star/add.html.twig',
+                    'default/activity/event/torrent/star/add' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user'  =>
                         [
@@ -1040,8 +1242,9 @@ class ActivityController extends AbstractController
                 }
 
                 return $this->render(
-                    'default/activity/event/torrent/star/delete.html.twig',
+                    'default/activity/event/torrent/star/delete' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user'  =>
                         [
@@ -1079,8 +1282,9 @@ class ActivityController extends AbstractController
             default:
 
                 return $this->render(
-                    'default/activity/event/undefined.html.twig',
+                    'default/activity/event/undefined' . $extension,
                     [
+                        'id'    => $activity->getId(),
                         'added' => $activity->getAdded(),
                         'user' =>
                         [

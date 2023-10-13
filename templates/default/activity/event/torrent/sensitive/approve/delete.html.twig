@@ -3,7 +3,7 @@
         <a href="{{ path('user_info', { userId : user.id }) }}">
             <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
         </a>
-        {{ 'disapproved sensitive edition' | trans }}
+        {{ 'have disapproved sensitive edition' | trans }}
         {% if torrent.sensitive.exist %}
             <a href="{{ path('torrent_sensitive_edit', { torrentId : torrent.id, torrentSensitiveId : torrent.sensitive.id }) }}">
                 #{{ torrent.sensitive.id }}

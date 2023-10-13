@@ -3,7 +3,7 @@
         <a href="{{ path('user_info', { userId : user.id }) }}">
             <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
         </a>
-        {{ 'approved locales edition' | trans }}
+        {{ 'have approved locales edition' | trans }}
         {% if torrent.locales.exist %}
             <a href="{{ path('torrent_locales_edit', { torrentId : torrent.id, torrentLocalesId : torrent.locales.id }) }}">
                 #{{ torrent.locales.id }}

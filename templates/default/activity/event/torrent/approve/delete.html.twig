@@ -4,7 +4,7 @@
             <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
         </a>
         <span class="margin-l-4-px">
-            {{ 'disapproved torrent' | trans }}
+            {{ 'have disapproved torrent' | trans }}
         </span>
         {% if session.user.moderator or session.user.owner %}
             <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
