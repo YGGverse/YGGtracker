@@ -12,7 +12,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="padding-t-16-px">
+                        <td class="padding-t-16-px min-width-200-px">
                             {{ 'Theme' | trans }}
                         </td>
                         <td class="padding-t-16-px">
@@ -60,7 +60,7 @@
                         </td>
                         <td class="padding-t-16-px">
                             {% for locale in locales %}
-                                <div class="padding-y-4-px">
+                                <div class="margin-t-8-px margin-b-4-px margin-r-8-px display-inline-block min-width-120-px">
                                     {% if locale in user.locales %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" checked="checked" />
                                     {% else %}
@@ -89,7 +89,7 @@
                     </tr>
                     <tr>
                         <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
-                            {{ 'Events' | trans }}
+                            {{ 'Activity' | trans }}
                         </td>
                     </tr>
                     <tr>
