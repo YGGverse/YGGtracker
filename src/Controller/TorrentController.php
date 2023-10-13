@@ -85,7 +85,7 @@ class TorrentController extends AbstractController
         {
             foreach ($announce as $tracker)
             {
-                $allTrackers[$tracker] = $user->isYggdrasil() && !in_array($tracker, $appTrackers);
+                $allTrackers[$tracker] = !($user->isYggdrasil() && !in_array($tracker, $appTrackers));
             }
         }
 
