@@ -437,6 +437,10 @@ a:visited.background-color-hover-night-light:hover {
   display: block;
 }
 
+.display-inline-block {
+  display: inline-block;
+}
+
 .display-flex {
   display: flex;
 }

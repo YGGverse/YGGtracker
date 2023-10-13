@@ -789,8 +789,7 @@ class TorrentController extends AbstractController
                 'error'     => [],
                 'attribute' =>
                 [
-                    'value'       => $request->get('locales') ? $request->get('locales') : $torrentLocalesCurrent['value'],
-                    'placeholder' => $translator->trans('Content language')
+                    'value' => $request->get('locales') ? $request->get('locales') : $torrentLocalesCurrent['value'],
                 ]
             ]
         ];
@@ -1143,8 +1142,7 @@ class TorrentController extends AbstractController
                 'error'     => [],
                 'attribute' =>
                 [
-                    'value'       => $torrentSensitiveCurrent['value'],
-                    'placeholder' => $translator->trans('Apply sensitive filters to publication')
+                    'value' => $torrentSensitiveCurrent['value'],
                 ]
             ]
         ];
