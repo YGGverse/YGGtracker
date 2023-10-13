@@ -72,6 +72,23 @@ class TorrentController extends AbstractController
             $user->getEvents()
         );
 
+        // Create trackers list
+        $appTrackers = explode('|', $this->getParameter('app.trackers'));
+        $allTrackers = [];
+
+        foreach ($appTrackers as $tracker)
+        {
+            $allTrackers[$tracker] = true;
+        }
+
+        foreach ($file->getAnnounceList() as $announce)
+        {
+            foreach ($announce as $tracker)
+            {
+                $allTrackers[$tracker] = $user->isYggdrasil() && !in_array($tracker, $appTrackers);
+            }
+        }
+
         // Init page
         $page = $request->get('page') ? (int) $request->get('page') : 1;
 
@@ -145,14 +162,14 @@ class TorrentController extends AbstractController
                 'source'   => $file->getSource(),
                 'comment'  => $file->getComment(),
                 'tree'     => $file->getFileTree(),
-                'trackers' => $file->getAnnounceList(),
+              //'trackers' => $file->getAnnounceList(),
                 'hash' =>
                 [
                     'v1' => $file->getInfoHashV1(false),
                     'v2' => $file->getInfoHashV2(false)
                 ],
             ],
-            'trackers' => explode('|', $this->getParameter('app.trackers')),
+            'trackers'   => $allTrackers,
             'activities' => $activityService->findLastActivitiesByTorrentId(
                 $torrent->getId(),
                 $user->getEvents(),
