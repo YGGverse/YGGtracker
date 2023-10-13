@@ -6,9 +6,24 @@
         <span class="margin-l-4-px">
             {{ 'disapproved torrent' | trans }}
         </span>
-        <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
-            {{ torrent.name }}
-        </a>
+        {% if session.user.moderator or session.user.owner %}
+            <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                {{ torrent.name }}
+            </a>
+            {% if torrent.approved == false %}
+                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+            {% endif %}
+        {% else %}
+            {% if torrent.approved == false %}
+                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+            {% elseif torrent.sensitive == true %}
+                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% else %}
+                <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                    {{ torrent.name }}
+                </a>
+            {% endif %}
+        {% endif %}
     </div>
     <div class="column width-20 text-right">
         {{ added | format_ago }}

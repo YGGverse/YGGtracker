@@ -43,6 +43,9 @@ class ActivityController extends AbstractController
         return $this->render(
             'default/activity/list.html.twig',
             [
+                'session'    => [
+                    'user' => $user
+                ],
                 'activities' => $activityService->findLastActivities( // @TODO locale/sensitive filters
                     $user->getEvents(),
                     $this->getParameter('app.pagination'),
@@ -59,7 +62,8 @@ class ActivityController extends AbstractController
     }
 
     public function event(
-        $activity,
+        \App\Entity\User $user,
+        \App\Entity\Activity $activity,
         ActivityService $activityService,
         UserService $userService,
         TorrentService $torrentService,
@@ -347,6 +351,12 @@ class ActivityController extends AbstractController
             // Torrent
             case $activity::EVENT_TORRENT_ADD:
 
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
                 return $this->render(
                     'default/activity/event/torrent/add.html.twig',
                     [
@@ -362,10 +372,22 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
@@ -373,6 +395,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_APPROVE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/approve/add.html.twig',
@@ -389,10 +417,22 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
@@ -400,6 +440,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_APPROVE_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/approve/delete.html.twig',
@@ -416,10 +462,22 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
@@ -428,6 +486,12 @@ class ActivityController extends AbstractController
 
             // Torrent Download
             case $activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/download/file/add.html.twig',
@@ -444,10 +508,22 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
@@ -455,6 +531,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/download/magnet/add.html.twig',
@@ -471,10 +553,22 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
@@ -483,6 +577,12 @@ class ActivityController extends AbstractController
 
             /// Torrent Locales
             case $activity::EVENT_TORRENT_LOCALES_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/locales/add.html.twig',
@@ -499,15 +599,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
-                            'locales' => [
+                            'locales'    => [
                                 'id'     => $activity->getData()['torrentLocalesId'],
-                                'exist' => $torrentService->getTorrentLocales(
+                                'exist'  => $torrentService->getTorrentLocales(
                                     $activity->getData()['torrentLocalesId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -516,6 +628,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_LOCALES_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/locales/delete.html.twig',
@@ -532,15 +650,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
-                            'locales' => [
-                                'id' => $activity->getData()['torrentLocalesId'],
+                            'locales'   => [
+                                'id'    => $activity->getData()['torrentLocalesId'],
                                 'exist' => $torrentService->getTorrentLocales(
                                     $activity->getData()['torrentLocalesId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -549,6 +679,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_LOCALES_APPROVE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/locales/approve/add.html.twig',
@@ -565,15 +701,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
-                            'locales' => [
-                                'id' => $activity->getData()['torrentLocalesId'],
+                            'locales'   => [
+                                'id'    => $activity->getData()['torrentLocalesId'],
                                 'exist' => $torrentService->getTorrentLocales(
                                     $activity->getData()['torrentLocalesId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -582,6 +730,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_LOCALES_APPROVE_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/locales/approve/delete.html.twig',
@@ -598,15 +752,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
-                            'locales' => [
-                                'id' => $activity->getData()['torrentLocalesId'],
+                            'locales'   => [
+                                'id'    => $activity->getData()['torrentLocalesId'],
                                 'exist' => $torrentService->getTorrentLocales(
                                     $activity->getData()['torrentLocalesId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -616,6 +782,12 @@ class ActivityController extends AbstractController
 
             /// Torrent Sensitive
             case $activity::EVENT_TORRENT_SENSITIVE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/sensitive/add.html.twig',
@@ -632,15 +804,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
                             'sensitive' => [
-                                'id'     => $activity->getData()['torrentSensitiveId'],
+                                'id'    => $activity->getData()['torrentSensitiveId'],
                                 'exist' => $torrentService->getTorrentSensitive(
                                     $activity->getData()['torrentSensitiveId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -649,6 +833,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_SENSITIVE_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/sensitive/delete.html.twig',
@@ -665,15 +855,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
                             'sensitive' => [
-                                'id' => $activity->getData()['torrentSensitiveId'],
+                                'id'    => $activity->getData()['torrentSensitiveId'],
                                 'exist' => $torrentService->getTorrentSensitive(
                                     $activity->getData()['torrentSensitiveId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -682,6 +884,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_SENSITIVE_APPROVE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/sensitive/approve/add.html.twig',
@@ -698,15 +906,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
                             'sensitive' => [
-                                'id' => $activity->getData()['torrentSensitiveId'],
+                                'id'    => $activity->getData()['torrentSensitiveId'],
                                 'exist' => $torrentService->getTorrentSensitive(
                                     $activity->getData()['torrentSensitiveId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -715,6 +935,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_SENSITIVE_APPROVE_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/sensitive/approve/delete.html.twig',
@@ -731,15 +957,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName(),
                             'sensitive' => [
-                                'id' => $activity->getData()['torrentSensitiveId'],
+                                'id'    => $activity->getData()['torrentSensitiveId'],
                                 'exist' => $torrentService->getTorrentSensitive(
                                     $activity->getData()['torrentSensitiveId'] // could be deleted by moderator, remove links
                                 )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
                             ]
                         ]
                     ]
@@ -749,6 +987,12 @@ class ActivityController extends AbstractController
 
             /// Torrent star
             case $activity::EVENT_TORRENT_STAR_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/star/add.html.twig',
@@ -765,10 +1009,22 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
@@ -776,6 +1032,12 @@ class ActivityController extends AbstractController
             break;
 
             case $activity::EVENT_TORRENT_STAR_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
 
                 return $this->render(
                     'default/activity/event/torrent/star/delete.html.twig',
@@ -792,17 +1054,27 @@ class ActivityController extends AbstractController
                         ],
                         'torrent' =>
                         [
-                            'id'   => $activity->getTorrentId(),
-                            'name' => $torrentService->readTorrentFileByTorrentId(
-                                $activity->getTorrentId()
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
                             )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
                         ]
                     ]
                 );
 
             break;
-
-            // @TODO Page
 
             default:
 

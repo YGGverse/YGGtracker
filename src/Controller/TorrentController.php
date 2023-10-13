@@ -55,6 +55,18 @@ class TorrentController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Sensitive filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Approved filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && !$torrent->isApproved())
+        {
+            throw $this->createNotFoundException();
+        }
+
         // Get contributors
         $contributors = [];
         foreach ($torrentService->getTorrentContributors($torrent) as $userId)
@@ -95,6 +107,10 @@ class TorrentController extends AbstractController
         // Render template
         return $this->render('default/torrent/info.html.twig',
         [
+            'session' =>
+            [
+                'user' => $user
+            ],
             'user' =>
             [
                 'id'        => $user->getId(),
@@ -215,16 +231,16 @@ class TorrentController extends AbstractController
         $total = $torrentService->findTorrentsTotal(
             $query,
             $user->getLocales(),
-            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
-            $user->isModerator() ? null : true, // show approved content only for regular users
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() ? true : null, // show approved content only for regular users
         );
 
         $torrents = [];
         foreach ($torrentService->findTorrents(
             $query,
             $user->getLocales(),
-            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
-            $user->isModerator() ? null : true, // show approved content only for regular users
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() ? true : null, // show approved content only for regular users
             $this->getParameter('app.pagination'),
             ($page - 1) * $this->getParameter('app.pagination')
         ) as $torrent)
@@ -247,8 +263,10 @@ class TorrentController extends AbstractController
 
             $torrents[] =
             [
-                'id'     => $torrent->getId(),
-                'added'  => $torrent->getAdded(),
+                'id'        => $torrent->getId(),
+                'added'     => $torrent->getAdded(),
+                'approved'  => $torrent->isApproved(),
+                'sensitive' => $torrent->isSensitive(),
                 'file'   =>
                 [
                     'name' => $file->getName(),
@@ -341,8 +359,8 @@ class TorrentController extends AbstractController
         $total = $torrentService->findTorrentsTotal(
             [],
             $user->getLocales(),
-            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
-            $user->isModerator() ? null : true, // show approved content only for regular users
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() ? true : null, // show approved content only for regular users
         );
 
         // Create torrents list
@@ -350,8 +368,8 @@ class TorrentController extends AbstractController
         foreach ($torrentService->findTorrents(
             [],
             $user->getLocales(),
-            $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
-            $user->isModerator() ? null : true, // show approved content only for regular users
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() ? true : null, // show approved content only for regular users
             $this->getParameter('app.pagination'),
             ($page - 1) * $this->getParameter('app.pagination')
         ) as $torrent)
@@ -375,8 +393,10 @@ class TorrentController extends AbstractController
 
             $torrents[] =
             [
-                'id'     => $torrent->getId(),
-                'added'  => $torrent->getAdded(),
+                'id'        => $torrent->getId(),
+                'added'     => $torrent->getAdded(),
+                'approved'  => $torrent->isApproved(),
+                'sensitive' => $torrent->isSensitive(),
                 'file'   =>
                 [
                     'name' => $file->getName(),
@@ -1480,6 +1500,18 @@ class TorrentController extends AbstractController
             );
         }
 
+        // Sensitive filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Approved filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && !$torrent->isApproved())
+        {
+            throw $this->createNotFoundException();
+        }
+
         // Register download
         $torrentService->addTorrentDownloadFile(
             $torrent->getId(),
@@ -1586,6 +1618,18 @@ class TorrentController extends AbstractController
             throw new \Exception(
                 $translator->trans('File not found')
             );
+        }
+
+        // Sensitive filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Approved filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && !$torrent->isApproved())
+        {
+            throw $this->createNotFoundException();
         }
 
         // Register download

@@ -208,6 +208,10 @@ class UserController extends AbstractController
         return $this->render(
             'default/user/info.html.twig',
             [
+                'session' =>
+                [
+                    'user' => $user
+                ],
                 'user' => [
                     'id'        => $userTarget->getId(),
                     'address'   => $userTarget->getId() === $user->getId() ? $userTarget->getAddress() : false,

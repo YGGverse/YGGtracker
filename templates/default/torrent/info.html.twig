@@ -340,7 +340,7 @@
             <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night">
                 {{ render(controller(
                     'App\\Controller\\ActivityController::event',
-                    { activity : activity }
+                    { user : session.user, activity : activity }
                 )) }}
             </div>
         {% endfor %}
