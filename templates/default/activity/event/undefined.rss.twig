@@ -2,6 +2,6 @@
     <title>{{ 'undefined event' | trans }} {{ 'by' | trans }} #{{ user.id }}</title>
     <author>#{{ user.id }}</author>
     <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
-    <guid>{{ path('user_info', { userId : user.id }) }}#activity-{{ id }}</guid>
-    <link>{{ path('user_info', { userId : user.id }) }}#activity</link>
+    <guid>{{ url('user_info', { userId : user.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('user_info', { userId : user.id }) }}#activity</link>
 </item>

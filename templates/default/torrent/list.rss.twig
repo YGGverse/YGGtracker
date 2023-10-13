@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <atom:link href="{{ url('torrent_recent') }}" rel="self" type="application/rss+xml"></atom:link>
+        <title>{{ name }} - {{ 'Torrents' | trans }}</title>
+        <link>{{ url('torrent_recent') }}</link>
+        {% for torrent in torrents %}
+            <item>
+                <title>{{ torrent.file.name }}</title>
+                <author>#{{ torrent.user.id }}</author>
+                <pubDate>{{ torrent.added | date('D, d M Y h:i:s O') }}</pubDate>
+                <guid>{{ url('torrent_info', { torrentId : torrent.id }) }}</guid>
+                <link>{{ url('torrent_info', { torrentId : torrent.id }) }}</link>
+            </item>
+        {% endfor %}
+    </channel>
+</rss>

@@ -460,6 +460,87 @@ class TorrentController extends AbstractController
         ]);
     }
 
+    #[Route(
+        '/{_locale}/rss/torrents',
+        name: 'rss_torrents_recent',
+        defaults: [
+            '_locale' => '%app.locale%'
+        ],
+        requirements: [
+            '_locale' => '%app.locales%'
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function rssRecent(
+        Request $request,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Get total torrents
+        $total = $torrentService->findTorrentsTotal(
+            [],
+            $user->getLocales(),
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() ? true : null // show approved content only for regular users
+        );
+
+        // Create torrents list
+        $torrents = [];
+        foreach ($torrentService->findTorrents(
+            [],
+            $user->getLocales(),
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() ? true : null, // show approved content only for regular users
+            $this->getParameter('app.pagination'),
+            0
+        ) as $torrent)
+        {
+            // Read file
+            if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+            {
+                throw $this->createNotFoundException(); // @TODO exception
+            }
+
+            $torrents[] =
+            [
+                'id'        => $torrent->getId(),
+                'added'     => $torrent->getAdded(),
+                'file'   =>
+                [
+                    'name' => $file->getName(),
+                ],
+                'user' =>
+                [
+                    'id'   => $torrent->getUserId(),
+                ],
+            ];
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $this->render(
+            'default/torrent/list.rss.twig',
+            [
+                'query'    => $request->query->get('query'),
+                'torrents' => $torrents
+            ],
+            $response
+        );
+    }
+
     // Forms
     #[Route(
         '/{_locale}/submit',
