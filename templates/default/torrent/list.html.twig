@@ -21,7 +21,7 @@
                             {{ torrent.file.name }}
                         </a>
                     </h2>
-                    {% if torrent.scrape.leechers == 0 and torrent.scrape.leechers == 0 %}
+                    {% if torrent.scrape.leechers > 0 and torrent.scrape.seeders == 0 %}
                         <span class="label label-green margin-l-4-px font-size-10-px position-relative top--2 cursor-default"
                                 title="{{ 'Active leechers waiting for seeders' | trans }}">
                             {{ 'wanted' | trans }}
