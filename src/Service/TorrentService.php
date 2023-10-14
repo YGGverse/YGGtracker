@@ -154,47 +154,48 @@ class TorrentService
     {
         $keywords = [];
 
-        $file = $this->readTorrentFileByFilepath($filepath);
-
-        foreach ($file->getFileList() as $file)
+        if ($file = $this->readTorrentFileByFilepath($filepath))
         {
-            $words = explode(
-                ' ',
-                preg_replace(
-                    '/[\s]+/',
+            foreach ($file->getFileList() as $file)
+            {
+                $words = explode(
                     ' ',
                     preg_replace(
-                        '/[\W]+/',
+                        '/[\s]+/',
                         ' ',
-                        $file['path']
+                        preg_replace(
+                            '/[\W]+/',
+                            ' ',
+                            $file['path']
+                        )
                     )
-                )
-            );
+                );
 
-            foreach ($words as $key => $value)
-            {
-                if (mb_strlen($value) < $minLength)
+                foreach ($words as $key => $value)
                 {
-                    unset($words[$key]);
+                    if (mb_strlen($value) < $minLength)
+                    {
+                        unset($words[$key]);
+                    }
+
+                    else
+                    {
+                        $words[$key] = mb_strtolower($value);
+                    }
                 }
 
-                else
+                if ($hash = $file->getInfoHashV1(false))
                 {
-                    $words[$key] = mb_strtolower($value);
+                    $keywords[] = $hash;
                 }
-            }
 
-            if ($hash = $file->getInfoHashV1(false))
-            {
-                $keywords[] = $hash;
-            }
+                if ($hash = $file->getInfoHashV2(false))
+                {
+                    $keywords[] = $hash;
+                }
 
-            if ($hash = $file->getInfoHashV2(false))
-            {
-                $keywords[] = $hash;
+                $keywords = array_merge($keywords, $words);
             }
-
-            $keywords = array_merge($keywords, $words);
         }
 
         return array_unique($keywords);
