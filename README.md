@@ -4,6 +4,9 @@ BitTorrent Registry for Yggdrasil
 
 YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
 
+![Pasted image 1](https://github.com/YGGverse/YGGtracker/assets/108541346/962f7850-01e1-4add-9dbe-c11b80108a75)
+
+
 #### Installation
 
 ```
