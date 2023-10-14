@@ -21,39 +21,8 @@ class SearchController extends AbstractController
         return $this->render(
             'default/search/module.html.twig',
             [
-                'query' => $query,
+                'query' => urldecode($query),
             ]
         );
-    }
-
-    private function initUser(
-        Request $request,
-        UserService $userService,
-        ActivityService $activityService
-    ): ?\App\Entity\User
-    {
-        // Init user
-        if (!$user = $userService->findUserByAddress($request->getClientIp()))
-        {
-            $user = $userService->addUser(
-                $request->getClientIp(),
-                time(),
-                $this->getParameter('app.locale'),
-                explode('|', $this->getParameter('app.locales')),
-                $activityService->getEventCodes(),
-                $this->getParameter('app.theme'),
-                $this->getParameter('app.sensitive'),
-                $this->getParameter('app.yggdrasil'),
-                $this->getParameter('app.approved')
-            );
-
-            // Add user join event
-            $activityService->addEventUserAdd(
-                $user->getId(),
-                time()
-            );
-        }
-
-        return $user;
     }
 }

@@ -221,7 +221,7 @@ class TorrentController extends AbstractController
         );
 
         // Init request
-        $query = $request->get('query') ? explode(' ', $request->get('query')) : [];
+        $query = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
         $page  = $request->get('page') ? (int) $request->get('page') : 1;
 
         // Get total torrents
@@ -322,8 +322,14 @@ class TorrentController extends AbstractController
         }
 
         return $this->render('default/torrent/list.html.twig', [
-            'query'    => $request->query->get('query'),
-            'torrents' => $torrents
+            'query'    => urldecode($request->get('query')),
+            'torrents' => $torrents,
+            'pagination' =>
+            [
+                'page'  => $page,
+                'pages' => ceil($total / $this->getParameter('app.pagination')),
+                'total' => $total
+            ]
         ]);
     }
 
@@ -379,7 +385,7 @@ class TorrentController extends AbstractController
 
             // Generate keywords
             $keywords = [];
-            $query = explode(' ', mb_strtolower($request->query->get('query')));
+            $query = explode(' ', mb_strtolower(urldecode($request->query->get('query'))));
             foreach ($torrent->getKeywords() as $keyword)
             {
                 if (in_array($keyword, $query))
@@ -452,8 +458,13 @@ class TorrentController extends AbstractController
         }
 
         return $this->render('default/torrent/list.html.twig', [
-            'query'    => $request->query->get('query'),
-            'torrents' => $torrents
+            'torrents' => $torrents,
+            'pagination' =>
+            [
+                'page'  => $page,
+                'pages' => ceil($total / $this->getParameter('app.pagination')),
+                'total' => $total
+            ]
         ]);
     }
 
@@ -531,7 +542,6 @@ class TorrentController extends AbstractController
         return $this->render(
             'default/torrent/list.rss.twig',
             [
-                'query'    => $request->query->get('query'),
                 'torrents' => $torrents
             ],
             $response

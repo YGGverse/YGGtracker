@@ -137,6 +137,46 @@
                 </div>
             </div>
         {% endfor %}
+        {% if pagination.pages > 1 %}
+            <div class="margin-t-16-px text-right">
+                {{ 'Page' | trans | lower }} {{ pagination.page }} / {{ pagination.pages }}
+                {% if query %}
+                    {% if pagination.page > 1 %}
+                        {% if pagination.page == 2 %}
+                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true) | raw }) }}">
+                                {{ 'Back' | trans | lower }}
+                            </a>
+                        {% else %}
+                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true), page : pagination.page - 1 }) }}">
+                                {{ 'Back' | trans | lower }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {% if pagination.page < pagination.pages %}
+                        <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true), page : pagination.page + 1 }) }}">
+                            {{ 'Next' | trans | lower }}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {% if pagination.page > 1 %}
+                        {% if pagination.page == 2 %}
+                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_recent') }}">
+                                {{ 'Back' | trans | lower }}
+                            </a>
+                        {% else %}
+                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_recent', { page : pagination.page - 1 }) }}">
+                                {{ 'Back' | trans | lower }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {% if pagination.page < pagination.pages %}
+                        <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_recent', { page : pagination.page + 1 }) }}">
+                            {{ 'Next' | trans | lower }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
     {% else %}
         <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
             <div class="text-center">
