@@ -109,10 +109,7 @@ class TorrentController extends AbstractController
         [
             'session' =>
             [
-                'user' => $user
-            ],
-            'user' =>
-            [
+                'user' => $user,
                 'id'        => $user->getId(),
                 'moderator' => $user->isModerator()
             ],

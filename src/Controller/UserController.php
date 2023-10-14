@@ -210,11 +210,13 @@ class UserController extends AbstractController
             [
                 'session' =>
                 [
-                    'user' => $user
+                    'user'      => $user,
+                    'owner'     => $user->getId() === $userTarget->getId(),
+                    'moderator' => $user->isModerator()
                 ],
                 'user' => [
                     'id'        => $userTarget->getId(),
-                    'address'   => $userTarget->getId() === $user->getId() ? $userTarget->getAddress() : false,
+                    'address'   => $userTarget->getAddress(),
                     'moderator' => $userTarget->isModerator(),
                     'approved'  => $userTarget->isApproved(),
                     'status'    => $userTarget->isStatus(),

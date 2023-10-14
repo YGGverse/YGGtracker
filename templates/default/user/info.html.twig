@@ -33,7 +33,7 @@
                 <tr>
                     <td class="padding-y-8-px border-bottom-default text-right" colspan="2">{{ 'Common'|trans }}</td>
                 </tr>
-                {% if user.address %}
+                {% if session.owner or session.moderator %}
                     <tr>
                         <td class="padding-t-16-px">{{ 'Address' | trans }}</td>
                         <td class="padding-t-16-px">
@@ -68,7 +68,7 @@
                     <td class="padding-t-16-px">
                         {% if user.status %}
                             {{ 'Active' | trans }}
-                            {% if user.moderator %}
+                            {% if session.moderator %}
                                 <a class="float-right" href="{{ path('user_status_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -77,7 +77,7 @@
                             {% endif %}
                         {% else %}
                             {{ 'Disabled' | trans }}
-                            {% if user.moderator %}
+                            {% if session.moderator %}
                                 <a class="float-right text-color-red" href="{{ path('user_status_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
@@ -94,7 +94,7 @@
                     <td>
                         {% if user.approved %}
                             {{ 'Yes'| trans }}
-                            {% if user.moderator %}
+                            {% if session.moderator %}
                                 <a class="float-right" href="{{ path('user_approved_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -103,7 +103,7 @@
                             {% endif %}
                         {% else %}
                             {{ 'No'| trans }}
-                            {% if user.moderator %}
+                            {% if session.moderator %}
                                 <a class="float-right text-color-red" href="{{ path('user_approved_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
@@ -118,9 +118,9 @@
                         {{ 'Moderator' | trans }}
                     </td>
                     <td>
-                        {% if user.moderator %}
+                        {% if session.moderator %}
                             {{ 'Yes'| trans }}
-                            {% if user.moderator %}
+                            {% if session.moderator %}
                                 <a class="float-right" href="{{ path('user_moderator_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
@@ -129,7 +129,7 @@
                             {% endif %}
                         {% else %}
                             {{ 'No'| trans }}
-                            {% if user.moderator %}
+                            {% if session.moderator %}
                                 <a class="float-right text-color-red" href="{{ path('user_moderator_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
