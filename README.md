@@ -1,26 +1,65 @@
 # YGGtracker
 
-Distributed BitTorrent Registry for Yggdrasil
+BitTorrent Registry for Yggdrasil
 
 YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
 
 #### Installation
 
-##### Production (v.1)
+```
+symfony check:requirements
+```
 
-* `composer create-project yggverse/yggtracker`
+##### Production
 
-##### Development (v.2)
+Install stable release
 
-* `git clone https://github.com/YGGverse/YGGtracker.git`
-* `cd YGGtracker`
-* `composer update`
-* `php bin/console doctrine:schema:update --force`
-* `symfony server:start`
+```
+composer create-project yggverse/yggtracker
+```
+
+##### Development
+
+Latest codebase available in repository
+
+```
+git clone https://github.com/YGGverse/YGGtracker.git
+cd YGGtracker
+composer update
+symfony server:start
+```
+
+##### Database
+
+New installation
+
+```
+php bin/console doctrine:schema:update --force
+```
+
+Existing DB upgrade
+
+```
+php bin/console doctrine:migrations:migrate
+```
+
+##### Crontab
+
+* `* * * * * /crontab/torrent/scrape` - update seeding stats
+
+##### Routing
+
+YGGtracker uses sub-directory prefix by default,
+if your instance running in the document root, please change `prefix` value to `/` in file
+`/config/routes.yaml`
+
+##### App settings
+
+Custom settings could be provided in the `/.env.local` file by overwriting default `/.env` values
 
 #### Localization
 
-* Community translations by [Crowdin](https://crowdin.com/project/yggtracker)
+* Join community translations by [Crowdin](https://crowdin.com/project/yggtracker)
 
 #### Contribution
 
@@ -46,6 +85,7 @@ git checkout -b my-pr-branch-name
 
 #### Components
 
+* [Symfony Framework](https://symfony.com)
 * [SVG icons](https://icons.getbootstrap.com)
 * [Scrapper](https://github.com/medariox/scrapeer) / [Composer Edition](https://github.com/YGGverse/scrapeer)
 * [Bencode Library](https://github.com/Rhilip/Bencode)
