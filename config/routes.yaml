@@ -3,3 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+    # this prefix using in official build URLs.
+    # replace to / if you hosted YGGtracker instance in the document root
+    prefix: '/yggtracker'
