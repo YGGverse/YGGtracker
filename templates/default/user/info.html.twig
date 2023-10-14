@@ -118,7 +118,7 @@
                         {{ 'Moderator' | trans }}
                     </td>
                     <td>
-                        {% if session.moderator %}
+                        {% if user.moderator %}
                             {{ 'Yes'| trans }}
                             {% if session.moderator %}
                                 <a class="float-right" href="{{ path('user_moderator_toggle', { userId : user.id }) }}" title="{{ 'Toggle' | trans }}">
