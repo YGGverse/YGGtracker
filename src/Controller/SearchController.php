@@ -21,7 +21,7 @@ class SearchController extends AbstractController
         return $this->render(
             'default/search/module.html.twig',
             [
-                'query' => urldecode($query),
+                'query' => $query ? urldecode($query) : '',
             ]
         );
     }
