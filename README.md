@@ -100,7 +100,6 @@ git checkout -b my-pr-branch-name
 #### Instances
 
 * [http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/](http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/)
-* [http://[200:e6fd:bb3c:b354:cd3a:f939:753e:cd72]/yggtracker/](http://[200:e6fd:bb3c:b354:cd3a:f939:753e:cd72]/yggtracker/)
 
 #### See also
 
