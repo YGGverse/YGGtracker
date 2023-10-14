@@ -45,54 +45,49 @@ class TorrentService
 
         if ($torrent = $this->getTorrentScrapeQueue())
         {
-            // Get file
-            if (!$file = $this->readTorrentFileByTorrentId($torrent->getId()))
-            {
-                // @TODO
-                throw new \Exception(
-                    $translator->trans('File not found')
-                );
-            }
-
-            // Get info hashes
-            $hashes = [];
-
-            if ($hash = $file->getInfoHashV1(false))
-            {
-                $hashes[] = $hash;
-            }
-
-            if ($hash = $file->getInfoHashV2(false))
-            {
-                $hashes[] = $hash;
-            }
-
             // Init default values
             $seeders  = 0;
             $peers    = 0;
             $leechers = 0;
 
-            // Get scrape
-            if ($hashes && $trackers)
+            // Get file
+            if ($file = $this->readTorrentFileByTorrentId($torrent->getId()))
             {
-                // Update scrape info
-                if ($results = $scraper->scrape($hashes, $trackers, null, 1))
+                // Get info hashes
+                $hashes = [];
+
+                if ($hash = $file->getInfoHashV1(false))
                 {
-                    foreach ($results as $result)
+                    $hashes[] = $hash;
+                }
+
+                if ($hash = $file->getInfoHashV2(false))
+                {
+                    $hashes[] = $hash;
+                }
+
+                // Get scrape
+                if ($hashes && $trackers)
+                {
+                    // Update scrape info
+                    if ($results = $scraper->scrape($hashes, $trackers, null, 1))
                     {
-                        if (isset($result['seeders']))
+                        foreach ($results as $result)
                         {
-                            $seeders = $seeders + (int) $result['seeders'];
-                        }
+                            if (isset($result['seeders']))
+                            {
+                                $seeders = $seeders + (int) $result['seeders'];
+                            }
 
-                        if (isset($result['completed']))
-                        {
-                            $peers = $peers + (int) $result['completed'];
-                        }
+                            if (isset($result['completed']))
+                            {
+                                $peers = $peers + (int) $result['completed'];
+                            }
 
-                        if (isset($result['leechers']))
-                        {
-                            $leechers = $leechers + (int) $result['leechers'];
+                            if (isset($result['leechers']))
+                            {
+                                $leechers = $leechers + (int) $result['leechers'];
+                            }
                         }
                     }
                 }
@@ -156,7 +151,7 @@ class TorrentService
 
         if ($file = $this->readTorrentFileByFilepath($filepath))
         {
-            foreach ($file->getFileList() as $file)
+            foreach ($file->getFileList() as $list)
             {
                 $words = explode(
                     ' ',
@@ -166,7 +161,7 @@ class TorrentService
                         preg_replace(
                             '/[\W]+/',
                             ' ',
-                            $file['path']
+                            $list['path']
                         )
                     )
                 );
