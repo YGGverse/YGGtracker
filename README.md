@@ -87,8 +87,8 @@ git checkout -b my-pr-branch-name
 
 #### Feedback
 
-[Issues](https://github.com/YGGverse/YGGtracker/issues)
-[Wiki](https://github.com/YGGverse/YGGtracker/wiki)
+* [Issues](https://github.com/YGGverse/YGGtracker/issues)
+* [Wiki](https://github.com/YGGverse/YGGtracker/wiki)
 
 #### Community
 
