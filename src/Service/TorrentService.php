@@ -154,7 +154,9 @@ class TorrentService
     {
         $keywords = [];
 
-        foreach ($this->readTorrentFileByFilepath($filepath)->getFileList() as $file)
+        $file = $this->readTorrentFileByFilepath($filepath);
+
+        foreach ($file->getFileList() as $file)
         {
             $words = explode(
                 ' ',
@@ -180,6 +182,16 @@ class TorrentService
                 {
                     $words[$key] = mb_strtolower($value);
                 }
+            }
+
+            if ($hash = $file->getInfoHashV1(false))
+            {
+                $keywords[] = $hash;
+            }
+
+            if ($hash = $file->getInfoHashV2(false))
+            {
+                $keywords[] = $hash;
             }
 
             $keywords = array_merge($keywords, $words);
