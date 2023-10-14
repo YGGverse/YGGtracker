@@ -85,7 +85,7 @@ git checkout -b my-pr-branch-name
 * [Bencode Library](https://github.com/Rhilip/Bencode)
 * [Identicons](https://github.com/dmester/jdenticon-php)
 
-#### Feedback
+#### Support
 
 * [Issues](https://github.com/YGGverse/YGGtracker/issues)
 * [Wiki](https://github.com/YGGverse/YGGtracker/wiki)
