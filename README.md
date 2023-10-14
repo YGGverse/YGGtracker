@@ -47,12 +47,6 @@ php bin/console doctrine:migrations:migrate
 
 * `* * * * * /crontab/torrent/scrape` - update seeding stats
 
-##### Routing
-
-YGGtracker uses sub-directory prefix by default,
-if your instance running in the document root, please change `prefix` value to `/` in file
-`/config/routes.yaml`
-
 ##### App settings
 
 Custom settings could be provided in the `/.env.local` file by overwriting default `/.env` values
@@ -93,7 +87,8 @@ git checkout -b my-pr-branch-name
 
 #### Feedback
 
-[https://github.com/YGGverse/YGGtracker/issues](https://github.com/YGGverse/YGGtracker/issues)
+[Issues](https://github.com/YGGverse/YGGtracker/issues)
+[Wiki](https://github.com/YGGverse/YGGtracker/wiki)
 
 #### Community
 
