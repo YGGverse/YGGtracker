@@ -1,4 +1,4 @@
 <form class="margin-t-16-px" name="search" method="get" action="{{ path('torrent_search') }}">
     <input class="min-width-200-px" type="text" name="query" value="{{ query }}" placeholder="{{ 'Keyword, file, hash...' | trans }}" />
-    <input {% if query is not null %}class="button-green"{% endif %} type="submit" value="{{ 'Search' | trans }}" />
+    <input {% if query %}class="button-green"{% endif %} type="submit" value="{{ 'Search' | trans }}" />
 </form>
