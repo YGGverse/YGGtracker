@@ -647,51 +647,51 @@
       </trans-unit>
       <trans-unit id="FEgqWb_" resname="year ago">
         <source>year ago</source>
-        <target>year ago</target>
+        <target>рік тому</target>
       </trans-unit>
       <trans-unit id="pfk9V_Q" resname="month ago">
         <source>month ago</source>
-        <target>month ago</target>
+        <target>місяць тому</target>
       </trans-unit>
       <trans-unit id="5rpeYTJ" resname="day ago">
         <source>day ago</source>
-        <target>day ago</target>
+        <target>день тому</target>
       </trans-unit>
       <trans-unit id="hM62aMH" resname="hour ago">
         <source>hour ago</source>
-        <target>hour ago</target>
+        <target>годину тому</target>
       </trans-unit>
       <trans-unit id="r2QgE4i" resname="minute ago">
         <source>minute ago</source>
-        <target>minute ago</target>
+        <target>хвилину тому</target>
       </trans-unit>
       <trans-unit id="RbqRzDS" resname="second ago">
         <source>second ago</source>
-        <target>second ago</target>
+        <target>секунду тому</target>
       </trans-unit>
       <trans-unit id="TQof7nK" resname="years ago">
         <source>years ago</source>
-        <target>years ago</target>
+        <target>років тому</target>
       </trans-unit>
       <trans-unit id="fEGjy26" resname="months ago">
         <source>months ago</source>
-        <target>months ago</target>
+        <target>місяців тому</target>
       </trans-unit>
       <trans-unit id="N9rZHfe" resname="days ago">
         <source>days ago</source>
-        <target>days ago</target>
+        <target>днів тому</target>
       </trans-unit>
       <trans-unit id="JQ76A_T" resname="hours ago">
         <source>hours ago</source>
-        <target>hours ago</target>
+        <target>годин тому</target>
       </trans-unit>
       <trans-unit id="HhrazP8" resname="minutes ago">
         <source>minutes ago</source>
-        <target>minutes ago</target>
+        <target>хвилин тому</target>
       </trans-unit>
       <trans-unit id="IsfvBWU" resname="seconds ago">
         <source>seconds ago</source>
-        <target>seconds ago</target>
+        <target>секунд тому</target>
       </trans-unit>
     </body>
   </file>
