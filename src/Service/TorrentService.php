@@ -134,11 +134,11 @@ class TorrentService
     }
 
     public function readTorrentFileByTorrentId(
-        int $id
+        int $torrentId
     ): ?\Rhilip\Bencode\TorrentFile
     {
         return $this->readTorrentFileByFilepath(
-            $this->getStorageFilepathById($id)
+            $this->getStorageFilepathByTorrentId($torrentId)
         );
     }
 
@@ -159,7 +159,7 @@ class TorrentService
                         '/[\s]+/',
                         ' ',
                         preg_replace(
-                            '/[\W]+/',
+                            '/[\W_]+/u',
                             ' ',
                             $list['path']
                         )
@@ -196,12 +196,12 @@ class TorrentService
         return array_unique($keywords);
     }
 
-    public function getStorageFilepathById(int $id): string
+    public function getStorageFilepathByTorrentId(int $torrentId): string
     {
         return sprintf(
             '%s/var/torrents/%s.torrent',
             $this->kernelInterface->getProjectDir(),
-            implode('/', str_split($id))
+            implode('/', str_split($torrentId))
         );
     }
 
@@ -248,7 +248,7 @@ class TorrentService
         $filesystem = new Filesystem();
         $filesystem->copy(
             $filepath,
-            $this->getStorageFilepathById(
+            $this->getStorageFilepathByTorrentId(
                 $torrent->getId()
             )
         );
@@ -442,6 +442,25 @@ class TorrentService
                 $this->entityManagerInterface->persist($torrent);
                 $this->entityManagerInterface->flush();
             }
+        }
+    }
+
+    public function reindexTorrentKeywordsAll(): void
+    {
+        foreach ($this->entityManagerInterface
+                      ->getRepository(Torrent::class)
+                      ->findAll() as $torrent)
+        {
+            $torrent->setKeywords(
+                $this->generateTorrentKeywordsByTorrentFilepath(
+                    $this->getStorageFilepathByTorrentId(
+                        $torrent->getId()
+                    )
+                )
+            );
+
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
         }
     }
 
