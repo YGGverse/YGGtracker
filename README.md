@@ -50,7 +50,7 @@ php bin/console doctrine:migrations:migrate
 
 ##### Crontab
 
-* `* * * * * /crontab/torrent/scrape` - update seeding stats
+* `* * * * * /crontab/torrent/scrape/{%app.key%}` - update seeding stats
 
 ##### App settings
 

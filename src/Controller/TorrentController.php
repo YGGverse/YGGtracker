@@ -322,7 +322,7 @@ class TorrentController extends AbstractController
         }
 
         return $this->render('default/torrent/list.html.twig', [
-            'query'    => urldecode($request->get('query')),
+            'query'    => $request->get('query') ? urldecode($request->get('query')) : '',
             'torrents' => $torrents,
             'pagination' =>
             [
@@ -1752,7 +1752,10 @@ class TorrentController extends AbstractController
 
     // Tools
     #[Route(
-        '/crontab/torrent/scrape',
+        '/crontab/torrent/scrape/{key}',
+        requirements: [
+            'key' => '%app.key%'
+        ],
         methods:
         [
             'GET'
@@ -1773,7 +1776,10 @@ class TorrentController extends AbstractController
     }
 
     #[Route(
-        '/tool/torrent/reindex',
+        '/tool/torrent/reindex/{key}',
+        requirements: [
+            'key' => '%app.key%'
+        ],
         methods:
         [
             'GET'
