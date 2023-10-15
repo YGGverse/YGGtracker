@@ -59,7 +59,7 @@
                 {% if torrent.keywords %}
                     <div class="margin-b-16-px">
                         {% for keyword, quantity in torrent.keywords %}
-                            <a href="{{ path('torrent_search', { query : keyword | url_encode(true) }) }}" title="{{ 'Contains' | trans }}: {{ quantity }}">
+                            <a href="{{ path('torrent_search', { query : keyword | url_encode(true) }) }}">
                                 #{{ keyword }}
                             </a>
                         {% endfor %}
