@@ -249,6 +249,7 @@ class TorrentController extends AbstractController
             }
 
             // Generate keywords
+            /* @TODO deprecated, based on active search result
             $keywords = [];
             foreach ($torrent->getKeywords() as $keyword)
             {
@@ -257,7 +258,22 @@ class TorrentController extends AbstractController
                     $keywords[] = $keyword;
                 }
             }
+            */
 
+            // Generate keywords by extension
+            $keywords = [];
+            foreach ($file->getFileList() as $item)
+            {
+                if ($keyword = pathinfo($item['path'], PATHINFO_EXTENSION))
+                {
+                    $keywords[] = mb_strtolower($keyword);
+                }
+            }
+            $keywords = array_unique($keywords);
+
+            sort($keywords);
+
+            // Push torrent
             $torrents[] =
             [
                 'id'        => $torrent->getId(),
@@ -383,17 +399,20 @@ class TorrentController extends AbstractController
                 throw $this->createNotFoundException(); // @TODO exception
             }
 
-            // Generate keywords
+            // Generate keywords by extension
             $keywords = [];
-            $query = explode(' ', mb_strtolower(urldecode($request->query->get('query'))));
-            foreach ($torrent->getKeywords() as $keyword)
+            foreach ($file->getFileList() as $item)
             {
-                if (in_array($keyword, $query))
+                if ($keyword = pathinfo($item['path'], PATHINFO_EXTENSION))
                 {
-                    $keywords[] = urlencode($keyword);
+                   $keywords[] = mb_strtolower($keyword);
                 }
             }
+            $keywords = array_unique($keywords);
 
+            sort($keywords);
+
+            // Push torrent
             $torrents[] =
             [
                 'id'        => $torrent->getId(),
