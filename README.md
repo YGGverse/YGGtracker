@@ -1,5 +1,7 @@
 # YGGtracker
 
+[![Crowdin](https://badges.crowdin.net/yggtracker/localized.svg)](https://crowdin.com/project/yggtracker)
+
 BitTorrent Registry for Yggdrasil
 
 YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
