@@ -262,16 +262,26 @@ class TorrentController extends AbstractController
 
             // Generate keywords by extension
             $keywords = [];
+
             foreach ($file->getFileList() as $item)
             {
                 if ($keyword = pathinfo($item['path'], PATHINFO_EXTENSION))
                 {
-                    $keywords[] = mb_strtolower($keyword);
+                    $keyword = mb_strtolower($keyword);
+
+                    if (isset($keywords[$keyword]))
+                    {
+                        $keywords[$keyword]++;
+                    }
+
+                    else
+                    {
+                        $keywords[$keyword] = 1;
+                    }
                 }
             }
-            $keywords = array_unique($keywords);
 
-            sort($keywords);
+            arsort($keywords);
 
             // Push torrent
             $torrents[] =
@@ -401,16 +411,26 @@ class TorrentController extends AbstractController
 
             // Generate keywords by extension
             $keywords = [];
+
             foreach ($file->getFileList() as $item)
             {
                 if ($keyword = pathinfo($item['path'], PATHINFO_EXTENSION))
                 {
-                   $keywords[] = mb_strtolower($keyword);
+                    $keyword = mb_strtolower($keyword);
+
+                    if (isset($keywords[$keyword]))
+                    {
+                        $keywords[$keyword]++;
+                    }
+
+                    else
+                    {
+                        $keywords[$keyword] = 1;
+                    }
                 }
             }
-            $keywords = array_unique($keywords);
 
-            sort($keywords);
+            arsort($keywords);
 
             // Push torrent
             $torrents[] =

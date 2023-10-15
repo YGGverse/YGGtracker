@@ -13,7 +13,7 @@
     </div>
     {% if torrents %}
         {% for torrent in torrents %}
-            <div class="padding-16-px margin-y-8-px border-radius-3-px background-color-night{% if torrent.sensitive == true or torrent.approved == false %} opacity-06{% endif %}">
+            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night{% if torrent.sensitive == true or torrent.approved == false %} opacity-06{% endif %}">
                 <a name="{{ torrent.id }}"></a>
                 <div class="margin-b-16-px">
                     <h2>
@@ -44,8 +44,8 @@
                 </div>
                 {% if torrent.keywords %}
                     <div class="margin-b-16-px">
-                        {% for keyword in torrent.keywords %}
-                            <a href="{{ path('torrent_search', { query : keyword | url_encode(true) }) }}">
+                        {% for keyword, quantity in torrent.keywords %}
+                            <a href="{{ path('torrent_search', { query : keyword | url_encode(true) }) }}" title="{{ 'Contains' | trans }}: {{ quantity }}">
                                 #{{ keyword }}
                             </a>
                         {% endfor %}
