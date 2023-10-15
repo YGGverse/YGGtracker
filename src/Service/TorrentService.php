@@ -214,12 +214,12 @@ class TorrentService
     {
         $contributors = [];
 
-        foreach ($this->findTorrentLocalesByTorrentId($torrent->getUserId()) as $torrentLocale)
+        foreach ($this->findTorrentLocalesByTorrentId($torrent->getId()) as $torrentLocale)
         {
             $contributors[] = $torrentLocale->getUserId();
         }
 
-        foreach ($this->findTorrentSensitiveByTorrentId($torrent->getUserId()) as $torrentSensitive)
+        foreach ($this->findTorrentSensitiveByTorrentId($torrent->getId()) as $torrentSensitive)
         {
             $contributors[] = $torrentSensitive->getUserId();
         }
