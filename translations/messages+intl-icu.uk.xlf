@@ -149,58 +149,6 @@
         <source>now</source>
         <target>щойно</target>
       </trans-unit>
-      <trans-unit id="TLTqJVg" resname="year">
-        <source>year</source>
-        <target>рік</target>
-      </trans-unit>
-      <trans-unit id="pcfRcZ4" resname="month">
-        <source>month</source>
-        <target>місяць</target>
-      </trans-unit>
-      <trans-unit id="lEwn5bl" resname="day">
-        <source>day</source>
-        <target>день</target>
-      </trans-unit>
-      <trans-unit id="msCt1HX" resname="hour">
-        <source>hour</source>
-        <target>година</target>
-      </trans-unit>
-      <trans-unit id="KM3SDq8" resname="minute">
-        <source>minute</source>
-        <target>хвилина</target>
-      </trans-unit>
-      <trans-unit id="FjZ6rLZ" resname="second">
-        <source>second</source>
-        <target>секунда</target>
-      </trans-unit>
-      <trans-unit id="HFCZOwC" resname="years">
-        <source>years</source>
-        <target>роки</target>
-      </trans-unit>
-      <trans-unit id="FoN0M0Q" resname="months">
-        <source>months</source>
-        <target>місяці</target>
-      </trans-unit>
-      <trans-unit id="q1EATp1" resname="days">
-        <source>days</source>
-        <target>дні</target>
-      </trans-unit>
-      <trans-unit id="QEMUsfS" resname="hours">
-        <source>hours</source>
-        <target>години</target>
-      </trans-unit>
-      <trans-unit id="kOY9hfo" resname="minutes">
-        <source>minutes</source>
-        <target>хвилини</target>
-      </trans-unit>
-      <trans-unit id="WfAG1jv" resname="seconds">
-        <source>seconds</source>
-        <target>секунди</target>
-      </trans-unit>
-      <trans-unit id="HY4I.WM" resname="ago">
-        <source>ago</source>
-        <target>тому</target>
-      </trans-unit>
       <trans-unit id="aw2VQXS" resname="Keyword, file, hash...">
         <source>Keyword, file, hash...</source>
         <target>Ключове слово, файл, хеш...</target>
@@ -697,9 +645,53 @@
         <source>BitTorrent protocol version 1</source>
         <target>BitTorrent протокол версії 1</target>
       </trans-unit>
-      <trans-unit id="Lq7LPQz" resname="Contains">
-        <source>Contains</source>
-        <target>Містить</target>
+      <trans-unit id="FEgqWb_" resname="year ago">
+        <source>year ago</source>
+        <target>year ago</target>
+      </trans-unit>
+      <trans-unit id="pfk9V_Q" resname="month ago">
+        <source>month ago</source>
+        <target>month ago</target>
+      </trans-unit>
+      <trans-unit id="5rpeYTJ" resname="day ago">
+        <source>day ago</source>
+        <target>day ago</target>
+      </trans-unit>
+      <trans-unit id="hM62aMH" resname="hour ago">
+        <source>hour ago</source>
+        <target>hour ago</target>
+      </trans-unit>
+      <trans-unit id="r2QgE4i" resname="minute ago">
+        <source>minute ago</source>
+        <target>minute ago</target>
+      </trans-unit>
+      <trans-unit id="RbqRzDS" resname="second ago">
+        <source>second ago</source>
+        <target>second ago</target>
+      </trans-unit>
+      <trans-unit id="TQof7nK" resname="years ago">
+        <source>years ago</source>
+        <target>years ago</target>
+      </trans-unit>
+      <trans-unit id="fEGjy26" resname="months ago">
+        <source>months ago</source>
+        <target>months ago</target>
+      </trans-unit>
+      <trans-unit id="N9rZHfe" resname="days ago">
+        <source>days ago</source>
+        <target>days ago</target>
+      </trans-unit>
+      <trans-unit id="JQ76A_T" resname="hours ago">
+        <source>hours ago</source>
+        <target>hours ago</target>
+      </trans-unit>
+      <trans-unit id="HhrazP8" resname="minutes ago">
+        <source>minutes ago</source>
+        <target>minutes ago</target>
+      </trans-unit>
+      <trans-unit id="IsfvBWU" resname="seconds ago">
+        <source>seconds ago</source>
+        <target>seconds ago</target>
       </trans-unit>
     </body>
   </file>
