@@ -667,39 +667,39 @@
       </trans-unit>
       <trans-unit id="VKDowX6" resname="Error">
         <source>Error</source>
-        <target>Error</target>
+        <target>Помилка</target>
       </trans-unit>
       <trans-unit id="g0SUekA" resname="Oops!">
         <source>Oops!</source>
-        <target>Oops!</target>
+        <target>Ой!</target>
       </trans-unit>
       <trans-unit id="9010RFH" resname="Internal server error">
         <source>Internal server error</source>
-        <target>Internal server error</target>
+        <target>Внутрішня помилка сервера</target>
       </trans-unit>
       <trans-unit id="ts54jZe" resname="Report">
         <source>Report</source>
-        <target>Report</target>
+        <target>Звіт</target>
       </trans-unit>
       <trans-unit id="4_uqFt2" resname="Not found">
         <source>Not found</source>
-        <target>Not found</target>
+        <target>Не знайдено</target>
       </trans-unit>
       <trans-unit id="hestk9M" resname="Page not found!">
         <source>Page not found!</source>
-        <target>Page not found!</target>
+        <target>Сторінку не знайдено!</target>
       </trans-unit>
       <trans-unit id="HfJe0N1" resname="BitTorrent protocol version 2">
         <source>BitTorrent protocol version 2</source>
-        <target>BitTorrent protocol version 2</target>
+        <target>BitTorrent протокол версії 2</target>
       </trans-unit>
       <trans-unit id="U4t_NWU" resname="BitTorrent protocol version 1">
         <source>BitTorrent protocol version 1</source>
-        <target>BitTorrent protocol version 1</target>
+        <target>BitTorrent протокол версії 1</target>
       </trans-unit>
       <trans-unit id="Lq7LPQz" resname="Contains">
         <source>Contains</source>
-        <target>Contains</target>
+        <target>Містить</target>
       </trans-unit>
     </body>
   </file>
