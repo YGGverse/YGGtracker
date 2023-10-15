@@ -17,6 +17,9 @@ class ActivityController extends AbstractController
     #[Route(
         '/{_locale}/activity',
         name: 'activity_all',
+        requirements: [
+            '_locale' => '%app.locales%'
+        ],
         methods:
         [
             'GET'
@@ -64,9 +67,6 @@ class ActivityController extends AbstractController
     #[Route(
         '/{_locale}/rss/activity',
         name: 'rss_activity',
-        defaults: [
-            '_locale' => '%app.locale%'
-        ],
         requirements: [
             '_locale' => '%app.locales%'
         ],
@@ -112,7 +112,6 @@ class ActivityController extends AbstractController
         '/{_locale}/rss/activity/user/{userId}',
         name: 'rss_activity_user',
         defaults: [
-            '_locale' => '%app.locale%',
             'userId'  => 0
         ],
         requirements: [
@@ -170,11 +169,8 @@ class ActivityController extends AbstractController
     #[Route(
         '/{_locale}/rss/activity/torrent/{torrentId}',
         name: 'rss_activity_torrent',
-        defaults: [
-            '_locale' => '%app.locale%',
-        ],
         requirements: [
-            '_locale' => '%app.locales%',
+            '_locale'    => '%app.locales%',
             'torrentId'  => '\d+'
         ],
         methods:

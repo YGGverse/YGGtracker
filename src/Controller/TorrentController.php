@@ -21,6 +21,7 @@ class TorrentController extends AbstractController
         name: 'torrent_info',
         requirements:
         [
+            '_locale'   => '%app.locales%',
             'torrentId' => '\d+',
         ],
         methods:
@@ -201,6 +202,10 @@ class TorrentController extends AbstractController
     #[Route(
         '/{_locale}/search',
         name: 'torrent_search',
+        requirements:
+        [
+            '_locale' => '%app.locales%'
+        ],
         methods:
         [
             'GET'
@@ -362,6 +367,10 @@ class TorrentController extends AbstractController
     #[Route(
         '/{_locale}',
         name: 'torrent_recent',
+        requirements:
+        [
+            '_locale' => '%app.locales%'
+        ],
         methods:
         [
             'GET'
@@ -515,9 +524,6 @@ class TorrentController extends AbstractController
     #[Route(
         '/{_locale}/rss/torrents',
         name: 'rss_torrents_recent',
-        defaults: [
-            '_locale' => '%app.locale%'
-        ],
         requirements: [
             '_locale' => '%app.locales%'
         ],
@@ -596,6 +602,10 @@ class TorrentController extends AbstractController
     #[Route(
         '/{_locale}/submit',
         name: 'torrent_submit',
+        requirements:
+        [
+            '_locale' => '%app.locales%'
+        ],
         methods:
         [
             'GET',
@@ -746,6 +756,7 @@ class TorrentController extends AbstractController
         name: 'torrent_approve_toggle',
         requirements:
         [
+            '_locale'   => '%app.locales%',
             'torrentId' => '\d+',
         ],
         methods:
@@ -822,6 +833,7 @@ class TorrentController extends AbstractController
         name: 'torrent_locales_edit',
         requirements:
         [
+            '_locale'          => '%app.locales%',
             'torrentId'        => '\d+',
             'torrentLocalesId' => '\d+',
         ],
@@ -1021,6 +1033,7 @@ class TorrentController extends AbstractController
         name: 'torrent_locales_approve',
         requirements:
         [
+            '_locale'          => '%app.locales%',
             'torrentId'        => '\d+',
             'torrentLocalesId' => '\d+',
         ],
@@ -1107,6 +1120,7 @@ class TorrentController extends AbstractController
         name: 'torrent_locales_delete',
         requirements:
         [
+            '_locale'          => '%app.locales%',
             'torrentId'        => '\d+',
             'torrentLocalesId' => '\d+',
         ],
@@ -1181,7 +1195,8 @@ class TorrentController extends AbstractController
         name: 'torrent_sensitive_edit',
         requirements:
         [
-            'torrentId'        => '\d+',
+            '_locale'            => '%app.locales%',
+            'torrentId'          => '\d+',
             'torrentSensitiveId' => '\d+',
         ],
         defaults:
@@ -1350,6 +1365,7 @@ class TorrentController extends AbstractController
         name: 'torrent_sensitive_approve',
         requirements:
         [
+            '_locale'            => '%app.locales%',
             'torrentId'          => '\d+',
             'torrentSensitiveId' => '\d+',
         ],
@@ -1436,6 +1452,7 @@ class TorrentController extends AbstractController
         name: 'torrent_sensitive_delete',
         requirements:
         [
+            '_locale'            => '%app.locales%',
             'torrentId'          => '\d+',
             'torrentSensitiveId' => '\d+',
         ],
@@ -1510,6 +1527,7 @@ class TorrentController extends AbstractController
         name: 'torrent_star_toggle',
         requirements:
         [
+            '_locale'   => '%app.locales%',
             'torrentId' => '\d+',
         ],
         methods:
@@ -1588,6 +1606,7 @@ class TorrentController extends AbstractController
         name: 'torrent_download_file',
         requirements:
         [
+            '_locale'   => '%app.locales%',
             'torrentId' => '\d+',
         ],
         methods:
@@ -1708,6 +1727,7 @@ class TorrentController extends AbstractController
         name: 'torrent_download_magnet',
         requirements:
         [
+            '_locale'   => '%app.locales%',
             'torrentId' => '\d+',
         ],
         methods:

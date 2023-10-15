@@ -40,9 +40,6 @@ class UserController extends AbstractController
     #[Route(
         '/{_locale}/settings',
         name: 'user_settings',
-        defaults: [
-            '_locale' => '%app.locale%'
-        ],
         requirements: [
             '_locale' => '%app.locales%',
         ],
@@ -157,7 +154,6 @@ class UserController extends AbstractController
         '/{_locale}/profile/{userId}',
         name: 'user_info',
         defaults: [
-            '_locale' => '%app.locale%',
             'userId'  => 0,
         ],
         requirements: [
@@ -265,7 +261,8 @@ class UserController extends AbstractController
         name: 'user_star_toggle',
         requirements:
         [
-            'userId' => '\d+',
+            '_locale' => '%app.locales%',
+            'userId'  => '\d+',
         ],
         methods:
         [
@@ -341,7 +338,8 @@ class UserController extends AbstractController
         name: 'user_moderator_toggle',
         requirements:
         [
-            'userId' => '\d+',
+            '_locale' => '%app.locales%',
+            'userId'  => '\d+',
         ],
         methods:
         [
@@ -415,7 +413,8 @@ class UserController extends AbstractController
         name: 'user_status_toggle',
         requirements:
         [
-            'userId' => '\d+',
+            '_locale' => '%app.locales%',
+            'userId'  => '\d+',
         ],
         methods:
         [
@@ -489,7 +488,8 @@ class UserController extends AbstractController
         name: 'user_approved_toggle',
         requirements:
         [
-            'userId' => '\d+',
+            '_locale' => '%app.locales%',
+            'userId'  => '\d+',
         ],
         methods:
         [
