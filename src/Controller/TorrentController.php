@@ -1772,6 +1772,24 @@ class TorrentController extends AbstractController
         return new Response(); // @TODO
     }
 
+    #[Route(
+        '/tool/torrent/reindex',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function reindex(
+        TorrentService $torrentService
+    ): Response
+    {
+        // Reindex keywords
+        $torrentService->reindexTorrentKeywordsAll();
+
+        // Render response
+        return new Response(); // @TODO
+    }
+
     private function initUser(
         Request $request,
         UserService $userService,
