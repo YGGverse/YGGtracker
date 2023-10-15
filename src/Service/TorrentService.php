@@ -189,6 +189,11 @@ class TorrentService
                     $keywords[] = $hash;
                 }
 
+                if ($name = $file->getName(false))
+                {
+                    $keywords[] = $name;
+                }
+
                 $keywords = array_merge($keywords, $words);
             }
         }
