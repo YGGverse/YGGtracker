@@ -271,12 +271,12 @@ class TorrentController extends AbstractController
 
                     if (isset($keywords[$keyword]))
                     {
-                        $keywords[$keyword]++;
+                        $keywords[$keyword] = $keywords[$keyword] + (int) $item['size'];
                     }
 
                     else
                     {
-                        $keywords[$keyword] = 1;
+                        $keywords[$keyword] = 0;
                     }
                 }
             }
@@ -420,12 +420,12 @@ class TorrentController extends AbstractController
 
                     if (isset($keywords[$keyword]))
                     {
-                        $keywords[$keyword]++;
+                        $keywords[$keyword] = $keywords[$keyword] + (int) $item['size'];
                     }
 
                     else
                     {
-                        $keywords[$keyword] = 1;
+                        $keywords[$keyword] = 0;
                     }
                 }
             }
