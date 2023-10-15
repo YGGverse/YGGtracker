@@ -254,7 +254,7 @@ class TorrentController extends AbstractController
             {
                 if (in_array($keyword, $query))
                 {
-                    $keywords[] = urlencode($keyword);
+                    $keywords[] = $keyword;
                 }
             }
 
