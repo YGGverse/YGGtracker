@@ -693,6 +693,30 @@
         <source>seconds ago</source>
         <target>seconds ago</target>
       </trans-unit>
+      <trans-unit id="KGg3UPj" resname=" years ago">
+        <source> years ago</source>
+        <target> years ago</target>
+      </trans-unit>
+      <trans-unit id="LJz20sI" resname=" months ago">
+        <source> months ago</source>
+        <target> months ago</target>
+      </trans-unit>
+      <trans-unit id="r7fyHp0" resname=" days ago">
+        <source> days ago</source>
+        <target> days ago</target>
+      </trans-unit>
+      <trans-unit id="mga12oW" resname=" hours ago">
+        <source> hours ago</source>
+        <target> hours ago</target>
+      </trans-unit>
+      <trans-unit id="BAlvYYB" resname=" minutes ago">
+        <source> minutes ago</source>
+        <target> minutes ago</target>
+      </trans-unit>
+      <trans-unit id="m4YrK9n" resname=" seconds ago">
+        <source> seconds ago</source>
+        <target> seconds ago</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

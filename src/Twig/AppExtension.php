@@ -77,21 +77,42 @@ class AppExtension extends AbstractExtension
 
         $values =
         [
-            365 * 24 * 60 * 60 => $this->translator->trans('year ago'),
-            30  * 24 * 60 * 60 => $this->translator->trans('month ago'),
-                  24 * 60 * 60 => $this->translator->trans('day ago'),
-                       60 * 60 => $this->translator->trans('hour ago'),
-                            60 => $this->translator->trans('minute ago'),
-                             1 => $this->translator->trans('second ago')
-        ];
-
-        $plural = [
-            $this->translator->trans('year ago')   => $this->translator->trans('years ago'),
-            $this->translator->trans('month ago')  => $this->translator->trans('months ago'),
-            $this->translator->trans('day ago')    => $this->translator->trans('days ago'),
-            $this->translator->trans('hour ago')   => $this->translator->trans('hours ago'),
-            $this->translator->trans('minute ago') => $this->translator->trans('minutes ago'),
-            $this->translator->trans('second ago') => $this->translator->trans('seconds ago')
+            365 * 24 * 60 * 60 =>
+            [
+                $this->translator->trans('year ago'),
+                $this->translator->trans('years ago'),
+                $this->translator->trans(' years ago')
+            ],
+            30  * 24 * 60 * 60 =>
+            [
+                $this->translator->trans('month ago'),
+                $this->translator->trans('months ago'),
+                $this->translator->trans(' months ago')
+            ],
+            24 * 60 * 60 =>
+            [
+                $this->translator->trans('day ago'),
+                $this->translator->trans('days ago'),
+                $this->translator->trans(' days ago')
+            ],
+            60 * 60 =>
+            [
+                $this->translator->trans('hour ago'),
+                $this->translator->trans('hours ago'),
+                $this->translator->trans(' hours ago')
+            ],
+            60 =>
+            [
+                $this->translator->trans('minute ago'),
+                $this->translator->trans('minutes ago'),
+                $this->translator->trans(' minutes ago')
+            ],
+            1 =>
+            [
+                $this->translator->trans('second ago'),
+                $this->translator->trans('seconds ago'),
+                $this->translator->trans(' seconds ago')
+            ]
         ];
 
         foreach ($values as $key => $value)
@@ -105,9 +126,19 @@ class AppExtension extends AbstractExtension
                 return sprintf(
                     '%s %s',
                     $round,
-                    $round > 1 ? $plural[$value] : $value
+                    $this->plural(
+                        $round,
+                        $value
+                    )
                 );
             }
         }
+    }
+
+    private function plural(int $number, array $texts)
+    {
+        $cases = [2, 0, 1, 1, 1, 2];
+
+        return $texts[(($number % 100) > 4 && ($number % 100) < 20) ? 2 : $cases[min($number % 10, 5)]];
     }
 }
