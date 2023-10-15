@@ -1,0 +1,17 @@
+{% extends theme ~ '/layout.html.twig' %}
+{% block title %}{{ 'Error' | trans }} - {{ name }}{% endblock %}
+{% block main_content %}
+    <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
+        <div class="text-center">
+            <h1 class="display-block margin-b-16-px">
+                {{ 'Oops!' | trans }}
+            </h1>
+            <div class="text-color-night">
+                {{ 'Internal server error' | trans }}
+            </div>
+            <a class="button button-green margin-y-16-px" href="https://github.com/YGGverse/YGGtracker/issues">
+                {{ 'Report' | trans }}
+            </a>
+        </div>
+    <div>
+{% endblock %}
