@@ -665,6 +665,42 @@
         <source>have added star for user</source>
         <target>have added star for user</target>
       </trans-unit>
+      <trans-unit id="VKDowX6" resname="Error">
+        <source>Error</source>
+        <target>Error</target>
+      </trans-unit>
+      <trans-unit id="g0SUekA" resname="Oops!">
+        <source>Oops!</source>
+        <target>Oops!</target>
+      </trans-unit>
+      <trans-unit id="9010RFH" resname="Internal server error">
+        <source>Internal server error</source>
+        <target>Internal server error</target>
+      </trans-unit>
+      <trans-unit id="ts54jZe" resname="Report">
+        <source>Report</source>
+        <target>Report</target>
+      </trans-unit>
+      <trans-unit id="4_uqFt2" resname="Not found">
+        <source>Not found</source>
+        <target>Not found</target>
+      </trans-unit>
+      <trans-unit id="hestk9M" resname="Page not found!">
+        <source>Page not found!</source>
+        <target>Page not found!</target>
+      </trans-unit>
+      <trans-unit id="HfJe0N1" resname="BitTorrent protocol version 2">
+        <source>BitTorrent protocol version 2</source>
+        <target>BitTorrent protocol version 2</target>
+      </trans-unit>
+      <trans-unit id="U4t_NWU" resname="BitTorrent protocol version 1">
+        <source>BitTorrent protocol version 1</source>
+        <target>BitTorrent protocol version 1</target>
+      </trans-unit>
+      <trans-unit id="Lq7LPQz" resname="Contains">
+        <source>Contains</source>
+        <target>Contains</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
