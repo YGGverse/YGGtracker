@@ -72,21 +72,22 @@ class TorrentRepository extends ServiceEntityRepository
 
         if ($keywords) // @TODO ANY or DTS
         {
-            $orX = $query->expr()->orX();
+            $andX = $query->expr()->andX();
 
             foreach ($keywords as $i => $keyword)
             {
                 $keyword = mb_strtolower($keyword); // all keywords stored in lowercase
 
-                $orX->add("t.keywords LIKE :keyword{$i}");
+                $andX->add("t.keywords LIKE :keyword{$i}");
                 $query->setParameter(":keyword{$i}", "%{$keyword}%");
             }
 
-            $query->andWhere($orX);
+            $query->andWhere($andX);
         }
 
         if ($locales) // @TODO ANY or DTS
         {
+            //$orX = $query->expr()->orX();
             $orX = $query->expr()->orX();
 
             foreach ($locales as $i => $locale)
