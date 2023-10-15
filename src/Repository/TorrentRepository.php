@@ -76,6 +76,8 @@ class TorrentRepository extends ServiceEntityRepository
 
             foreach ($keywords as $i => $keyword)
             {
+                $keyword = mb_strtolower($keyword); // all keywords stored in lowercase
+
                 $orX->add("t.keywords LIKE :keyword{$i}");
                 $query->setParameter(":keyword{$i}", "%{$keyword}%");
             }
