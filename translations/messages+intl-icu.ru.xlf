@@ -7,307 +7,307 @@
     <body>
       <trans-unit id="NSECGi6" resname="File not found">
         <source>File not found</source>
-        <target>File not found</target>
+        <target>Файл не найден</target>
       </trans-unit>
       <trans-unit id="awzJBNC" resname="Users">
         <source>Users</source>
-        <target>Users</target>
+        <target>Пользователи</target>
       </trans-unit>
       <trans-unit id="aTGLDGq" resname="Joined">
         <source>Joined</source>
-        <target>Joined</target>
+        <target>Присоединился</target>
       </trans-unit>
       <trans-unit id="h7QuQMK" resname="Approved">
         <source>Approved</source>
-        <target>Approved</target>
+        <target>Утвержден</target>
       </trans-unit>
       <trans-unit id="4DA0L1y" resname="Disapproved">
         <source>Disapproved</source>
-        <target>Disapproved</target>
+        <target>Отклонен</target>
       </trans-unit>
       <trans-unit id="RJ.LE0Z" resname="User statuses">
         <source>User statuses</source>
-        <target>User statuses</target>
+        <target>Статусы пользователей</target>
       </trans-unit>
       <trans-unit id="ksHN.fT" resname="Enabled">
         <source>Enabled</source>
-        <target>Enabled</target>
+        <target>Включено</target>
       </trans-unit>
       <trans-unit id="dQgbWT0" resname="Disabled">
         <source>Disabled</source>
-        <target>Disabled</target>
+        <target>Отключено</target>
       </trans-unit>
       <trans-unit id="a8mndct" resname="User moderators">
         <source>User moderators</source>
-        <target>User moderators</target>
+        <target>Модерация пользователей</target>
       </trans-unit>
       <trans-unit id="awLg02O" resname="Added">
         <source>Added</source>
-        <target>Added</target>
+        <target>Добавлено</target>
       </trans-unit>
       <trans-unit id="QRj7T_0" resname="Removed">
         <source>Removed</source>
-        <target>Removed</target>
+        <target>Удалено</target>
       </trans-unit>
       <trans-unit id="kg68hPN" resname="User stars">
         <source>User stars</source>
-        <target>User stars</target>
+        <target>Звезды пользователей</target>
       </trans-unit>
       <trans-unit id="ohibNaT" resname="Torrents">
         <source>Torrents</source>
-        <target>Torrents</target>
+        <target>Торренты</target>
       </trans-unit>
       <trans-unit id="lq4iox7" resname="Torrent locales">
         <source>Torrent locales</source>
-        <target>Torrent locales</target>
+        <target>Локали торрента</target>
       </trans-unit>
       <trans-unit id="tI.znC4" resname="Deleted">
         <source>Deleted</source>
-        <target>Deleted</target>
+        <target>Удалено</target>
       </trans-unit>
       <trans-unit id="Vt2WDnJ" resname="Torrent sensitive">
         <source>Torrent sensitive</source>
-        <target>Torrent sensitive</target>
+        <target>Чувствительное содержимое</target>
       </trans-unit>
       <trans-unit id="tL8VElY" resname="Torrent stars">
         <source>Torrent stars</source>
-        <target>Torrent stars</target>
+        <target>Звезды торрента</target>
       </trans-unit>
       <trans-unit id="ZxMky2X" resname="Torrent downloads">
         <source>Torrent downloads</source>
-        <target>Torrent downloads</target>
+        <target>Загрузки торрентов</target>
       </trans-unit>
       <trans-unit id="q8fpiSg" resname="Files">
         <source>Files</source>
-        <target>Files</target>
+        <target>Файлы</target>
       </trans-unit>
       <trans-unit id="0y.A5if" resname="Magnet links">
         <source>Magnet links</source>
-        <target>Magnet links</target>
+        <target>Magnet-ссылки</target>
       </trans-unit>
       <trans-unit id="zBHUFdk" resname="Access denied">
         <source>Access denied</source>
-        <target>Access denied</target>
+        <target>Доступ запрещен</target>
       </trans-unit>
       <trans-unit id="_ji6HWn" resname="At least one locale required">
         <source>At least one locale required</source>
-        <target>At least one locale required</target>
+        <target>Требуется хотя бы одна локаль</target>
       </trans-unit>
       <trans-unit id="fYxwFh4" resname="Torrent file out of size limit">
         <source>Torrent file out of size limit</source>
-        <target>Torrent file out of size limit</target>
+        <target>Превышен размер торрент-файла</target>
       </trans-unit>
       <trans-unit id="J4iakCK" resname="Torrent file already exists">
         <source>Torrent file already exists</source>
-        <target>Torrent file already exists</target>
+        <target>Торрент-файл уже существует</target>
       </trans-unit>
       <trans-unit id="OMHLqqs" resname="Could not parse torrent file">
         <source>Could not parse torrent file</source>
-        <target>Could not parse torrent file</target>
+        <target>Не удалось проанализировать торрент-файл</target>
       </trans-unit>
       <trans-unit id="6rhNefb" resname="Torrent file required">
         <source>Torrent file required</source>
-        <target>Torrent file required</target>
+        <target>Требуется указать торрент-файл</target>
       </trans-unit>
       <trans-unit id="335w5QI" resname="B">
         <source>B</source>
-        <target>B</target>
+        <target>Б</target>
       </trans-unit>
       <trans-unit id="pNfcu5." resname="Kb">
         <source>Kb</source>
-        <target>Kb</target>
+        <target>Кб</target>
       </trans-unit>
       <trans-unit id="mhI2lhb" resname="Mb">
         <source>Mb</source>
-        <target>Mb</target>
+        <target>Мб</target>
       </trans-unit>
       <trans-unit id="e0K0oQ5" resname="Gb">
         <source>Gb</source>
-        <target>Gb</target>
+        <target>Гб</target>
       </trans-unit>
       <trans-unit id="wI8AiyL" resname="Tb">
         <source>Tb</source>
-        <target>Tb</target>
+        <target>Тб</target>
       </trans-unit>
       <trans-unit id="cfWnmQc" resname="Pb">
         <source>Pb</source>
-        <target>Pb</target>
+        <target>Пб</target>
       </trans-unit>
       <trans-unit id="0YVBcLX" resname="Eb">
         <source>Eb</source>
-        <target>Eb</target>
+        <target>Эб</target>
       </trans-unit>
       <trans-unit id="IISijB3" resname="Zb">
         <source>Zb</source>
-        <target>Zb</target>
+        <target>Зб</target>
       </trans-unit>
       <trans-unit id="xh_ZAt3" resname="Yb">
         <source>Yb</source>
-        <target>Yb</target>
+        <target>Иб</target>
       </trans-unit>
       <trans-unit id="7V65o34" resname="now">
         <source>now</source>
-        <target>now</target>
+        <target>сейчас</target>
       </trans-unit>
       <trans-unit id="aw2VQXS" resname="Keyword, file, hash...">
         <source>Keyword, file, hash...</source>
-        <target>Keyword, file, hash...</target>
+        <target>Ключевое слово, файл, хэш...</target>
       </trans-unit>
       <trans-unit id="ScJmuqq" resname="Search">
         <source>Search</source>
-        <target>Search</target>
+        <target>Поиск</target>
       </trans-unit>
       <trans-unit id="k8s5Jex" resname="Recent uploads">
         <source>Recent uploads</source>
-        <target>Recent uploads</target>
+        <target>Последние загрузки</target>
       </trans-unit>
       <trans-unit id="xQ9.bKM" resname="Active leechers waiting for seeders">
         <source>Active leechers waiting for seeders</source>
-        <target>Active leechers waiting for seeders</target>
+        <target>Активные пиры ожидают раздачи</target>
       </trans-unit>
       <trans-unit id="ypBmhzv" resname="wanted">
         <source>wanted</source>
-        <target>wanted</target>
+        <target>розыск</target>
       </trans-unit>
       <trans-unit id="R138zpi" resname="Waiting for approve">
         <source>Waiting for approve</source>
-        <target>Waiting for approve</target>
+        <target>На рассмотрении</target>
       </trans-unit>
       <trans-unit id="uP0WnsM" resname="Content visible for non sensitive users only">
         <source>Content visible for non sensitive users only</source>
-        <target>Content visible for non sensitive users only</target>
+        <target>Содержимое видимо только для нечувствительных пользователей</target>
       </trans-unit>
       <trans-unit id="GvhRkHM" resname="Size">
         <source>Size</source>
-        <target>Size</target>
+        <target>Размер</target>
       </trans-unit>
       <trans-unit id="QKvXHnR" resname="Seeders">
         <source>Seeders</source>
-        <target>Seeders</target>
+        <target>Сиды</target>
       </trans-unit>
       <trans-unit id="ZLdpvK_" resname="Peers">
         <source>Peers</source>
-        <target>Peers</target>
+        <target>Пиры</target>
       </trans-unit>
       <trans-unit id="mR8Ug6L" resname="Leechers">
         <source>Leechers</source>
-        <target>Leechers</target>
+        <target>Личеры</target>
       </trans-unit>
       <trans-unit id="E_vs9Gs" resname="Open magnet link">
         <source>Open magnet link</source>
-        <target>Open magnet link</target>
+        <target>Открыть magnet-ссылку</target>
       </trans-unit>
       <trans-unit id="ybPDgkf" resname="Total">
         <source>Total</source>
-        <target>Total</target>
+        <target>Всего</target>
       </trans-unit>
       <trans-unit id="5Y_6cg2" resname="Download torrent file">
         <source>Download torrent file</source>
-        <target>Download torrent file</target>
+        <target>Скачать торрент-файл</target>
       </trans-unit>
       <trans-unit id="41fTloc" resname="Star">
         <source>Star</source>
-        <target>Star</target>
+        <target>Звезда</target>
       </trans-unit>
       <trans-unit id="n1ysPPL" resname="Nothing found">
         <source>Nothing found</source>
-        <target>Nothing found</target>
+        <target>Ничего не найдено</target>
       </trans-unit>
       <trans-unit id="gtAEXOf" resname="* share new torrent file to change it">
         <source>* share new torrent file to change it</source>
-        <target>* share new torrent file to change it</target>
+        <target>* поделитесь новым торрент-файлом, чтобы исправить это</target>
       </trans-unit>
       <trans-unit id="FV_BbAQ" resname="Submit">
         <source>Submit</source>
-        <target>Submit</target>
+        <target>Отправить</target>
       </trans-unit>
       <trans-unit id="ZTfB0U1" resname="Submit torrent">
         <source>Submit torrent</source>
-        <target>Submit torrent</target>
+        <target>Отправить торрент</target>
       </trans-unit>
       <trans-unit id="wAsU1pF" resname="Content language">
         <source>Content language</source>
-        <target>Content language</target>
+        <target>Язык контента</target>
       </trans-unit>
       <trans-unit id="y_ytxTz" resname="This torrent contains selected languages">
         <source>This torrent contains selected languages</source>
-        <target>This torrent contains selected languages</target>
+        <target>Этот торрент содержит выбранные языки</target>
       </trans-unit>
       <trans-unit id="LGTAMNS" resname="Sensitive">
         <source>Sensitive</source>
-        <target>Sensitive</target>
+        <target>Чувствительность</target>
       </trans-unit>
       <trans-unit id="fhhVD.B" resname="Mark torrent content as sensitive">
         <source>Mark torrent content as sensitive</source>
-        <target>Mark torrent content as sensitive</target>
+        <target>Отметить содержимое торрента как чувствительное</target>
       </trans-unit>
       <trans-unit id="2ZuDCA5" resname="Edit locales">
         <source>Edit locales</source>
-        <target>Edit locales</target>
+        <target>Изменить локали</target>
       </trans-unit>
       <trans-unit id="OBSQFyT" resname="Torrent">
         <source>Torrent</source>
-        <target>Torrent</target>
+        <target>Торрент</target>
       </trans-unit>
       <trans-unit id="kE0Fugk" resname="Edit locales for torrent">
         <source>Edit locales for torrent</source>
-        <target>Edit locales for torrent</target>
+        <target>Изменить локали для торрента</target>
       </trans-unit>
       <trans-unit id="I3TZF5S" resname="cancel">
         <source>cancel</source>
-        <target>cancel</target>
+        <target>отменить</target>
       </trans-unit>
       <trans-unit id="p_LSbo0" resname="by">
         <source>by</source>
-        <target>by</target>
+        <target>от</target>
       </trans-unit>
       <trans-unit id="kONatGQ" resname="identicon">
         <source>identicon</source>
-        <target>identicon</target>
+        <target>пиктограмма</target>
       </trans-unit>
       <trans-unit id="4tClSWj" resname="Delete">
         <source>Delete</source>
-        <target>Delete</target>
+        <target>Удалить</target>
       </trans-unit>
       <trans-unit id="GFXm4Yt" resname="Disapprove">
         <source>Disapprove</source>
-        <target>Disapprove</target>
+        <target>Отклонить</target>
       </trans-unit>
       <trans-unit id="YAesvjC" resname="Approve">
         <source>Approve</source>
-        <target>Approve</target>
+        <target>Утвердить</target>
       </trans-unit>
       <trans-unit id="Iqk3OBD" resname="Edit sensitive status">
         <source>Edit sensitive status</source>
-        <target>Edit sensitive status</target>
+        <target>Изменить статус чувствительности</target>
       </trans-unit>
       <trans-unit id="rzkdzo_" resname="Edit sensitive status for torrent">
         <source>Edit sensitive status for torrent</source>
-        <target>Edit sensitive status for torrent</target>
+        <target>Редактировать статус чувствительности для торрента</target>
       </trans-unit>
       <trans-unit id="CjCoFdZ" resname="Page">
         <source>Page</source>
-        <target>Page</target>
+        <target>Страница</target>
       </trans-unit>
       <trans-unit id="Em1EFUR" resname="Moderation">
         <source>Moderation</source>
-        <target>Moderation</target>
+        <target>Модерация</target>
       </trans-unit>
       <trans-unit id="haOas0X" resname="Yes">
         <source>Yes</source>
-        <target>Yes</target>
+        <target>Да</target>
       </trans-unit>
       <trans-unit id="PQOh3qV" resname="Toggle">
         <source>Toggle</source>
-        <target>Toggle</target>
+        <target>Переключить</target>
       </trans-unit>
       <trans-unit id="HqRCoTS" resname="No">
         <source>No</source>
-        <target>No</target>
+        <target>Нет</target>
       </trans-unit>
       <trans-unit id="MJlV4Ah" resname="Common">
         <source>Common</source>
-        <target>Common</target>
+        <target>Общее</target>
       </trans-unit>
       <trans-unit id="OEOXHc." resname="ID">
         <source>ID</source>
@@ -319,403 +319,403 @@
       </trans-unit>
       <trans-unit id="T3Un3Wo" resname="Info hash v1">
         <source>Info hash v1</source>
-        <target>Info hash v1</target>
+        <target>Инфо-хеш v1</target>
       </trans-unit>
       <trans-unit id="k77N_dn" resname="Info hash v2">
         <source>Info hash v2</source>
-        <target>Info hash v2</target>
+        <target>Инфо-хеш v2</target>
       </trans-unit>
       <trans-unit id="1wueJLy" resname="Created">
         <source>Created</source>
-        <target>Created</target>
+        <target>Создано</target>
       </trans-unit>
       <trans-unit id="3QXQ4kf" resname="Pieces">
         <source>Pieces</source>
-        <target>Pieces</target>
+        <target>Фрагменты</target>
       </trans-unit>
       <trans-unit id="DlcMpvq" resname="Source">
         <source>Source</source>
-        <target>Source</target>
+        <target>Источник</target>
       </trans-unit>
       <trans-unit id="mzKJo4W" resname="Software">
         <source>Software</source>
-        <target>Software</target>
+        <target>Программа</target>
       </trans-unit>
       <trans-unit id="RPXj__x" resname="Comment">
         <source>Comment</source>
-        <target>Comment</target>
+        <target>Комментарий</target>
       </trans-unit>
       <trans-unit id="NQrUM8Q" resname="Contributors">
         <source>Contributors</source>
-        <target>Contributors</target>
+        <target>Участники</target>
       </trans-unit>
       <trans-unit id="mvYF.Ky" resname="Scrape">
         <source>Scrape</source>
-        <target>Scrape</target>
+        <target>Статус</target>
       </trans-unit>
       <trans-unit id="Bud8ddd" resname="Trackers">
         <source>Trackers</source>
-        <target>Trackers</target>
+        <target>Трекеры</target>
       </trans-unit>
       <trans-unit id="Ph5aqB7" resname="Filtered by settings">
         <source>Filtered by settings</source>
-        <target>Filtered by settings</target>
+        <target>Отфильтровано согласно настройкам</target>
       </trans-unit>
       <trans-unit id="RkxP.QG" resname="Edit">
         <source>Edit</source>
-        <target>Edit</target>
+        <target>Редактировать</target>
       </trans-unit>
       <trans-unit id="g7KFKj7" resname="Locales">
         <source>Locales</source>
-        <target>Locales</target>
+        <target>Локали</target>
       </trans-unit>
       <trans-unit id="bLRLVjN" resname="Recent activity">
         <source>Recent activity</source>
-        <target>Recent activity</target>
+        <target>Недавняя активность</target>
       </trans-unit>
       <trans-unit id="dpAPG.0" resname="Back">
         <source>Back</source>
-        <target>Back</target>
+        <target>Назад</target>
       </trans-unit>
       <trans-unit id="H.V6Kdf" resname="Next">
         <source>Next</source>
-        <target>Next</target>
+        <target>Далее</target>
       </trans-unit>
       <trans-unit id="dKiDoDe" resname="Settings">
         <source>Settings</source>
-        <target>Settings</target>
+        <target>Настройки</target>
       </trans-unit>
       <trans-unit id="wms_1M5" resname="Interface">
         <source>Interface</source>
-        <target>Interface</target>
+        <target>Интерфейс</target>
       </trans-unit>
       <trans-unit id="77UucXK" resname="Theme">
         <source>Theme</source>
-        <target>Theme</target>
+        <target>Тема</target>
       </trans-unit>
       <trans-unit id="pP5lJk7" resname="Language">
         <source>Language</source>
-        <target>Language</target>
+        <target>Язык</target>
       </trans-unit>
       <trans-unit id="ByvVctG" resname="Join translation">
         <source>Join translation</source>
-        <target>Join translation</target>
+        <target>Присоединиться к переводам</target>
       </trans-unit>
       <trans-unit id="R70pB1_" resname="Content">
         <source>Content</source>
-        <target>Content</target>
+        <target>Содержимое</target>
       </trans-unit>
       <trans-unit id="ONoVBcq" resname="Activity">
         <source>Activity</source>
-        <target>Activity</target>
+        <target>Активность</target>
       </trans-unit>
       <trans-unit id="1f3BrwI" resname="Downloads">
         <source>Downloads</source>
-        <target>Downloads</target>
+        <target>Загрузки</target>
       </trans-unit>
       <trans-unit id="zmgk0li" resname="Yggdrasil only">
         <source>Yggdrasil only</source>
-        <target>Yggdrasil only</target>
+        <target>Только Yggdrasil</target>
       </trans-unit>
       <trans-unit id="FQn1YfJ" resname="Save">
         <source>Save</source>
-        <target>Save</target>
+        <target>Сохранить</target>
       </trans-unit>
       <trans-unit id="OnhpU4i" resname="Home">
         <source>Home</source>
-        <target>Home</target>
+        <target>Главная</target>
       </trans-unit>
       <trans-unit id="1pajW90" resname="Profile">
         <source>Profile</source>
-        <target>Profile</target>
+        <target>Профиль</target>
       </trans-unit>
       <trans-unit id="tRLZfny" resname="User">
         <source>User</source>
-        <target>User</target>
+        <target>Пользователь</target>
       </trans-unit>
       <trans-unit id="G6xAB4g" resname="Bookmark">
         <source>Bookmark</source>
-        <target>Bookmark</target>
+        <target>Закладка</target>
       </trans-unit>
       <trans-unit id="Vu_PIJV" resname="Address">
         <source>Address</source>
-        <target>Address</target>
+        <target>Адрес</target>
       </trans-unit>
       <trans-unit id="3VuNjXf" resname="Address hidden for others">
         <source>Address hidden for others</source>
-        <target>Address hidden for others</target>
+        <target>Адрес скрыт для других</target>
       </trans-unit>
       <trans-unit id="7Fugq7c" resname="Access">
         <source>Access</source>
-        <target>Access</target>
+        <target>Доступ</target>
       </trans-unit>
       <trans-unit id="kg5BPH1" resname="Status">
         <source>Status</source>
-        <target>Status</target>
+        <target>Статус</target>
       </trans-unit>
       <trans-unit id="kjQGlYm" resname="Active">
         <source>Active</source>
-        <target>Active</target>
+        <target>Активный</target>
       </trans-unit>
       <trans-unit id="Z0jsi3Z" resname="Moderator">
         <source>Moderator</source>
-        <target>Moderator</target>
+        <target>Модератор</target>
       </trans-unit>
       <trans-unit id="MYZVzqS" resname="Languages">
         <source>Languages</source>
-        <target>Languages</target>
+        <target>Языки</target>
       </trans-unit>
       <trans-unit id="CLoCFMI" resname="Events subscribed">
         <source>Events subscribed</source>
-        <target>Events subscribed</target>
+        <target>Подписка на события</target>
       </trans-unit>
       <trans-unit id="qqJclwn" resname="undefined event">
         <source>undefined event</source>
-        <target>undefined event</target>
+        <target>неизвестное событие</target>
       </trans-unit>
       <trans-unit id="4Il4Y5X" resname="have downloaded torrent file">
         <source>have downloaded torrent file</source>
-        <target>have downloaded torrent file</target>
+        <target>скачал торрент-файл</target>
       </trans-unit>
       <trans-unit id="h80m7iF" resname="waiting for approve">
         <source>waiting for approve</source>
-        <target>waiting for approve</target>
+        <target>на рассмотрении</target>
       </trans-unit>
       <trans-unit id="LV6GAKT" resname="sensitive">
         <source>sensitive</source>
-        <target>sensitive</target>
+        <target>чувствительность</target>
       </trans-unit>
       <trans-unit id="t_REuxn" resname="have downloaded magnet link">
         <source>have downloaded magnet link</source>
-        <target>have downloaded magnet link</target>
+        <target>скачал magnet-ссылку</target>
       </trans-unit>
       <trans-unit id="GUgRc6p" resname="have disapproved torrent">
         <source>have disapproved torrent</source>
-        <target>have disapproved torrent</target>
+        <target>отменил утверждение торрента</target>
       </trans-unit>
       <trans-unit id="peGPPOh" resname="have approved torrent">
         <source>have approved torrent</source>
-        <target>have approved torrent</target>
+        <target>утвердил торрент</target>
       </trans-unit>
       <trans-unit id="Ax4hwgW" resname="have added torrent">
         <source>have added torrent</source>
-        <target>have added torrent</target>
+        <target>добавил торрент</target>
       </trans-unit>
       <trans-unit id="kOS_6Om" resname="have deleted locales edition">
         <source>have deleted locales edition</source>
-        <target>have deleted locales edition</target>
+        <target>удалил редакцию локалей</target>
       </trans-unit>
       <trans-unit id="naGLbTA" resname="for torrent">
         <source>for torrent</source>
-        <target>for torrent</target>
+        <target>для торрента</target>
       </trans-unit>
       <trans-unit id="eD4JIr7" resname="have disapproved locales edition">
         <source>have disapproved locales edition</source>
-        <target>have disapproved locales edition</target>
+        <target>отклонил редакцию локалей</target>
       </trans-unit>
       <trans-unit id="L8_5bk0" resname="have approved locales edition">
         <source>have approved locales edition</source>
-        <target>have approved locales edition</target>
+        <target>утвердил редакцию локалей</target>
       </trans-unit>
       <trans-unit id="gbo5PRi" resname="have added locales edition">
         <source>have added locales edition</source>
-        <target>have added locales edition</target>
+        <target>добавил редакцию локалей</target>
       </trans-unit>
       <trans-unit id="aazoJuz" resname="have removed star from torrent">
         <source>have removed star from torrent</source>
-        <target>have removed star from torrent</target>
+        <target>удалили звезду с торрента</target>
       </trans-unit>
       <trans-unit id="cES0sXy" resname="have added star for torrent">
         <source>have added star for torrent</source>
-        <target>have added star for torrent</target>
+        <target>добавил звезду для торрента</target>
       </trans-unit>
       <trans-unit id="DJ7R0RO" resname="have deleted sensitive edition">
         <source>have deleted sensitive edition</source>
-        <target>have deleted sensitive edition</target>
+        <target>удалил редакцию чувствительного контента</target>
       </trans-unit>
       <trans-unit id="hDJxvYG" resname="have disapproved sensitive edition">
         <source>have disapproved sensitive edition</source>
-        <target>have disapproved sensitive edition</target>
+        <target>отклонил редакцию чувствительного контента</target>
       </trans-unit>
       <trans-unit id="46W8iLj" resname="have approved sensitive edition">
         <source>have approved sensitive edition</source>
-        <target>have approved sensitive edition</target>
+        <target>утвердил редакцию чувствительного контента</target>
       </trans-unit>
       <trans-unit id="oAC9LIa" resname="have added sensitive edition">
         <source>have added sensitive edition</source>
-        <target>have added sensitive edition</target>
+        <target>добавил редакцию чувствительного контента</target>
       </trans-unit>
       <trans-unit id="BQifRyb" resname="have disabled">
         <source>have disabled</source>
-        <target>have disabled</target>
+        <target>отключил</target>
       </trans-unit>
       <trans-unit id="LdA3apc" resname="have disabled user">
         <source>have disabled user</source>
-        <target>have disabled user</target>
+        <target>отключил пользователя</target>
       </trans-unit>
       <trans-unit id="ksNGaFf" resname="have enabled">
         <source>have enabled</source>
-        <target>have enabled</target>
+        <target>включил</target>
       </trans-unit>
       <trans-unit id="qA2qjC5" resname="have enabled user">
         <source>have enabled user</source>
-        <target>have enabled user</target>
+        <target>включил пользователя</target>
       </trans-unit>
       <trans-unit id="gXbWkeB" resname="have disapproved">
         <source>have disapproved</source>
-        <target>have disapproved</target>
+        <target>отклонил</target>
       </trans-unit>
       <trans-unit id="kFzblGl" resname="have disapproved user">
         <source>have disapproved user</source>
-        <target>have disapproved user</target>
+        <target>отключил пользователя</target>
       </trans-unit>
       <trans-unit id="Gm8.zqs" resname="have approved">
         <source>have approved</source>
-        <target>have approved</target>
+        <target>утвердил</target>
       </trans-unit>
       <trans-unit id="9m0Bjnq" resname="have approved user">
         <source>have approved user</source>
-        <target>have approved user</target>
+        <target>утвердил пользователя</target>
       </trans-unit>
       <trans-unit id="6lqK6b6" resname="have joined">
         <source>have joined</source>
-        <target>have joined</target>
+        <target>присоединился</target>
       </trans-unit>
       <trans-unit id="yEC_h0o" resname="have removed moderator permissions from">
         <source>have removed moderator permissions from</source>
-        <target>have removed moderator permissions from</target>
+        <target>удалил права модератора от</target>
       </trans-unit>
       <trans-unit id="xU4ckhu" resname="have removed moderator permissions from user">
         <source>have removed moderator permissions from user</source>
-        <target>have removed moderator permissions from user</target>
+        <target>удалил права модератора от пользователя</target>
       </trans-unit>
       <trans-unit id="aiqFdWc" resname="have granted moderator permissions to">
         <source>have granted moderator permissions to</source>
-        <target>have granted moderator permissions to</target>
+        <target>предоставил права модератора для</target>
       </trans-unit>
       <trans-unit id="IygeMVn" resname="have granted moderator permissions to user">
         <source>have granted moderator permissions to user</source>
-        <target>have granted moderator permissions to user</target>
+        <target>предоставил права модератора для пользователя</target>
       </trans-unit>
       <trans-unit id="H06V5cY" resname="have removed star from">
         <source>have removed star from</source>
-        <target>have removed star from</target>
+        <target>удалил звезду от</target>
       </trans-unit>
       <trans-unit id="7_4hNGn" resname="have removed star from user">
         <source>have removed star from user</source>
-        <target>have removed star from user</target>
+        <target>удалили звезду от пользователя</target>
       </trans-unit>
       <trans-unit id="ojDrmfX" resname="have added star for">
         <source>have added star for</source>
-        <target>have added star for</target>
+        <target>добавил звезду для</target>
       </trans-unit>
       <trans-unit id="iN2_Dtz" resname="have added star for user">
         <source>have added star for user</source>
-        <target>have added star for user</target>
+        <target>добавил звезду для пользователя</target>
       </trans-unit>
       <trans-unit id="VKDowX6" resname="Error">
         <source>Error</source>
-        <target>Error</target>
+        <target>Ошибка</target>
       </trans-unit>
       <trans-unit id="g0SUekA" resname="Oops!">
         <source>Oops!</source>
-        <target>Oops!</target>
+        <target>Ой!</target>
       </trans-unit>
       <trans-unit id="9010RFH" resname="Internal server error">
         <source>Internal server error</source>
-        <target>Internal server error</target>
+        <target>Внутренняя ошибка сервера</target>
       </trans-unit>
       <trans-unit id="ts54jZe" resname="Report">
         <source>Report</source>
-        <target>Report</target>
+        <target>Сообщить</target>
       </trans-unit>
       <trans-unit id="4_uqFt2" resname="Not found">
         <source>Not found</source>
-        <target>Not found</target>
+        <target>Не найдено</target>
       </trans-unit>
       <trans-unit id="hestk9M" resname="Page not found!">
         <source>Page not found!</source>
-        <target>Page not found!</target>
+        <target>Страница не найдена!</target>
       </trans-unit>
       <trans-unit id="HfJe0N1" resname="BitTorrent protocol version 2">
         <source>BitTorrent protocol version 2</source>
-        <target>BitTorrent protocol version 2</target>
+        <target>BitTorrent протокол версии 2</target>
       </trans-unit>
       <trans-unit id="U4t_NWU" resname="BitTorrent protocol version 1">
         <source>BitTorrent protocol version 1</source>
-        <target>BitTorrent protocol version 1</target>
+        <target>BitTorrent протокол версии 1</target>
       </trans-unit>
       <trans-unit id="FEgqWb_" resname="year ago">
         <source>year ago</source>
-        <target>year ago</target>
+        <target>год назад</target>
       </trans-unit>
       <trans-unit id="pfk9V_Q" resname="month ago">
         <source>month ago</source>
-        <target>month ago</target>
+        <target>месяц назад</target>
       </trans-unit>
       <trans-unit id="5rpeYTJ" resname="day ago">
         <source>day ago</source>
-        <target>day ago</target>
+        <target>день назад</target>
       </trans-unit>
       <trans-unit id="hM62aMH" resname="hour ago">
         <source>hour ago</source>
-        <target>hour ago</target>
+        <target>час назад</target>
       </trans-unit>
       <trans-unit id="r2QgE4i" resname="minute ago">
         <source>minute ago</source>
-        <target>minute ago</target>
+        <target>минуту назад</target>
       </trans-unit>
       <trans-unit id="RbqRzDS" resname="second ago">
         <source>second ago</source>
-        <target>second ago</target>
+        <target>секунду назад</target>
       </trans-unit>
       <trans-unit id="TQof7nK" resname="years ago">
         <source>years ago</source>
-        <target>years ago</target>
+        <target>год назад</target>
       </trans-unit>
       <trans-unit id="fEGjy26" resname="months ago">
         <source>months ago</source>
-        <target>months ago</target>
+        <target>месяца назад</target>
       </trans-unit>
       <trans-unit id="N9rZHfe" resname="days ago">
         <source>days ago</source>
-        <target>days ago</target>
+        <target>дня назад</target>
       </trans-unit>
       <trans-unit id="JQ76A_T" resname="hours ago">
         <source>hours ago</source>
-        <target>hours ago</target>
+        <target>часа назад</target>
       </trans-unit>
       <trans-unit id="HhrazP8" resname="minutes ago">
         <source>minutes ago</source>
-        <target>minutes ago</target>
+        <target>минуты назад</target>
       </trans-unit>
       <trans-unit id="IsfvBWU" resname="seconds ago">
         <source>seconds ago</source>
-        <target>seconds ago</target>
+        <target>секунды назад</target>
       </trans-unit>
       <trans-unit id="KGg3UPj" resname=" years ago">
         <source> years ago</source>
-        <target> years ago</target>
+        <target> лет назад</target>
       </trans-unit>
       <trans-unit id="LJz20sI" resname=" months ago">
         <source> months ago</source>
-        <target> months ago</target>
+        <target> месяцев назад</target>
       </trans-unit>
       <trans-unit id="r7fyHp0" resname=" days ago">
         <source> days ago</source>
-        <target> days ago</target>
+        <target> дней назад</target>
       </trans-unit>
       <trans-unit id="mga12oW" resname=" hours ago">
         <source> hours ago</source>
-        <target> hours ago</target>
+        <target> часов назад</target>
       </trans-unit>
       <trans-unit id="BAlvYYB" resname=" minutes ago">
         <source> minutes ago</source>
-        <target> minutes ago</target>
+        <target> минут назад</target>
       </trans-unit>
       <trans-unit id="m4YrK9n" resname=" seconds ago">
         <source> seconds ago</source>
-        <target> seconds ago</target>
+        <target> секунд назад</target>
       </trans-unit>
     </body>
   </file>
