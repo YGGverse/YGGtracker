@@ -1,6 +1,6 @@
 <div class="row">
     <div class="column width-80">
-        <a href="{{ path('user_info', { userId : user.id }) }}">
+        <a class="margin-r-4-px" href="{{ path('user_info', { userId : user.id }) }}">
             <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
         </a>
         {{ 'have approved sensitive edition' | trans }}
