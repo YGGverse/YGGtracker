@@ -523,7 +523,7 @@
       </trans-unit>
       <trans-unit id="aazoJuz" resname="have removed star from torrent">
         <source>have removed star from torrent</source>
-        <target>удалили звезду с торрента</target>
+        <target>удалил звезду с торрента</target>
       </trans-unit>
       <trans-unit id="cES0sXy" resname="have added star for torrent">
         <source>have added star for torrent</source>
