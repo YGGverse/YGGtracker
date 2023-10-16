@@ -96,8 +96,9 @@ git checkout -b my-pr-branch-name
 
 * [Issues](https://github.com/YGGverse/YGGtracker/issues)
 * [Wiki](https://github.com/YGGverse/YGGtracker/wiki)
+* [HowTo Yggdrasil](http://[222:a8e4:50cd:55c:788e:b0a5:4e2f:a92c]/yggdrasil:bittorrent:yggtracker)
 
-#### Community
+#### Blog
 
 * [Mastodon](https://mastodon.social/@YGGverse)
 
