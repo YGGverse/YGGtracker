@@ -299,6 +299,11 @@ class TorrentController extends AbstractController
                 [
                     'name' => $file->getName(),
                     'size' => $file->getSize(),
+                    'hash' =>
+                    [
+                        'v1' => $file->getInfoHashV1(false),
+                        'v2' => $file->getInfoHashV2(false)
+                    ],
                 ],
                 'scrape' =>
                 [
