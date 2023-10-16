@@ -151,7 +151,7 @@
       </trans-unit>
       <trans-unit id="aw2VQXS" resname="Keyword, file, hash...">
         <source>Keyword, file, hash...</source>
-        <target>Ключевое слово, файл, хеш...</target>
+        <target>Ключевое слово, файл, хэш...</target>
       </trans-unit>
       <trans-unit id="ScJmuqq" resname="Search">
         <source>Search</source>
@@ -319,11 +319,11 @@
       </trans-unit>
       <trans-unit id="T3Un3Wo" resname="Info hash v1">
         <source>Info hash v1</source>
-        <target>Инфо-хеш v1</target>
+        <target>Инфо-хэш v1</target>
       </trans-unit>
       <trans-unit id="k77N_dn" resname="Info hash v2">
         <source>Info hash v2</source>
-        <target>Инфо-хеш v2</target>
+        <target>Инфо-хэш v2</target>
       </trans-unit>
       <trans-unit id="1wueJLy" resname="Created">
         <source>Created</source>
