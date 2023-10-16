@@ -13,7 +13,7 @@
     </div>
     {% if torrents %}
         {% for torrent in torrents %}
-            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night{% if torrent.sensitive == true or torrent.approved == false %} opacity-06{% endif %}">
+            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
                 <a name="{{ torrent.id }}"></a>
                 <div class="margin-b-16-px">
                     <h2>
