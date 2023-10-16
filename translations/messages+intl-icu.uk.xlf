@@ -275,7 +275,7 @@
       </trans-unit>
       <trans-unit id="YAesvjC" resname="Approve">
         <source>Approve</source>
-        <target>Затверджено</target>
+        <target>Затвердити</target>
       </trans-unit>
       <trans-unit id="Iqk3OBD" resname="Edit sensitive status">
         <source>Edit sensitive status</source>
@@ -339,7 +339,7 @@
       </trans-unit>
       <trans-unit id="mzKJo4W" resname="Software">
         <source>Software</source>
-        <target>Програмне забезпечення</target>
+        <target>Програма</target>
       </trans-unit>
       <trans-unit id="RPXj__x" resname="Comment">
         <source>Comment</source>
