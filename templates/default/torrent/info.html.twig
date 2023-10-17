@@ -21,6 +21,11 @@
 {% from _self import recursive_file_tree %}
 {% extends 'default/layout.html.twig' %}
 {% block title %}{{ file.name }} - {{ 'Torrent' | trans }} #{{ torrent.id }}{% if pagination.page > 1 %} - {{ 'Page' | trans }} {{ pagination.page }}{% endif %} - {{ name }}{% endblock %}
+{% block keywords %}
+    {% if torrent.keywords %}
+        <meta name="keywords" content="{{ torrent.keywords | join(',') }}" />
+    {% endif %}
+{% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
         <h1 class="display-block text-center margin-b-16-px">

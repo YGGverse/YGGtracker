@@ -3,6 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}{{ name }}{% endblock %}</title>
+        {% block keywords %}
+            <meta name="keywords" content="yggverse,yggtracker,yggdrasil,bittorrent,magnet,tracker" />
+        {% endblock %}
         {% block stylesheets %}
             <link href="{{ asset('asset/' ~ theme ~ '/css/framework.css') }}?{{ version }}" rel="stylesheet" />
             <link href="{{ asset('asset/' ~ theme ~ '/css/common.css') }}?{{ version }}" rel="stylesheet" />

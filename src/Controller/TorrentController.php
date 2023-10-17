@@ -125,6 +125,7 @@ class TorrentController extends AbstractController
                     'peers'     => (int) $torrent->getPeers(),
                     'leechers'  => (int) $torrent->getLeechers(),
                 ],
+                'keywords'  => $torrent->getKeywords(),
                 'locales'   => $torrent->getLocales(),
                 'sensitive' => $torrent->isSensitive(),
                 'approved'  => $torrent->isApproved(),
