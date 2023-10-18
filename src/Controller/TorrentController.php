@@ -1564,6 +1564,12 @@ class TorrentController extends AbstractController
             );
         }
 
+        // Block crawler requests
+        if (in_array($request->getClientIp(), explode('|', $this->getParameter('app.crawlers'))))
+        {
+            throw $this->createNotFoundException();
+        }
+
         // Init torrent
         if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
         {
@@ -1641,6 +1647,12 @@ class TorrentController extends AbstractController
             throw new \Exception(
                 $translator->trans('Access denied')
             );
+        }
+
+        // Block crawler requests
+        if (in_array($request->getClientIp(), explode('|', $this->getParameter('app.crawlers'))))
+        {
+            throw $this->createNotFoundException();
         }
 
         // Init torrent
@@ -1762,6 +1774,12 @@ class TorrentController extends AbstractController
             throw new \Exception(
                 $translator->trans('Access denied')
             );
+        }
+
+        // Block crawler requests
+        if (in_array($request->getClientIp(), explode('|', $this->getParameter('app.crawlers'))))
+        {
+            throw $this->createNotFoundException();
         }
 
         // Init torrent

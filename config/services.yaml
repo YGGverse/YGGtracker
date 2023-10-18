@@ -9,6 +9,7 @@ parameters:
     app.key: '%env(APP_KEY)%'
     app.pagination: '%env(APP_PAGINATION)%'
     app.trackers: '%env(APP_TRACKERS)%'
+    app.crawlers: '%env(APP_CRAWLERS)%'
     app.locales: '%env(APP_LOCALES)%'
     app.themes: '%env(APP_THEMES)%'
     app.locale: '%env(APP_LOCALE)%'
