@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="NSECGi6" resname="File not found">
         <source>File not found</source>
-        <target>Файл не знайдений</target>
+        <target>Файл не знайдено</target>
       </trans-unit>
       <trans-unit id="awzJBNC" resname="Users">
         <source>Users</source>
@@ -716,6 +716,10 @@
       <trans-unit id="m4YrK9n" resname=" seconds ago">
         <source> seconds ago</source>
         <target> секунд тому</target>
+      </trans-unit>
+      <trans-unit id="6XiwDeR" resname="Search results">
+        <source>Search results</source>
+        <target>Результати пошуку</target>
       </trans-unit>
     </body>
   </file>

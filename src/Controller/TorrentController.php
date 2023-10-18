@@ -517,7 +517,7 @@ class TorrentController extends AbstractController
         }
 
         return $this->render('default/torrent/list.html.twig', [
-            'torrents' => $torrents,
+            'torrents'   => $torrents,
             'pagination' =>
             [
                 'page'  => $page,
@@ -552,9 +552,13 @@ class TorrentController extends AbstractController
             $activityService
         );
 
+        // Init request
+        $query = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
+        $page  = $request->get('page') ? (int) $request->get('page') : 1;
+
         // Get total torrents
         $total = $torrentService->findTorrentsTotal(
-            [],
+            $query,
             $user->getLocales(),
             !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null // show approved content only for regular users
@@ -563,12 +567,12 @@ class TorrentController extends AbstractController
         // Create torrents list
         $torrents = [];
         foreach ($torrentService->findTorrents(
-            [],
+            $query,
             $user->getLocales(),
             !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null, // show approved content only for regular users
             $this->getParameter('app.pagination'),
-            0
+            ($page - 1) * $this->getParameter('app.pagination')
         ) as $torrent)
         {
             // Read file

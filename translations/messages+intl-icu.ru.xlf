@@ -717,6 +717,10 @@
         <source> seconds ago</source>
         <target> секунд назад</target>
       </trans-unit>
+      <trans-unit id="6XiwDeR" resname="Search results">
+        <source>Search results</source>
+        <target>Результаты поиска</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
