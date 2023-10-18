@@ -1884,6 +1884,41 @@ class TorrentController extends AbstractController
         return new Response(); // @TODO
     }
 
+    #[Route(
+        '/sitemap.xml',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function sitemap(
+        TorrentService $torrentService
+    ): Response
+    {
+        $locale  = $this->getParameter('app.locale');
+        $locales = explode('|', $this->getParameter('app.locales'));
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $this->render(
+            'default/torrent/sitemap.xml.twig',
+            [
+                'locale'   => $locale,
+                'locales'  => $locales,
+                'torrents' => $torrentService->findTorrents(
+                    [],       // without keywords filter
+                    $locales, // all sensitive levels
+                    null,     // all sensitive levels
+                    true,     // approved only
+                    1000,     // @TODO limit
+                    0         // offset
+                )
+            ],
+            $response
+        );
+    }
+
     private function initUser(
         Request $request,
         UserService $userService,

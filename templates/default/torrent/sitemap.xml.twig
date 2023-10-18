@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    {% for torrent in torrents %}
+    <url>
+        <lastmod>{{ torrent.added | date('Y-m-d') }}</lastmod>
+        {% for code in locales %}
+            {% if code == locale %}
+                <loc>{{ url('torrent_info', { '_locale': code , torrentId : torrent.id }) }}</loc>
+            {% else %}
+                <xhtml:link rel="alternate" hreflang="{{ code }}" href="{{ url('torrent_info', { '_locale': code , torrentId : torrent.id }) }}" />
+            {% endif %}
+        {% endfor %}
+    </url>
+    {% endfor %}
+</urlset>
