@@ -26,8 +26,8 @@ class TorrentRepository extends ServiceEntityRepository
         array $locales,
         ?bool $sensitive = null,
         ?bool $approved = null,
-        int $limit  = 0,
-        int $offset = 10
+        int $limit  = 10,
+        int $offset = 0
     ): int
     {
         return $this->getTorrentsQueryByFilter(
@@ -45,8 +45,8 @@ class TorrentRepository extends ServiceEntityRepository
         array $locales,
         ?bool $sensitive = null,
         ?bool $approved = null,
-        int $limit  = 0,
-        int $offset = 10
+        int $limit  = 10,
+        int $offset = 0
     ): array
     {
         return $this->getTorrentsQueryByFilter(
@@ -55,10 +55,10 @@ class TorrentRepository extends ServiceEntityRepository
             $sensitive,
             $approved,
         )->setMaxResults($limit)
-                     ->setFirstResult($offset)
-                     ->orderBy('t.id', 'DESC') // same as t.added
-                     ->getQuery()
-                     ->getResult();
+         ->setFirstResult($offset)
+         ->orderBy('t.id', 'DESC') // same as t.added
+         ->getQuery()
+         ->getResult();
     }
 
     private function getTorrentsQueryByFilter(
