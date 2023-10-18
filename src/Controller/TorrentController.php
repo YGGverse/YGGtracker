@@ -1908,7 +1908,7 @@ class TorrentController extends AbstractController
                 'locales'  => $locales,
                 'torrents' => $torrentService->findTorrents(
                     [],       // without keywords filter
-                    $locales, // all sensitive levels
+                    $locales, // all system locales
                     null,     // all sensitive levels
                     true,     // approved only
                     1000,     // @TODO limit
