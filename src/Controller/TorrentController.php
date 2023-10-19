@@ -631,6 +631,11 @@ class TorrentController extends AbstractController
         $locales   = $request->get('locales') ? explode('|', $request->get('locales')) : explode('|', $this->getParameter('app.locales'));
         $sensitive = $request->get('sensitive') ? (bool) $request->get('sensitive') : null;
 
+        $yggdrasil = $request->get('yggdrasil') ? (bool) $request->get('yggdrasil') : false;
+
+        // Init trackers
+        $trackers = explode('|', $this->getParameter('app.trackers'));
+
         // Get total torrents
         $total = $torrentService->findTorrentsTotal(
             $query,
@@ -698,7 +703,16 @@ class TorrentController extends AbstractController
                                 'torrentId' => $torrent->getId()
                             ],
                             false
-                        )
+                        ),
+                        'urn' => $yggdrasil ? $file->setAnnounceList([$trackers])->getMagnetLink()
+                                            : $file->setAnnounceList(
+                                                array_unique(
+                                                    array_merge(
+                                                        $file->getAnnounceList(),
+                                                        [$trackers]
+                                                    )
+                                                )
+                                              )->getMagnetLink()
                     ],
                     'scrape' =>
                     [
