@@ -88,6 +88,10 @@ git checkout -b my-pr-branch-name
 
 * Engine sources [MIT License](https://github.com/YGGverse/YGGtracker/blob/main/LICENSE)
 
+#### Versioning
+
+[Semantic Versioning 2.0.0](https://semver.org/#semantic-versioning-200)
+
 #### Components
 
 * [Symfony Framework](https://symfony.com)
