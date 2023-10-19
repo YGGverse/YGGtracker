@@ -708,7 +708,7 @@ class TorrentController extends AbstractController
                                             : $file->setAnnounceList(
                                                 array_unique(
                                                     array_merge(
-                                                        $file->getAnnounceList(),
+                                                        (array) $file->getAnnounceList(),
                                                         [$trackers]
                                                     )
                                                 )
