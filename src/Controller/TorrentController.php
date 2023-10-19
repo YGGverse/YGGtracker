@@ -683,7 +683,7 @@ class TorrentController extends AbstractController
                         'name' => $file->getName(),
                         'size' => $file->getSize(),
                         'url'  => $this->generateUrl(
-                            'torrent_download_file',
+                            'torrent_file',
                             [
                                 'torrentId' => $torrent->getId()
                             ],
@@ -693,7 +693,7 @@ class TorrentController extends AbstractController
                     'magnet' =>
                     [
                         'url' => $this->generateUrl(
-                            'torrent_download_magnet',
+                            'torrent_magnet',
                             [
                                 'torrentId' => $torrent->getId()
                             ],
@@ -1747,8 +1747,8 @@ class TorrentController extends AbstractController
 
     // Torrent download file
     #[Route(
-        '/torrent/{torrentId}/download/file',
-        name: 'torrent_download_file',
+        '/torrent/{torrentId}/file',
+        name: 'torrent_file',
         requirements:
         [
             'torrentId' => '\d+'
@@ -1873,8 +1873,8 @@ class TorrentController extends AbstractController
 
     // Torrent download magnet
     #[Route(
-        '/torrent/{torrentId}/download/magnet',
-        name: 'torrent_download_magnet',
+        '/torrent/{torrentId}/magnet',
+        name: 'torrent_magnet',
         requirements:
         [
             'torrentId' => '\d+'
