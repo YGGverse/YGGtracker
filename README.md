@@ -112,7 +112,11 @@ git checkout -b my-pr-branch-name
 
 #### Instances
 
-* [http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/](http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/)
+* `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/`
+
+#### Plugins
+
+* [qBitTorrent search plugin](https://github.com/YGGverse/qbittorrent-yggtracker-search-plugin)
 
 #### See also
 
