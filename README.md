@@ -60,7 +60,11 @@ Custom settings could be provided in the `/.env.local` file by overwriting defau
 
 #### Localization
 
-* Join community translations by [Crowdin](https://crowdin.com/project/yggtracker)
+Join community translations by [Crowdin](https://crowdin.com/project/yggtracker)
+
+#### API
+
+[Wiki reference](https://github.com/YGGverse/YGGtracker/wiki/API)
 
 #### Contribution
 
@@ -95,7 +99,7 @@ git checkout -b my-pr-branch-name
 #### Support
 
 * [Issues](https://github.com/YGGverse/YGGtracker/issues)
-* [Wiki](https://github.com/YGGverse/YGGtracker/wiki)
+* [Documentation](https://github.com/YGGverse/YGGtracker/wiki)
 * [HowTo Yggdrasil](https://ygg.work.gd/yggdrasil:bittorrent:yggtracker)
 
 #### Blog

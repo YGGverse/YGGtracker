@@ -608,6 +608,118 @@ class TorrentController extends AbstractController
         );
     }
 
+    // #25
+    // https://github.com/YGGverse/YGGtracker/issues/25
+    #[Route(
+        '/api/torrents',
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function jsonRecent(
+        Request $request,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init request
+        $query     = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
+        $page      = $request->get('page') ? (int) $request->get('page') : 1;
+
+        $locales   = $request->get('locales') ? explode('|', $request->get('locales')) : explode('|', $this->getParameter('app.locales'));
+        $sensitive = $request->get('sensitive') ? (bool) $request->get('sensitive') : null;
+
+        // Get total torrents
+        $total = $torrentService->findTorrentsTotal(
+            $query,
+            $locales,
+            $sensitive,
+            true, // approved only
+        );
+
+        // Create torrents list
+        $torrents = [];
+        foreach ($torrentService->findTorrents(
+            $query,
+            $locales,
+            $sensitive,
+            true, // approved only
+            $this->getParameter('app.pagination'),
+            ($page - 1) * $this->getParameter('app.pagination')
+        ) as $torrent)
+        {
+            // Read file
+            if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+            {
+                throw $this->createNotFoundException(); // @TODO exception
+            }
+
+            // Generate url
+            $url = [];
+            foreach ($locales as $locale)
+            {
+                $url[$locale] = $this->generateUrl(
+                    'torrent_info',
+                    [
+                        '_locale'   => $locale,
+                        'torrentId' => $torrent->getId(),
+                    ],
+                    false
+                );
+            }
+
+            $torrents[] =
+            [
+                'torrent' =>
+                [
+                    'id'        => $torrent->getId(),
+                    'added'     => $torrent->getAdded(),
+                    'locales'   => $torrent->getLocales(),
+                    'sensitive' => $torrent->isSensitive(),
+                    'file' =>
+                    [
+                        'name' => $file->getName(),
+                        'size' => $file->getSize(),
+                    ],
+                    'scrape' =>
+                    [
+                        'seeders'   => (int) $torrent->getSeeders(),
+                        'peers'     => (int) $torrent->getPeers(),
+                        'leechers'  => (int) $torrent->getLeechers(),
+                    ],
+                    'url' => $url
+                ],
+            ];
+        }
+
+        $url = [];
+        foreach ($locales as $locale)
+        {
+            $url[$locale] = $this->generateUrl(
+                'torrent_recent',
+                [
+                    '_locale' => $locale
+                ],
+                false
+            );
+        }
+
+        return $this->json(
+            [
+                'version' => time(),
+                'tracker' =>
+                [
+                    'name'    => $this->getParameter('app.name'),
+                    'version' => $this->getParameter('app.version'),
+                    'url'     => $url
+                ],
+                'torrents' => $torrents
+            ]
+        );
+    }
+
     // Forms
     #[Route(
         '/{_locale}/submit',
