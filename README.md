@@ -15,10 +15,6 @@ YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) I
 
 * `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/`
 
-#### Plugins
-
-* [qBitTorrent](https://github.com/YGGverse/qbittorrent-yggtracker-search-plugin)
-
 #### Installation
 
 ```
@@ -117,6 +113,10 @@ git checkout -b my-pr-branch-name
 #### Blog
 
 * [Mastodon](https://mastodon.social/@YGGverse)
+
+#### Plugins
+
+* [qBitTorrent](https://github.com/YGGverse/qbittorrent-yggtracker-search-plugin)
 
 #### See also
 
