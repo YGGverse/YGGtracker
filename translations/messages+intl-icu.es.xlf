@@ -5,10 +5,6 @@
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
     <body>
-      <trans-unit id="NSECGi6" resname="File not found">
-        <source>File not found</source>
-        <target>File not found</target>
-      </trans-unit>
       <trans-unit id="awzJBNC" resname="Users">
         <source>Users</source>
         <target>Users</target>
@@ -720,6 +716,10 @@
       <trans-unit id="6XiwDeR" resname="Search results">
         <source>Search results</source>
         <target>Search results</target>
+      </trans-unit>
+      <trans-unit id="HSCiIv7" resname="&lt;a href=&quot;%s&quot;&gt;Upload&lt;/a&gt; any torrent - download with Yggdrasil">
+        <source>&lt;a href="%s"&gt;Upload&lt;/a&gt; any torrent - download with Yggdrasil</source>
+        <target><![CDATA[<a href="%s">Upload</a> any torrent - download with Yggdrasil]]></target>
       </trans-unit>
     </body>
   </file>
