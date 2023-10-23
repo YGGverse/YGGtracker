@@ -1874,6 +1874,126 @@ class TorrentController extends AbstractController
         return $response->setContent($data);
     }
 
+    // Torrent download wanted file
+    #[Route(
+        '/torrent/{torrentId}/file/wanted',
+        name: 'torrent_file_wanted',
+        requirements:
+        [
+            'torrentId' => '\d+'
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function downloadFileWanted(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Block crawler requests
+        if (in_array($request->getClientIp(), explode('|', $this->getParameter('app.crawlers'))))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Sensitive filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Approved filter
+        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && !$torrent->isApproved())
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Register download
+        $torrentService->addTorrentDownloadFile(
+            $torrent->getId(),
+            $user->getId(),
+            time()
+        );
+
+        // Register download event
+        $activityService->addEventTorrentDownloadFileAdd(
+            $user->getId(),
+            time(),
+            $torrent->getId()
+        );
+
+        // Apply filters
+        $file = $this->filterYggdrasil(
+            $file,
+            false // wanted file downloading with original trackers
+        );
+
+        // Get data
+        $data = $file->dumpToString();
+
+        // Set headers
+        $response = new Response();
+
+        $response->headers->set(
+            'Content-type',
+            'application/x-bittorrent'
+        );
+
+        $response->headers->set(
+            'Content-length',
+            strlen($data)
+        );
+
+        $response->headers->set(
+            'Content-Disposition',
+            sprintf(
+                'attachment; filename="%s.wanted.%s.torrent";',
+                mb_strtolower(
+                    $this->getParameter('app.name')
+                ),
+                mb_strtolower(
+                    $file->getName()
+                )
+            )
+        );
+
+        $response->sendHeaders();
+
+        // Return file content
+        return $response->setContent($data);
+    }
+
     // Torrent download magnet
     #[Route(
         '/torrent/{torrentId}/magnet',

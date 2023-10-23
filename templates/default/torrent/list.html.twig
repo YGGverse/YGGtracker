@@ -33,10 +33,11 @@
                         </a>
                     </h2>
                     {% if torrent.scrape.leechers > 0 and torrent.scrape.seeders == 0 %}
-                        <span class="label label-green margin-l-4-px font-size-10-px position-relative top--2 cursor-default"
-                                title="{{ 'Active leechers waiting for seeders' | trans }}">
+                        <a href="{{ path('torrent_file_wanted', { torrentId : torrent.id }) }}"
+                           class="label label-green margin-l-4-px font-size-10-px position-relative top--2"
+                           title="{{ 'Active leechers waiting for seeders' | trans }}">
                             {{ 'wanted' | trans }}
-                        </span>
+                        </a>
                     {% endif %}
                     {% if torrent.approved == false %}
                         <sub class="margin-l-8-px float-right opacity-06 hover-opacity-1" title="{{ 'Waiting for approve' | trans }}">
