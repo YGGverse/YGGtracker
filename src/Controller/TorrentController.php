@@ -2253,15 +2253,25 @@ class TorrentController extends AbstractController
             }
         }
 
-        // Format announce list
-        $trackers = [];
+        // Remove duplicates in list
+        $values = [];
 
         foreach ($announceList[0] as $value)
         {
-            $trackers[] = [$value];
+            $values[] = $value;
         }
 
         foreach ($announceList[1] as $value)
+        {
+            $values[] = $value;
+        }
+
+        $values = array_unique($values);
+
+        // Format announce list
+        $trackers = [];
+
+        foreach ($values as $value)
         {
             $trackers[] = [$value];
         }
