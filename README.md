@@ -4,7 +4,7 @@
 
 BitTorrent Network for Yggdrasil
 
-YGGtracker is catalog, open tracker and bridge tools that allows to convert and download any torrent with [Yggdrasil network](https://github.com/yggdrasil-network).
+YGGtracker is catalog, open tracker and social network that allows to convert and download any torrent with [Yggdrasil network](https://github.com/yggdrasil-network) by community.
 
 Engine uses IPv6 `200::/7` addresses to identify users without registration.
 
