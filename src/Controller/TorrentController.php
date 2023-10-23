@@ -2212,7 +2212,8 @@ class TorrentController extends AbstractController
                     $torrentService->copyToFtpStorage(
                         $torrent->getId(),
                         sprintf(
-                            '/torrents/wanted/all/wanted#%s.%s.torrent',
+                            '%s/torrents/wanted/all/wanted#%s.%s.torrent',
+                            $this->getParameter('app.torrent.wanted.ftp.folder'),
                             $torrent->getId(),
                             $file->getName()
                         )
@@ -2224,7 +2225,8 @@ class TorrentController extends AbstractController
                         $torrentService->copyToFtpStorage(
                             $torrent->getId(),
                             sprintf(
-                                '/torrents/wanted/sensitive/yes/wanted#%s.%s.torrent',
+                                '%s/torrents/wanted/sensitive/yes/wanted#%s.%s.torrent',
+                                $this->getParameter('app.torrent.wanted.ftp.folder'),
                                 $torrent->getId(),
                                 $file->getName()
                             )
@@ -2236,7 +2238,8 @@ class TorrentController extends AbstractController
                         $torrentService->copyToFtpStorage(
                             $torrent->getId(),
                             sprintf(
-                                '/torrents/wanted/sensitive/no/wanted#%s.%s.torrent',
+                                '%s/torrents/wanted/sensitive/no/wanted#%s.%s.torrent',
+                                $this->getParameter('app.torrent.wanted.ftp.folder'),
                                 $torrent->getId(),
                                 $file->getName()
                             )
@@ -2249,7 +2252,8 @@ class TorrentController extends AbstractController
                         $torrentService->copyToFtpStorage(
                             $torrent->getId(),
                             sprintf(
-                                '/torrents/wanted/locale/%s/wanted#%s.%s.torrent',
+                                '%s/torrents/wanted/locale/%s/wanted#%s.%s.torrent',
+                                $this->getParameter('app.torrent.wanted.ftp.folder'),
                                 $locale,
                                 $torrent->getId(),
                                 $file->getName()
@@ -2265,7 +2269,8 @@ class TorrentController extends AbstractController
                 /// All
                 $torrentService->removeFromFtpStorage(
                     sprintf(
-                        '/torrents/wanted/all/wanted#%s.%s.torrent',
+                        '%s/torrents/wanted/all/wanted#%s.%s.torrent',
+                        $this->getParameter('app.torrent.wanted.ftp.folder'),
                         $torrent->getId(),
                         $file->getName()
                     )
@@ -2274,7 +2279,8 @@ class TorrentController extends AbstractController
                 /// Sensitive
                 $torrentService->removeFromFtpStorage(
                     sprintf(
-                        '/torrents/wanted/sensitive/yes/wanted#%s.%s.torrent',
+                        '%s/torrents/wanted/sensitive/yes/wanted#%s.%s.torrent',
+                        $this->getParameter('app.torrent.wanted.ftp.folder'),
                         $torrent->getId(),
                         $file->getName()
                     )
@@ -2282,7 +2288,8 @@ class TorrentController extends AbstractController
 
                 $torrentService->removeFromFtpStorage(
                     sprintf(
-                        '/torrents/wanted/sensitive/no/wanted#%s.%s.torrent',
+                        '%s/torrents/wanted/sensitive/no/wanted#%s.%s.torrent',
+                        $this->getParameter('app.torrent.wanted.ftp.folder'),
                         $torrent->getId(),
                         $file->getName()
                     )
@@ -2293,7 +2300,8 @@ class TorrentController extends AbstractController
                 {
                     $torrentService->removeFromFtpStorage(
                         sprintf(
-                            '/torrents/wanted/locale/%s/wanted#%s.%s.torrent',
+                            '%s/torrents/wanted/locale/%s/wanted#%s.%s.torrent',
+                            $this->getParameter('app.torrent.wanted.ftp.folder'),
                             $locale,
                             $torrent->getId(),
                             $file->getName()

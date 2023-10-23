@@ -19,6 +19,7 @@ parameters:
     app.yggdrasil: '%env(APP_YGGDRASIL)%'
     app.torrent.size.max: '%env(APP_TORRENT_FILE_SIZE_MAX)%'
     app.torrent.wanted.ftp.enabled: '%env(APP_TORRENT_WANTED_FTP_ENABLED)%'
+    app.torrent.wanted.ftp.folder: '%env(APP_TORRENT_WANTED_FTP_FOLDER)%'
     app.torrent.wanted.ftp.approved: '%env(APP_TORRENT_WANTED_FTP_APPROVED_ONLY)%'
 
 services:
