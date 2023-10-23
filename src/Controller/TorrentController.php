@@ -2099,6 +2099,7 @@ class TorrentController extends AbstractController
         Request $request,
         TranslatorInterface $translator,
         TorrentService $torrentService,
+        ActivityService $activityService
     ): Response
     {
         // Init Scraper
