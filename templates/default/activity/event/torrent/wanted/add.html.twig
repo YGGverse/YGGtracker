@@ -1,8 +1,6 @@
 <div class="row">
     <div class="column width-80">
-        <span class="margin-l-4-px">
-            {{ 'seeders wanted for torrent' | trans }}
-        </span>
+        {{ 'Seeders wanted for torrent' | trans }}
         {% if session.user.moderator or session.user.owner %}
             <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
                 {{ torrent.name }}

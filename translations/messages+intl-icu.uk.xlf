@@ -725,9 +725,9 @@
         <source>Wanted</source>
         <target>Розшук</target>
       </trans-unit>
-      <trans-unit id="B95C5DS" resname="seeders wanted for torrent">
-        <source>seeders wanted for torrent</source>
-        <target>розшукуються роздачі для торенту</target>
+      <trans-unit id="SK4nQBL" resname="Seeders wanted for torrent">
+        <source>Seeders wanted for torrent</source>
+        <target>Розшукуються роздачі для торенту</target>
       </trans-unit>
     </body>
   </file>
