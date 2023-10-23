@@ -15,7 +15,7 @@ Engine uses IPv6 `0200::/7` addresses to identify users without registration.
 #### Instances
 
 * `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/`
-  + `ftp://[201:23b4:991a:634d:8359:4521:5576:15b7]:21/torrents/wanted`
+  + `ftp://[201:23b4:991a:634d:8359:4521:5576:15b7]:21/yggtracker/`
 
 #### Installation
 
