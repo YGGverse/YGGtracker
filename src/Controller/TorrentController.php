@@ -661,6 +661,9 @@ class TorrentController extends AbstractController
                 throw $this->createNotFoundException(); // @TODO exception
             }
 
+            // Apply yggdrasil filters
+            $file = $this->filterYggdrasil($file, $yggdrasil);
+
             // Generate url
             $url = [];
             foreach ($locales as $locale)
@@ -704,15 +707,7 @@ class TorrentController extends AbstractController
                             ],
                             false
                         ),
-                        'urn' => $yggdrasil ? $file->setAnnounceList([$trackers])->getMagnetLink()
-                                            : $file->setAnnounceList(
-                                                array_unique(
-                                                    array_merge(
-                                                        (array) $file->getAnnounceList(),
-                                                        [$trackers]
-                                                    )
-                                                )
-                                              )->getMagnetLink()
+                        'urn' => $file->getMagnetLink()
                     ],
                     'scrape' =>
                     [
@@ -1809,10 +1804,7 @@ class TorrentController extends AbstractController
 
         if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
         {
-            // @TODO
-            throw new \Exception(
-                $translator->trans('File not found')
-            );
+            throw $this->createNotFoundException();
         }
 
         // Sensitive filter
@@ -1841,16 +1833,13 @@ class TorrentController extends AbstractController
             $torrent->getId()
         );
 
-        // Filter trackers
-        if ($user->isYggdrasil())
-        {
-            $file->setAnnounceList(
-                [
-                    explode('|', $this->getParameter('app.trackers'))
-                ]
-            );
-        }
+        // Apply filters
+        $file = $this->filterYggdrasil(
+            $file,
+            $user->isYggdrasil()
+        );
 
+        // Get data
         $data = $file->dumpToString();
 
         // Set headers
@@ -1935,10 +1924,7 @@ class TorrentController extends AbstractController
 
         if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
         {
-            // @TODO
-            throw new \Exception(
-                $translator->trans('File not found')
-            );
+            throw $this->createNotFoundException();
         }
 
         // Sensitive filter
@@ -1967,15 +1953,11 @@ class TorrentController extends AbstractController
             $torrent->getId()
         );
 
-        // Filter trackers
-        if ($user->isYggdrasil())
-        {
-            $file->setAnnounceList(
-                [
-                    explode('|', $this->getParameter('app.trackers'))
-                ]
-            );
-        }
+        // Apply filters
+        $file = $this->filterYggdrasil(
+            $file,
+            $user->isYggdrasil()
+        );
 
         // Return magnet link
         return $this->redirect(
@@ -2093,5 +2075,83 @@ class TorrentController extends AbstractController
         }
 
         return $user;
+    }
+
+    private function filterYggdrasil(
+        ?\Rhilip\Bencode\TorrentFile $file, bool $yggdrasil, string $regex = '/^0{0,1}[2-3][a-f0-9]{0,2}:/'
+    ):  ?\Rhilip\Bencode\TorrentFile
+    {
+        // Get app trackers
+        $appTrackers = explode('|', $this->getParameter('app.trackers'));
+
+        // Get original file announcements
+        $announceList = $file->getAnnounceList();
+
+        // Append app trackers
+        foreach ($appTrackers as $appTracker)
+        {
+            // Append application trackers
+            $announceList[0][] = $appTracker;
+
+            // Append application re-trackers
+            $announceList[1][] = $appTracker;
+        }
+
+        // Remove duplicated
+        $announceList[0] = array_unique($announceList[0]);
+        $announceList[1] = array_unique($announceList[1]);
+
+        // Yggdrasil-only mode
+        if ($yggdrasil)
+        {
+            // Replace announce URL with first application tracker if original does not match Yggdrasil condition
+            if (!preg_match($regex, str_replace(['[',']'], false, parse_url($value, PHP_URL_HOST))))
+            {
+                $file->setAnnounce(
+                    $appTrackers[0]
+                );
+            }
+
+            // Remove non-Yggdrasil trackers from announcement list
+            foreach ($announceList[0] as $key => $value)
+            {
+                // trackers
+                if (!preg_match($regex, str_replace(['[',']'], false, parse_url($value, PHP_URL_HOST))))
+                {
+                    unset($announceList[0][$key]);
+                }
+            }
+
+            // Remove non-Yggdrasil re-trackers from announcement list
+            foreach ($announceList[1] as $key => $value)
+            {
+                // trackers
+                if (!preg_match($regex, str_replace(['[',']'], false, parse_url($value, PHP_URL_HOST))))
+                {
+                    unset($announceList[1][$key]);
+                }
+            }
+        }
+
+        // Format announce list
+        $trackers = [];
+
+        foreach ($announceList[0] as $value)
+        {
+            $trackers[] = [$value];
+        }
+
+        foreach ($announceList[1] as $value)
+        {
+            $trackers[] = [$value];
+        }
+
+        // Update announce list
+        $file->setAnnounceList(
+            $trackers
+        );
+
+        // Return filtered file
+        return $file;
     }
 }
