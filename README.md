@@ -2,14 +2,15 @@
 
 [![Crowdin](https://badges.crowdin.net/yggtracker/localized.svg)](https://crowdin.com/project/yggtracker)
 
-BitTorrent Registry for Yggdrasil
+BitTorrent Network for Yggdrasil
 
-YGGtracker uses [Yggdrasil](https://github.com/yggdrasil-network/yggdrasil-go) IPv6 addresses to identify users without registration.
+YGGtracker is catalog, open tracker and bridge tools that allows to convert and download any torrent with [Yggdrasil network](https://github.com/yggdrasil-network).
+
+Engine uses IPv6 `200::/7` addresses to identify users without registration.
 
 #### [Showcase](https://github.com/YGGverse/YGGtracker/wiki/Showcase)
 
 ![Pasted image 1](https://github.com/YGGverse/YGGtracker/assets/108541346/962f7850-01e1-4add-9dbe-c11b80108a75)
-
 
 #### Instances
 
