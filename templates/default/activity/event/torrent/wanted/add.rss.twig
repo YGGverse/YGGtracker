@@ -1,0 +1,17 @@
+<item>
+    <title>
+        {{ 'seeders wanted for torrent' | trans }}
+        {% if session.user.moderator or session.user.owner %}
+            {{ torrent.name }}
+        {% else %}
+            {% if torrent.sensitive == true %}
+                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% else %}
+                {{ torrent.name }}
+            {% endif %}
+        {% endif %}
+    </title>
+    <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
+    <guid>{{ url('torrent_info', { torrentId : torrent.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('torrent_info', { torrentId : torrent.id }) }}#activity</link>
+</item>

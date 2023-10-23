@@ -721,6 +721,14 @@
         <source>&lt;a href="%s"&gt;Upload&lt;/a&gt; any torrent - download with Yggdrasil</source>
         <target><![CDATA[<a href="%s">Загрузить</a> любой торрент - скачать с Yggdrasil]]></target>
       </trans-unit>
+      <trans-unit id="wpaDJlY" resname="Wanted">
+        <source>Wanted</source>
+        <target>Розыск</target>
+      </trans-unit>
+      <trans-unit id="B95C5DS" resname="seeders wanted for torrent">
+        <source>seeders wanted for torrent</source>
+        <target>требуется раздача для торрента</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

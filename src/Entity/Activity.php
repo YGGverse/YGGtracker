@@ -57,6 +57,8 @@ class Activity
 
     public const EVENT_TORRENT_DOWNLOAD_MAGNET_ADD      = 2600;
 
+    public const EVENT_TORRENT_WANTED_ADD               = 2700;
+
     // ...
 
     #[ORM\Column]

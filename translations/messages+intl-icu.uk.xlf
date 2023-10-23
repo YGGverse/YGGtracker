@@ -163,7 +163,7 @@
       </trans-unit>
       <trans-unit id="ypBmhzv" resname="wanted">
         <source>wanted</source>
-        <target>розшукується</target>
+        <target>розшук</target>
       </trans-unit>
       <trans-unit id="R138zpi" resname="Waiting for approve">
         <source>Waiting for approve</source>
@@ -720,6 +720,14 @@
       <trans-unit id="HSCiIv7" resname="&lt;a href=&quot;%s&quot;&gt;Upload&lt;/a&gt; any torrent - download with Yggdrasil">
         <source>&lt;a href="%s"&gt;Upload&lt;/a&gt; any torrent - download with Yggdrasil</source>
         <target><![CDATA[<a href="%s">Надіслати</a> будь-який торент - завантажити з Yggdrasil]]></target>
+      </trans-unit>
+      <trans-unit id="wpaDJlY" resname="Wanted">
+        <source>Wanted</source>
+        <target>Розшук</target>
+      </trans-unit>
+      <trans-unit id="B95C5DS" resname="seeders wanted for torrent">
+        <source>seeders wanted for torrent</source>
+        <target>розшукуються роздачі для торенту</target>
       </trans-unit>
     </body>
   </file>

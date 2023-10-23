@@ -764,6 +764,44 @@ class ActivityController extends AbstractController
 
             break;
 
+            // Torrent Wanted
+            case $activity::EVENT_TORRENT_WANTED_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/wanted/add' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
             /// Torrent Locales
             case $activity::EVENT_TORRENT_LOCALES_ADD:
 

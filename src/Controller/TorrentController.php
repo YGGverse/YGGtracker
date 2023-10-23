@@ -2191,6 +2191,17 @@ class TorrentController extends AbstractController
             }
         }
 
+        // Register activity event only on previous status changed
+        if ($leechers && !$seeders &&
+            $leechers != (int) $torrent->getLeechers() && $seeders != (int) $torrent->getSeeders())
+        {
+            $activityService->addEventTorrentWantedAdd(
+                $torrent->getUserId(), // just required field, let's relate with author, because we don't know which exactly user requires for seeders from crontab @TODO
+                time(),
+                $torrent->getId()
+            );
+        }
+
         // Update DB
         $torrentService->updateTorrentScrape(
             $torrent->getId(),

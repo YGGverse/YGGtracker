@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="column width-80">
+        <span class="margin-l-4-px">
+            {{ 'seeders wanted for torrent' | trans }}
+        </span>
+        {% if session.user.moderator or session.user.owner %}
+            <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                {{ torrent.name }}
+            </a>
+        {% else %}
+            {% if torrent.sensitive == true %}
+                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% else %}
+                <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                    {{ torrent.name }}
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="column width-20 text-right">
+        {{ added | format_ago }}
+    </div>
+</div>

@@ -61,6 +61,8 @@ class ActivityService
 
             Activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD,
             Activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD,
+
+            Activity::EVENT_TORRENT_WANTED_ADD,
         ];
     }
 
@@ -362,6 +364,18 @@ class ActivityService
                     ]
                     [
                         $this->translatorInterface->trans('Magnet links')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_WANTED_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrents')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Wanted')
                     ] = $code;
 
                 break;
@@ -839,6 +853,37 @@ class ActivityService
 
         $activity->setAdded(
             $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+
+    public function addEventTorrentWantedAdd(
+        int $userId,
+        int $added,
+        int $torrentId
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_WANTED_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setTorrentId(
+            $torrentId
         );
 
         $this->entityManagerInterface->persist($activity);
