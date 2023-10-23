@@ -36,86 +36,6 @@ class TorrentService
     }
 
     // Tools
-    public function scrapeTorrentQueue(
-        array $trackers = []
-    ): void
-    {
-        // Init Scraper
-        $scraper = new \Yggverse\Scrapeer\Scraper();
-
-        if ($torrent = $this->getTorrentScrapeQueue())
-        {
-            // Init default values
-            $seeders  = 0;
-            $peers    = 0;
-            $leechers = 0;
-
-            // Get file
-            if ($file = $this->readTorrentFileByTorrentId($torrent->getId()))
-            {
-                // Get info hashes
-                $hashes = [];
-
-                if ($hash = $file->getInfoHashV1(false))
-                {
-                    $hashes[] = $hash;
-                }
-
-                if ($hash = $file->getInfoHashV2(false))
-                {
-                    $hashes[] = $hash;
-                }
-
-                // Get scrape
-                if ($hashes && $trackers)
-                {
-                    // Update scrape info
-                    if ($results = $scraper->scrape($hashes, $trackers, null, 1))
-                    {
-                        foreach ($results as $result)
-                        {
-                            if (isset($result['seeders']))
-                            {
-                                $seeders = $seeders + (int) $result['seeders'];
-                            }
-
-                            if (isset($result['completed']))
-                            {
-                                $peers = $peers + (int) $result['completed'];
-                            }
-
-                            if (isset($result['leechers']))
-                            {
-                                $leechers = $leechers + (int) $result['leechers'];
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Update torrent scrape
-            $torrent->setSeeders(
-                $seeders
-            );
-
-            $torrent->setPeers(
-                $peers
-            );
-
-            $torrent->setLeechers(
-                $leechers
-            );
-
-            $torrent->setScraped(
-                time()
-            );
-
-            // Save results to DB
-            $this->entityManagerInterface->persist($torrent);
-            $this->entityManagerInterface->flush();
-        }
-    }
-
     public function readTorrentFileByFilepath(
         string $filepath
     ): ?\Rhilip\Bencode\TorrentFile
@@ -210,6 +130,15 @@ class TorrentService
         );
     }
 
+    public function getFtpFilepathByFilename(string $filename): string
+    {
+        return sprintf(
+            '%s/var/ftp/%s',
+            $this->kernelInterface->getProjectDir(),
+            $filename
+        );
+    }
+
     public function getTorrentContributors(Torrent $torrent): array
     {
         $contributors = [];
@@ -227,6 +156,34 @@ class TorrentService
         $contributors[] = $torrent->getUserId();
 
         return array_unique($contributors);
+    }
+
+    public function copyToFtpStorage(
+        int $torrentId,
+        string $filename
+    ): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->copy(
+            $this->getStorageFilepathByTorrentId(
+                $torrentId
+            ),
+            $this->getFtpFilepathByFilename(
+                $filename
+            )
+        );
+    }
+
+    public function removeFromFtpStorage(
+        string $filename
+    ): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove(
+            $this->getFtpFilepathByFilename(
+                $filename
+            )
+        );
     }
 
     public function add(
@@ -447,6 +404,36 @@ class TorrentService
                 $this->entityManagerInterface->persist($torrent);
                 $this->entityManagerInterface->flush();
             }
+        }
+    }
+
+    public function updateTorrentScrape(
+        int $torrentId,
+        int $seeders,
+        int $peers,
+        int $leechers
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            $torrent->setSeeders(
+                $seeders
+            );
+
+            $torrent->setPeers(
+                $peers
+            );
+
+            $torrent->setLeechers(
+                $leechers
+            );
+
+            $torrent->setScraped(
+                time()
+            );
+
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
         }
     }
 

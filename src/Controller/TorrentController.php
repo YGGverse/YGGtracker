@@ -1858,10 +1858,11 @@ class TorrentController extends AbstractController
         $response->headers->set(
             'Content-Disposition',
             sprintf(
-                'attachment; filename="%s.%s.torrent";',
+                'attachment; filename="%s#%s.%s.torrent";',
                 mb_strtolower(
                     $this->getParameter('app.name')
                 ),
+                $torrent->getId(),
                 mb_strtolower(
                     $file->getName()
                 )
@@ -1978,10 +1979,8 @@ class TorrentController extends AbstractController
         $response->headers->set(
             'Content-Disposition',
             sprintf(
-                'attachment; filename="%s.wanted.%s.torrent";',
-                mb_strtolower(
-                    $this->getParameter('app.name')
-                ),
+                'attachment; filename="wanted#%s.%s.torrent";',
+                $torrent->getId(),
                 mb_strtolower(
                     $file->getName()
                 )
@@ -2102,9 +2101,207 @@ class TorrentController extends AbstractController
         TorrentService $torrentService,
     ): Response
     {
-        $torrentService->scrapeTorrentQueue(
-            explode('|', $this->getParameter('app.trackers'))
+        // Init Scraper
+        $scraper = new \Yggverse\Scrapeer\Scraper();
+
+        // Get next torrent in scrape queue
+        if (!$torrent = $torrentService->getTorrentScrapeQueue())
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Get file
+        if (!$file = $torrentService->readTorrentFileByTorrentId($torrent->getId()))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Filter yggdrasil trackers
+        $file = $this->filterYggdrasil($file, true);
+
+        // Get trackers list
+        $trackers = [];
+
+        if ($announce = $file->getAnnounce())
+        {
+            $trackers[] = $announce;
+        }
+
+        if ($announceList = $file->getAnnounceList())
+        {
+            if (isset($announceList[0]))
+            {
+                foreach ($announceList[0] as $value)
+                {
+                    $trackers[] = $value;
+                }
+            }
+
+            if (isset($announceList[1]))
+            {
+                foreach ($announceList[1] as $value)
+                {
+                    $trackers[] = $value;
+                }
+            }
+        }
+
+        $trackers = array_unique($trackers);
+
+        // Get info hashes
+        $hashes = [];
+
+        if ($hash = $file->getInfoHashV1(false))
+        {
+            $hashes[] = $hash;
+        }
+
+        if ($hash = $file->getInfoHashV2(false))
+        {
+            $hashes[] = $hash;
+        }
+
+        // Get scrape
+        $seeders  = 0;
+        $peers    = 0;
+        $leechers = 0;
+
+        if ($hashes && $trackers)
+        {
+            // Update scrape info
+            if ($results = $scraper->scrape($hashes, $trackers, null, 1))
+            {
+                foreach ($results as $result)
+                {
+                    if (isset($result['seeders']))
+                    {
+                        $seeders = $seeders + (int) $result['seeders'];
+                    }
+
+                    if (isset($result['completed']))
+                    {
+                        $peers = $peers + (int) $result['completed'];
+                    }
+
+                    if (isset($result['leechers']))
+                    {
+                        $leechers = $leechers + (int) $result['leechers'];
+                    }
+                }
+            }
+        }
+
+        // Update DB
+        $torrentService->updateTorrentScrape(
+            $torrent->getId(),
+            $seeders,
+            $peers,
+            $leechers
         );
+
+        // Update torrent wanted storage if enabled
+        if ($this->getParameter('app.torrent.wanted.ftp.enabled') === '1')
+        {
+            // Add wanted file
+            if ($leechers && !$seeders)
+            {
+                if ($this->getParameter('app.torrent.wanted.ftp.approved') === '0' ||
+                   ($this->getParameter('app.torrent.wanted.ftp.approved') === '1' && $torrent->isApproved()))
+                {
+                    /// All
+                    $torrentService->copyToFtpStorage(
+                        $torrent->getId(),
+                        sprintf(
+                            '/torrents/wanted/all/wanted#%s.%s.torrent',
+                            $torrent->getId(),
+                            $file->getName()
+                        )
+                    );
+
+                    /// Sensitive
+                    if ($torrent->isSensitive())
+                    {
+                        $torrentService->copyToFtpStorage(
+                            $torrent->getId(),
+                            sprintf(
+                                '/torrents/wanted/sensitive/yes/wanted#%s.%s.torrent',
+                                $torrent->getId(),
+                                $file->getName()
+                            )
+                        );
+                    }
+
+                    else
+                    {
+                        $torrentService->copyToFtpStorage(
+                            $torrent->getId(),
+                            sprintf(
+                                '/torrents/wanted/sensitive/no/wanted#%s.%s.torrent',
+                                $torrent->getId(),
+                                $file->getName()
+                            )
+                        );
+                    }
+
+                    /// Locals
+                    foreach ($torrent->getLocales() as $locale)
+                    {
+                        $torrentService->copyToFtpStorage(
+                            $torrent->getId(),
+                            sprintf(
+                                '/torrents/wanted/locale/%s/wanted#%s.%s.torrent',
+                                $locale,
+                                $torrent->getId(),
+                                $file->getName()
+                            )
+                        );
+                    }
+                }
+            }
+
+            // Remove not wanted files
+            else
+            {
+                /// All
+                $torrentService->removeFromFtpStorage(
+                    sprintf(
+                        '/torrents/wanted/all/wanted#%s.%s.torrent',
+                        $torrent->getId(),
+                        $file->getName()
+                    )
+                );
+
+                /// Sensitive
+                $torrentService->removeFromFtpStorage(
+                    sprintf(
+                        '/torrents/wanted/sensitive/yes/wanted#%s.%s.torrent',
+                        $torrent->getId(),
+                        $file->getName()
+                    )
+                );
+
+                $torrentService->removeFromFtpStorage(
+                    sprintf(
+                        '/torrents/wanted/sensitive/no/wanted#%s.%s.torrent',
+                        $torrent->getId(),
+                        $file->getName()
+                    )
+                );
+
+                /// Locals
+                foreach (explode('|', $this->getParameter('app.locales')) as $locale)
+                {
+                    $torrentService->removeFromFtpStorage(
+                        sprintf(
+                            '/torrents/wanted/locale/%s/wanted#%s.%s.torrent',
+                            $locale,
+                            $torrent->getId(),
+                            $file->getName()
+                        )
+                    );
+                }
+            }
+        }
 
         // Render response
         return new Response(); // @TODO
