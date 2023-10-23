@@ -2418,25 +2418,40 @@ class TorrentController extends AbstractController
         ?\Rhilip\Bencode\TorrentFile $file, bool $yggdrasil, string $regex = '/^0{0,1}[2-3][a-f0-9]{0,2}:/'
     ):  ?\Rhilip\Bencode\TorrentFile
     {
+        // Init trackers registry
+        $allTrackers = [];
+
         // Get app trackers
         $appTrackers = explode('|', $this->getParameter('app.trackers'));
-
-        // Get original file announcements
-        $announceList = $file->getAnnounceList();
 
         // Append app trackers
         foreach ($appTrackers as $appTracker)
         {
-            // Append application trackers
-            $announceList[0][] = $appTracker;
-
-            // Append application re-trackers
-            $announceList[1][] = $appTracker;
+            $allTrackers[] = $appTracker;
         }
 
-        // Remove duplicated
-        $announceList[0] = array_unique($announceList[0]);
-        $announceList[1] = array_unique($announceList[1]);
+        // Get original file announcements
+        $announceList = $file->getAnnounceList();
+
+        // Append original file announcements
+        foreach ($announceList as $announce)
+        {
+            if (is_array($announce))
+            {
+                foreach ($announce as $value)
+                {
+                    $allTrackers[] = $value;
+                }
+            }
+
+            else
+            {
+                $allTrackers[] = $value;
+            }
+        }
+
+        // Remove duplicates
+        $allTrackers = array_unique($allTrackers);
 
         // Yggdrasil-only mode
         if ($yggdrasil)
@@ -2450,45 +2465,20 @@ class TorrentController extends AbstractController
             }
 
             // Remove non-Yggdrasil trackers from announcement list
-            foreach ($announceList[0] as $key => $value)
+            foreach ($allTrackers as $key => $value)
             {
                 // trackers
                 if (!preg_match($regex, str_replace(['[',']'], false, parse_url($value, PHP_URL_HOST))))
                 {
-                    unset($announceList[0][$key]);
-                }
-            }
-
-            // Remove non-Yggdrasil re-trackers from announcement list
-            foreach ($announceList[1] as $key => $value)
-            {
-                // trackers
-                if (!preg_match($regex, str_replace(['[',']'], false, parse_url($value, PHP_URL_HOST))))
-                {
-                    unset($announceList[1][$key]);
+                    unset($allTrackers[$key]);
                 }
             }
         }
-
-        // Remove duplicates in list
-        $values = [];
-
-        foreach ($announceList[0] as $value)
-        {
-            $values[] = $value;
-        }
-
-        foreach ($announceList[1] as $value)
-        {
-            $values[] = $value;
-        }
-
-        $values = array_unique($values);
 
         // Format announce list
         $trackers = [];
 
-        foreach ($values as $value)
+        foreach ($allTrackers as $value)
         {
             $trackers[] = [$value];
         }
