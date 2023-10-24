@@ -62,7 +62,7 @@ php bin/console doctrine:migrations:migrate
 
 ##### FTP
 
-Setup anonymous read-only access to `/var/ftp` catalog ([read more](https://github.com/YGGverse/YGGtracker/wiki/Features#wanted))
+Setup anonymous read-only access to `/var/ftp` catalog ([read more](https://github.com/YGGverse/YGGtracker/wiki/Features#the-wanted))
 
 ##### App settings
 
