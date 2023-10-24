@@ -120,9 +120,10 @@ git checkout -b my-pr-branch-name
 
 * [Mastodon](https://mastodon.social/@YGGverse)
 
-#### Plugins
+#### Integrations
 
-* [qBitTorrent](https://github.com/YGGverse/qbittorrent-yggtracker-search-plugin)
+* [YGGtracker Search Plugin for qBittorrent](https://github.com/YGGverse/qbittorrent-yggtracker-search-plugin)
+* [Crontab script that allows to receive wanted torrents from multiple YGGtracker nodes](https://github.com/YGGverse/yggtracker-wanted-torrents-receiver)
 
 #### See also
 
