@@ -8,9 +8,6 @@
             <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
                 {{ torrent.name }}
             </a>
-            {% if torrent.approved == false %}
-                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
-            {% endif %}
         {% else %}
             {% if torrent.approved == false %}
                 #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
