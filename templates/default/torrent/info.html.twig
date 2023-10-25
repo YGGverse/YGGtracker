@@ -9,10 +9,8 @@
                 {{ self.recursive_file_tree(value) }}
             </div>
         {% else %}
-            <div class="padding-y-4-px padding-l-8-px background-color-hover-night-light cursor-default">
-                <span class="word-break">
-                    {{ key }}
-                </span>
+            <div class="padding-y-4-px padding-l-8-px background-color-hover-night-light cursor-default word-break">
+                {{ key }}
                 <div class="float-right padding-x-8-px">
                     {{ value | format_bytes }}
                 </div>
@@ -292,7 +290,7 @@
         </div>
         <div class="padding-y-16-px">
             {% for tracker, status in trackers %}
-                <div class="padding-y-4-px">
+                <div class="padding-y-4-px word-break">
                     {% if status %}
                         {{ tracker }}
                     {% else %}
