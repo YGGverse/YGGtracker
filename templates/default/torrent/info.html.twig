@@ -10,7 +10,9 @@
             </div>
         {% else %}
             <div class="padding-y-4-px padding-l-8-px background-color-hover-night-light cursor-default">
-                {{ key }}
+                <span class="word-break">
+                    {{ key }}
+                </span>
                 <div class="float-right padding-x-8-px">
                     {{ value | format_bytes }}
                 </div>

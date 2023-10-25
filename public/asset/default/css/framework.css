@@ -15,6 +15,18 @@
   float: left;
 }
 
+.word-break {
+  word-break: break-word;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.float-left {
+  float: left;
+}
+
 .float-right {
   float: right;
 }
