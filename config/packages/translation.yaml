@@ -8,7 +8,7 @@ framework:
             crowdin:
                 dsn: '%env(CROWDIN_DSN)%'
                 domains: ['messages']
-                locales: ['en','cs','eo','fr','ka','de','he','it','lv','pl','pt','ru','es','uk']
+                locales: ['en','cs','nl','eo','fr','ka','de','he','it','lv','pl','pt','ru','es','uk']
 #            loco:
 #                dsn: '%env(LOCO_DSN)%'
 #            lokalise:
