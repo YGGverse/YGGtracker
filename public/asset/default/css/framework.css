@@ -208,6 +208,14 @@ a.button-green:hover {
   border-top: 1px #5d627d solid;
 }
 
+.border-bottom-dashed {
+  border-bottom: 1px #5d627d dashed;
+}
+
+.border-top-dashed {
+  border-top: 1px #5d627d dashed;
+}
+
 .border-width-2-px {
   border-width: 2px;
 }
@@ -365,6 +373,10 @@ a:visited.background-color-hover-night-light:hover {
 .padding-y-24-px {
   padding-top: 24px;
   padding-bottom: 24px;
+}
+
+.margin-t-4-px {
+  margin-top: 4px;
 }
 
 .margin-l-4-px {

@@ -62,6 +62,9 @@ class ActivityService
             Activity::EVENT_TORRENT_DOWNLOAD_FILE_ADD,
             Activity::EVENT_TORRENT_DOWNLOAD_MAGNET_ADD,
 
+            Activity::EVENT_TORRENT_STATUS_ADD,
+            Activity::EVENT_TORRENT_STATUS_DELETE,
+
             Activity::EVENT_TORRENT_WANTED_ADD,
         ];
     }
@@ -376,6 +379,30 @@ class ActivityService
                     ]
                     [
                         $this->translatorInterface->trans('Wanted')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_STATUS_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrents')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Enabled')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_STATUS_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrents')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disabled')
                     ] = $code;
 
                 break;
@@ -861,6 +888,65 @@ class ActivityService
         return $activity;
     }
 
+    public function addEventTorrentStatusAdd(
+        int $userId,
+        int $torrentId,
+        int $added
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_STATUS_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentStatusDelete(
+        int $userId,
+        int $torrentId,
+        int $added
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_STATUS_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
 
     public function addEventTorrentWantedAdd(
         int $userId,

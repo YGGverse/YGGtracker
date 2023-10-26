@@ -39,6 +39,14 @@
                             {{ 'wanted' | trans }}
                         </a>
                     {% endif %}
+                    {% if torrent.status == false %}
+                        <sub class="margin-l-8-px float-right opacity-06 hover-opacity-1" title="{{ 'Disabled' | trans }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z"/>
+                                <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z"/>
+                            </svg>
+                        </sub>
+                    {% endif %}
                     {% if torrent.approved == false %}
                         <sub class="margin-l-8-px float-right opacity-06 hover-opacity-1" title="{{ 'Waiting for approve' | trans }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
@@ -47,7 +55,7 @@
                         </sub>
                     {% endif %}
                     {% if torrent.sensitive == true %}
-                        <sub class="margin-l-8-px float-right opacity-06 hover-opacity-1" title="{{ 'Content visible for non sensitive users only' | trans }}">
+                        <sub class="margin-l-8-px float-right opacity-06 hover-opacity-1" title="{{ 'Sensitive' | trans }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="m9.97 4.88.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"/>
                             </svg>

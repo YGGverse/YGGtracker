@@ -169,10 +169,6 @@
         <source>Waiting for approve</source>
         <target>Waiting for approve</target>
       </trans-unit>
-      <trans-unit id="uP0WnsM" resname="Content visible for non sensitive users only">
-        <source>Content visible for non sensitive users only</source>
-        <target>Content visible for non sensitive users only</target>
-      </trans-unit>
       <trans-unit id="GvhRkHM" resname="Size">
         <source>Size</source>
         <target>Size</target>
@@ -725,9 +721,21 @@
         <source>Seeders wanted for torrent</source>
         <target>Seeders wanted for torrent</target>
       </trans-unit>
-      <trans-unit id="147HHy2" resname="Hide sensitive">
-        <source>Hide sensitive</source>
-        <target>Hide sensitive</target>
+      <trans-unit id="rCCle.3" resname="Hide">
+        <source>Hide</source>
+        <target>Hide</target>
+      </trans-unit>
+      <trans-unit id="m11TRpU" resname="have disabled torrent">
+        <source>have disabled torrent</source>
+        <target>have disabled torrent</target>
+      </trans-unit>
+      <trans-unit id="qfr4ljO" resname="have enabled torrent">
+        <source>have enabled torrent</source>
+        <target>have enabled torrent</target>
+      </trans-unit>
+      <trans-unit id="F_s8AWj" resname="disabled">
+        <source>disabled</source>
+        <target>disabled</target>
       </trans-unit>
     </body>
   </file>

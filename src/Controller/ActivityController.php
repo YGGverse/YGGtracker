@@ -560,6 +560,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -606,6 +607,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -652,6 +654,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -699,6 +702,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -745,6 +749,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -783,6 +788,102 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            // Torrent Status
+            case $activity::EVENT_TORRENT_STATUS_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/status/add' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName()
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_STATUS_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/status/delete' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -830,6 +931,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -882,6 +984,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -934,6 +1037,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -986,6 +1090,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -1039,6 +1144,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -1091,6 +1197,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -1143,6 +1250,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -1195,6 +1303,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName(),
@@ -1248,6 +1357,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()
@@ -1294,6 +1404,7 @@ class ActivityController extends AbstractController
                             'id'        => $torrent->getId(),
                             'sensitive' => $torrent->isSensitive(),
                             'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
                             'name'      => $torrentService->readTorrentFileByTorrentId(
                                 $torrent->getId()
                             )->getName()

@@ -65,34 +65,39 @@
                     </tr>
                     <tr>
                         <td class="padding-t-16-px">
-                            {{ 'Locales' | trans }}
+                            <div class="margin-t-4-px">
+                                {{ 'Locales' | trans }}
+                            </div>
                         </td>
-                        <td class="padding-t-16-px">
+                        <td class="padding-t-16-px padding-b-8-px">
                             {% for locale in locales %}
-                                <div class="margin-t-8-px margin-b-4-px margin-r-8-px display-inline-block min-width-120-px">
+                                <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
                                     {% if locale in user.locales %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" checked="checked" />
                                     {% else %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" />
                                     {% endif %}
-                                    <label for="{{ locale }}">
-                                        {{ locale|locale_name(locale)|u.title }}
+                                    <label class="margin-x-4-px" for="{{ locale }}">
+                                        {{ locale | locale_name(locale) | u.title }}
                                     </label>
                                 </div>
                             {% endfor %}
                         </td>
                     </tr>
                     <tr>
-                        <td class="padding-t-8-px">
-                            {{ 'Hide sensitive' | trans }}
+                        <td class="padding-y-12-px">
+                            {{ 'Sensitive' | trans }}
                         </td>
-                        <td>
-                            <div class="padding-t-8-px">
+                        <td class="padding-y-12-px border-top-default">
+                            <div class="margin-r-8-px">
                                 {% if user.sensitive %}
-                                    <input name="sensitive" type="checkbox" value="true" checked="checked" />
+                                    <input name="sensitive" id="sensitive" type="checkbox" value="true" checked="checked" />
                                 {% else %}
-                                    <input name="sensitive" type="checkbox" value="true" />
+                                    <input name="sensitive" id="sensitive" type="checkbox" value="true" />
                                 {% endif %}
+                                <label class="margin-x-4-px" for="sensitive">
+                                    {{ 'Hide' | trans }}
+                                </label>
                             </div>
                         </td>
                     </tr>
@@ -104,20 +109,22 @@
                     <tr>
                         <td colspan="2"></td>
                     </tr>
+                    {% set i = 0 %}
                     {% for group, event in events %}
+                        {% set i = i + 1 %}
                         <tr>
-                            <td class="padding-t-8-px">
+                            <td class="padding-y-12-px">
                                 {{ group }}
                             </td>
-                            <td class="padding-t-8-px">
+                            <td class="padding-t-8-px {% if i > 1 %}border-top-default{% endif %}">
                                 {% for key, value in event %}
-                                    <span class="margin-r-8-px">
+                                    <span class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
                                         {% if value in user.events %}
                                             <input name="events[]" id="event-{{ value }}" type="checkbox" value="{{ value }}" checked="checked" />
                                         {% else %}
                                             <input name="events[]" id="event-{{ value }}" type="checkbox" value="{{ value }}" />
                                         {% endif %}
-                                        <label for="event-{{ value }}">
+                                        <label class="margin-x-4-px" for="event-{{ value }}">
                                             {{ key }}
                                         </label>
                                     </span>
@@ -136,10 +143,13 @@
                         </td>
                         <td class="padding-y-16-px">
                             {% if user.yggdrasil %}
-                                <input name="yggdrasil" type="checkbox" value="true" checked="checked" />
+                                <input name="yggdrasil" id="yggdrasil" type="checkbox" value="true" checked="checked" />
                             {% else %}
-                                <input name="yggdrasil" type="checkbox" value="true" />
+                                <input name="yggdrasil" id="yggdrasil" type="checkbox" value="true" />
                             {% endif %}
+                            <label class="margin-x-4-px" for="yggdrasil">
+                                {{ 'Enabled' | trans }}
+                            </label>
                         </td>
                     </tr>
                 </tbody>

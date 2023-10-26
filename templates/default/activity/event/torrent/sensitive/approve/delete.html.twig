@@ -20,10 +20,12 @@
                 #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
             {% endif %}
         {% else %}
-            {% if torrent.approved == false %}
+            {% if torrent.status == false %}
+                #{{ torrent.id }} ({{ 'disabled' | trans }})
+            {% elseif torrent.approved == false %}
                 #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
-            {% elseif torrent.sensitive == true %}
-                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% elseif torrent.sensitive == true and session.user.sensitive == true %}
+                #{{ torrent.id }}
             {% else %}
                 <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
                     {{ torrent.name }}

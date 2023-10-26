@@ -22,38 +22,46 @@ class TorrentRepository extends ServiceEntityRepository
     }
 
     public function findTorrentsTotal(
+        int   $userId,
         array $keywords,
         array $locales,
         ?bool $sensitive = null,
-        ?bool $approved = null,
-        int $limit  = 10,
-        int $offset = 0
+        ?bool $approved  = null,
+        ?bool $status    = null,
+        int   $limit  = 10,
+        int   $offset = 0
     ): int
     {
         return $this->getTorrentsQueryByFilter(
+            $userId,
             $keywords,
             $locales,
             $sensitive,
             $approved,
+            $status,
         )->select('count(t.id)')
          ->getQuery()
          ->getSingleScalarResult();
     }
 
     public function findTorrents(
+        int   $userId,
         array $keywords,
         array $locales,
         ?bool $sensitive = null,
-        ?bool $approved = null,
+        ?bool $approved  = null,
+        ?bool $status    = null,
         int $limit  = 10,
         int $offset = 0
     ): array
     {
         return $this->getTorrentsQueryByFilter(
+            $userId,
             $keywords,
             $locales,
             $sensitive,
             $approved,
+            $status,
         )->setMaxResults($limit)
          ->setFirstResult($offset)
          ->orderBy('t.id', 'DESC') // same as t.added
@@ -62,54 +70,85 @@ class TorrentRepository extends ServiceEntityRepository
     }
 
     private function getTorrentsQueryByFilter(
+        int   $userId,
         array $keywords,
         array $locales,
         ?bool $sensitive = null,
-        ?bool $approved = null,
+        ?bool $approved  = null,
+        ?bool $status    = null,
     ): \Doctrine\ORM\QueryBuilder
     {
         $query = $this->createQueryBuilder('t');
 
-        if ($keywords) // @TODO ANY or DTS
+        if ($keywords)
         {
-            $andX = $query->expr()->andX();
+            $andKeywords = $query->expr()->andX();
 
             foreach ($keywords as $i => $keyword)
             {
                 $keyword = mb_strtolower($keyword); // all keywords stored in lowercase
 
-                $andX->add("t.keywords LIKE :keyword{$i}");
+                $andKeywords->add("t.keywords LIKE :keyword{$i}");
+
                 $query->setParameter(":keyword{$i}", "%{$keyword}%");
             }
 
-            $query->andWhere($andX);
+            $query->andWhere($andKeywords);
         }
 
-        if ($locales) // @TODO ANY or DTS
+        if ($locales)
         {
-            //$orX = $query->expr()->orX();
-            $orX = $query->expr()->orX();
+            $orLocales = $query->expr()->orX();
 
             foreach ($locales as $i => $locale)
             {
-                $orX->add("t.locales LIKE :locale{$i}");
+                $orLocales->add("t.locales LIKE :locale{$i}");
+                $orLocales->add("t.userId = :userId");
 
                 $query->setParameter(":locale{$i}", "%{$locale}%");
+                $query->setParameter('userId', $userId);
             }
 
-            $query->andWhere($orX);
+            $query->andWhere($orLocales);
         }
 
         if (is_bool($sensitive))
         {
-            $query->andWhere('t.sensitive = :sensitive')
-                  ->setParameter('sensitive', $sensitive);
+            $orSensitive = $query->expr()->orX();
+
+            $orSensitive->add("t.sensitive = :sensitive");
+            $orSensitive->add("t.userId = :userId");
+
+            $query->setParameter('sensitive', $sensitive);
+            $query->setParameter('userId', $userId);
+
+            $query->andWhere($orSensitive);
         }
 
         if (is_bool($approved))
         {
-            $query->andWhere('t.approved = :approved')
-                  ->setParameter('approved', $approved);
+            $orApproved = $query->expr()->orX();
+
+            $orApproved->add("t.approved = :approved");
+            $orApproved->add("t.userId = :userId");
+
+            $query->setParameter('approved', $approved);
+            $query->setParameter('userId', $userId);
+
+            $query->andWhere($orApproved);
+        }
+
+        if (is_bool($status))
+        {
+            $orStatus = $query->expr()->orX();
+
+            $orStatus->add("t.status = :status");
+            $orStatus->add("t.userId = :userId");
+
+            $query->setParameter('status', $status);
+            $query->setParameter('userId', $userId);
+
+            $query->andWhere($orStatus);
         }
 
         return $query;

@@ -4,15 +4,12 @@
             <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
         </a>
         <span class="margin-l-4-px">
-            {{ 'have downloaded magnet link' | trans }}
+            {{ 'have enabled torrent' | trans }}
         </span>
         {% if session.user.moderator or session.user.owner %}
             <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
                 {{ torrent.name }}
             </a>
-            {% if torrent.approved == false %}
-                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
-            {% endif %}
         {% else %}
             {% if torrent.status == false %}
                 #{{ torrent.id }} ({{ 'disabled' | trans }})

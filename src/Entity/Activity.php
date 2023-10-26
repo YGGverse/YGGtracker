@@ -59,6 +59,9 @@ class Activity
 
     public const EVENT_TORRENT_WANTED_ADD               = 2700;
 
+    public const EVENT_TORRENT_STATUS_ADD               = 1800;
+    public const EVENT_TORRENT_STATUS_DELETE            = 1801;
+
     // ...
 
     #[ORM\Column]

@@ -33,6 +33,9 @@ class Torrent
     #[ORM\Column]
     private ?bool $approved = null;
 
+    #[ORM\Column]
+    private ?bool $status = null;
+
     #[ORM\Column(length: 32)]
     private ?string $md5file = null;
 
@@ -152,6 +155,18 @@ class Torrent
     public function setApproved(bool $approved): static
     {
         $this->approved = $approved;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -192,7 +192,8 @@ class TorrentService
         int $added,
         array $locales,
         bool $sensitive,
-        bool $approved
+        bool $approved,
+        bool $status
     ): ?Torrent
     {
         $torrent = $this->addTorrent(
@@ -204,7 +205,8 @@ class TorrentService
             ),
             $locales,
             $sensitive,
-            $approved
+            $approved,
+            $status
         );
 
         $filesystem = new Filesystem();
@@ -249,7 +251,8 @@ class TorrentService
         array $keywords,
         array $locales,
         bool $sensitive,
-        bool $approved
+        bool $approved,
+        bool $status
     ): ?Torrent
     {
         $torrent = new Torrent();
@@ -261,6 +264,7 @@ class TorrentService
         $torrent->setLocales($locales);
         $torrent->setSensitive($sensitive);
         $torrent->setApproved($approved);
+        $torrent->setStatus($status);
 
         $this->entityManagerInterface->persist($torrent);
         $this->entityManagerInterface->flush();
@@ -292,6 +296,30 @@ class TorrentService
         return $torrent;
     }
 
+    public function toggleTorrentStatus(
+        int $torrentId
+    ): ?Torrent
+    {
+        $torrent = $this->getTorrent($torrentId);
+
+        $torrent->setStatus(
+            !$torrent->isStatus() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrent);
+        $this->entityManagerInterface->flush();
+
+        $this->updateTorrentLocales(
+            $torrent->getId()
+        );
+
+        $this->updateTorrentSensitive(
+            $torrent->getId()
+        );
+
+        return $torrent;
+    }
+
     public function getTorrentScrapeQueue(): ?Torrent
     {
         return $this->entityManagerInterface
@@ -305,40 +333,48 @@ class TorrentService
     }
 
     public function findTorrents(
+        int   $userId,
         array $keywords,
         array $locales,
         ?bool $sensitive,
         ?bool $approved,
-        int $limit,
-        int $offset
+        ?bool $status,
+        int   $limit,
+        int   $offset
     ) : array
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
                     ->findTorrents(
+                        $userId,
                         $keywords,
                         $locales,
                         $sensitive,
                         $approved,
+                        $status,
                         $limit,
                         $offset
                     );
     }
 
     public function findTorrentsTotal(
+        int   $userId,
         array $keywords,
         array $locales,
         ?bool $sensitive,
-        ?bool $approved
+        ?bool $approved,
+        ?bool $status
     ) : int
     {
         return $this->entityManagerInterface
                     ->getRepository(Torrent::class)
                     ->findTorrentsTotal(
+                        $userId,
                         $keywords,
                         $locales,
                         $sensitive,
-                        $approved
+                        $approved,
+                        $status
                     );
     }
 

@@ -2,9 +2,7 @@
     <title>
         {{ 'User' | trans }}
         #{{ user.id }}
-        {{ 'have deleted locales edition' | trans }}
-        #{{ torrent.locales.id }}
-        {{ 'for torrent' | trans }}
+        {{ 'have enabled torrent' | trans }}
         {% if session.user.moderator or session.user.owner %}
             {{ torrent.name }}
         {% else %}
@@ -15,12 +13,14 @@
             {% elseif torrent.sensitive == true and session.user.sensitive == true %}
                 #{{ torrent.id }} ({{ 'sensitive' | trans }})
             {% else %}
-                {{ torrent.name }}
+                <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                    {{ torrent.name }}
+                </a>
             {% endif %}
         {% endif %}
     </title>
     <author>#{{ user.id }}</author>
     <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
-    <guid>{{ url('torrent_locales_edit', { torrentId : torrent.id }) }}#activity-{{ id }}</guid>
-    <link>{{ url('torrent_locales_edit', { torrentId : torrent.id }) }}#activity</link>
+    <guid>{{ url('torrent_info', { torrentId : torrent.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('torrent_info', { torrentId : torrent.id }) }}#activity</link>
 </item>

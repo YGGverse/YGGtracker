@@ -80,7 +80,7 @@
         </div>
         <table class="width-100">
             <tbody>
-                {% if session.moderator %}
+                {% if session.moderator or session.owner %}
                     <tr>
                         <td colspan="2">
                             <div class="padding-y-8-px border-bottom-default text-right">
@@ -90,19 +90,19 @@
                     </tr>
                     <tr>
                         <td class="padding-t-16-px">
-                            {{ 'Approved' | trans }}
+                            {{ 'Enabled' | trans }}
                         </td>
                         <td class="padding-t-16-px">
-                            {% if torrent.approved %}
+                            {% if torrent.status %}
                                 {{ 'Yes' | trans }}
-                                <a class="float-right" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                <a class="float-right" href="{{ path('torrent_status_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
                                     </svg>
                                 </a>
                             {% else %}
                                 {{ 'No' | trans }}
-                                <a class="float-right text-color-red" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                <a class="float-right text-color-red" href="{{ path('torrent_status_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
                                     </svg>
@@ -110,6 +110,30 @@
                             {% endif %}
                         </td>
                     </tr>
+                    {% if session.moderator %}
+                        <tr>
+                            <td>
+                                {{ 'Approved' | trans }}
+                            </td>
+                            <td>
+                                {% if torrent.approved %}
+                                    {{ 'Yes' | trans }}
+                                    <a class="float-right" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                                        </svg>
+                                    </a>
+                                {% else %}
+                                    {{ 'No' | trans }}
+                                    <a class="float-right text-color-red" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
+                                        </svg>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endif %}
                 <tr>
                     <td colspan="2">

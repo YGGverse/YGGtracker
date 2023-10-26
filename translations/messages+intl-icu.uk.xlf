@@ -169,10 +169,6 @@
         <source>Waiting for approve</source>
         <target>Очікує на підтвердження</target>
       </trans-unit>
-      <trans-unit id="uP0WnsM" resname="Content visible for non sensitive users only">
-        <source>Content visible for non sensitive users only</source>
-        <target>Контент видимий лише для нечутливих користувачів</target>
-      </trans-unit>
       <trans-unit id="GvhRkHM" resname="Size">
         <source>Size</source>
         <target>Розмір</target>
@@ -725,9 +721,21 @@
         <source>Seeders wanted for torrent</source>
         <target>Розшукуються роздачі для торенту</target>
       </trans-unit>
-      <trans-unit id="147HHy2" resname="Hide sensitive">
-        <source>Hide sensitive</source>
-        <target>Приховувати чутливий вміст</target>
+      <trans-unit id="rCCle.3" resname="Hide">
+        <source>Hide</source>
+        <target>Приховати</target>
+      </trans-unit>
+      <trans-unit id="m11TRpU" resname="have disabled torrent">
+        <source>have disabled torrent</source>
+        <target>вимкнув торент</target>
+      </trans-unit>
+      <trans-unit id="qfr4ljO" resname="have enabled torrent">
+        <source>have enabled torrent</source>
+        <target>увімкнув торент</target>
+      </trans-unit>
+      <trans-unit id="F_s8AWj" resname="disabled">
+        <source>disabled</source>
+        <target>вимкнено</target>
       </trans-unit>
     </body>
   </file>
