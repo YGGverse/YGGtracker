@@ -407,6 +407,22 @@ class TorrentService
         }
     }
 
+    public function updateTorrentScraped(
+        int $torrentId,
+        int $time
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            $torrent->setScraped(
+                time()
+            );
+
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
+        }
+    }
+
     public function updateTorrentScrape(
         int $torrentId,
         int $seeders,

@@ -1826,6 +1826,12 @@ class TorrentController extends AbstractController
             time()
         );
 
+        // Request scrape
+        $torrentService->updateTorrentScraped(
+            $torrent->getId(),
+            0
+        );
+
         // Register download event
         $activityService->addEventTorrentDownloadFileAdd(
             $user->getId(),
@@ -1947,6 +1953,12 @@ class TorrentController extends AbstractController
             time()
         );
 
+        // Request scrape
+        $torrentService->updateTorrentScraped(
+            $torrent->getId(),
+            0
+        );
+
         // Register download event
         $activityService->addEventTorrentDownloadFileAdd(
             $user->getId(),
@@ -2063,6 +2075,12 @@ class TorrentController extends AbstractController
             $torrent->getId(),
             $user->getId(),
             time()
+        );
+
+        // Request scrape
+        $torrentService->updateTorrentScraped(
+            $torrent->getId(),
+            0
         );
 
         // Register download event
