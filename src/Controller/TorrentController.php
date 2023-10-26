@@ -57,7 +57,7 @@ class TorrentController extends AbstractController
         }
 
         // Sensitive filter
-        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        if (!$user->isModerator() && $user->isSensitive())
         {
             throw $this->createNotFoundException();
         }
@@ -234,7 +234,7 @@ class TorrentController extends AbstractController
         $total = $torrentService->findTorrentsTotal(
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null, // show approved content only for regular users
         );
 
@@ -242,7 +242,7 @@ class TorrentController extends AbstractController
         foreach ($torrentService->findTorrents(
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null, // show approved content only for regular users
             $this->getParameter('app.pagination'),
             ($page - 1) * $this->getParameter('app.pagination')
@@ -403,7 +403,7 @@ class TorrentController extends AbstractController
         $total = $torrentService->findTorrentsTotal(
             [],
             $user->getLocales(),
-            !$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null, // show approved content only for regular users
         );
 
@@ -412,7 +412,7 @@ class TorrentController extends AbstractController
         foreach ($torrentService->findTorrents(
             [],
             $user->getLocales(),
-            !$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null, // show approved content only for regular users
             $this->getParameter('app.pagination'),
             ($page - 1) * $this->getParameter('app.pagination')
@@ -560,7 +560,7 @@ class TorrentController extends AbstractController
         $total = $torrentService->findTorrentsTotal(
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null // show approved content only for regular users
         );
 
@@ -569,7 +569,7 @@ class TorrentController extends AbstractController
         foreach ($torrentService->findTorrents(
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
+            !$user->isModerator() && $user->isSensitive() ? false : null, // hide on sensitive mode enabled or show all
             !$user->isModerator() ? true : null, // show approved content only for regular users
             $this->getParameter('app.pagination'),
             ($page - 1) * $this->getParameter('app.pagination')
@@ -1808,7 +1808,7 @@ class TorrentController extends AbstractController
         }
 
         // Sensitive filter
-        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        if (!$user->isModerator() && $user->isSensitive())
         {
             throw $this->createNotFoundException();
         }
@@ -1935,7 +1935,7 @@ class TorrentController extends AbstractController
         }
 
         // Sensitive filter
-        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        if (!$user->isModerator() && $user->isSensitive())
         {
             throw $this->createNotFoundException();
         }
@@ -2059,7 +2059,7 @@ class TorrentController extends AbstractController
         }
 
         // Sensitive filter
-        if (!$user->isModerator() && $user->getId() != $torrent->getUserId() && $user->isSensitive())
+        if (!$user->isModerator() && $user->isSensitive())
         {
             throw $this->createNotFoundException();
         }
