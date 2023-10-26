@@ -397,10 +397,6 @@
         <source>Join translation</source>
         <target>Приєднатись до перекладу</target>
       </trans-unit>
-      <trans-unit id="R70pB1_" resname="Content">
-        <source>Content</source>
-        <target>Контент</target>
-      </trans-unit>
       <trans-unit id="ONoVBcq" resname="Activity">
         <source>Activity</source>
         <target>Активність</target>
@@ -728,6 +724,10 @@
       <trans-unit id="SK4nQBL" resname="Seeders wanted for torrent">
         <source>Seeders wanted for torrent</source>
         <target>Розшукуються роздачі для торенту</target>
+      </trans-unit>
+      <trans-unit id="147HHy2" resname="Hide sensitive">
+        <source>Hide sensitive</source>
+        <target>Приховувати чутливий вміст</target>
       </trans-unit>
     </body>
   </file>
