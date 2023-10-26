@@ -415,7 +415,7 @@ class TorrentService
         if ($torrent = $this->getTorrent($torrentId))
         {
             $torrent->setScraped(
-                time()
+                $time
             );
 
             $this->entityManagerInterface->persist($torrent);
