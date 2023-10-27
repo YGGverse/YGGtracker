@@ -880,7 +880,19 @@ class TorrentController extends AbstractController
             {
                 // Save data
                 $torrent = $torrentService->add(
+
                     $file->getPathName(),
+
+                    (bool) $this->getParameter('app.index.torrent.name'),
+                    (bool) $this->getParameter('app.index.torrent.filenames'),
+                    (bool) $this->getParameter('app.index.torrent.hash.v1'),
+                    (bool) $this->getParameter('app.index.torrent.hash.v2'),
+                    (bool) $this->getParameter('app.index.torrent.source'),
+                    (bool) $this->getParameter('app.index.torrent.comment'),
+                    (bool) $this->getParameter('app.index.transliteration'),
+                    (int)  $this->getParameter('app.index.word.length.min'),
+                    (int)  $this->getParameter('app.index.word.length.max'),
+
                     $user->getId(),
                     time(),
                     (array) $locales,
@@ -2440,7 +2452,17 @@ class TorrentController extends AbstractController
     ): Response
     {
         // Reindex keywords
-        $torrentService->reindexTorrentKeywordsAll();
+        $torrentService->reindexTorrentKeywordsAll(
+            (bool) $this->getParameter('app.index.torrent.name'),
+            (bool) $this->getParameter('app.index.torrent.filenames'),
+            (bool) $this->getParameter('app.index.torrent.hash.v1'),
+            (bool) $this->getParameter('app.index.torrent.hash.v2'),
+            (bool) $this->getParameter('app.index.torrent.source'),
+            (bool) $this->getParameter('app.index.torrent.comment'),
+            (bool) $this->getParameter('app.index.transliteration'),
+            (int)  $this->getParameter('app.index.word.length.min'),
+            (int)  $this->getParameter('app.index.word.length.max')
+        );
 
         // Render response
         return new Response(); // @TODO

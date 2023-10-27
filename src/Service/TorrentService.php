@@ -62,63 +62,167 @@ class TorrentService
         );
     }
 
+    public function generateTorrentKeywordsByString(
+        string $string,
+        bool   $transliteration,
+        int    $wordLengthMin,
+        int    $wordLengthMax,
+    ): array
+    {
+        $words = explode(
+            ' ',
+            preg_replace(
+                '/[\s]+/',
+                ' ',
+                preg_replace(
+                    '/[\W_]+/u',
+                    ' ',
+                    $string
+                )
+            )
+        );
+
+        // Apply words filter
+        foreach ((array) $words as $key => $value)
+        {
+            // Apply word length filter
+            $length = mb_strlen($value);
+
+            if ($length < $wordLengthMin || $length > $wordLengthMax)
+            {
+                unset($words[$key]);
+            }
+
+            else
+            {
+                // Apply case insensitive search conversion
+                $words[$key] = mb_strtolower($value);
+
+                if ($transliteration)
+                {
+                    // @TODO
+                }
+            }
+        }
+
+        // Build simple array
+        $keywords = [];
+        foreach ((array) $words as $word)
+        {
+            $keywords[] = $word;
+        }
+
+        // Return unique keywords
+        return array_unique(
+            $keywords
+        );
+    }
+
     public function generateTorrentKeywordsByTorrentFilepath(
+
         string $filepath,
-        int $minLength = 3
+
+        bool   $extractName,
+        bool   $extractFilenames,
+        bool   $extractInfoHashV1,
+        bool   $extractInfoHashV2,
+        bool   $extractSource,
+        bool   $extractComment,
+
+        bool   $wordTransliteration,
+        int    $wordLengthMin,
+        int    $wordLengthMax
+
     ): array
     {
         $keywords = [];
 
         if ($file = $this->readTorrentFileByFilepath($filepath))
         {
-            foreach ($file->getFileList() as $list)
+            if ($extractName)
             {
-                $words = explode(
-                    ' ',
-                    preg_replace(
-                        '/[\s]+/',
-                        ' ',
-                        preg_replace(
-                            '/[\W_]+/u',
-                            ' ',
-                            $list['path']
-                        )
-                    )
-                );
-
-                foreach ($words as $key => $value)
+                if ($name = $file->getName(false))
                 {
-                    if (mb_strlen($value) < $minLength)
-                    {
-                        unset($words[$key]);
-                    }
-
-                    else
-                    {
-                        $words[$key] = mb_strtolower($value);
-                    }
+                    $keywords = array_merge(
+                        $keywords,
+                        $this->generateTorrentKeywordsByString(
+                            $name,
+                            $wordTransliteration,
+                            $wordLengthMin,
+                            $wordLengthMax
+                        )
+                    );
                 }
+            }
 
+            if ($extractFilenames)
+            {
+                foreach ($file->getFileList() as $list)
+                {
+                    $keywords = array_merge(
+                        $keywords,
+                        $this->generateTorrentKeywordsByString(
+                            $list['path'],
+                            $wordTransliteration,
+                            $wordLengthMin,
+                            $wordLengthMax
+                        )
+                    );
+                }
+            }
+
+            if ($extractSource)
+            {
+                if ($source = $file->getSource(false))
+                {
+                    $keywords = array_merge(
+                        $keywords,
+                        $this->generateTorrentKeywordsByString(
+                            $source,
+                            $wordTransliteration,
+                            $wordLengthMin,
+                            $wordLengthMax
+                        )
+                    );
+                }
+            }
+
+            if ($extractComment)
+            {
+                if ($comment = $file->getComment(false))
+                {
+                    $keywords = array_merge(
+                        $keywords,
+                        $this->generateTorrentKeywordsByString(
+                            $comment,
+                            $wordTransliteration,
+                            $wordLengthMin,
+                            $wordLengthMax
+                        )
+                    );
+                }
+            }
+
+            if ($extractInfoHashV1)
+            {
                 if ($hash = $file->getInfoHashV1(false))
                 {
                     $keywords[] = $hash;
                 }
+            }
 
+            if ($extractInfoHashV2)
+            {
                 if ($hash = $file->getInfoHashV2(false))
                 {
                     $keywords[] = $hash;
                 }
-
-                if ($name = $file->getName(false))
-                {
-                    $keywords[] = $name;
-                }
-
-                $keywords = array_merge($keywords, $words);
             }
         }
 
-        return array_unique($keywords);
+        return array_unique(
+            $keywords
+        );
     }
 
     public function getStorageFilepathByTorrentId(int $torrentId): string
@@ -187,13 +291,27 @@ class TorrentService
     }
 
     public function add(
+
         string $filepath,
-        int $userId,
-        int $added,
-        array $locales,
-        bool $sensitive,
-        bool $approved,
-        bool $status
+
+        bool   $extractName,
+        bool   $extractFilenames,
+        bool   $extractInfoHashV1,
+        bool   $extractInfoHashV2,
+        bool   $extractSource,
+        bool   $extractComment,
+
+        bool   $wordTransliteration,
+        int    $wordLengthMin,
+        int    $wordLengthMax,
+
+        int    $userId,
+        int    $added,
+        array  $locales,
+        bool   $sensitive,
+        bool   $approved,
+        bool   $status
+
     ): ?Torrent
     {
         $torrent = $this->addTorrent(
@@ -201,7 +319,16 @@ class TorrentService
             $added,
             md5_file($filepath),
             $this->generateTorrentKeywordsByTorrentFilepath(
-                $filepath
+                $filepath,
+                $extractName,
+                $extractFilenames,
+                $extractInfoHashV1,
+                $extractInfoHashV2,
+                $extractSource,
+                $extractComment,
+                $wordTransliteration,
+                $wordLengthMin,
+                $wordLengthMax
             ),
             $locales,
             $sensitive,
@@ -489,7 +616,17 @@ class TorrentService
         }
     }
 
-    public function reindexTorrentKeywordsAll(): void
+    public function reindexTorrentKeywordsAll(
+        bool $extractName,
+        bool $extractFilenames,
+        bool $extractInfoHashV1,
+        bool $extractInfoHashV2,
+        bool $extractSource,
+        bool $extractComment,
+        bool $wordTransliteration,
+        int  $wordLengthMin,
+        int  $wordLengthMax
+    ): void
     {
         foreach ($this->entityManagerInterface
                       ->getRepository(Torrent::class)
@@ -499,7 +636,16 @@ class TorrentService
                 $this->generateTorrentKeywordsByTorrentFilepath(
                     $this->getStorageFilepathByTorrentId(
                         $torrent->getId()
-                    )
+                    ),
+                    $extractName,
+                    $extractFilenames,
+                    $extractInfoHashV1,
+                    $extractInfoHashV2,
+                    $extractSource,
+                    $extractComment,
+                    $wordTransliteration,
+                    $wordLengthMin,
+                    $wordLengthMax
                 )
             );
 

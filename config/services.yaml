@@ -21,6 +21,15 @@ parameters:
     app.torrent.wanted.ftp.enabled: '%env(APP_TORRENT_WANTED_FTP_ENABLED)%'
     app.torrent.wanted.ftp.folder: '%env(APP_TORRENT_WANTED_FTP_FOLDER)%'
     app.torrent.wanted.ftp.approved: '%env(APP_TORRENT_WANTED_FTP_APPROVED_ONLY)%'
+    app.index.torrent.name: '%env(APP_INDEX_TORRENT_NAME)%'
+    app.index.torrent.filenames: '%env(APP_INDEX_TORRENT_FILENAMES)%'
+    app.index.torrent.hash.v1: '%env(APP_INDEX_TORRENT_HASH_V1)%'
+    app.index.torrent.hash.v2: '%env(APP_INDEX_TORRENT_HASH_V2)%'
+    app.index.torrent.source: '%env(APP_INDEX_TORRENT_SOURCE)%'
+    app.index.torrent.comment: '%env(APP_INDEX_TORRENT_COMMENT)%'
+    app.index.word.length.min: '%env(APP_INDEX_WORD_LENGTH_MIN)%'
+    app.index.word.length.max: '%env(APP_INDEX_WORD_LENGTH_MAX)%'
+    app.index.transliteration: '%env(APP_INDEX_TRANSLITERATION)%'
 
 services:
     # default configuration for services in *this* file
