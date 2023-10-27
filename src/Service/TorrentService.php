@@ -64,7 +64,6 @@ class TorrentService
 
     public function generateTorrentKeywordsByString(
         string $string,
-        bool   $transliteration,
         int    $wordLengthMin,
         int    $wordLengthMax,
     ): array
@@ -97,11 +96,6 @@ class TorrentService
             {
                 // Apply case insensitive search conversion
                 $words[$key] = mb_strtolower($value);
-
-                if ($transliteration)
-                {
-                    // @TODO
-                }
             }
         }
 
@@ -129,7 +123,6 @@ class TorrentService
         bool   $extractSource,
         bool   $extractComment,
 
-        bool   $wordTransliteration,
         int    $wordLengthMin,
         int    $wordLengthMax
 
@@ -147,7 +140,6 @@ class TorrentService
                         $keywords,
                         $this->generateTorrentKeywordsByString(
                             $name,
-                            $wordTransliteration,
                             $wordLengthMin,
                             $wordLengthMax
                         )
@@ -163,7 +155,6 @@ class TorrentService
                         $keywords,
                         $this->generateTorrentKeywordsByString(
                             $list['path'],
-                            $wordTransliteration,
                             $wordLengthMin,
                             $wordLengthMax
                         )
@@ -179,7 +170,6 @@ class TorrentService
                         $keywords,
                         $this->generateTorrentKeywordsByString(
                             $source,
-                            $wordTransliteration,
                             $wordLengthMin,
                             $wordLengthMax
                         )
@@ -195,7 +185,6 @@ class TorrentService
                         $keywords,
                         $this->generateTorrentKeywordsByString(
                             $comment,
-                            $wordTransliteration,
                             $wordLengthMin,
                             $wordLengthMax
                         )
@@ -301,7 +290,6 @@ class TorrentService
         bool   $extractSource,
         bool   $extractComment,
 
-        bool   $wordTransliteration,
         int    $wordLengthMin,
         int    $wordLengthMax,
 
@@ -326,7 +314,6 @@ class TorrentService
                 $extractInfoHashV2,
                 $extractSource,
                 $extractComment,
-                $wordTransliteration,
                 $wordLengthMin,
                 $wordLengthMax
             ),
@@ -623,7 +610,6 @@ class TorrentService
         bool $extractInfoHashV2,
         bool $extractSource,
         bool $extractComment,
-        bool $wordTransliteration,
         int  $wordLengthMin,
         int  $wordLengthMax
     ): void
@@ -643,7 +629,6 @@ class TorrentService
                     $extractInfoHashV2,
                     $extractSource,
                     $extractComment,
-                    $wordTransliteration,
                     $wordLengthMin,
                     $wordLengthMax
                 )

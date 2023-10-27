@@ -229,8 +229,6 @@ class TorrentController extends AbstractController
             $activityService
         );
 
-        //
-
         // Init request
         $query = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
         $page  = $request->get('page') ? (int) $request->get('page') : 1;
@@ -883,13 +881,12 @@ class TorrentController extends AbstractController
 
                     $file->getPathName(),
 
-                    (bool) $this->getParameter('app.index.torrent.name'),
-                    (bool) $this->getParameter('app.index.torrent.filenames'),
-                    (bool) $this->getParameter('app.index.torrent.hash.v1'),
-                    (bool) $this->getParameter('app.index.torrent.hash.v2'),
-                    (bool) $this->getParameter('app.index.torrent.source'),
-                    (bool) $this->getParameter('app.index.torrent.comment'),
-                    (bool) $this->getParameter('app.index.transliteration'),
+                    (bool) $this->getParameter('app.index.torrent.name.enabled'),
+                    (bool) $this->getParameter('app.index.torrent.filenames.enabled'),
+                    (bool) $this->getParameter('app.index.torrent.hash.v1.enabled'),
+                    (bool) $this->getParameter('app.index.torrent.hash.v2.enabled'),
+                    (bool) $this->getParameter('app.index.torrent.source.enabled'),
+                    (bool) $this->getParameter('app.index.torrent.comment.enabled'),
                     (int)  $this->getParameter('app.index.word.length.min'),
                     (int)  $this->getParameter('app.index.word.length.max'),
 
@@ -2453,13 +2450,12 @@ class TorrentController extends AbstractController
     {
         // Reindex keywords
         $torrentService->reindexTorrentKeywordsAll(
-            (bool) $this->getParameter('app.index.torrent.name'),
-            (bool) $this->getParameter('app.index.torrent.filenames'),
-            (bool) $this->getParameter('app.index.torrent.hash.v1'),
-            (bool) $this->getParameter('app.index.torrent.hash.v2'),
-            (bool) $this->getParameter('app.index.torrent.source'),
-            (bool) $this->getParameter('app.index.torrent.comment'),
-            (bool) $this->getParameter('app.index.transliteration'),
+            (bool) $this->getParameter('app.index.torrent.name.enabled'),
+            (bool) $this->getParameter('app.index.torrent.filenames.enabled'),
+            (bool) $this->getParameter('app.index.torrent.hash.v1.enabled'),
+            (bool) $this->getParameter('app.index.torrent.hash.v2.enabled'),
+            (bool) $this->getParameter('app.index.torrent.source.enabled'),
+            (bool) $this->getParameter('app.index.torrent.comment.enabled'),
             (int)  $this->getParameter('app.index.word.length.min'),
             (int)  $this->getParameter('app.index.word.length.max')
         );

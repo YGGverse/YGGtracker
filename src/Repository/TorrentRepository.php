@@ -73,27 +73,36 @@ class TorrentRepository extends ServiceEntityRepository
         int   $userId,
         array $keywords,
         array $locales,
-        ?bool $sensitive = null,
-        ?bool $approved  = null,
-        ?bool $status    = null,
+        ?bool $sensitive       = null,
+        ?bool $approved        = null,
+        ?bool $status          = null
     ): \Doctrine\ORM\QueryBuilder
     {
         $query = $this->createQueryBuilder('t');
 
         if ($keywords)
         {
-            $andKeywords = $query->expr()->andX();
-
             foreach ($keywords as $i => $keyword)
             {
-                $keyword = mb_strtolower($keyword); // all keywords stored in lowercase
+                // Make query to the index case insensitive
+                $keyword = mb_strtolower($keyword);
 
-                $andKeywords->add("t.keywords LIKE :keyword{$i}");
+                // Init OR condition for each word form
+                $orKeywords = $query->expr()->orX();
 
+                $orKeywords->add("t.keywords LIKE :keyword{$i}");
                 $query->setParameter(":keyword{$i}", "%{$keyword}%");
-            }
 
-            $query->andWhere($andKeywords);
+                // Generate  word forms for each transliteration locale #33
+                foreach ($this->generateWordForms($keyword) as $j => $wordForm)
+                {
+                    $orKeywords->add("t.keywords LIKE :keyword{$i}{$j}");
+                    $query->setParameter(":keyword{$i}{$j}", "%{$wordForm}%");
+                }
+
+                // Append AND condition
+                $query->andWhere($orKeywords);
+            }
         }
 
         if ($locales)
@@ -152,5 +161,60 @@ class TorrentRepository extends ServiceEntityRepository
         }
 
         return $query;
+    }
+
+    // Word forms generator to improve search results
+    // e.g. transliteration rules for latin filenames
+    private function generateWordForms(
+        string $keyword,
+        // #33 supported locales:
+        // https://github.com/ashtokalo/php-translit
+        array  $transliteration = [
+            'be',
+            'bg',
+            'el',
+            'hy',
+            'kk',
+            'mk',
+            'ru',
+            'ka',
+            'uk'
+        ],
+        // Additional char forms
+        array $charForms =
+        [
+            'c' => 'k',
+            'k' => 'c',
+        ]
+    ): array
+    {
+        $wordForms = [];
+
+        // Apply transliteration
+        foreach ($transliteration as $locale)
+        {
+            $wordForms[] = \ashtokalo\translit\Translit::object()->convert(
+                $keyword,
+                $locale
+            );
+        }
+
+        // Apply char forms
+        foreach ($wordForms as $wordForm)
+        {
+            foreach ($charForms as $from => $to)
+            {
+                $wordForms[] = str_replace(
+                    $from,
+                    $to,
+                    $wordForm
+                );
+            }
+        }
+
+        // Remove duplicates
+        return array_unique(
+            $wordForms
+        );
     }
 }

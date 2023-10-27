@@ -4,8 +4,51 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3770ffcd80695bc10a22f8ece4f68d1f",
+    "content-hash": "4d930a43cf9a80e1622029c4a4048a6b",
     "packages": [
+        {
+            "name": "ashtokalo/php-translit",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ashtokalo/php-translit.git",
+                "reference": "8ced36cbcd0ed8befb1388ef51935eb53bcfe5b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashtokalo/php-translit/zipball/8ced36cbcd0ed8befb1388ef51935eb53bcfe5b3",
+                "reference": "8ced36cbcd0ed8befb1388ef51935eb53bcfe5b3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ashtokalo\\translit\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP library to convert text from one script to another.",
+            "keywords": [
+                "latinization",
+                "romanization",
+                "translit",
+                "transliteration"
+            ],
+            "support": {
+                "issues": "https://github.com/ashtokalo/php-translit/issues",
+                "source": "https://github.com/ashtokalo/php-translit/tree/0.2.0"
+            },
+            "time": "2022-09-26T09:05:24+00:00"
+        },
         {
             "name": "doctrine/annotations",
             "version": "2.0.1",
