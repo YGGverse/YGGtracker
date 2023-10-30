@@ -197,27 +197,34 @@ a.button-green:hover {
 }
 
 .border-color-default {
-  border: 1px #5d627d solid;
+  border: 1px rgba(93, 98, 125, .6) solid;
 }
 
 .border-bottom-default {
-  border-bottom: 1px #5d627d solid;
+  border-bottom: 1px rgba(93, 98, 125, .6) solid;
 }
 
 .border-top-default {
-  border-top: 1px #5d627d solid;
+  border-top: 1px rgba(93, 98, 125, .6) solid;
 }
 
 .border-bottom-dashed {
-  border-bottom: 1px #5d627d dashed;
+  border-bottom: 1px rgba(93, 98, 125, .6) dashed;
 }
 
 .border-top-dashed {
-  border-top: 1px #5d627d dashed;
+  border-top: 1px rgba(93, 98, 125, .6) dashed;
 }
 
 .border-width-2-px {
   border-width: 2px;
+}
+
+.background-poster {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-blend-mode: soft-light;
 }
 
 .background-color-night {
@@ -502,6 +509,10 @@ a:visited.background-color-hover-night-light:hover {
 }
 
 /* responsive rules */
+
+.height-148-px {
+  height: 148px;
+}
 
 .width-100 {
   width: 100%;

@@ -47,6 +47,9 @@ class User
     #[ORM\Column]
     private ?bool $yggdrasil = null;
 
+    #[ORM\Column]
+    private ?bool $posters = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -187,6 +190,18 @@ class User
     public function setYggdrasil(bool $yggdrasil): static
     {
         $this->yggdrasil = $yggdrasil;
+
+        return $this;
+    }
+
+    public function isPosters(): ?bool
+    {
+        return $this->posters;
+    }
+
+    public function setPosters(bool $posters): static
+    {
+        $this->posters = $posters;
 
         return $this;
     }

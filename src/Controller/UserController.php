@@ -117,6 +117,11 @@ class UserController extends AbstractController
                 $request->get('yggdrasil') === 'true'
             );
 
+            // Update posters
+            $user->setPosters(
+                $request->get('posters') === 'true'
+            );
+
             // Save changes to DB
             $userService->save($user);
 
@@ -137,6 +142,7 @@ class UserController extends AbstractController
                     'id'        => $user->getId(),
                     'sensitive' => $user->isSensitive(),
                     'yggdrasil' => $user->isYggdrasil(),
+                    'posters'   => $user->isPosters(),
                     'locale'    => $user->getLocale(),
                     'locales'   => $user->getLocales(),
                     'events'    => $user->getEvents(),
@@ -543,6 +549,11 @@ class UserController extends AbstractController
                 true
             );
 
+            $torrentService->setTorrentPostersApprovedByUserId(
+                $userTarget->getId(),
+                true
+            );
+
             // @TODO make event for each item
         }
 
@@ -613,6 +624,7 @@ class UserController extends AbstractController
                 $this->getParameter('app.theme'),
                 $this->getParameter('app.sensitive'),
                 $this->getParameter('app.yggdrasil'),
+                $this->getParameter('app.posters'),
                 $this->getParameter('app.approved')
             );
 

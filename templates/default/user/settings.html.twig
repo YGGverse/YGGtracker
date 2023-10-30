@@ -59,6 +59,23 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="padding-y-12-px">
+                            {{ 'Posters' | trans }}
+                        </td>
+                        <td class="padding-y-12-px">
+                            <div class="margin-r-8-px">
+                                {% if user.posters %}
+                                    <input name="posters" id="posters" type="checkbox" value="true" checked="checked" />
+                                {% else %}
+                                    <input name="posters" id="posters" type="checkbox" value="true" />
+                                {% endif %}
+                                <label class="margin-x-4-px" for="posters">
+                                    {{ 'Enabled' | trans }}
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="padding-b-8-px border-bottom-default text-right" colspan="2">
                             {{ 'Search' | trans }}
                         </td>

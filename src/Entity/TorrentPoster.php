@@ -25,9 +25,6 @@ class TorrentPoster
     #[ORM\Column]
     private ?bool $approved = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $color = null;
-
     #[ORM\Column(length: 32)]
     private ?string $md5file = null;
 
@@ -87,18 +84,6 @@ class TorrentPoster
     public function setApproved(bool $approved): static
     {
         $this->approved = $approved;
-
-        return $this;
-    }
-
-    public function getColor(): ?string
-    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): static
-    {
-        $this->color = $color;
 
         return $this;
     }

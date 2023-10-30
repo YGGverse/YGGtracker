@@ -24,7 +24,8 @@
     </div>
     {% if torrents %}
         {% for torrent in torrents %}
-            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night">
+            <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night {% if torrent.poster %}background-poster{% endif %}"
+                 {% if torrent.poster %}style="background-image:url('{{ torrent.poster }}')"{% endif %}>
                 <a name="{{ torrent.id }}"></a>
                 <div class="margin-b-16-px">
                     <h2>
@@ -86,15 +87,6 @@
                     </div>
                 {% endif %}
                 <div class="margin-b-16-px border-bottom-default"></div>
-                {#
-                <sup>
-                    {{ torrent.added | format_ago }}
-                    {{ 'by' | trans }}
-                    <a href="{{ path('user_info', { userId : torrent.user.id }) }}">
-                        <img class="border-radius-50 border-color-default vertical-align-middle margin-x-4-px" src="{{ torrent.user.identicon }}" alt="{{ 'identicon' | trans }}" />
-                    </a>
-                </sup>
-                #}
                 <span class="margin-r-4-px cursor-default" title="{{ 'Size' | trans }}">
                     <small>
                         {{ torrent.file.size | format_bytes }}

@@ -1463,6 +1463,7 @@ class ActivityController extends AbstractController
                 $this->getParameter('app.theme'),
                 $this->getParameter('app.sensitive'),
                 $this->getParameter('app.yggdrasil'),
+                $this->getParameter('app.posters'),
                 $this->getParameter('app.approved')
             );
 

@@ -51,6 +51,9 @@ class Torrent
     #[ORM\Column(nullable: true)]
     private ?int $leechers = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $torrentPosterId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -203,6 +206,18 @@ class Torrent
     public function setLeechers(?int $leechers): static
     {
         $this->leechers = $leechers;
+
+        return $this;
+    }
+
+    public function getTorrentPosterId(): ?int
+    {
+        return $this->torrentPosterId;
+    }
+
+    public function setTorrentPosterId(int $torrentPosterId): static
+    {
+        $this->torrentPosterId = $torrentPosterId;
 
         return $this;
     }

@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Torrent;
 use App\Entity\TorrentLocales;
 use App\Entity\TorrentSensitive;
+use App\Entity\TorrentPoster;
 use App\Entity\TorrentStar;
 use App\Entity\TorrentDownloadFile;
 use App\Entity\TorrentDownloadMagnet;
@@ -12,6 +13,7 @@ use App\Entity\TorrentDownloadMagnet;
 use App\Repository\TorrentRepository;
 use App\Repository\TorrentLocalesRepository;
 use App\Repository\TorrentSensitiveRepository;
+use App\Repository\TorrentPosterRepository;
 use App\Repository\TorrentStarRepository;
 use App\Repository\TorrentDownloadFileRepository;
 use App\Repository\TorrentDownloadMagnetRepository;
@@ -214,10 +216,93 @@ class TorrentService
         );
     }
 
+    public function getImageUriByTorrentPosterId(
+        int    $torrentPosterId,
+        int    $quality   = 100,
+        int    $width     = 748,
+        int    $height    = 0,
+        float  $opacity   = 1,
+        bool   $grayscale = false,
+        string $format    = 'webp'
+    ): string
+    {
+        $uri = sprintf(
+            '/posters/%s.%s',
+            implode('/', str_split($torrentPosterId)),
+            $format
+        );
+
+        $filename = sprintf(
+            '%s/public/posters/%s.%s',
+            $this->kernelInterface->getProjectDir(),
+            implode('/', str_split($torrentPosterId)),
+            $format
+        );
+
+        if (file_exists($filename))
+        {
+            return $uri;
+        }
+
+        $path = explode('/', $filename);
+
+        array_pop($path);
+
+        @mkdir(implode('/', $path), 0755, true);
+
+        $image = new \Imagick();
+
+        $image->readImage(
+            $this->getStorageFilepathByTorrentPosterId(
+                $torrentPosterId
+            )
+        );
+
+        $image->setImageFormat($format);
+        $image->setImageCompressionQuality($quality);
+
+        if ($width || $height)
+        {
+            $image->adaptiveResizeImage(
+                $width,
+                $height
+            );
+        }
+
+        if ($grayscale)
+        {
+            $image->setImageType(
+                \Imagick::IMGTYPE_GRAYSCALE
+            );
+        }
+
+        if ($opacity)
+        {
+            $image->setImageOpacity(
+                $opacity
+            );
+        }
+
+        $image->writeImage(
+            $filename
+        );
+
+        return $uri;
+    }
+
+    public function getStorageFilepathByTorrentPosterId(int $torrentPosterId): string
+    {
+        return sprintf(
+            '%s/var/posters/%s',
+            $this->kernelInterface->getProjectDir(),
+            implode('/', str_split($torrentPosterId))
+        );
+    }
+
     public function getStorageFilepathByTorrentId(int $torrentId): string
     {
         return sprintf(
-            '%s/var/torrents/%s.torrent',
+            '%s/var/torrents/%s.torrent', // @TODO remove extension as not required in background storage
             $this->kernelInterface->getProjectDir(),
             implode('/', str_split($torrentId))
         );
@@ -931,6 +1016,209 @@ class TorrentService
             );
         }
     }
+
+    // Torrent poster
+    public function getTorrentPoster(
+        int $torrentPosterId
+    ): ?TorrentPoster
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentPoster::class)
+                    ->find(
+                        $torrentPosterId
+                    );
+    }
+
+    public function findTorrentPosterByMd5File(
+        string $md5file
+    ): ?Torrent
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentPoster::class)
+                    ->findOneBy(
+                        [
+                            'md5file' => $md5file
+                        ]
+        );
+    }
+
+    public function findLastTorrentPosterByTorrentId(
+        int $torrentId
+    ): ?TorrentPoster
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentPoster::class)
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
+    public function findTorrentPosterByTorrentId(
+        int $torrentId
+    ): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentPoster::class)
+                    ->findBy(
+                        [
+                            'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
+    public function toggleTorrentPosterApproved(
+        int $torrentPosterId
+    ): ?TorrentPoster
+    {
+        $torrentPoster = $this->entityManagerInterface
+                              ->getRepository(TorrentPoster::class)
+                              ->find($torrentPosterId);
+
+        $torrentPoster->setApproved(
+            !$torrentPoster->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrentPoster);
+        $this->entityManagerInterface->flush();
+
+        $this->updateTorrentPoster(
+            $torrentPoster->getTorrentId()
+        );
+
+        return $torrentSensitive;
+    }
+
+    public function deleteTorrentPoster(
+        int $torrentPosterId
+    ): ?TorrentPoster
+    {
+        // Remove torrent file from permanent storage
+        $filesystem = new Filesystem();
+        $filesystem->remove(
+            $this->getStorageFilepathByTorrentPosterId(
+                $torrentPosterId
+            )
+        );
+
+        // Remove from DB
+        $torrentPoster = $this->getTorrentPoster(
+            $torrentPosterId
+        );
+
+        $this->entityManagerInterface->remove($torrentPoster);
+        $this->entityManagerInterface->flush();
+
+        // Update torrent
+        $this->updateTorrentPoster(
+            $torrentPoster->getTorrentId()
+        );
+
+        return $torrentSensitive;
+    }
+
+    public function addTorrentPoster(
+        string $filename,
+        int $torrentId,
+        int $userId,
+        int $added,
+        bool $approved
+    ): ?TorrentPoster
+    {
+        // Add new DB record
+        $torrentPoster = new TorrentPoster();
+
+        $torrentPoster->setTorrentId($torrentId);
+        $torrentPoster->setUserId($userId);
+        $torrentPoster->setAdded($added);
+        $torrentPoster->setApproved($approved);
+        $torrentPoster->setMd5file(
+            md5_file($filename)
+        );
+
+        $this->entityManagerInterface->persist($torrentPoster);
+        $this->entityManagerInterface->flush();
+
+        // Save file in permanent storage
+        $filesystem = new Filesystem();
+        $filesystem->copy(
+            $filename,
+            $this->getStorageFilepathByTorrentPosterId(
+                $torrentPoster->getId()
+            )
+        );
+
+        // Update torrent info
+        $this->updateTorrentPoster(
+            $torrentId
+        );
+
+        return $torrentPoster;
+    }
+
+    public function setTorrentPostersApprovedByUserId(
+        int $userId,
+        bool $value
+    ): void
+    {
+        foreach ($this->entityManagerInterface
+                      ->getRepository(TorrentPoster::class)
+                      ->findBy(
+                        [
+                            'userId' => $userId
+                        ]) as $torrentPoster)
+        {
+            $torrentPoster->setApproved(
+                $value
+            );
+
+            $this->entityManagerInterface->persist($torrentPoster);
+            $this->entityManagerInterface->flush();
+
+            $this->updateTorrentPoster(
+                $torrentPoster->getTorrentId(),
+            );
+        }
+    }
+
+    public function updateTorrentPoster(
+        int $torrentId,
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            if ($torrentPoster = $this->entityManagerInterface
+                                      ->getRepository(TorrentPoster::class)
+                                      ->findOneBy(
+                                          [
+                                              'torrentId' => $torrentId,
+                                              'approved'  => true,
+                                          ],
+                                          [
+                                              'id' => 'DESC'
+                                          ]
+            ))
+            {
+                $torrent->setTorrentPosterId(
+                    $torrentPoster->getId()
+                );
+
+                $this->entityManagerInterface->persist($torrent);
+                $this->entityManagerInterface->flush();
+            }
+        }
+    }
+
+
+
+
 
     // Torrent star
     public function findTorrentStar(

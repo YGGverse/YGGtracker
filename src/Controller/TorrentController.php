@@ -106,6 +106,22 @@ class TorrentController extends AbstractController
         // Init page
         $page = $request->get('page') ? (int) $request->get('page') : 1;
 
+        // Poster
+        if ($user->isPosters() && $torrent->getTorrentPosterId())
+        {
+            $poster = $request->getScheme() . '://' .
+                      $request->getHttpHost() .
+                      $request->getBasePath() .
+                      $torrentService->getImageUriByTorrentPosterId(
+                          $torrent->getTorrentPosterId()
+                      );
+        }
+
+        else
+        {
+            $poster = false;
+        }
+
         // Render template
         return $this->render('default/torrent/info.html.twig',
         [
@@ -155,7 +171,7 @@ class TorrentController extends AbstractController
                         )
                     ]
                 ],
-                'star'  =>
+                'star' =>
                 [
                     'exist' => (bool) $torrentService->findTorrentStar(
                         $torrent->getId(),
@@ -165,7 +181,8 @@ class TorrentController extends AbstractController
                         $torrent->getId()
                     )
                 ],
-                'contributors' => $contributors
+                'contributors' => $contributors,
+                'poster' => $poster
             ],
             'file' =>
             [
@@ -284,6 +301,22 @@ class TorrentController extends AbstractController
 
             arsort($keywords);
 
+            // Poster
+            if ($user->isPosters() && $torrent->getTorrentPosterId())
+            {
+                $poster = $request->getScheme() . '://' .
+                          $request->getHttpHost() .
+                          $request->getBasePath() .
+                          $torrentService->getImageUriByTorrentPosterId(
+                              $torrent->getTorrentPosterId()
+                          );
+            }
+
+            else
+            {
+                $poster = false;
+            }
+
             // Push torrent
             $torrents[] =
             [
@@ -351,6 +384,7 @@ class TorrentController extends AbstractController
                         $torrent->getId()
                     )
                 ],
+                'poster' => $poster
             ];
         }
 
@@ -447,6 +481,22 @@ class TorrentController extends AbstractController
 
             arsort($keywords);
 
+            // Poster
+            if ($user->isPosters() && $torrent->getTorrentPosterId())
+            {
+                $poster = $request->getScheme() . '://' .
+                          $request->getHttpHost() .
+                          $request->getBasePath() .
+                          $torrentService->getImageUriByTorrentPosterId(
+                              $torrent->getTorrentPosterId()
+                          );
+            }
+
+            else
+            {
+                $poster = false;
+            }
+
             // Push torrent
             $torrents[] =
             [
@@ -470,15 +520,6 @@ class TorrentController extends AbstractController
                     'seeders'   => (int) $torrent->getSeeders(),
                     'peers'     => (int) $torrent->getPeers(),
                     'leechers'  => (int) $torrent->getLeechers(),
-                ],
-                'user' =>
-                [
-                    'id'        => $torrent->getUserId(),
-                    'identicon' => $userService->identicon(
-                        $userService->getUser(
-                            $torrent->getUserId()
-                        )->getAddress()
-                    )
                 ],
                 'keywords' => $keywords,
                 'download'  =>
@@ -514,6 +555,7 @@ class TorrentController extends AbstractController
                         $torrent->getId()
                     )
                 ],
+                'poster' => $poster
             ];
         }
 
@@ -1773,6 +1815,379 @@ class TorrentController extends AbstractController
         );
     }
 
+    // Torrent poster
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/edit/poster/{torrentPosterId}',
+        name: 'torrent_poster_edit',
+        requirements:
+        [
+            '_locale'         => '%app.locales%',
+            'torrentId'       => '\d+',
+            'torrentPosterId' => '\d+',
+        ],
+        defaults:
+        [
+            'torrentPosterId' => null,
+        ],
+        methods:
+        [
+            'GET',
+            'POST'
+        ]
+    )]
+    public function editPoster(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init poster value
+        if ($request->get('torrentPosterId'))
+        {
+            if ($torrentPoster = $torrentService->getTorrentPoster($request->get('torrentPosterId')))
+            {
+                $torrentPosterCurrent =
+                [
+                    'id'     => $torrentPoster->getId(),
+                    'userId' => $torrentPoster->getUserId(),
+                    'value'  => 'src' // @TODO
+                ];
+            }
+
+            else
+            {
+                throw $this->createNotFoundException();
+            }
+        }
+        else
+        {
+            if ($torrentPoster = $torrentService->findLastTorrentPosterByTorrentId($torrent->getId()))
+            {
+                $torrentPosterCurrent =
+                [
+                    'id'     => $torrentPoster->getId(),
+                    'userId' => $torrentPoster->getUserId(),
+                    'value'  => 'src' // @TODO
+                ];
+            }
+
+            else
+            {
+                $torrentPosterCurrent =
+                [
+                    'id'     => null,
+                    'userId' => null,
+                    'value'  => false,
+                ];
+            }
+        }
+
+        // Init edition history
+        $editions = [];
+        foreach ($torrentService->findTorrentPosterByTorrentId($torrent->getId()) as $torrentPosterEdition)
+        {
+            $editions[] =
+            [
+                'id'       => $torrentPosterEdition->getId(),
+                'added'    => $torrentPosterEdition->getAdded(),
+                'approved' => $torrentPosterEdition->isApproved(),
+                'active'   => $torrentPosterEdition->getId() == $torrentPosterCurrent['id'],
+                'user'     =>
+                [
+                    'id' => $torrentPosterEdition->getUserId(),
+                    'identicon' => $userService->identicon(
+                        $userService->getUser(
+                            $torrentPosterEdition->getUserId()
+                        )->getAddress()
+                    ),
+                ],
+                'poster'   =>
+                    $request->getScheme() . '://' .
+                    $request->getHttpHost() .
+                    $request->getBasePath() .
+                    $torrentService->getImageUriByTorrentPosterId(
+                        $torrentPosterEdition->getId()
+                    )
+            ];
+        }
+
+        // Init form
+        $form =
+        [
+            'poster' =>
+            [
+                'error' => []
+            ]
+        ];
+
+        // Process request
+        if ($request->isMethod('post'))
+        {
+            if ($file = $request->files->get('poster'))
+            {
+                //// Validate poster file
+                if (filesize($file->getPathName()) > $this->getParameter('app.torrent.poster.size.max'))
+                {
+                    $form['poster']['error'][] = $translator->trans('Poster file out of size limit');
+                }
+
+                //// Validate image format
+                if (!@getimagesize($file->getPathName()))
+                {
+                    $form['poster']['error'][] = $translator->trans('Image file not supported');
+                }
+            }
+
+            else
+            {
+                $form['poster']['error'][] = $translator->trans('Poster file required');
+            }
+
+            // Request is valid
+            if (empty($form['poster']['error']))
+            {
+                // Save data
+                $torrentPoster = $torrentService->addTorrentPoster(
+                    $file->getPathName(),
+                    $torrent->getId(),
+                    $user->getId(),
+                    time(),
+                    $user->isApproved()
+                );
+
+                // Add activity event
+                /* @TODO
+                $activityService->addEventTorrentPosterAdd(
+                    $user->getId(),
+                    $torrent->getId(),
+                    time(),
+                    $torrentPoster->getId()
+                );
+                */
+
+                // Redirect to info page created
+                return $this->redirectToRoute(
+                    'torrent_info',
+                    [
+                        '_locale'   => $request->get('_locale'),
+                        'torrentId' => $torrent->getId()
+                    ]
+                );
+            }
+        }
+
+        // Render form template
+        return $this->render(
+            'default/torrent/edit/poster.html.twig',
+            [
+                'torrentId' => $torrent->getId(),
+                'editions'  => $editions,
+                'form'      => $form,
+                'session' =>
+                [
+                    'moderator' => $user->isModerator(),
+                    'owner'     => $torrentPosterCurrent['userId'] === $user->getId(),
+                ]
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/approve/poster/{torrentPosterId}',
+        name: 'torrent_poster_approve',
+        requirements:
+        [
+            '_locale'         => '%app.locales%',
+            'torrentId'       => '\d+',
+            'torrentPosterId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function approvePoster(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent poster
+        if (!$torrentPoster = $torrentService->getTorrentPoster($request->get('torrentPosterId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Add activity event
+        if (!$torrentPoster->isApproved())
+        {
+            /* @TODO
+            $activityService->addEventTorrentPosterApproveAdd(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentPoster->getId()
+            );
+            */
+        }
+
+        else
+        {
+            /* @TODO
+            $activityService->addEventTorrentPosterApproveDelete(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentPoster->getId()
+            );
+            */
+        }
+
+        // Update approved
+        $torrentService->toggleTorrentPosterApproved(
+            $torrentPoster->getId()
+        );
+
+        // Redirect
+        return $this->redirectToRoute(
+            'torrent_poster_edit',
+            [
+                '_locale'         => $request->get('_locale'),
+                'torrentId'       => $torrent->getId(),
+                'torrentPosterId' => $torrentPoster->getId(),
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/delete/poster/{torrentPosterId}',
+        name: 'torrent_poster_delete',
+        requirements:
+        [
+            '_locale'         => '%app.locales%',
+            'torrentId'       => '\d+',
+            'torrentPosterId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function deletePoster(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent poster
+        if (!$torrentPoster = $torrentService->getTorrentPoster($request->get('torrentPosterId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!($user->isModerator() || $user->getId() === $torrentPoster->getUserId()))
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Add activity event
+        /* @TODO
+        $activityService->addEventTorrentPosterDelete(
+            $user->getId(),
+            $torrent->getId(),
+            time(),
+            $torrentPoster->getId()
+        );
+        */
+
+        // Update approved
+        $torrentService->deleteTorrentPoster(
+            $torrentPoster->getId()
+        );
+
+        // Redirect
+        return $this->redirectToRoute(
+            'torrent_poster_edit',
+            [
+                '_locale'         => $request->get('_locale'),
+                'torrentId'       => $torrent->getId(),
+                'torrentPosterId' => $torrentPoster->getId(),
+            ]
+        );
+    }
+
+
+
+
+
+
+
     // Torrent star
     #[Route(
         '/{_locale}/torrent/{torrentId}/star/toggle',
@@ -2519,6 +2934,7 @@ class TorrentController extends AbstractController
                 $this->getParameter('app.theme'),
                 $this->getParameter('app.sensitive'),
                 $this->getParameter('app.yggdrasil'),
+                $this->getParameter('app.posters'),
                 $this->getParameter('app.approved')
             );
 

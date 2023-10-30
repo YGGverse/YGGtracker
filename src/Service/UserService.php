@@ -32,6 +32,7 @@ class UserService
         string $theme,
         bool   $sensitive = true,
         bool   $yggdrasil = true,
+        bool   $posters   = true,
         bool   $approved  = false,
         bool   $moderator = false,
         bool   $status    = true
@@ -82,6 +83,10 @@ class UserService
 
         $user->setYggdrasil(
             $yggdrasil
+        );
+
+        $user->setPosters(
+            $posters
         );
 
         $this->entityManagerInterface->persist($user);
