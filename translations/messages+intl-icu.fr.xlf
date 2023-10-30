@@ -737,6 +737,54 @@
         <source>disabled</source>
         <target>disabled</target>
       </trans-unit>
+      <trans-unit id="IJdOfoF" resname="Torrent poster">
+        <source>Torrent poster</source>
+        <target>Torrent poster</target>
+      </trans-unit>
+      <trans-unit id="3HqhHgY" resname="Poster file out of size limit">
+        <source>Poster file out of size limit</source>
+        <target>Poster file out of size limit</target>
+      </trans-unit>
+      <trans-unit id="xKW1PAN" resname="Image file not supported">
+        <source>Image file not supported</source>
+        <target>Image file not supported</target>
+      </trans-unit>
+      <trans-unit id=".r0pj7s" resname="Poster file required">
+        <source>Poster file required</source>
+        <target>Poster file required</target>
+      </trans-unit>
+      <trans-unit id="OpO8m_n" resname="Edit torrent poster">
+        <source>Edit torrent poster</source>
+        <target>Edit torrent poster</target>
+      </trans-unit>
+      <trans-unit id="hO4zays" resname="Edit poster for torrent">
+        <source>Edit poster for torrent</source>
+        <target>Edit poster for torrent</target>
+      </trans-unit>
+      <trans-unit id="G6dup_P" resname="Poster">
+        <source>Poster</source>
+        <target>Poster</target>
+      </trans-unit>
+      <trans-unit id="HHOEGv4" resname="Posters">
+        <source>Posters</source>
+        <target>Posters</target>
+      </trans-unit>
+      <trans-unit id="dv2khYF" resname="have deleted poster edition">
+        <source>have deleted poster edition</source>
+        <target>have deleted poster edition</target>
+      </trans-unit>
+      <trans-unit id="CaAjDOQ" resname="have disapproved poster edition">
+        <source>have disapproved poster edition</source>
+        <target>have disapproved poster edition</target>
+      </trans-unit>
+      <trans-unit id="u26pehE" resname="have approved poster edition">
+        <source>have approved poster edition</source>
+        <target>have approved poster edition</target>
+      </trans-unit>
+      <trans-unit id="_jJysd3" resname="have added poster edition">
+        <source>have added poster edition</source>
+        <target>have added poster edition</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
