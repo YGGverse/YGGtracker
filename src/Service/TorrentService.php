@@ -1209,10 +1209,17 @@ class TorrentService
                 $torrent->setTorrentPosterId(
                     $torrentPoster->getId()
                 );
-
-                $this->entityManagerInterface->persist($torrent);
-                $this->entityManagerInterface->flush();
             }
+
+            else
+            {
+                $torrent->setTorrentPosterId(
+                    null
+                );
+            }
+
+            $this->entityManagerInterface->persist($torrent);
+            $this->entityManagerInterface->flush();
         }
     }
 
