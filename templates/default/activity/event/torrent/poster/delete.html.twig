@@ -9,7 +9,7 @@
                 #{{ torrent.poster.id }}
             </a>
         {% else %}
-            #{{ torrent.sensitive.id }}
+            #{{ torrent.poster.id }}
         {% endif %}
         {{ 'for torrent' | trans }}
         {% if session.user.moderator or session.user.owner %}
