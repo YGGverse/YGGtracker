@@ -737,10 +737,6 @@
         <source>disabled</source>
         <target>отключено</target>
       </trans-unit>
-      <trans-unit id="IJdOfoF" resname="Torrent poster">
-        <source>Torrent poster</source>
-        <target>Постер торрента</target>
-      </trans-unit>
       <trans-unit id="3HqhHgY" resname="Poster file out of size limit">
         <source>Poster file out of size limit</source>
         <target>Размер файла постера превышает максимальный размер</target>
@@ -784,6 +780,10 @@
       <trans-unit id="_jJysd3" resname="have added poster edition">
         <source>have added poster edition</source>
         <target>добавил редакцию постера</target>
+      </trans-unit>
+      <trans-unit id="WDtpCq_" resname="Torrent posters">
+        <source>Torrent posters</source>
+        <target>Постеры торрентов</target>
       </trans-unit>
     </body>
   </file>

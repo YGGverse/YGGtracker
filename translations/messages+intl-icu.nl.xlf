@@ -737,10 +737,6 @@
         <source>disabled</source>
         <target>disabled</target>
       </trans-unit>
-      <trans-unit id="IJdOfoF" resname="Torrent poster">
-        <source>Torrent poster</source>
-        <target>Torrent poster</target>
-      </trans-unit>
       <trans-unit id="3HqhHgY" resname="Poster file out of size limit">
         <source>Poster file out of size limit</source>
         <target>Poster file out of size limit</target>
@@ -784,6 +780,10 @@
       <trans-unit id="_jJysd3" resname="have added poster edition">
         <source>have added poster edition</source>
         <target>have added poster edition</target>
+      </trans-unit>
+      <trans-unit id="WDtpCq_" resname="Torrent posters">
+        <source>Torrent posters</source>
+        <target>Torrent posters</target>
       </trans-unit>
     </body>
   </file>

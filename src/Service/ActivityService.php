@@ -331,7 +331,7 @@ class ActivityService
 
                     $events
                     [
-                        $this->translatorInterface->trans('Torrent poster')
+                        $this->translatorInterface->trans('Torrent posters')
                     ]
                     [
                         $this->translatorInterface->trans('Added')
@@ -343,7 +343,7 @@ class ActivityService
 
                     $events
                     [
-                        $this->translatorInterface->trans('Torrent poster')
+                        $this->translatorInterface->trans('Torrent posters')
                     ]
                     [
                         $this->translatorInterface->trans('Deleted')
@@ -355,7 +355,7 @@ class ActivityService
 
                     $events
                     [
-                        $this->translatorInterface->trans('Torrent poster')
+                        $this->translatorInterface->trans('Torrent posters')
                     ]
                     [
                         $this->translatorInterface->trans('Approved')
@@ -367,7 +367,7 @@ class ActivityService
 
                     $events
                     [
-                        $this->translatorInterface->trans('Torrent poster')
+                        $this->translatorInterface->trans('Torrent posters')
                     ]
                     [
                         $this->translatorInterface->trans('Disapproved')
