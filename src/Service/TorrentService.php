@@ -293,7 +293,7 @@ class TorrentService
     public function getStorageFilepathByTorrentPosterId(int $torrentPosterId): string
     {
         return sprintf(
-            '%s/var/posters/%s',
+            '%s/var/posters/%s.original',
             $this->kernelInterface->getProjectDir(),
             implode('/', str_split($torrentPosterId))
         );
@@ -302,7 +302,7 @@ class TorrentService
     public function getStorageFilepathByTorrentId(int $torrentId): string
     {
         return sprintf(
-            '%s/var/torrents/%s.torrent', // @TODO remove extension as not required in background storage
+            '%s/var/torrents/%s.torrent',
             $this->kernelInterface->getProjectDir(),
             implode('/', str_split($torrentId))
         );
