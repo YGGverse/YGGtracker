@@ -215,7 +215,7 @@ class Torrent
         return $this->torrentPosterId;
     }
 
-    public function setTorrentPosterId(int $torrentPosterId): static
+    public function setTorrentPosterId(?int $torrentPosterId): static
     {
         $this->torrentPosterId = $torrentPosterId;
 
