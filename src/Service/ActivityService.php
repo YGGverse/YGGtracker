@@ -56,6 +56,11 @@ class ActivityService
             Activity::EVENT_TORRENT_SENSITIVE_APPROVE_ADD,
             Activity::EVENT_TORRENT_SENSITIVE_APPROVE_DELETE,
 
+            Activity::EVENT_TORRENT_POSTER_ADD,
+            Activity::EVENT_TORRENT_POSTER_DELETE,
+            Activity::EVENT_TORRENT_POSTER_APPROVE_ADD,
+            Activity::EVENT_TORRENT_POSTER_APPROVE_DELETE,
+
             Activity::EVENT_TORRENT_STAR_ADD,
             Activity::EVENT_TORRENT_STAR_DELETE,
 
@@ -314,6 +319,55 @@ class ActivityService
                     $events
                     [
                         $this->translatorInterface->trans('Torrent sensitive')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disapproved')
+                    ] = $code;
+
+                break;
+
+                /// Torrent poster
+                case Activity::EVENT_TORRENT_POSTER_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent poster')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_POSTER_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent poster')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Deleted')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_POSTER_APPROVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent poster')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Approved')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_POSTER_APPROVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent poster')
                     ]
                     [
                         $this->translatorInterface->trans('Disapproved')
@@ -1389,6 +1443,155 @@ class ActivityService
         $activity->setData(
             [
                 'torrentSensitiveId' => $torrentSensitiveId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    /// Torrent poster
+    public function addEventTorrentPosterAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentPosterId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_POSTER_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentPosterId' => $torrentPosterId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentPosterDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentPosterId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_POSTER_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentPosterId' => $torrentPosterId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentPosterApproveAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentPosterId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_POSTER_APPROVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentPosterId' => $torrentPosterId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentPosterApproveDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentPosterId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_POSTER_APPROVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentPosterId' => $torrentPosterId
             ]
         );
 

@@ -1329,6 +1329,219 @@ class ActivityController extends AbstractController
 
             break;
 
+            /// Torrent Poster
+            case $activity::EVENT_TORRENT_POSTER_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/poster/add' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'poster' => [
+                                'id'    => $activity->getData()['torrentPosterId'],
+                                'exist' => $torrentService->getTorrentPoster(
+                                    $activity->getData()['torrentPosterId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_POSTER_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/poster/delete' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'poster' => [
+                                'id'    => $activity->getData()['torrentPosterId'],
+                                'exist' => $torrentService->getTorrentPoster(
+                                    $activity->getData()['torrentPosterId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_POSTER_APPROVE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/poster/approve/add' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'poster' => [
+                                'id'    => $activity->getData()['torrentPosterId'],
+                                'exist' => $torrentService->getTorrentPoster(
+                                    $activity->getData()['torrentPosterId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_POSTER_APPROVE_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/poster/approve/delete' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'poster' => [
+                                'id'    => $activity->getData()['torrentPosterId'],
+                                'exist' => $torrentService->getTorrentPoster(
+                                    $activity->getData()['torrentPosterId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
             /// Torrent star
             case $activity::EVENT_TORRENT_STAR_ADD:
 

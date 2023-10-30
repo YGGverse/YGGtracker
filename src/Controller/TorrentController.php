@@ -1979,14 +1979,12 @@ class TorrentController extends AbstractController
                 );
 
                 // Add activity event
-                /* @TODO
                 $activityService->addEventTorrentPosterAdd(
                     $user->getId(),
                     $torrent->getId(),
                     time(),
                     $torrentPoster->getId()
                 );
-                */
 
                 // Redirect to info page created
                 return $this->redirectToRoute(
@@ -2068,26 +2066,22 @@ class TorrentController extends AbstractController
         // Add activity event
         if (!$torrentPoster->isApproved())
         {
-            /* @TODO
             $activityService->addEventTorrentPosterApproveAdd(
                 $user->getId(),
                 $torrent->getId(),
                 time(),
                 $torrentPoster->getId()
             );
-            */
         }
 
         else
         {
-            /* @TODO
             $activityService->addEventTorrentPosterApproveDelete(
                 $user->getId(),
                 $torrent->getId(),
                 time(),
                 $torrentPoster->getId()
             );
-            */
         }
 
         // Update approved
@@ -2157,14 +2151,12 @@ class TorrentController extends AbstractController
         }
 
         // Add activity event
-        /* @TODO
         $activityService->addEventTorrentPosterDelete(
             $user->getId(),
             $torrent->getId(),
             time(),
             $torrentPoster->getId()
         );
-        */
 
         // Update approved
         $torrentService->deleteTorrentPoster(
@@ -2181,12 +2173,6 @@ class TorrentController extends AbstractController
             ]
         );
     }
-
-
-
-
-
-
 
     // Torrent star
     #[Route(

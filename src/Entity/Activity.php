@@ -62,6 +62,11 @@ class Activity
     public const EVENT_TORRENT_STATUS_ADD               = 1800;
     public const EVENT_TORRENT_STATUS_DELETE            = 1801;
 
+    public const EVENT_TORRENT_POSTER_ADD               = 2800;
+    public const EVENT_TORRENT_POSTER_DELETE            = 2801;
+    public const EVENT_TORRENT_POSTER_APPROVE_ADD       = 2810;
+    public const EVENT_TORRENT_POSTER_APPROVE_DELETE    = 2811;
+
     // ...
 
     #[ORM\Column]
