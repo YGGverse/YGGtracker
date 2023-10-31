@@ -17,18 +17,32 @@
                 {% endfor %}
                 <input class="width-100" type="file" name="poster" value="" />
             </div>
+            <div class="margin-y-16-px">
+                <input type="radio" name="position" id="position-center" value="center" {% if form.position.attribute.value == 'center' %}checked="checked"{% endif %} />
+                <label class="margin-x-4-px" for="position-center">
+                    {{ 'Center' | trans }}
+                </label>
+                <input type="radio" name="position" id="position-top" value="top" {% if form.position.attribute.value == 'top' %}checked="checked"{% endif %} />
+                <label class="margin-x-4-px" for="position-top">
+                    {{ 'Top' | trans }}
+                </label>
+                <input type="radio" name="position" id="position-bottom" value="bottom" {% if form.position.attribute.value == 'bottom' %}checked="checked"{% endif %} />
+                <label class="margin-x-4-px" for="position-bottom">
+                    {{ 'Bottom' | trans }}
+                </label>
+            </div>
             <div class="padding-t-4-px margin-b-16-px border-bottom-default"></div>
             <div class="text-right">
                 <a class="margin-r-8-px" href="{{ path('torrent_info', { torrentId : torrentId }) }}">
-                    {{'cancel' | trans }}
+                    {{ 'cancel' | trans }}
                 </a>
                 <input class="button-green" type="submit" value="{{'Submit'|trans }}" />
             </div>
         </form>
     </div>
     {% for edition in editions %}
-        <div class="padding-x-24-px padding-y-16-px margin-y-8-px border-radius-3-px {% if edition.active %}background-color-night-light height-148-px{% else %}background-color-night{% endif %} {% if edition.poster %}background-poster{% endif %}"
-             {% if edition.poster %}style="background-image:url('{{ edition.poster }}')"{% endif %}>
+        <div class="padding-x-24-px padding-y-16-px margin-y-8-px border-radius-3-px {% if edition.active %}background-color-night-light{% else %}background-color-night{% endif %} {% if edition.poster %}background-poster{% endif %}"
+             {% if edition.poster %}style="background-image:url('{{ edition.poster }}');background-position:{{ edition.position }}"{% endif %}>
             {% if edition.active %}
                 {{ edition.added | format_ago }}
             {% else %}
@@ -79,6 +93,29 @@
                     {% endif %}
                 {% endif %}
             </div>
+            {% if edition.active %}
+                <form name="poster-edition-{{ edition.id }}" method="post" action="{{ path('torrent_poster_edit', { torrentId : torrentId }) }}">
+                    <input type="hidden" name="id" value="{{ edition.id }}" />
+                    <div class="margin-y-16-px">
+                        <input type="radio" name="position" id="poster-edition-{{ edition.id }}-position-center" value="center" {% if edition.position == 'center' %}checked="checked"{% endif %} />
+                        <label class="margin-x-4-px" for="poster-edition-{{ edition.id }}-position-center">
+                            {{ 'Center' | trans }}
+                        </label>
+                        <input type="radio" name="position" id="poster-edition-{{ edition.id }}-position-top" value="top" {% if edition.position == 'top' %}checked="checked"{% endif %} />
+                        <label class="margin-x-4-px" for="poster-edition-{{ edition.id }}-position-top">
+                            {{ 'Top' | trans }}
+                        </label>
+                        <input type="radio" name="position" id="poster-edition-{{ edition.id }}-position-bottom" value="bottom" {% if edition.position == 'bottom' %}checked="checked"{% endif %} />
+                        <label class="margin-x-4-px" for="poster-edition-{{ edition.id }}-position-bottom">
+                            {{ 'Bottom' | trans }}
+                        </label>
+                    </div>
+                    <div class="padding-t-4-px margin-b-16-px border-bottom-default"></div>
+                    <div class="text-right">
+                        <input class="button-green" type="submit" value="{{'Submit'|trans }}" />
+                    </div>
+                </form>
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock %}

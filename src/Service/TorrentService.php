@@ -1126,6 +1126,7 @@ class TorrentService
 
     public function addTorrentPoster(
         string $filename,
+        string $position,
         int $torrentId,
         int $userId,
         int $added,
@@ -1139,6 +1140,7 @@ class TorrentService
         $torrentPoster->setUserId($userId);
         $torrentPoster->setAdded($added);
         $torrentPoster->setApproved($approved);
+        $torrentPoster->setPosition($position);
         $torrentPoster->setMd5file(
             md5_file($filename)
         );

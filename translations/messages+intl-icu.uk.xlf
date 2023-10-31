@@ -785,6 +785,18 @@
         <source>Torrent posters</source>
         <target>Постери торентів</target>
       </trans-unit>
+      <trans-unit id="2UYGdCf" resname="Center">
+        <source>Center</source>
+        <target>Центр</target>
+      </trans-unit>
+      <trans-unit id="1c389.9" resname="Top">
+        <source>Top</source>
+        <target>Верх</target>
+      </trans-unit>
+      <trans-unit id="R5rSGsk" resname="Bottom">
+        <source>Bottom</source>
+        <target>Низ</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

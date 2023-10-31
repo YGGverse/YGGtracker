@@ -28,6 +28,9 @@ class TorrentPoster
     #[ORM\Column(length: 32)]
     private ?string $md5file = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $position = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +99,18 @@ class TorrentPoster
     public function setMd5file(string $md5file): static
     {
         $this->md5file = $md5file;
+
+        return $this;
+    }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
+
+    public function setPosition(string $position): static
+    {
+        $this->position = $position;
 
         return $this;
     }

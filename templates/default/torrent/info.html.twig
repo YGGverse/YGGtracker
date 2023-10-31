@@ -30,7 +30,7 @@
 {% endblock %}
 {% block main_content %}
     <div class="padding-24-px margin-y-8-px border-radius-3-px background-color-night {% if torrent.poster %}background-poster{% endif %}"
-         {% if torrent.poster %}style="background-image:url('{{ torrent.poster }}')"{% endif %}>
+         {% if torrent.poster %}style="background-image:url('{{ torrent.poster.url }}');background-position:{{ torrent.poster.position }}"{% endif %}>
         <h1 class="display-block text-center margin-b-16-px">
             {{ file.name }}
             {#{{ 'Torrent' | trans }} #{{ torrent.id }}#}

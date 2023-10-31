@@ -109,12 +109,19 @@ class TorrentController extends AbstractController
         // Poster
         if ($user->isPosters() && $torrent->getTorrentPosterId())
         {
-            $poster = $request->getScheme() . '://' .
-                      $request->getHttpHost() .
-                      $request->getBasePath() .
-                      $torrentService->getImageUriByTorrentPosterId(
-                          $torrent->getTorrentPosterId()
-                      );
+            $torrentPoster = $torrentService->getTorrentPoster(
+                $torrent->getTorrentPosterId()
+            );
+
+            $poster = [
+                'position' => $torrentPoster->getPosition(),
+                'url'      => $request->getScheme() . '://' .
+                              $request->getHttpHost() .
+                              $request->getBasePath() .
+                              $torrentService->getImageUriByTorrentPosterId(
+                                  $torrentPoster->getId()
+                              )
+            ];
         }
 
         else
@@ -304,12 +311,19 @@ class TorrentController extends AbstractController
             // Poster
             if ($user->isPosters() && $torrent->getTorrentPosterId())
             {
-                $poster = $request->getScheme() . '://' .
-                          $request->getHttpHost() .
-                          $request->getBasePath() .
-                          $torrentService->getImageUriByTorrentPosterId(
-                              $torrent->getTorrentPosterId()
-                          );
+                $torrentPoster = $torrentService->getTorrentPoster(
+                    $torrent->getTorrentPosterId()
+                );
+
+                $poster = [
+                    'position' => $torrentPoster->getPosition(),
+                    'url'      => $request->getScheme() . '://' .
+                                  $request->getHttpHost() .
+                                  $request->getBasePath() .
+                                  $torrentService->getImageUriByTorrentPosterId(
+                                      $torrentPoster->getId()
+                                  )
+                ];
             }
 
             else
@@ -484,12 +498,19 @@ class TorrentController extends AbstractController
             // Poster
             if ($user->isPosters() && $torrent->getTorrentPosterId())
             {
-                $poster = $request->getScheme() . '://' .
-                          $request->getHttpHost() .
-                          $request->getBasePath() .
-                          $torrentService->getImageUriByTorrentPosterId(
-                              $torrent->getTorrentPosterId()
-                          );
+                $torrentPoster = $torrentService->getTorrentPoster(
+                    $torrent->getTorrentPosterId()
+                );
+
+                $poster = [
+                    'position' => $torrentPoster->getPosition(),
+                    'url'      => $request->getScheme() . '://' .
+                                  $request->getHttpHost() .
+                                  $request->getBasePath() .
+                                  $torrentService->getImageUriByTorrentPosterId(
+                                      $torrentPoster->getId()
+                                  )
+                ];
             }
 
             else
@@ -1905,6 +1926,16 @@ class TorrentController extends AbstractController
             }
         }
 
+        // Init position
+        $position = in_array(
+            $request->get('position'),
+            [
+                'center',
+                'top',
+                'bottom'
+            ]
+        ) ? $request->get('position') : 'center';
+
         // Init edition history
         $editions = [];
         foreach ($torrentService->findTorrentPosterByTorrentId($torrent->getId()) as $torrentPosterEdition)
@@ -1913,6 +1944,7 @@ class TorrentController extends AbstractController
             [
                 'id'       => $torrentPosterEdition->getId(),
                 'added'    => $torrentPosterEdition->getAdded(),
+                'position' => $torrentPosterEdition->getPosition(),
                 'approved' => $torrentPosterEdition->isApproved(),
                 'active'   => $torrentPosterEdition->getId() == $torrentPosterCurrent['id'],
                 'user'     =>
@@ -1940,13 +1972,28 @@ class TorrentController extends AbstractController
             'poster' =>
             [
                 'error' => []
+            ],
+            'position' =>
+            [
+                'error' => [],
+                'attribute' =>
+                [
+                    'value' => $position
+                ]
             ]
         ];
 
         // Process request
         if ($request->isMethod('post'))
         {
-            if ($file = $request->files->get('poster'))
+            if ($request->get('id') && $torrentService->getTorrentPoster($request->get('id')))
+            {
+                $filename = $torrentService->getStorageFilepathByTorrentPosterId(
+                    $request->get('id')
+                );
+            }
+
+            else if ($file = $request->files->get('poster'))
             {
                 //// Validate poster file
                 if (filesize($file->getPathName()) > $this->getParameter('app.torrent.poster.size.max'))
@@ -1959,11 +2006,15 @@ class TorrentController extends AbstractController
                 {
                     $form['poster']['error'][] = $translator->trans('Image file not supported');
                 }
+
+                $filename = $file->getPathName();
             }
 
             else
             {
                 $form['poster']['error'][] = $translator->trans('Poster file required');
+
+                $filename = false;
             }
 
             // Request is valid
@@ -1971,7 +2022,8 @@ class TorrentController extends AbstractController
             {
                 // Save data
                 $torrentPoster = $torrentService->addTorrentPoster(
-                    $file->getPathName(),
+                    $filename,
+                    $position,
                     $torrent->getId(),
                     $user->getId(),
                     time(),
