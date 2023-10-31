@@ -107,8 +107,8 @@ git checkout -b my-pr-branch-name
 * [Symfony Framework](https://symfony.com)
 * [SVG icons](https://icons.getbootstrap.com)
 * [Scrapper](https://github.com/medariox/scrapeer) / [Composer Edition](https://github.com/YGGverse/scrapeer)
-* [Bencode Library](https://github.com/Rhilip/Bencode)
-* [Transliteration Library](https://github.com/ashtokalo/php-translit)
+* [Bencode](https://github.com/Rhilip/Bencode)
+* [Transliteration](https://github.com/ashtokalo/php-translit)
 * [Identicons](https://github.com/dmester/jdenticon-php)
 
 #### Support
