@@ -11,7 +11,7 @@
                 {{ torrent.name }}
             </a>
             {% if torrent.approved == false %}
-                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+                ({{ 'waiting for approve' | trans }})
             {% endif %}
         {% else %}
             {% if torrent.status == false %}
