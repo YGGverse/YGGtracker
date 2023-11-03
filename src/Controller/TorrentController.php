@@ -2416,14 +2416,10 @@ class TorrentController extends AbstractController
         $response->headers->set(
             'Content-Disposition',
             sprintf(
-                'attachment; filename="%s#%s.%s.torrent";',
-                mb_strtolower(
-                    $this->getParameter('app.name')
-                ),
-                $torrent->getId(),
-                mb_strtolower(
-                    $file->getName()
-                )
+                'attachment; filename="%s [%s#%s].torrent";',
+                $file->getName(),
+                $this->getParameter('app.name'),
+                $torrent->getId()
             )
         );
 
