@@ -39,6 +39,13 @@ class AppExtension extends AbstractExtension
                     'formatAgo'
                 ]
             ),
+            new TwigFilter(
+                'url_to_markdown',
+                [
+                    $this,
+                    'urlToMarkdown'
+                ]
+            ),
         ];
     }
 
@@ -133,6 +140,17 @@ class AppExtension extends AbstractExtension
                 );
             }
         }
+    }
+
+    public function urlToMarkdown(
+        string $text
+    ) : string
+    {
+        return preg_replace(
+            '~(https?://(?:www\.)?[^\s]+)~i',
+            '[$1]($1)',
+            $text
+        );
     }
 
     private function plural(int $number, array $texts)

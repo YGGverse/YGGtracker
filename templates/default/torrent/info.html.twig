@@ -226,7 +226,7 @@
                             {{ 'Source' | trans }}
                         </td>
                         <td>
-                            {{ file.source }}
+                            {{ file.source | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
@@ -246,7 +246,7 @@
                             {{ 'Comment' | trans }}
                         </td>
                         <td>
-                            {{ file.comment | nl2br }}
+                            {{ file.comment | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
