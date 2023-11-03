@@ -52,7 +52,7 @@ class AppExtension extends AbstractExtension
     public function formatBytes(
         int $bytes,
         int $precision = 2
-    ) : string
+    ): string
     {
         $size = [
             $this->translator->trans('B'),
@@ -73,7 +73,7 @@ class AppExtension extends AbstractExtension
 
     public function formatAgo(
         int $time,
-    ) : string
+    ): string
     {
         $diff = time() - $time;
 
@@ -144,7 +144,7 @@ class AppExtension extends AbstractExtension
 
     public function urlToMarkdown(
         string $text
-    ) : string
+    ): string
     {
         return preg_replace(
             '~(https?://(?:www\.)?[^\s]+)~i',
