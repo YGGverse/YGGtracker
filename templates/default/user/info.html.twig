@@ -177,6 +177,18 @@
                 </tr>
                 <tr>
                     <td>
+                        {{ 'Posters' | trans }}
+                    </td>
+                    <td>
+                        {% if user.posters %}
+                            {{ 'Yes' | trans }}
+                        {% else %}
+                            {{ 'No' | trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         {{ 'Sensitive' | trans }}
                     </td>
                     <td>

@@ -222,6 +222,7 @@ class UserController extends AbstractController
                     'moderator' => $userTarget->isModerator(),
                     'approved'  => $userTarget->isApproved(),
                     'status'    => $userTarget->isStatus(),
+                    'posters'   => $userTarget->isPosters(),
                     'sensitive' => $userTarget->isSensitive(),
                     'yggdrasil' => $userTarget->isYggdrasil(),
                     'locale'    => $userTarget->getLocale(),
