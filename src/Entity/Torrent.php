@@ -54,6 +54,9 @@ class Torrent
     #[ORM\Column(nullable: true)]
     private ?int $torrentPosterId = null;
 
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    private ?array $categories = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -218,6 +221,18 @@ class Torrent
     public function setTorrentPosterId(?int $torrentPosterId): static
     {
         $this->torrentPosterId = $torrentPosterId;
+
+        return $this;
+    }
+
+    public function getCategories(): ?array
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(?array $categories): static
+    {
+        $this->categories = $categories;
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Torrent;
 use App\Entity\TorrentLocales;
+use App\Entity\TorrentCategories;
 use App\Entity\TorrentSensitive;
 use App\Entity\TorrentPoster;
 use App\Entity\TorrentStar;
@@ -12,6 +13,7 @@ use App\Entity\TorrentDownloadMagnet;
 
 use App\Repository\TorrentRepository;
 use App\Repository\TorrentLocalesRepository;
+use App\Repository\TorrentCategoriesRepository;
 use App\Repository\TorrentSensitiveRepository;
 use App\Repository\TorrentPosterRepository;
 use App\Repository\TorrentStarRepository;
@@ -381,6 +383,7 @@ class TorrentService
         int    $userId,
         int    $added,
         array  $locales,
+        array  $categories,
         bool   $sensitive,
         bool   $approved,
         bool   $status
@@ -403,6 +406,7 @@ class TorrentService
                 $wordLengthMax
             ),
             $locales,
+            $categories,
             $sensitive,
             $approved,
             $status
@@ -421,6 +425,14 @@ class TorrentService
             $userId,
             $added,
             $locales,
+            $approved
+        );
+
+        $this->addTorrentCategories(
+            $torrent->getId(),
+            $userId,
+            $added,
+            $categories,
             $approved
         );
 
@@ -449,6 +461,7 @@ class TorrentService
         string $md5file,
         array $keywords,
         array $locales,
+        array $categories,
         bool $sensitive,
         bool $approved,
         bool $status
@@ -461,6 +474,7 @@ class TorrentService
         $torrent->setMd5File($md5file);
         $torrent->setKeywords($keywords);
         $torrent->setLocales($locales);
+        $torrent->setCategories($categories);
         $torrent->setSensitive($sensitive);
         $torrent->setApproved($approved);
         $torrent->setStatus($status);
@@ -534,7 +548,8 @@ class TorrentService
     public function findTorrents(
         int   $userId,
         array $keywords,
-        array $locales,
+        ?array $locales,
+        ?array $categories,
         ?bool $sensitive,
         ?bool $approved,
         ?bool $status,
@@ -548,6 +563,7 @@ class TorrentService
                         $userId,
                         $keywords,
                         $locales,
+                        $categories,
                         $sensitive,
                         $approved,
                         $status,
@@ -559,7 +575,8 @@ class TorrentService
     public function findTorrentsTotal(
         int   $userId,
         array $keywords,
-        array $locales,
+        ?array $locales,
+        ?array $categories,
         ?bool $sensitive,
         ?bool $approved,
         ?bool $status
@@ -571,6 +588,7 @@ class TorrentService
                         $userId,
                         $keywords,
                         $locales,
+                        $categories,
                         $sensitive,
                         $approved,
                         $status
@@ -635,6 +653,32 @@ class TorrentService
             ))
             {
                 $torrent->setLocales($torrentLocales->getValue());
+
+                $this->entityManagerInterface->persist($torrent);
+                $this->entityManagerInterface->flush();
+            }
+        }
+    }
+
+    public function updateTorrentCategories(
+        int $torrentId
+    ): void
+    {
+        if ($torrent = $this->getTorrent($torrentId))
+        {
+            if ($torrentCategories = $this->entityManagerInterface
+                                          ->getRepository(TorrentCategories::class)
+                                          ->findOneBy(
+                                            [
+                                                'torrentId' => $torrentId,
+                                                'approved'  => true,
+                                            ],
+                                            [
+                                                'id' => 'DESC'
+                                            ]
+            ))
+            {
+                $torrent->setCategories($torrentCategories->getValue());
 
                 $this->entityManagerInterface->persist($torrent);
                 $this->entityManagerInterface->flush();
@@ -882,6 +926,133 @@ class TorrentService
 
             $this->updateTorrentLocales(
                 $torrentLocales->getTorrentId(),
+            );
+        }
+    }
+
+    // Torrent category
+    public function getTorrentCategories(
+        int $torrentCategoryId
+    ): ?TorrentCategories
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentCategories::class)
+                    ->find($torrentCategoryId);
+    }
+
+    public function findLastTorrentCategoriesByTorrentId(
+        int $torrentId
+    ): ?TorrentCategories
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentCategories::class)
+                    ->findOneBy(
+                        [
+                            'torrentId' => $torrentId
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
+    public function findTorrentCategoriesByTorrentId(int $torrentId): array
+    {
+        return $this->entityManagerInterface
+                    ->getRepository(TorrentCategories::class)
+                    ->findBy(
+                        [
+                            'torrentId' => $torrentId,
+                        ],
+                        [
+                            'id' => 'DESC'
+                        ]
+                    );
+    }
+
+    public function toggleTorrentCategoriesApproved(
+        int $torrentCategoriesId
+    ): ?TorrentCategories
+    {
+        $torrentCategories = $this->getTorrentCategories($torrentCategoriesId);
+
+        $torrentCategories->setApproved(
+            !$torrentCategories->isApproved() // toggle current value
+        );
+
+        $this->entityManagerInterface->persist($torrentCategories);
+        $this->entityManagerInterface->flush();
+
+        $this->updateTorrentCategories(
+            $torrentCategories->getTorrentId()
+        );
+
+        return $torrentCategories;
+    }
+
+    public function deleteTorrentCategories(
+        int $torrentCategoriesId
+    ): ?TorrentCategories
+    {
+        $torrentCategories = $this->getTorrentCategories($torrentCategoriesId);
+
+        $this->entityManagerInterface->remove($torrentCategories);
+        $this->entityManagerInterface->flush();
+
+        $this->updateTorrentCategories(
+            $torrentCategories->getTorrentId()
+        );
+
+        return $torrentCategories;
+    }
+
+    public function addTorrentCategories(
+        int $torrentId,
+        int $userId,
+        int $added,
+        array $value,
+        bool $approved
+    ): ?TorrentCategories
+    {
+        $torrentCategories = new TorrentCategories();
+
+        $torrentCategories->setTorrentId($torrentId);
+        $torrentCategories->setUserId($userId);
+        $torrentCategories->setAdded($added);
+        $torrentCategories->setValue($value);
+        $torrentCategories->setApproved($approved);
+
+        $this->entityManagerInterface->persist($torrentCategories);
+        $this->entityManagerInterface->flush();
+
+        $this->updateTorrentCategories(
+            $torrentId
+        );
+
+        return $torrentCategories;
+    }
+
+    public function setTorrentCategoriesApprovedByUserId(
+        int $userId,
+        bool $value
+    ): void
+    {
+        foreach ($this->entityManagerInterface
+                      ->getRepository(TorrentCategories::class)
+                      ->findBy(
+                        [
+                            'userId' => $userId
+                        ]) as $torrentCategories)
+        {
+            $torrentCategories->setApproved(
+                $value
+            );
+
+            $this->entityManagerInterface->persist($torrentCategories);
+            $this->entityManagerInterface->flush();
+
+            $this->updateTorrentCategories(
+                $torrentCategories->getTorrentId(),
             );
         }
     }

@@ -24,7 +24,8 @@ class TorrentRepository extends ServiceEntityRepository
     public function findTorrentsTotal(
         int   $userId,
         array $keywords,
-        array $locales,
+        ?array $locales,
+        ?array $categories,
         ?bool $sensitive = null,
         ?bool $approved  = null,
         ?bool $status    = null,
@@ -36,6 +37,7 @@ class TorrentRepository extends ServiceEntityRepository
             $userId,
             $keywords,
             $locales,
+            $categories,
             $sensitive,
             $approved,
             $status,
@@ -47,7 +49,8 @@ class TorrentRepository extends ServiceEntityRepository
     public function findTorrents(
         int   $userId,
         array $keywords,
-        array $locales,
+        ?array $locales,
+        ?array $categories,
         ?bool $sensitive = null,
         ?bool $approved  = null,
         ?bool $status    = null,
@@ -59,6 +62,7 @@ class TorrentRepository extends ServiceEntityRepository
             $userId,
             $keywords,
             $locales,
+            $categories,
             $sensitive,
             $approved,
             $status,
@@ -70,17 +74,18 @@ class TorrentRepository extends ServiceEntityRepository
     }
 
     private function getTorrentsQueryByFilter(
-        int   $userId,
-        array $keywords,
-        array $locales,
-        ?bool $sensitive       = null,
-        ?bool $approved        = null,
-        ?bool $status          = null
+        int    $userId,
+        ?array $keywords,
+        ?array $locales,
+        ?array $categories,
+        ?bool  $sensitive       = null,
+        ?bool  $approved        = null,
+        ?bool  $status          = null
     ): \Doctrine\ORM\QueryBuilder
     {
         $query = $this->createQueryBuilder('t');
 
-        if ($keywords)
+        if (is_array($keywords))
         {
             foreach ($keywords as $i => $keyword)
             {
@@ -105,7 +110,7 @@ class TorrentRepository extends ServiceEntityRepository
             }
         }
 
-        if ($locales)
+        if (is_array($locales))
         {
             $orLocales = $query->expr()->orX();
 
@@ -119,6 +124,22 @@ class TorrentRepository extends ServiceEntityRepository
             }
 
             $query->andWhere($orLocales);
+        }
+
+        if (is_array($categories))
+        {
+            $orCategories = $query->expr()->orX();
+
+            foreach ($categories as $i => $category)
+            {
+                $orCategories->add("t.categories LIKE :category{$i}");
+                $orCategories->add("t.userId = :userId");
+
+                $query->setParameter(":category{$i}", "%{$category}%");
+                $query->setParameter('userId', $userId);
+            }
+
+            $query->andWhere($orCategories);
         }
 
         if (is_bool($sensitive))

@@ -50,6 +50,9 @@ class User
     #[ORM\Column]
     private ?bool $posters = null;
 
+    #[ORM\Column(type: Types::SIMPLE_ARRAY)]
+    private ?array $categories = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -202,6 +205,18 @@ class User
     public function setPosters(bool $posters): static
     {
         $this->posters = $posters;
+
+        return $this;
+    }
+
+    public function getCategories(): ?array
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(?array $categories): static
+    {
+        $this->categories = $categories;
 
         return $this;
     }

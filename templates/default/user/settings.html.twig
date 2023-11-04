@@ -89,7 +89,7 @@
                         <td class="padding-t-16-px padding-b-8-px">
                             {% for locale in locales %}
                                 <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
-                                    {% if locale in user.locales %}
+                                    {% if locale in user.locales | sort %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" checked="checked" />
                                     {% else %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" />
@@ -102,10 +102,31 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="padding-y-12-px">
+                        <td class="padding-y-16-px">
+                            <div class="margin-t-4-px">
+                                {{ 'Categories' | trans }}
+                            </div>
+                        </td>
+                        <td class="padding-t-16-px padding-b-8-px border-top-default">
+                            {% for category in categories | sort %}
+                                <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
+                                    {% if category in user.categories %}
+                                        <input name="categories[]" id="{{ category }}" type="checkbox" value="{{ category }}" checked="checked" />
+                                    {% else %}
+                                        <input name="categories[]" id="{{ category }}" type="checkbox" value="{{ category }}" />
+                                    {% endif %}
+                                    <label class="margin-x-4-px" for="{{ category }}">
+                                        {{ category | u.title | trans }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="padding-y-16-px">
                             {{ 'Sensitive' | trans }}
                         </td>
-                        <td class="padding-y-12-px border-top-default">
+                        <td class="padding-t-16-px padding-b-8-px border-top-default">
                             <div class="margin-r-8-px">
                                 {% if user.sensitive %}
                                     <input name="sensitive" id="sensitive" type="checkbox" value="true" checked="checked" />

@@ -85,6 +85,23 @@ class UserController extends AbstractController
                 );
             }
 
+            // Update categories
+            if ($request->get('categories'))
+            {
+                $categories = [];
+                foreach ((array) $request->get('categories') as $category)
+                {
+                    if (in_array($category, explode('|', $this->getParameter('app.categories'))))
+                    {
+                        $categories[] = $category;
+                    }
+                }
+
+                $user->setCategories(
+                    $categories
+                );
+            }
+
             // Update theme
             if (in_array($request->get('theme'), explode('|', $this->getParameter('app.themes'))))
             {
@@ -139,19 +156,21 @@ class UserController extends AbstractController
             'default/user/settings.html.twig',
             [
                 'user' => [
-                    'id'        => $user->getId(),
-                    'sensitive' => $user->isSensitive(),
-                    'yggdrasil' => $user->isYggdrasil(),
-                    'posters'   => $user->isPosters(),
-                    'locale'    => $user->getLocale(),
-                    'locales'   => $user->getLocales(),
-                    'events'    => $user->getEvents(),
-                    'theme'     => $user->getTheme(),
-                    'added'     => $user->getAdded()
+                    'id'         => $user->getId(),
+                    'sensitive'  => $user->isSensitive(),
+                    'yggdrasil'  => $user->isYggdrasil(),
+                    'posters'    => $user->isPosters(),
+                    'locale'     => $user->getLocale(),
+                    'locales'    => $user->getLocales(),
+                    'categories' => $user->getCategories(),
+                    'events'     => $user->getEvents(),
+                    'theme'      => $user->getTheme(),
+                    'added'      => $user->getAdded()
                 ],
-                'locales' => explode('|', $this->getParameter('app.locales')),
-                'themes'  => explode('|', $this->getParameter('app.themes')),
-                'events'  => $activityService->getEventsTree()
+                'locales'    => explode('|', $this->getParameter('app.locales')),
+                'categories' => explode('|', $this->getParameter('app.categories')),
+                'themes'     => explode('|', $this->getParameter('app.themes')),
+                'events'     => $activityService->getEventsTree()
             ]
         );
     }
@@ -217,20 +236,21 @@ class UserController extends AbstractController
                     'moderator' => $user->isModerator()
                 ],
                 'user' => [
-                    'id'        => $userTarget->getId(),
-                    'address'   => $userTarget->getAddress(),
-                    'moderator' => $userTarget->isModerator(),
-                    'approved'  => $userTarget->isApproved(),
-                    'status'    => $userTarget->isStatus(),
-                    'posters'   => $userTarget->isPosters(),
-                    'sensitive' => $userTarget->isSensitive(),
-                    'yggdrasil' => $userTarget->isYggdrasil(),
-                    'locale'    => $userTarget->getLocale(),
-                    'locales'   => $userTarget->getLocales(),
-                    'events'    => $userTarget->getEvents(),
-                    'theme'     => $userTarget->getTheme(),
-                    'added'     => $userTarget->getAdded(),
-                    'identicon' => $userService->identicon(
+                    'id'         => $userTarget->getId(),
+                    'address'    => $userTarget->getAddress(),
+                    'moderator'  => $userTarget->isModerator(),
+                    'approved'   => $userTarget->isApproved(),
+                    'status'     => $userTarget->isStatus(),
+                    'posters'    => $userTarget->isPosters(),
+                    'sensitive'  => $userTarget->isSensitive(),
+                    'yggdrasil'  => $userTarget->isYggdrasil(),
+                    'locale'     => $userTarget->getLocale(),
+                    'locales'    => $userTarget->getLocales(),
+                    'categories' => $user->getCategories(),
+                    'events'     => $userTarget->getEvents(),
+                    'theme'      => $userTarget->getTheme(),
+                    'added'      => $userTarget->getAdded(),
+                    'identicon'  => $userService->identicon(
                         $userTarget->getAddress(),
                         48
                     ),
@@ -541,6 +561,11 @@ class UserController extends AbstractController
             );
 
             $torrentService->setTorrentLocalesApprovedByUserId(
+                $userTarget->getId(),
+                true
+            );
+
+            $torrentService->setTorrentCategoriesApprovedByUserId(
                 $userTarget->getId(),
                 true
             );

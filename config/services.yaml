@@ -11,6 +11,7 @@ parameters:
     app.trackers: '%env(APP_TRACKERS)%'
     app.crawlers: '%env(APP_CRAWLERS)%'
     app.locales: '%env(APP_LOCALES)%'
+    app.categories: '%env(APP_CATEGORIES)%'
     app.themes: '%env(APP_THEMES)%'
     app.locale: '%env(APP_LOCALE)%'
     app.theme: '%env(APP_THEME)%'

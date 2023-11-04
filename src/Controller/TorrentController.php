@@ -150,12 +150,13 @@ class TorrentController extends AbstractController
                     'peers'     => (int) $torrent->getPeers(),
                     'leechers'  => (int) $torrent->getLeechers(),
                 ],
-                'keywords'  => $torrent->getKeywords(),
-                'locales'   => $torrent->getLocales(),
-                'sensitive' => $torrent->isSensitive(),
-                'approved'  => $torrent->isApproved(),
-                'status'    => $torrent->isStatus(),
-                'download'  =>
+                'keywords'   => $torrent->getKeywords(),
+                'locales'    => $torrent->getLocales(),
+                'categories' => $torrent->getCategories(),
+                'sensitive'  => $torrent->isSensitive(),
+                'approved'   => $torrent->isApproved(),
+                'status'     => $torrent->isStatus(),
+                'download'   =>
                 [
                     'file' =>
                     [
@@ -262,7 +263,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->isSensitive() ? false : null,
+            $user->getCategories(),
+            $user->isSensitive() ? false : null,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
         );
@@ -272,7 +274,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->isSensitive() ? false : null,
+            $user->getCategories(),
+            $user->isSensitive() ? false : null,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
             $this->getParameter('app.pagination'),
@@ -448,7 +451,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             [],
             $user->getLocales(),
-            !$user->isModerator() && $user->isSensitive() ? false : null,
+            $user->getCategories(),
+            $user->isSensitive() ? false : null,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
         );
@@ -459,7 +463,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             [],
             $user->getLocales(),
-            !$user->isModerator() && $user->isSensitive() ? false : null,
+            $user->getCategories(),
+            $user->isSensitive() ? false : null,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
             $this->getParameter('app.pagination'),
@@ -625,7 +630,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->isSensitive() ? false : null,
+            $user->getCategories(),
+            $user->isSensitive() ? false : null,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
         );
@@ -636,7 +642,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             $query,
             $user->getLocales(),
-            !$user->isModerator() && $user->isSensitive() ? false : null,
+            $user->getCategories(),
+            $user->isSensitive() ? false : null,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
             $this->getParameter('app.pagination'),
@@ -700,13 +707,14 @@ class TorrentController extends AbstractController
         );
 
         // Init request
-        $query     = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
-        $page      = $request->get('page') ? (int) $request->get('page') : 1;
+        $query      = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
+        $page       = $request->get('page') ? (int) $request->get('page') : 1;
 
-        $locales   = $request->get('locales') ? explode('|', $request->get('locales')) : explode('|', $this->getParameter('app.locales'));
-        $sensitive = $request->get('sensitive') ? (bool) $request->get('sensitive') : null;
+        $locales    = $request->get('locales') ? explode('|', $request->get('locales')) : explode('|', $this->getParameter('app.locales'));
+        $categories = $request->get('categories') ? explode('|', $request->get('categories')) : explode('|', $this->getParameter('app.categories'));
+        $sensitive  = $request->get('sensitive') ? (bool) $request->get('sensitive') : null;
 
-        $yggdrasil = $request->get('yggdrasil') ? (bool) $request->get('yggdrasil') : false;
+        $yggdrasil  = $request->get('yggdrasil') ? (bool) $request->get('yggdrasil') : false;
 
         // Init trackers
         $trackers = explode('|', $this->getParameter('app.trackers'));
@@ -716,7 +724,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             $query,
             $locales,
-            !$user->isModerator() ? $sensitive : null,
+            $categories,
+            $sensitive,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
         );
@@ -727,7 +736,8 @@ class TorrentController extends AbstractController
             $user->getId(),
             $query,
             $locales,
-            !$user->isModerator() ? $sensitive : null,
+            $categories,
+            $sensitive,
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
             $this->getParameter('app.pagination'),
@@ -873,6 +883,14 @@ class TorrentController extends AbstractController
                     'value' => $request->get('locales') ? $request->get('locales') : [$request->get('_locale')],
                 ]
             ],
+            'categories' =>
+            [
+                'error' => [],
+                'attribute' =>
+                [
+                    'value' => $request->get('categories') ? $request->get('categories') : [],
+                ]
+            ],
             'torrent' =>
             [
                 'error' => [],
@@ -909,6 +927,25 @@ class TorrentController extends AbstractController
                 $form['locales']['error'][] = $translator->trans('At least one locale required');
             }
 
+            /// Categories
+            $categories = [];
+            if ($request->get('categories'))
+            {
+                foreach ((array) $request->get('categories') as $locale)
+                {
+                    if (in_array($locale, explode('|', $this->getParameter('app.categories'))))
+                    {
+                        $categories[] = $locale;
+                    }
+                }
+            }
+
+            //// At least one valid locale required
+            if (!$categories)
+            {
+                $form['categories']['error'][] = $translator->trans('At least one category required');
+            }
+
             /// Torrent
             if ($file = $request->files->get('torrent'))
             {
@@ -937,7 +974,7 @@ class TorrentController extends AbstractController
             }
 
             // Request is valid
-            if (empty($form['torrent']['error']) && empty($form['locales']['error']))
+            if (empty($form['torrent']['error']) && empty($form['locales']['error']) && empty($form['categories']['error']))
             {
                 // Save data
                 $torrent = $torrentService->add(
@@ -956,6 +993,7 @@ class TorrentController extends AbstractController
                     $user->getId(),
                     time(),
                     (array) $locales,
+                    (array) $categories,
                     (bool) $request->get('sensitive'),
                     $user->isApproved(),
                     $user->isStatus()
@@ -983,8 +1021,9 @@ class TorrentController extends AbstractController
         return $this->render(
             'default/torrent/submit.html.twig',
             [
-                'locales' => explode('|', $this->getParameter('app.locales')),
-                'form'    => $form,
+                'locales'    => explode('|', $this->getParameter('app.locales')),
+                'categories' => explode('|', $this->getParameter('app.categories')),
+                'form'       => $form,
             ]
         );
     }
@@ -1500,6 +1539,369 @@ class TorrentController extends AbstractController
                 '_locale'          => $request->get('_locale'),
                 'torrentId'        => $torrent->getId(),
                 'torrentLocalesId' => $torrentLocales->getId(),
+            ]
+        );
+    }
+
+    // Torrent categories
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/edit/categories/{torrentCategoriesId}',
+        name: 'torrent_categories_edit',
+        requirements:
+        [
+            '_locale'             => '%app.locales%',
+            'torrentId'           => '\d+',
+            'torrentCategoriesId' => '\d+',
+        ],
+        defaults:
+        [
+            'torrentCategoriesId' => null,
+        ],
+        methods:
+        [
+            'GET',
+            'POST'
+        ]
+    )]
+    public function editCategories(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        if (!$user->isStatus())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent categories
+        $torrentCategoriesCurrent = [
+            'userId' => null,
+            'value'  => []
+        ];
+
+        // Get from edition version requested
+        if ($request->get('torrentCategoriesId'))
+        {
+            if ($torrentCategories = $torrentService->getTorrentCategories($request->get('torrentCategoriesId')))
+            {
+                $torrentCategoriesCurrent['userId'] = $torrentCategories->getUserId();
+
+                foreach ($torrentCategories->getValue() as $value)
+                {
+                    $torrentCategoriesCurrent['value'][] = $value;
+                }
+            }
+
+            else
+            {
+                throw $this->createNotFoundException();
+            }
+        }
+
+        // Otherwise, get latest available
+        else
+        {
+            if ($torrentCategories = $torrentService->findLastTorrentCategoriesByTorrentId($torrent->getId()))
+            {
+                $torrentCategoriesCurrent['userId'] = $torrentCategories->getUserId();
+
+                foreach ($torrentCategories->getValue() as $value)
+                {
+                    $torrentCategoriesCurrent['value'][] = $value;
+                }
+
+                // Update active categories
+                $request->attributes->set('torrentCategoriesId', $torrentCategories->getId());
+            }
+        }
+
+        // Init edition history
+        $editions = [];
+        foreach ($torrentService->findTorrentCategoriesByTorrentId($torrent->getId()) as $torrentCategoriesEdition)
+        {
+            $editions[] =
+            [
+                'id'       => $torrentCategoriesEdition->getId(),
+                'added'    => $torrentCategoriesEdition->getAdded(),
+                'approved' => $torrentCategoriesEdition->isApproved(),
+                'active'   => $torrentCategoriesEdition->getId() == $request->get('torrentCategoriesId'),
+                'user'     =>
+                [
+                    'id' => $torrentCategoriesEdition->getUserId(),
+                    'identicon' => $userService->identicon(
+                        $userService->getUser(
+                            $torrentCategoriesEdition->getUserId()
+                        )->getAddress()
+                    ),
+                ]
+            ];
+        }
+
+        // Init form
+        $form =
+        [
+            'categories' =>
+            [
+                'error'     => [],
+                'attribute' =>
+                [
+                    'value' => $request->get('categories') ? $request->get('categories') : $torrentCategoriesCurrent['value'],
+                ]
+            ]
+        ];
+
+        // Process request
+        if ($request->isMethod('post'))
+        {
+            /// Categories
+            $categories = [];
+            if ($request->get('categories'))
+            {
+                foreach ((array) $request->get('categories') as $category)
+                {
+                    if (in_array($category, explode('|', $this->getParameter('app.categories'))))
+                    {
+                        $categories[] = $category;
+                    }
+                }
+            }
+
+            //// At least one valid category required
+            if (!$categories)
+            {
+                $form['categories']['error'][] = $translator->trans('At least one category required');
+            }
+
+            // Request is valid
+            if (empty($form['categories']['error']))
+            {
+                // Save data
+                $torrentCategories = $torrentService->addTorrentCategories(
+                    $torrent->getId(),
+                    $user->getId(),
+                    time(),
+                    $categories,
+                    $user->isApproved()
+                );
+
+                // Register activity event
+                /* @TODO
+                $activityService->addEventTorrentCategoriesAdd(
+                    $user->getId(),
+                    $torrent->getId(),
+                    time(),
+                    $torrentCategories->getId()
+                );
+                */
+
+                // Redirect to info page
+                return $this->redirectToRoute(
+                    'torrent_info',
+                    [
+                        '_locale'   => $request->get('_locale'),
+                        'torrentId' => $torrent->getId()
+                    ]
+                );
+            }
+        }
+
+        // Render form template
+        return $this->render(
+            'default/torrent/edit/categories.html.twig',
+            [
+                'torrentId'  => $torrent->getId(),
+                'categories' => explode('|', $this->getParameter('app.categories')),
+                'editions'   => $editions,
+                'form'       => $form,
+                'session'    =>
+                [
+                    'moderator' => $user->isModerator(),
+                    'owner'     => $torrentCategoriesCurrent['userId'] === $user->getId(),
+                ]
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/approve/categories/{torrentCategoriesId}',
+        name: 'torrent_categories_approve',
+        requirements:
+        [
+            '_locale'             => '%app.locales%',
+            'torrentId'           => '\d+',
+            'torrentCategoriesId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function approveCategories(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent categories
+        if (!$torrentCategories = $torrentService->getTorrentCategories($request->get('torrentCategoriesId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!$user->isModerator())
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Register activity event
+        /* @TODO
+        if (!$torrentCategories->isApproved())
+        {
+            $activityService->addEventTorrentCategoriesApproveAdd(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentCategories->getId()
+            );
+        }
+
+        else
+        {
+            $activityService->addEventTorrentCategoriesApproveDelete(
+                $user->getId(),
+                $torrent->getId(),
+                time(),
+                $torrentCategories->getId()
+            );
+        }
+        */
+
+        // Update approved
+        $torrentService->toggleTorrentCategoriesApproved(
+            $torrentCategories->getId()
+        );
+
+        // Redirect back to form
+        return $this->redirectToRoute(
+            'torrent_categories_edit',
+            [
+                '_locale'             => $request->get('_locale'),
+                'torrentId'           => $torrent->getId(),
+                'torrentCategoriesId' => $torrentCategories->getId(),
+            ]
+        );
+    }
+
+    #[Route(
+        '/{_locale}/torrent/{torrentId}/delete/categories/{torrentCategoriesId}',
+        name: 'torrent_categories_delete',
+        requirements:
+        [
+            '_locale'             => '%app.locales%',
+            'torrentId'           => '\d+',
+            'torrentCategoriesId' => '\d+',
+        ],
+        methods:
+        [
+            'GET'
+        ]
+    )]
+    public function deleteCategories(
+        Request $request,
+        TranslatorInterface $translator,
+        UserService $userService,
+        TorrentService $torrentService,
+        ActivityService $activityService
+    ): Response
+    {
+        // Init user
+        $user = $this->initUser(
+            $request,
+            $userService,
+            $activityService
+        );
+
+        // Init torrent
+        if (!$torrent = $torrentService->getTorrent($request->get('torrentId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Init torrent categories
+        if (!$torrentCategories = $torrentService->getTorrentCategories($request->get('torrentCategoriesId')))
+        {
+            throw $this->createNotFoundException();
+        }
+
+        // Check permissions
+        if (!($user->isModerator() || $user->getId() === $torrentCategories->getUserId()))
+        {
+            // @TODO
+            throw new \Exception(
+                $translator->trans('Access denied')
+            );
+        }
+
+        // Add activity event
+        /* @TODO
+        $activityService->addEventTorrentCategoriesDelete(
+            $user->getId(),
+            $torrent->getId(),
+            time(),
+            $torrentCategories->getId()
+        );
+        */
+
+        // Update approved
+        $torrentService->deleteTorrentCategories(
+            $torrentCategories->getId()
+        );
+
+        // Redirect back to form
+        return $this->redirectToRoute(
+            'torrent_categories_edit',
+            [
+                '_locale'             => $request->get('_locale'),
+                'torrentId'           => $torrent->getId(),
+                'torrentCategoriesId' => $torrentCategories->getId(),
             ]
         );
     }
@@ -2926,14 +3328,15 @@ class TorrentController extends AbstractController
                 'locale'   => $locale,
                 'locales'  => $locales,
                 'torrents' => $torrentService->findTorrents(
-                    0,        // no user session init, pass 0
-                    [],       // without keywords filter
-                    $locales, // all system locales
-                    null,     // all sensitive levels
-                    true,     // approved only
-                    true,     // enabled only
-                    1000,     // @TODO limit
-                    0         // offset
+                    0,           // no user session init, pass 0
+                    [],          // without keywords filter
+                    $locales,    // all system locales
+                    $categories, // all system locales
+                    null,        // all sensitive levels
+                    true,        // approved only
+                    true,        // enabled only
+                    1000,        // @TODO limit
+                    0            // offset
                 )
             ],
             $response

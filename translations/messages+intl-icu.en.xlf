@@ -797,6 +797,38 @@
         <source>Bottom</source>
         <target>Bottom</target>
       </trans-unit>
+      <trans-unit id="uLHYlMa" resname="Categories">
+        <source>Categories</source>
+        <target>Categories</target>
+      </trans-unit>
+      <trans-unit id="R2SmYMn" resname="At least one category required">
+        <source>At least one category required</source>
+        <target>At least one category required</target>
+      </trans-unit>
+      <trans-unit id="QmNxufM" resname="Content category">
+        <source>Content category</source>
+        <target>Content category</target>
+      </trans-unit>
+      <trans-unit id="zRrq72V" resname="This torrent have selected categories">
+        <source>This torrent have selected categories</source>
+        <target>This torrent have selected categories</target>
+      </trans-unit>
+      <trans-unit id="o_ep6hc" resname="Edit categories">
+        <source>Edit categories</source>
+        <target>Edit categories</target>
+      </trans-unit>
+      <trans-unit id="2SVm4J_" resname="Edit categories for torrent">
+        <source>Edit categories for torrent</source>
+        <target>Edit categories for torrent</target>
+      </trans-unit>
+      <trans-unit id="yj3GEvR" resname="Locale">
+        <source>Locale</source>
+        <target>Locale</target>
+      </trans-unit>
+      <trans-unit id="KSwG8AR" resname="Category">
+        <source>Category</source>
+        <target>Category</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
