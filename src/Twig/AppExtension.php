@@ -46,6 +46,13 @@ class AppExtension extends AbstractExtension
                     'urlToMarkdown'
                 ]
             ),
+            new TwigFilter(
+                'trans_category',
+                [
+                    $this,
+                    'transCategory'
+                ]
+            ),
         ];
     }
 
@@ -151,6 +158,29 @@ class AppExtension extends AbstractExtension
             '[$1]($1)',
             $text
         );
+    }
+
+    public function transCategory(
+        string $name
+    ): string
+    {
+        switch ($name)
+        {
+            case 'movie':     return $this->translator->trans('movie');
+            case 'series':    return $this->translator->trans('series');
+            case 'tv':        return $this->translator->trans('tv');
+            case 'animation': return $this->translator->trans('animation');
+            case 'music':     return $this->translator->trans('music');
+            case 'game':      return $this->translator->trans('game');
+            case 'audiobook': return $this->translator->trans('audiobook');
+            case 'podcast':   return $this->translator->trans('podcast');
+            case 'book':      return $this->translator->trans('book');
+            case 'archive':   return $this->translator->trans('archive');
+            case 'picture':   return $this->translator->trans('picture');
+            case 'software':  return $this->translator->trans('software');
+            case 'other':     return $this->translator->trans('other');
+            default:          return $name;
+        }
     }
 
     private function plural(int $number, array $texts)

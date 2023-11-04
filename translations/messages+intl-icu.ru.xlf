@@ -799,55 +799,107 @@
       </trans-unit>
       <trans-unit id="uLHYlMa" resname="Categories">
         <source>Categories</source>
-        <target>Categories</target>
+        <target>Категории</target>
       </trans-unit>
       <trans-unit id="R2SmYMn" resname="At least one category required">
         <source>At least one category required</source>
-        <target>At least one category required</target>
+        <target>Необходимо указать минимум одну категорию</target>
       </trans-unit>
       <trans-unit id="QmNxufM" resname="Content category">
         <source>Content category</source>
-        <target>Content category</target>
+        <target>Категория содержимого</target>
       </trans-unit>
       <trans-unit id="zRrq72V" resname="This torrent have selected categories">
         <source>This torrent have selected categories</source>
-        <target>This torrent have selected categories</target>
+        <target>Этот торрент содержит выбранные категории</target>
       </trans-unit>
       <trans-unit id="o_ep6hc" resname="Edit categories">
         <source>Edit categories</source>
-        <target>Edit categories</target>
+        <target>Редактировать категории</target>
       </trans-unit>
       <trans-unit id="2SVm4J_" resname="Edit categories for torrent">
         <source>Edit categories for torrent</source>
-        <target>Edit categories for torrent</target>
+        <target>Редактировать категории для торрента</target>
       </trans-unit>
       <trans-unit id="yj3GEvR" resname="Locale">
         <source>Locale</source>
-        <target>Locale</target>
+        <target>Локаль</target>
       </trans-unit>
       <trans-unit id="KSwG8AR" resname="Category">
         <source>Category</source>
-        <target>Category</target>
+        <target>Категория</target>
       </trans-unit>
       <trans-unit id="AlYAkS1" resname="Torrent categories">
         <source>Torrent categories</source>
-        <target>Torrent categories</target>
+        <target>Категории торрента</target>
       </trans-unit>
       <trans-unit id="Yfrv1ti" resname="have deleted categories edition">
         <source>have deleted categories edition</source>
-        <target>have deleted categories edition</target>
+        <target>удалил редакцию категорий</target>
       </trans-unit>
       <trans-unit id="LAnRgSg" resname="have disapproved categories edition">
         <source>have disapproved categories edition</source>
-        <target>have disapproved categories edition</target>
+        <target>отклонил редакцию категорий</target>
       </trans-unit>
       <trans-unit id="uF9AEqp" resname="have approved categories edition">
         <source>have approved categories edition</source>
-        <target>have approved categories edition</target>
+        <target>утвердил редакцию категорий</target>
       </trans-unit>
       <trans-unit id="oVNdrer" resname="have added categories edition">
         <source>have added categories edition</source>
-        <target>have added categories edition</target>
+        <target>добавил редакцию категорий</target>
+      </trans-unit>
+      <trans-unit id="imujLJv" resname="movie">
+        <source>movie</source>
+        <target>фильм</target>
+      </trans-unit>
+      <trans-unit id="nNo46jo" resname="series">
+        <source>series</source>
+        <target>сериал</target>
+      </trans-unit>
+      <trans-unit id="pG5dK74" resname="tv">
+        <source>tv</source>
+        <target>ТВ шоу</target>
+      </trans-unit>
+      <trans-unit id="7CPO8DE" resname="animation">
+        <source>animation</source>
+        <target>анимация</target>
+      </trans-unit>
+      <trans-unit id="gPGJmE5" resname="music">
+        <source>music</source>
+        <target>музыка</target>
+      </trans-unit>
+      <trans-unit id="bKXKt35" resname="game">
+        <source>game</source>
+        <target>игра</target>
+      </trans-unit>
+      <trans-unit id="PYW9Udx" resname="audiobook">
+        <source>audiobook</source>
+        <target>аудиокнига</target>
+      </trans-unit>
+      <trans-unit id="9ippfeB" resname="podcast">
+        <source>podcast</source>
+        <target>подкаст</target>
+      </trans-unit>
+      <trans-unit id="knGf4M_" resname="book">
+        <source>book</source>
+        <target>книга</target>
+      </trans-unit>
+      <trans-unit id="DrPja.s" resname="archive">
+        <source>archive</source>
+        <target>архив</target>
+      </trans-unit>
+      <trans-unit id="LOonTQv" resname="picture">
+        <source>picture</source>
+        <target>изображение</target>
+      </trans-unit>
+      <trans-unit id="NTkPVFP" resname="software">
+        <source>software</source>
+        <target>программа</target>
+      </trans-unit>
+      <trans-unit id="2SmKENG" resname="other">
+        <source>other</source>
+        <target>другое</target>
       </trans-unit>
     </body>
   </file>

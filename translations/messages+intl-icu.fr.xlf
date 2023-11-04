@@ -849,6 +849,58 @@
         <source>have added categories edition</source>
         <target>have added categories edition</target>
       </trans-unit>
+      <trans-unit id="imujLJv" resname="movie">
+        <source>movie</source>
+        <target>movie</target>
+      </trans-unit>
+      <trans-unit id="nNo46jo" resname="series">
+        <source>series</source>
+        <target>series</target>
+      </trans-unit>
+      <trans-unit id="pG5dK74" resname="tv">
+        <source>tv</source>
+        <target>tv</target>
+      </trans-unit>
+      <trans-unit id="7CPO8DE" resname="animation">
+        <source>animation</source>
+        <target>animation</target>
+      </trans-unit>
+      <trans-unit id="gPGJmE5" resname="music">
+        <source>music</source>
+        <target>music</target>
+      </trans-unit>
+      <trans-unit id="bKXKt35" resname="game">
+        <source>game</source>
+        <target>game</target>
+      </trans-unit>
+      <trans-unit id="PYW9Udx" resname="audiobook">
+        <source>audiobook</source>
+        <target>audiobook</target>
+      </trans-unit>
+      <trans-unit id="9ippfeB" resname="podcast">
+        <source>podcast</source>
+        <target>podcast</target>
+      </trans-unit>
+      <trans-unit id="knGf4M_" resname="book">
+        <source>book</source>
+        <target>book</target>
+      </trans-unit>
+      <trans-unit id="DrPja.s" resname="archive">
+        <source>archive</source>
+        <target>archive</target>
+      </trans-unit>
+      <trans-unit id="LOonTQv" resname="picture">
+        <source>picture</source>
+        <target>picture</target>
+      </trans-unit>
+      <trans-unit id="NTkPVFP" resname="software">
+        <source>software</source>
+        <target>software</target>
+      </trans-unit>
+      <trans-unit id="2SmKENG" resname="other">
+        <source>other</source>
+        <target>other</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

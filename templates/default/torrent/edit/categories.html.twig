@@ -32,7 +32,7 @@
                                 <input type="checkbox" name="categories[]" id="{{ category }}" value="{{ category }}" />
                             {% endif %}
                             <label class="margin-l-4-px" for="{{ category }}">
-                                {{ category | u.title }}
+                                {{ category | trans_category | u.title }}
                             </label>
                         </div>
                     {% endfor %}

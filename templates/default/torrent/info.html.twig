@@ -362,7 +362,7 @@
                 {% if torrent.categories %}
                     <div class="padding-y-4-px">
                         {% set i = 0 %}
-                        {% for category in torrent.categories | sort %}{% if i > 0 %},{% endif %} {{ category | u.title }}{% set i = i + 1 %}{% endfor %}
+                        {% for category in torrent.categories | sort %}{% if i > 0 %},{% endif %} {{ category | trans_category | u.title }}{% set i = i + 1 %}{% endfor %}
                     </div>
                 {% endif %}
             </div>
