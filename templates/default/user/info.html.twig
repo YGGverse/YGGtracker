@@ -172,7 +172,8 @@
                         {{ 'Languages' | trans }}
                     </td>
                     <td class="width-80 line-height-20-px">
-                        {% for i, locale in user.locales | sort %}{% if i > 0 %},{% endif %} {{ locale | locale_name(locale) | u.title }}{% endfor %}
+                        {% set i = 0 %}
+                        {% for locale in user.locales | sort %}{% if i > 0 %},{% endif %} {{ locale | locale_name(locale) | u.title }}{% set i = i + 1 %}{% endfor %}
                     </td>
                 </tr>
                 <tr>
@@ -180,7 +181,8 @@
                         {{ 'Categories' | trans }}
                     </td>
                     <td class="width-80 line-height-20-px">
-                        {% for i, category in user.categories | sort %}{% if i > 0 %},{% endif %} {{ category | u.title }}{% endfor %}
+                        {% set i = 0 %}
+                        {% for category in user.categories | sort %}{% if i > 0 %},{% endif %} {{ category | u.title }}{% set i = i + 1 %}{% endfor %}
                     </td>
                 </tr>
                 <tr>

@@ -344,7 +344,8 @@
             <div class="padding-t-16-px text-left">
                 {% if torrent.locales %}
                     <div class="padding-y-4-px">
-                        {% for i, locale in torrent.locales | sort %}{% if i > 0 %},{% endif %} {{ locale | locale_name(locale) | u.title }}{% endfor %}
+                        {% set i = 0 %}
+                        {% for locale in torrent.locales | sort %}{% if i > 0 %},{% endif %} {{ locale | locale_name(locale) | u.title }}{% set i = i + 1 %}{% endfor %}
                     </div>
                 {% endif %}
             </div>
@@ -360,7 +361,8 @@
             <div class="padding-t-16-px text-left">
                 {% if torrent.categories %}
                     <div class="padding-y-4-px">
-                        {% for i, category in torrent.categories | sort %}{% if i > 0 %},{% endif %} {{ category | u.title }}{% endfor %}
+                        {% set i = 0 %}
+                        {% for category in torrent.categories | sort %}{% if i > 0 %},{% endif %} {{ category | u.title }}{% set i = i + 1 %}{% endfor %}
                     </div>
                 {% endif %}
             </div>
