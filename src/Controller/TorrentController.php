@@ -204,7 +204,9 @@ class TorrentController extends AbstractController
                 'private'  => $file->isPrivate(),
                 'source'   => $file->getSource(),
                 'comment'  => $file->getComment(),
-                'tree'     => $file->getFileTree(),
+                'tree'     => $file->getFileTree(
+                    \Rhilip\Bencode\TorrentFile::FILETREE_SORT_NATURAL // #34 @TODO cyrillic
+                ),
               //'trackers' => $file->getAnnounceList(),
                 'hash' =>
                 [
