@@ -707,21 +707,65 @@ class TorrentController extends AbstractController
         );
 
         // Init request
-        $query      = $request->get('query') ? explode(' ', urldecode($request->get('query'))) : [];
-        $page       = $request->get('page') ? (int) $request->get('page') : 1;
+        $query  = $request->get('query') ?
+                  explode(' ', urldecode($request->get('query'))) : [];
 
-        $locales    = $request->get('locales') ? explode('|', $request->get('locales')) : explode('|', $this->getParameter('app.locales'));
-        $categories = $request->get('categories') ? explode('|', $request->get('categories')) : explode('|', $this->getParameter('app.categories'));
-        $sensitive  = $request->get('sensitive') ? (bool) $request->get('sensitive') : null;
+        $page   = $request->get('page') ?
+                  (int) $request->get('page') : 1;
 
-        $yggdrasil  = $request->get('yggdrasil') ? (bool) $request->get('yggdrasil') : false;
+        $filter = $request->get('filter') ?
+                  true : false;
+
+        if ($request->get('locales'))
+        {
+            $locales = explode('|', $request->get('locales'));
+        }
+
+        else
+        {
+            $locales = $user->getLocales();
+        }
+
+        if ($request->get('categories'))
+        {
+            $categories = explode('|', $request->get('categories'));
+        }
+
+        else
+        {
+            $categories = $user->getCategories();
+        }
+
+        switch ($request->get('sensitive'))
+        {
+            case 'true':
+                $sensitive = true;
+            break;
+            case 'false':
+                $sensitive = false;
+            break;
+            default:
+                $sensitive = $user->isSensitive() ? false : null;
+        }
+
+        switch ($request->get('yggdrasil'))
+        {
+            case 'true':
+                $yggdrasil = true;
+            break;
+            case 'false':
+                $yggdrasil = false;
+            break;
+            default:
+                $yggdrasil = $user->isYggdrasil();
+        }
 
         // Init trackers
         $trackers = explode('|', $this->getParameter('app.trackers'));
 
         // Get total torrents
         $total = $torrentService->findTorrentsTotal(
-            $user->getId(),
+            $filter ? 0 : $user->getId(),
             $query,
             $locales,
             $categories,
@@ -733,7 +777,7 @@ class TorrentController extends AbstractController
         // Create torrents list
         $torrents = [];
         foreach ($torrentService->findTorrents(
-            $user->getId(),
+            $filter ? 0 : $user->getId(),
             $query,
             $locales,
             $categories,
@@ -753,28 +797,15 @@ class TorrentController extends AbstractController
             // Apply yggdrasil filters
             $file = $this->filterYggdrasil($file, $yggdrasil);
 
-            // Generate url
-            $url = [];
-            foreach ($locales as $locale)
-            {
-                $url[$locale] = $this->generateUrl(
-                    'torrent_info',
-                    [
-                        '_locale'   => $locale,
-                        'torrentId' => $torrent->getId(),
-                    ],
-                    false
-                );
-            }
-
             $torrents[] =
             [
                 'torrent' =>
                 [
-                    'id'        => $torrent->getId(),
-                    'added'     => $torrent->getAdded(),
-                    'locales'   => $torrent->getLocales(),
-                    'sensitive' => $torrent->isSensitive(),
+                    'id'         => $torrent->getId(),
+                    'added'      => $torrent->getAdded(),
+                    'locales'    => $torrent->getLocales(),
+                    'categories' => $torrent->getCategories(),
+                    'sensitive'  => $torrent->isSensitive(),
                     'file' =>
                     [
                         'name' => $file->getName(),
@@ -796,7 +827,7 @@ class TorrentController extends AbstractController
                             ],
                             false
                         ),
-                        'urn' => $file->getMagnetLink()
+                      //'urn' => $file->getMagnetLink()
                     ],
                     'scrape' =>
                     [
@@ -804,21 +835,16 @@ class TorrentController extends AbstractController
                         'peers'     => (int) $torrent->getPeers(),
                         'leechers'  => (int) $torrent->getLeechers(),
                     ],
-                    'url' => $url
+                    'url' => $this->generateUrl(
+                        'torrent_info',
+                        [
+                            '_locale'   => $user->getLocale(),
+                            'torrentId' => $torrent->getId(),
+                        ],
+                        false
+                    )
                 ],
             ];
-        }
-
-        $url = [];
-        foreach ($locales as $locale)
-        {
-            $url[$locale] = $this->generateUrl(
-                'torrent_recent',
-                [
-                    '_locale' => $locale
-                ],
-                false
-            );
         }
 
         return $this->json(
@@ -828,7 +854,13 @@ class TorrentController extends AbstractController
                 [
                     'name'    => $this->getParameter('app.name'),
                     'version' => $this->getParameter('app.version'),
-                    'url'     => $url
+                    'url'     => $this->generateUrl(
+                        'torrent_recent',
+                        [
+                            '_locale'   => $user->getLocale()
+                        ],
+                        false
+                    )
                 ],
                 'torrents' => $torrents
             ]
