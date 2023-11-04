@@ -318,6 +318,12 @@ class UserController extends AbstractController
             );
         }
 
+        // Block crawler requests
+        if (in_array($request->getClientIp(), explode('|', $this->getParameter('app.crawlers'))))
+        {
+            throw $this->createNotFoundException();
+        }
+
         // Init target user
         if (!$userTarget = $userService->getUser($request->get('userId')))
         {
