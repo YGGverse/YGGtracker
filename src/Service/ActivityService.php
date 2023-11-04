@@ -51,6 +51,11 @@ class ActivityService
             Activity::EVENT_TORRENT_LOCALES_APPROVE_ADD,
             Activity::EVENT_TORRENT_LOCALES_APPROVE_DELETE,
 
+            Activity::EVENT_TORRENT_CATEGORIES_ADD,
+            Activity::EVENT_TORRENT_CATEGORIES_DELETE,
+            Activity::EVENT_TORRENT_CATEGORIES_APPROVE_ADD,
+            Activity::EVENT_TORRENT_CATEGORIES_APPROVE_DELETE,
+
             Activity::EVENT_TORRENT_SENSITIVE_ADD,
             Activity::EVENT_TORRENT_SENSITIVE_DELETE,
             Activity::EVENT_TORRENT_SENSITIVE_APPROVE_ADD,
@@ -270,6 +275,55 @@ class ActivityService
                     $events
                     [
                         $this->translatorInterface->trans('Torrent locales')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Disapproved')
+                    ] = $code;
+
+                break;
+
+                /// Torrent categories
+                case Activity::EVENT_TORRENT_CATEGORIES_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent categories')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Added')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_CATEGORIES_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent categories')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Deleted')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_CATEGORIES_APPROVE_ADD:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent categories')
+                    ]
+                    [
+                        $this->translatorInterface->trans('Approved')
+                    ] = $code;
+
+                break;
+
+                case Activity::EVENT_TORRENT_CATEGORIES_APPROVE_DELETE:
+
+                    $events
+                    [
+                        $this->translatorInterface->trans('Torrent categories')
                     ]
                     [
                         $this->translatorInterface->trans('Disapproved')
@@ -1294,6 +1348,155 @@ class ActivityService
         $activity->setData(
             [
                 'torrentLocalesId' => $torrentLocalesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    /// Torrent categories
+    public function addEventTorrentCategoriesAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentCategoriesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_CATEGORIES_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentCategoriesId' => $torrentCategoriesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentCategoriesDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentCategoriesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_CATEGORIES_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentCategoriesId' => $torrentCategoriesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentCategoriesApproveAdd(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentCategoriesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_CATEGORIES_APPROVE_ADD
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentCategoriesId' => $torrentCategoriesId
+            ]
+        );
+
+        $this->entityManagerInterface->persist($activity);
+        $this->entityManagerInterface->flush();
+
+        return $activity;
+    }
+
+    public function addEventTorrentCategoriesApproveDelete(
+        int $userId,
+        int $torrentId,
+        int $added,
+        int $torrentCategoriesId,
+    ): ?Activity
+    {
+        $activity = new Activity();
+
+        $activity->setEvent(
+            Activity::EVENT_TORRENT_CATEGORIES_APPROVE_DELETE
+        );
+
+        $activity->setUserId(
+            $userId
+        );
+
+        $activity->setTorrentId(
+            $torrentId
+        );
+
+        $activity->setAdded(
+            $added
+        );
+
+        $activity->setData(
+            [
+                'torrentCategoriesId' => $torrentCategoriesId
             ]
         );
 

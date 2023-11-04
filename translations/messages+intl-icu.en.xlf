@@ -829,6 +829,26 @@
         <source>Category</source>
         <target>Category</target>
       </trans-unit>
+      <trans-unit id="AlYAkS1" resname="Torrent categories">
+        <source>Torrent categories</source>
+        <target>Torrent categories</target>
+      </trans-unit>
+      <trans-unit id="Yfrv1ti" resname="have deleted categories edition">
+        <source>have deleted categories edition</source>
+        <target>have deleted categories edition</target>
+      </trans-unit>
+      <trans-unit id="LAnRgSg" resname="have disapproved categories edition">
+        <source>have disapproved categories edition</source>
+        <target>have disapproved categories edition</target>
+      </trans-unit>
+      <trans-unit id="uF9AEqp" resname="have approved categories edition">
+        <source>have approved categories edition</source>
+        <target>have approved categories edition</target>
+      </trans-unit>
+      <trans-unit id="oVNdrer" resname="have added categories edition">
+        <source>have added categories edition</source>
+        <target>have added categories edition</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

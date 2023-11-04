@@ -1704,14 +1704,12 @@ class TorrentController extends AbstractController
                 );
 
                 // Register activity event
-                /* @TODO
                 $activityService->addEventTorrentCategoriesAdd(
                     $user->getId(),
                     $torrent->getId(),
                     time(),
                     $torrentCategories->getId()
                 );
-                */
 
                 // Redirect to info page
                 return $this->redirectToRoute(
@@ -1792,7 +1790,6 @@ class TorrentController extends AbstractController
         }
 
         // Register activity event
-        /* @TODO
         if (!$torrentCategories->isApproved())
         {
             $activityService->addEventTorrentCategoriesApproveAdd(
@@ -1812,7 +1809,6 @@ class TorrentController extends AbstractController
                 $torrentCategories->getId()
             );
         }
-        */
 
         // Update approved
         $torrentService->toggleTorrentCategoriesApproved(
@@ -1881,14 +1877,12 @@ class TorrentController extends AbstractController
         }
 
         // Add activity event
-        /* @TODO
         $activityService->addEventTorrentCategoriesDelete(
             $user->getId(),
             $torrent->getId(),
             time(),
             $torrentCategories->getId()
         );
-        */
 
         // Update approved
         $torrentService->deleteTorrentCategories(

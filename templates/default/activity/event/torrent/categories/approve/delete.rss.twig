@@ -1,0 +1,26 @@
+<item>
+    <title>
+        {{ 'User' | trans }}
+        #{{ user.id }}
+        {{ 'have disapproved categories edition' | trans }}
+        #{{ torrent.categories.id }}
+        {{ 'for torrent' | trans }}
+        {% if session.user.moderator or session.user.owner %}
+            {{ torrent.name }}
+        {% else %}
+            {% if torrent.status == false %}
+                #{{ torrent.id }} ({{ 'disabled' | trans }})
+            {% elseif torrent.approved == false %}
+                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+            {% elseif torrent.sensitive == true and session.user.sensitive == true %}
+                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% else %}
+                {{ torrent.name }}
+            {% endif %}
+        {% endif %}
+    </title>
+    <author>#{{ user.id }}</author>
+    <pubDate>{{ added | date('D, d M Y h:i:s O') }}</pubDate>
+    <guid>{{ url('torrent_categories_edit', { torrentId : torrent.id, torrentCategoriesId : torrent.categories.id }) }}#activity-{{ id }}</guid>
+    <link>{{ url('torrent_categories_edit', { torrentId : torrent.id, torrentCategoriesId : torrent.categories.id }) }}#activity</link>
+</item>

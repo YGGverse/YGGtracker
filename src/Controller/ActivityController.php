@@ -1116,6 +1116,219 @@ class ActivityController extends AbstractController
 
             break;
 
+            /// Torrent Categories
+            case $activity::EVENT_TORRENT_CATEGORIES_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/categories/add' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'categories' => [
+                                'id'     => $activity->getData()['torrentCategoriesId'],
+                                'exist'  => $torrentService->getTorrentCategories(
+                                    $activity->getData()['torrentCategoriesId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_CATEGORIES_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/categories/delete' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'categories' => [
+                                'id'    => $activity->getData()['torrentCategoriesId'],
+                                'exist' => $torrentService->getTorrentCategories(
+                                    $activity->getData()['torrentCategoriesId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_CATEGORIES_APPROVE_ADD:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/categories/approve/add' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'categories' => [
+                                'id'    => $activity->getData()['torrentCategoriesId'],
+                                'exist' => $torrentService->getTorrentCategories(
+                                    $activity->getData()['torrentCategoriesId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
+            case $activity::EVENT_TORRENT_CATEGORIES_APPROVE_DELETE:
+
+                // Init torrent
+                if (!$torrent = $torrentService->getTorrent($activity->getTorrentId()))
+                {
+                    throw $this->createNotFoundException();
+                }
+
+                return $this->render(
+                    'default/activity/event/torrent/categories/approve/delete' . $extension,
+                    [
+                        'id'    => $activity->getId(),
+                        'added' => $activity->getAdded(),
+                        'user' =>
+                        [
+                            'id'        => $activity->getUserId(),
+                            'identicon' => $userService->identicon(
+                                $userService->getUser(
+                                    $activity->getUserId()
+                                )->getAddress()
+                            )
+                        ],
+                        'torrent' =>
+                        [
+                            'id'        => $torrent->getId(),
+                            'sensitive' => $torrent->isSensitive(),
+                            'approved'  => $torrent->isApproved(),
+                            'status'    => $torrent->isStatus(),
+                            'name'      => $torrentService->readTorrentFileByTorrentId(
+                                $torrent->getId()
+                            )->getName(),
+                            'categories' => [
+                                'id'    => $activity->getData()['torrentCategoriesId'],
+                                'exist' => $torrentService->getTorrentCategories(
+                                    $activity->getData()['torrentCategoriesId'] // could be deleted by moderator, remove links
+                                )
+                            ]
+                        ],
+                        'session' =>
+                        [
+                            'user' =>
+                            [
+                                'id'        => $user->getId(),
+                                'sensitive' => $user->isSensitive(),
+                                'moderator' => $user->isModerator(),
+                                'owner'     => $user->getId() === $torrent->getUserId(),
+                            ]
+                        ]
+                    ]
+                );
+
+            break;
+
             /// Torrent Sensitive
             case $activity::EVENT_TORRENT_SENSITIVE_ADD:
 

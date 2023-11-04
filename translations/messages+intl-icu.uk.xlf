@@ -797,6 +797,58 @@
         <source>Bottom</source>
         <target>Низ</target>
       </trans-unit>
+      <trans-unit id="uLHYlMa" resname="Categories">
+        <source>Categories</source>
+        <target>Categories</target>
+      </trans-unit>
+      <trans-unit id="R2SmYMn" resname="At least one category required">
+        <source>At least one category required</source>
+        <target>At least one category required</target>
+      </trans-unit>
+      <trans-unit id="QmNxufM" resname="Content category">
+        <source>Content category</source>
+        <target>Content category</target>
+      </trans-unit>
+      <trans-unit id="zRrq72V" resname="This torrent have selected categories">
+        <source>This torrent have selected categories</source>
+        <target>This torrent have selected categories</target>
+      </trans-unit>
+      <trans-unit id="o_ep6hc" resname="Edit categories">
+        <source>Edit categories</source>
+        <target>Edit categories</target>
+      </trans-unit>
+      <trans-unit id="2SVm4J_" resname="Edit categories for torrent">
+        <source>Edit categories for torrent</source>
+        <target>Edit categories for torrent</target>
+      </trans-unit>
+      <trans-unit id="yj3GEvR" resname="Locale">
+        <source>Locale</source>
+        <target>Locale</target>
+      </trans-unit>
+      <trans-unit id="KSwG8AR" resname="Category">
+        <source>Category</source>
+        <target>Category</target>
+      </trans-unit>
+      <trans-unit id="AlYAkS1" resname="Torrent categories">
+        <source>Torrent categories</source>
+        <target>Torrent categories</target>
+      </trans-unit>
+      <trans-unit id="Yfrv1ti" resname="have deleted categories edition">
+        <source>have deleted categories edition</source>
+        <target>have deleted categories edition</target>
+      </trans-unit>
+      <trans-unit id="LAnRgSg" resname="have disapproved categories edition">
+        <source>have disapproved categories edition</source>
+        <target>have disapproved categories edition</target>
+      </trans-unit>
+      <trans-unit id="uF9AEqp" resname="have approved categories edition">
+        <source>have approved categories edition</source>
+        <target>have approved categories edition</target>
+      </trans-unit>
+      <trans-unit id="oVNdrer" resname="have added categories edition">
+        <source>have added categories edition</source>
+        <target>have added categories edition</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

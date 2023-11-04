@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="column width-80">
+        <a class="margin-r-4-px" href="{{ path('user_info', { userId : user.id }) }}">
+            <img class="border-radius-50 border-color-default vertical-align-middle" src="{{ user.identicon }}" alt="{{ 'identicon' | trans }}" />
+        </a>
+        {{ 'have approved categories edition' | trans }}
+        {% if torrent.categories.exist %}
+            <a href="{{ path('torrent_categories_edit', { torrentId : torrent.id, torrentCategoriesId : torrent.categories.id }) }}">
+                #{{ torrent.categories.id }}
+            </a>
+        {% else %}
+            #{{ torrent.categories.id }}
+        {% endif %}
+        {{ 'for torrent' | trans }}
+        {% if session.user.moderator or session.user.owner %}
+            <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                {{ torrent.name }}
+            </a>
+            {% if torrent.approved == false %}
+                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+            {% endif %}
+        {% else %}
+            {% if torrent.status == false %}
+                #{{ torrent.id }} ({{ 'disabled' | trans }})
+            {% elseif torrent.approved == false %}
+                #{{ torrent.id }} ({{ 'waiting for approve' | trans }})
+            {% elseif torrent.sensitive == true and session.user.sensitive == true %}
+                #{{ torrent.id }} ({{ 'sensitive' | trans }})
+            {% else %}
+                <a href="{{ path('torrent_info', { torrentId : torrent.id }) }}">
+                    {{ torrent.name }}
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="column width-20 text-right">
+        {{ added | format_ago }}
+    </div>
+</div>
