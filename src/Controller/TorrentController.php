@@ -57,10 +57,13 @@ class TorrentController extends AbstractController
         }
 
         // Sensitive filter
-        if (!$user->isModerator() && $user->isSensitive())
+        // @TODO add blur effect or sensitive notice instead of 404 on direct request #37
+        /*
+        if (!$user->isModerator() && $user->isSensitive() && $torrent->isSensitive())
         {
             throw $this->createNotFoundException();
         }
+        */
 
         // Access filter
         if (!$user->isModerator() && $user->getId() != $torrent->getUserId() &&
