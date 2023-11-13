@@ -4,10 +4,8 @@
     {% if filter %}
         <input type="hidden" name="filter" value="true" />
         <div class="text-left">
-            <div class="margin-t-16-px margin-b-4-px text-right">
-                <h2 class="margin-x-4-px">
-                    {{ 'Locales' | trans }}
-                </h2>
+            <div class="margin-t-16-px margin-b-4-px padding-x-4-px text-right">
+                {{ 'Locales' | trans }}
             </div>
             <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
                 {% for locale in locales | sort %}
@@ -23,10 +21,8 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="margin-b-4-px text-right">
-                <h2 class="margin-x-4-px">
-                    {{ 'Categories' | trans }}
-                </h2>
+            <div class="margin-b-4-px padding-x-4-px text-right">
+                {{ 'Categories' | trans }}
             </div>
             <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
                 {% for category in categories | sort %}
@@ -42,10 +38,8 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="margin-b-4-px text-right">
-                <h2 class="margin-x-4-px">
-                    {{ 'other' | trans | u.title }}
-                </h2>
+            <div class="margin-b-4-px padding-x-4-px text-right">
+                {{ 'other' | trans | u.title }}
             </div>
             <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
                 {% if sensitive %}
