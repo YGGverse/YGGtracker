@@ -901,6 +901,14 @@
         <source>other</source>
         <target>інше</target>
       </trans-unit>
+      <trans-unit id="v7fLnQX" resname="Hide filter">
+        <source>Hide filter</source>
+        <target>Приховати фільтр</target>
+      </trans-unit>
+      <trans-unit id="45aF7iu" resname="Show filter">
+        <source>Show filter</source>
+        <target>Показати фільтр</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
