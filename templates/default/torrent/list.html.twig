@@ -6,13 +6,13 @@
             <h2>{{ 'Search results' | trans }}</h2>
             <sub>
                 {% if app.request.get('filter') %}
-                    <a class="margin-l-4-px" href="{{ path('torrent_search', { query : query | url_encode(true) }) }}" title="{{ 'Hide filter' | trans }}">
+                    <a class="margin-l-4-px" rel="nofollow" href="{{ path('torrent_search', { query : query | url_encode(true) }) }}" title="{{ 'Hide filter' | trans }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square-fill" viewBox="0 0 16 16">
                             <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm.5 5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1 0-1zM4 8.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm2 3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"/>
                         </svg>
                     </a>
                 {% else %}
-                    <a class="text-color-night margin-l-4-px" href="{{ path('torrent_search', { query : query | url_encode(true), filter : 'true' }) }}" title="{{ 'Show filter' | trans }}">
+                    <a class="text-color-night margin-l-4-px" rel="nofollow" href="{{ path('torrent_search', { query : query | url_encode(true), filter : 'true' }) }}" title="{{ 'Show filter' | trans }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square-fill" viewBox="0 0 16 16">
                             <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm.5 5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1 0-1zM4 8.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm2 3a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z"/>
                         </svg>
