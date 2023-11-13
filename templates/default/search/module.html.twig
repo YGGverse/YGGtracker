@@ -9,16 +9,21 @@
             </div>
             <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
                 {% for locale in locales | sort %}
-                    <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
-                        {% if locale.checked %}
-                            <input name="locales[]" id="{{ locale.value }}" type="checkbox" value="{{ locale.value }}" checked="checked" />
-                        {% else %}
-                            <input name="locales[]" id="{{ locale.value }}" type="checkbox" value="{{ locale.value }}" />
-                        {% endif %}
-                        <label class="margin-x-4-px" for="{{ locale.value }}">
-                            {{ locale.value | locale_name(locale.value) | u.title }}
-                        </label>
-                    </div>
+                    {#{% if locale.total %}#}
+                        <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
+                            {% if locale.checked %}
+                                <input name="locales[]" id="{{ locale.value }}" type="checkbox" value="{{ locale.value }}" checked="checked" />
+                            {% else %}
+                                <input name="locales[]" id="{{ locale.value }}" type="checkbox" value="{{ locale.value }}" />
+                            {% endif %}
+                            <label class="margin-x-4-px" for="{{ locale.value }}">
+                                {{ locale.value | locale_name(locale.value) | u.title }}
+                                <span class="text-color-night">
+                                    ({{ locale.total }})
+                                </span>
+                            </label>
+                        </div>
+                    {#{% endif %}#}
                 {% endfor %}
             </div>
             <div class="margin-b-4-px padding-x-4-px text-right">
@@ -26,29 +31,37 @@
             </div>
             <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
                 {% for category in categories | sort %}
-                    <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
-                        {% if category.checked %}
-                            <input name="categories[]" id="{{ category.value }}" type="checkbox" value="{{ category.value }}" checked="checked" />
-                        {% else %}
-                            <input name="categories[]" id="{{ category.value }}" type="checkbox" value="{{ category.value }}" />
-                        {% endif %}
-                        <label class="margin-x-4-px" for="{{ category.value }}">
-                            {{ category.value | trans_category | u.title }}
-                        </label>
-                    </div>
+                    {#{% if category.total %}#}
+                        <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
+                            {% if category.checked %}
+                                <input name="categories[]" id="{{ category.value }}" type="checkbox" value="{{ category.value }}" checked="checked" />
+                            {% else %}
+                                <input name="categories[]" id="{{ category.value }}" type="checkbox" value="{{ category.value }}" />
+                            {% endif %}
+                            <label class="margin-x-4-px" for="{{ category.value }}">
+                                {{ category.value | trans_category | u.title }}
+                                <span class="text-color-night">
+                                    ({{ category.total }})
+                                </span>
+                            </label>
+                        </div>
+                    {#{% endif %}#}
                 {% endfor %}
             </div>
             <div class="margin-b-4-px padding-x-4-px text-right">
                 {{ 'other' | trans | u.title }}
             </div>
             <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
-                {% if sensitive %}
+                {% if sensitive.checked %}
                     <input name="sensitive" id="sensitive" type="checkbox" value="true" checked="checked" />
                 {% else %}
                     <input name="sensitive" id="sensitive" type="checkbox" value="true" />
                 {% endif %}
                 <label class="margin-x-4-px" for="sensitive">
                     {{ 'Sensitive' | trans }}
+                    <span class="text-color-night">
+                        ({{ sensitive.total }})
+                    </span>
                 </label>
             </div>
         </div>
