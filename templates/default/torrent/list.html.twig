@@ -80,7 +80,11 @@
                 {% if torrent.keywords %}
                     <div class="margin-b-16-px">
                         {% for keyword, quantity in torrent.keywords %}
-                            <a href="{{ path('torrent_search', { query : keyword | url_encode(true) }) }}">
+                            <a href="{{ path('torrent_search', { query : keyword | url_encode(true),
+                                                                 locales : app.request.get('locales'),
+                                                                 categories : app.request.get('categories'),
+                                                                 sensitive : app.request.get('sensitive'),
+                                                                 filter : app.request.get('filter') }) }}">
                                 #{{ keyword }}
                             </a>
                         {% endfor %}
@@ -169,17 +173,30 @@
                 {% if query %}
                     {% if pagination.page > 1 %}
                         {% if pagination.page == 2 %}
-                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true) | raw }) }}">
+                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true) | raw,
+                                                                                                             locales : app.request.get('locales'),
+                                                                                                             categories : app.request.get('categories'),
+                                                                                                             sensitive : app.request.get('sensitive'),
+                                                                                                             filter : app.request.get('filter') }) }}">
                                 {{ 'Back' | trans | lower }}
                             </a>
                         {% else %}
-                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true), page : pagination.page - 1 }) }}">
+                            <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true), page : pagination.page - 1,
+                                                                                                             locales : app.request.get('locales'),
+                                                                                                             categories : app.request.get('categories'),
+                                                                                                             sensitive : app.request.get('sensitive'),
+                                                                                                             filter : app.request.get('filter') }) }}">
                                 {{ 'Back' | trans | lower }}
                             </a>
                         {% endif %}
                     {% endif %}
                     {% if pagination.page < pagination.pages %}
-                        <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true), page : pagination.page + 1 }) }}">
+                        <a rel="nofollow" class="button margin-l-8-px" href="{{ path('torrent_search', { query : query | url_encode(true),
+                                                                                                         page : pagination.page + 1,
+                                                                                                         locales : app.request.get('locales'),
+                                                                                                         categories : app.request.get('categories'),
+                                                                                                         sensitive : app.request.get('sensitive'),
+                                                                                                         filter : app.request.get('filter') }) }}">
                             {{ 'Next' | trans | lower }}
                         </a>
                     {% endif %}
