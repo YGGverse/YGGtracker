@@ -323,6 +323,11 @@ class TorrentService
     {
         $contributors = [];
 
+        foreach ($this->findTorrentCategoriesByTorrentId($torrent->getId()) as $torrentCategory)
+        {
+            $contributors[] = $torrentCategory->getUserId();
+        }
+
         foreach ($this->findTorrentLocalesByTorrentId($torrent->getId()) as $torrentLocale)
         {
             $contributors[] = $torrentLocale->getUserId();
@@ -331,6 +336,11 @@ class TorrentService
         foreach ($this->findTorrentSensitiveByTorrentId($torrent->getId()) as $torrentSensitive)
         {
             $contributors[] = $torrentSensitive->getUserId();
+        }
+
+        foreach ($this->findTorrentPosterByTorrentId($torrent->getId()) as $torrentPoster)
+        {
+            $contributors[] = $torrentPoster->getUserId();
         }
 
         $contributors[] = $torrent->getUserId();
