@@ -265,22 +265,22 @@ class TorrentController extends AbstractController
 
         // Get total torrents
         $total = $torrentService->findTorrentsTotal(
-            $user->getId(),
+            $request->get('filter') ? 0 : $user->getId(),
             $query,
-            $user->getLocales(),
-            $user->getCategories(),
-            $user->isSensitive() ? false : null,
+            $request->get('filter') ? (array) $request->get('locales') : $user->getLocales(),
+            $request->get('filter') ? (array) $request->get('categories') : $user->getCategories(),
+            $request->get('filter') ? ($request->get('sensitive') ? null : false) : ($user->isSensitive() ? false : null),
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
         );
 
         $torrents = [];
         foreach ($torrentService->findTorrents(
-            $user->getId(),
+            $request->get('filter') ? 0 : $user->getId(),
             $query,
-            $user->getLocales(),
-            $user->getCategories(),
-            $user->isSensitive() ? false : null,
+            $request->get('filter') ? (array) $request->get('locales') : $user->getLocales(),
+            $request->get('filter') ? (array) $request->get('categories') : $user->getCategories(),
+            $request->get('filter') ? ($request->get('sensitive') ? null : false) : ($user->isSensitive() ? false : null),
             !$user->isModerator() ? true : null,
             !$user->isModerator() ? true : null,
             $this->getParameter('app.pagination'),

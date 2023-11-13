@@ -1,4 +1,62 @@
 <form class="margin-t-16-px" name="search" method="get" action="{{ path('torrent_search') }}">
     <input class="min-width-200-px" type="text" name="query" value="{{ query }}" placeholder="{{ 'Keyword, file, hash...' | trans }}" />
     <input {% if query %}class="button-green"{% endif %} type="submit" value="{{ 'Search' | trans }}" />
+    {% if filter %}
+        <input type="hidden" name="filter" value="true" />
+        <div class="text-left">
+            <div class="margin-t-16-px margin-b-4-px text-right">
+                <h2 class="margin-x-4-px">
+                    {{ 'Locales' | trans }}
+                </h2>
+            </div>
+            <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
+                {% for locale in locales | sort %}
+                    <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
+                        {% if locale.checked %}
+                            <input name="locales[]" id="{{ locale.value }}" type="checkbox" value="{{ locale.value }}" checked="checked" />
+                        {% else %}
+                            <input name="locales[]" id="{{ locale.value }}" type="checkbox" value="{{ locale.value }}" />
+                        {% endif %}
+                        <label class="margin-x-4-px" for="{{ locale.value }}">
+                            {{ locale.value | locale_name(locale.value) | u.title }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="margin-b-4-px text-right">
+                <h2 class="margin-x-4-px">
+                    {{ 'Categories' | trans }}
+                </h2>
+            </div>
+            <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
+                {% for category in categories | sort %}
+                    <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
+                        {% if category.checked %}
+                            <input name="categories[]" id="{{ category.value }}" type="checkbox" value="{{ category.value }}" checked="checked" />
+                        {% else %}
+                            <input name="categories[]" id="{{ category.value }}" type="checkbox" value="{{ category.value }}" />
+                        {% endif %}
+                        <label class="margin-x-4-px" for="{{ category.value }}">
+                            {{ category.value | trans_category | u.title }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="margin-b-4-px text-right">
+                <h2 class="margin-x-4-px">
+                    {{ 'other' | trans | u.title }}
+                </h2>
+            </div>
+            <div class="padding-t-16-px padding-b-8-px padding-x-24-px border-top-default">
+                {% if sensitive %}
+                    <input name="sensitive" id="sensitive" type="checkbox" value="true" checked="checked" />
+                {% else %}
+                    <input name="sensitive" id="sensitive" type="checkbox" value="true" />
+                {% endif %}
+                <label class="margin-x-4-px" for="sensitive">
+                    {{ 'Sensitive' | trans }}
+                </label>
+            </div>
+        </div>
+    {% endif %}
 </form>
