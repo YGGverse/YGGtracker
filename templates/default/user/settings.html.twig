@@ -87,9 +87,9 @@
                             </div>
                         </td>
                         <td class="padding-t-16-px padding-b-8-px">
-                            {% for locale in locales %}
+                            {% for locale in locales | sort %}
                                 <div class="margin-t-4-px margin-b-8-px margin-r-8-px display-inline-block min-width-120-px">
-                                    {% if locale in user.locales | sort %}
+                                    {% if locale in user.locales %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" checked="checked" />
                                     {% else %}
                                         <input name="locales[]" id="{{ locale }}" type="checkbox" value="{{ locale }}" />
