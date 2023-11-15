@@ -220,6 +220,18 @@
                         </td>
                     </tr>
                 {% endif %}
+                <tr>
+                    <td>
+                        {{ 'Private' | trans }}
+                    </td>
+                    <td>
+                        {% if file.private %}
+                            {{ 'Yes' | trans }}
+                        {% else %}
+                            {{ 'No' | trans }}
+                        {% endif %}
+                    </td>
+                </tr>
                 {% if file.source %}
                     <tr>
                         <td>
