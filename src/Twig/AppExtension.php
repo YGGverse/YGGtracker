@@ -154,7 +154,7 @@ class AppExtension extends AbstractExtension
     ): string
     {
         return preg_replace(
-            '~(https?://(?:www\.)?[^\s]+)~i',
+            '~(https?://(?:www\.)?[^\(\s\)]+)~i',
             '[$1]($1)',
             $text
         );
