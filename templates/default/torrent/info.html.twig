@@ -96,14 +96,14 @@
                         <td class="padding-t-16-px">
                             {% if torrent.status %}
                                 {{ 'Yes' | trans }}
-                                <a class="float-right" href="{{ path('torrent_status_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                <a rel="nofollow" class="float-right" href="{{ path('torrent_status_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
                                     </svg>
                                 </a>
                             {% else %}
                                 {{ 'No' | trans }}
-                                <a class="float-right text-color-red" href="{{ path('torrent_status_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                <a rel="nofollow" class="float-right text-color-red" href="{{ path('torrent_status_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
                                     </svg>
@@ -119,14 +119,14 @@
                             <td>
                                 {% if torrent.approved %}
                                     {{ 'Yes' | trans }}
-                                    <a class="float-right" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                    <a rel="nofollow" class="float-right" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
                                         </svg>
                                     </a>
                                 {% else %}
                                     {{ 'No' | trans }}
-                                    <a class="float-right text-color-red" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
+                                    <a rel="nofollow" class="float-right text-color-red" href="{{ path('torrent_approve_toggle', { torrentId : torrent.id }) }}" title="{{ 'Toggle' | trans }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                             <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
                                         </svg>
@@ -346,7 +346,7 @@
             {% endfor %}
         </div>
         <div class="text-right">
-            <a class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_locales_edit', { torrentId : torrent.id }) }}" title="{{'Edit'|trans }}">
+            <a rel="nofollow" class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_locales_edit', { torrentId : torrent.id }) }}" title="{{ 'Edit' | trans }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
                 </svg>
@@ -363,7 +363,7 @@
             </div>
         </div>
         <div class="text-right">
-            <a class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_categories_edit', { torrentId : torrent.id }) }}" title="{{'Edit'|trans }}">
+            <a rel="nofollow" class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_categories_edit', { torrentId : torrent.id }) }}" title="{{ 'Edit' | trans }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
                 </svg>
@@ -380,7 +380,7 @@
             </div>
         </div>
         <div class="text-right">
-            <a class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_sensitive_edit', { torrentId : torrent.id }) }}" title="{{'Edit'|trans }}">
+            <a rel="nofollow" class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_sensitive_edit', { torrentId : torrent.id }) }}" title="{{ 'Edit' | trans }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
                 </svg>
@@ -396,7 +396,7 @@
             </div>
         </div>
         <div class="text-right">
-            <a class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_poster_edit', { torrentId : torrent.id }) }}" title="{{'Edit'|trans }}">
+            <a rel="nofollow" class="margin-r-4-px{#opacity-0 parent-hover-opacity-09#}" href="{{ path('torrent_poster_edit', { torrentId : torrent.id }) }}" title="{{ 'Edit' | trans }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
                 </svg>
