@@ -58,7 +58,8 @@
                     {% if torrent.scrape.leechers > 0 and torrent.scrape.seeders == 0 %}
                         <a href="{{ path('torrent_file_wanted', { torrentId : torrent.id }) }}"
                            class="label label-green font-size-10-px position-relative display-inline-block"
-                           title="{{ 'Active leechers waiting for seeders' | trans }}">
+                           title="{{ 'Active leechers waiting for seeders' | trans }}"
+                           rel="nofollow">
                             {{ 'wanted' | trans }}
                         </a>
                     {% endif %}
