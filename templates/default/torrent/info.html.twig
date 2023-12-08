@@ -238,9 +238,8 @@
                             {{ 'Source' | trans }}
                         </td>
                         <td>
-                            {# disable markdown as unsafe for unfiltered content #}
-                            {#{{ file.source | url_to_markdown | markdown_to_html }}#}
-                            {{ file.source }}
+                            {# strip all tags then apply whitelist markdown filters to prevent ping from remote #}
+                            {{ file.source | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
@@ -250,9 +249,8 @@
                             {{ 'Software' | trans }}
                         </td>
                         <td>
-                            {# disable markdown as unsafe for unfiltered content #}
-                            {#{{ file.software | url_to_markdown | markdown_to_html }}#}
-                            {{ file.software }}
+                            {# strip all tags then apply whitelist markdown filters to prevent ping from remote #}
+                            {{ file.software | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
@@ -262,9 +260,8 @@
                             {{ 'Comment' | trans }}
                         </td>
                         <td>
-                            {# disable markdown as unsafe for unfiltered content #}
-                            {#{{ file.comment | url_to_markdown | markdown_to_html }}#}
-                            {{ file.comment }}
+                            {# strip all tags then apply whitelist markdown filters to prevent ping from remote #}
+                            {{ file.comment | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
