@@ -238,7 +238,9 @@
                             {{ 'Source' | trans }}
                         </td>
                         <td>
-                            {{ file.source | url_to_markdown | markdown_to_html }}
+                            {# disable markdown as unsafe for unfiltered content #}
+                            {#{{ file.source | url_to_markdown | markdown_to_html }}#}
+                            {{ file.source }}
                         </td>
                     </tr>
                 {% endif %}
@@ -248,7 +250,9 @@
                             {{ 'Software' | trans }}
                         </td>
                         <td>
-                            {{ file.software | url_to_markdown | markdown_to_html }}
+                            {# disable markdown as unsafe for unfiltered content #}
+                            {#{{ file.software | url_to_markdown | markdown_to_html }}#}
+                            {{ file.software }}
                         </td>
                     </tr>
                 {% endif %}
@@ -258,7 +262,9 @@
                             {{ 'Comment' | trans }}
                         </td>
                         <td>
-                            {{ file.comment | url_to_markdown | markdown_to_html }}
+                            {# disable markdown as unsafe for unfiltered content #}
+                            {#{{ file.comment | url_to_markdown | markdown_to_html }}#}
+                            {{ file.comment }}
                         </td>
                     </tr>
                 {% endif %}
