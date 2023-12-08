@@ -239,7 +239,7 @@
                         </td>
                         <td>
                             {# strip all tags then apply whitelist markdown filters to prevent ping from remote #}
-                            {{ file.source | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
+                            {{ file.source | trim | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
@@ -250,7 +250,7 @@
                         </td>
                         <td>
                             {# strip all tags then apply whitelist markdown filters to prevent ping from remote #}
-                            {{ file.software | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
+                            {{ file.software | trim | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
@@ -261,7 +261,7 @@
                         </td>
                         <td>
                             {# strip all tags then apply whitelist markdown filters to prevent ping from remote #}
-                            {{ file.comment | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
+                            {{ file.comment | trim | striptags | markdown_to_html | striptags | url_to_markdown | markdown_to_html }}
                         </td>
                     </tr>
                 {% endif %}
