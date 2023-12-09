@@ -16,12 +16,14 @@
             <header>
                 <div class="container">
                     <div class="row margin-y-16-px text-center">
-                        <a class="logo display-inline-block margin-b-8-px" href="{{ path('torrent_recent') }}">
+                        <a class="logo display-inline-block{#32 margin-b-8-px #}" href="{{ path('torrent_recent') }}">
                             <span>YGG</span>tracker
                         </a>
+                        {#32
                         <div class="font-size-10-px text-center text-color-night">
                             {{ '<a href="%s">Upload</a> any torrent - download with Yggdrasil' | trans | format(path('torrent_submit')) | raw }}
                         </div>
+                        #}
                         {% block header_search %}
                             {{ render(controller(
                                 'App\\Controller\\SearchController::module',
