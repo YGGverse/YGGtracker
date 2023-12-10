@@ -24,6 +24,7 @@ class SearchController extends AbstractController
         // Defaults
         $locales    = [];
         $categories = [];
+        $sensitive  = [];
 
         // Request
         $query = $request->get('query') ? urldecode($request->get('query')) : '';
@@ -65,7 +66,7 @@ class SearchController extends AbstractController
                         $keywords,
                         [$locale],
                         $request->get('categories') ? $request->get('categories') : $user->getCategories(),
-                        $sensitive,
+                        $request->get('sensitive') ? null : false,
                         !$user->isModerator() ? true : null,
                         !$user->isModerator() ? true : null,
                     )
@@ -94,7 +95,7 @@ class SearchController extends AbstractController
                         $keywords,
                         $request->get('locales') ? $request->get('locales') : $user->getLocales(),
                         [$category],
-                        $sensitive,
+                        $request->get('sensitive') ? null : false,
                         !$user->isModerator() ? true : null,
                         !$user->isModerator() ? true : null,
                     )
