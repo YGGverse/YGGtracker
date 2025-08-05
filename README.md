@@ -11,11 +11,6 @@ YGGtracker is a manually operated catalog and social network that allows users t
 
 ![Pasted image 1](https://github.com/YGGverse/YGGtracker/assets/108541346/962f7850-01e1-4add-9dbe-c11b80108a75)
 
-#### Instances
-
-* `http://[201:23b4:991a:634d:8359:4521:5576:15b7]/yggtracker/` | [tracker.ygg](http://tracker.ygg)
-  + `ftp://[201:23b4:991a:634d:8359:4521:5576:15b7]:21/yggtracker/` - wanted torrents
-
 #### Installation
 
 ```
