@@ -1,15 +1,13 @@
 # YGGtracker
 
-[![Crowdin](https://badges.crowdin.net/yggtracker/localized.svg)](https://crowdin.com/project/yggtracker)
+> [!NOTE]
+> Take a look at [βtracker](https://github.com/yggverse/btracker) - the modern aggregation alternative written in Rust!
 
-BitTorrent Network for Yggdrasil
+Social-oriented BitTorrent catalog for the [Yggdrasil network](https://github.com/yggdrasil-network)
 
-YGGtracker is catalog, open tracker and social network with many features that allow to convert, filter and download any torrent in [Yggdrasil network](https://github.com/yggdrasil-network) by community.
+YGGtracker is a manually operated catalog and social network that allows users to share their torrents in the local network.
 
 Engine uses IPv6 `0200::/7` addresses to identify users without registration.
-
-> [!TIP]
-> Take a look at [βtracker](https://github.com/yggverse/btracker) - the modern BitTorrent aggregation catalog written in Rust!
 
 #### [Showcase](https://github.com/YGGverse/YGGtracker/wiki/Showcase)
 
@@ -73,7 +71,7 @@ Custom settings could be provided in the `/.env.local` file by overwriting defau
 
 #### Localization
 
-Join community translations by [Crowdin](https://crowdin.com/project/yggtracker)
+[![Crowdin](https://badges.crowdin.net/yggtracker/localized.svg)](https://crowdin.com/project/yggtracker)
 
 #### API
 
