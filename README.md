@@ -3,7 +3,7 @@
 > [!NOTE]
 > Take a look at [βtracker](https://github.com/yggverse/btracker) - the modern aggregation alternative written in Rust!
 
-Social-oriented BitTorrent catalog for the [Yggdrasil network](https://github.com/yggdrasil-network)
+A social-oriented BitTorrent catalog for the [Yggdrasil](https://github.com/yggdrasil-network) network, written in the Symfony framework.
 
 YGGtracker is a manually operated catalog and social network that allows users to share their torrents in the local network.
 
