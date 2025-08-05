@@ -5,9 +5,7 @@
 
 A social-oriented BitTorrent catalog for the [Yggdrasil](https://github.com/yggdrasil-network) network, written in the Symfony framework.
 
-YGGtracker is a manually operated catalog and social network that allows users to share their torrents in the local network.
-
-Engine uses IPv6 `0200::/7` addresses to identify users without registration.
+YGGtracker is a manually operated catalog and social network that allows users to share their torrents in the local network. Engine uses IPv6 `0200::/7` addresses to identify users without registration.
 
 #### [Showcase](https://github.com/YGGverse/YGGtracker/wiki/Showcase)
 
