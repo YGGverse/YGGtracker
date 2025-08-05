@@ -8,6 +8,9 @@ YGGtracker is catalog, open tracker and social network with many features that a
 
 Engine uses IPv6 `0200::/7` addresses to identify users without registration.
 
+> [!INFO]
+> Take a look at [βtracker](https://github.com/yggverse/btracker) - the modern BitTorrent aggregation catalog written in Rust!
+
 #### [Showcase](https://github.com/YGGverse/YGGtracker/wiki/Showcase)
 
 ![Pasted image 1](https://github.com/YGGverse/YGGtracker/assets/108541346/962f7850-01e1-4add-9dbe-c11b80108a75)
